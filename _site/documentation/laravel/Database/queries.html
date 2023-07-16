@@ -1,0 +1,2293 @@
+<!DOCTYPE html>
+<html lang="">
+<!-- head -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>آشنایی با Query Builder | مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="آشنایی با Query Builder" />
+<meta name="author" content="Farhad Mirzapour" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="ابزار کوئری ساز یا به انگلیسی Query Builder یک interface بهینه و کارآمد برای ایجاد و اجرای کوئری جهت پرس و جو از پایگاه داده فراهم می کند. این ابزار قابلیت اجرای غالب عملیات مورد نظر در پایگاه داده ی اپلیکشن را دارا بوده و نیز برای تمامی سیستم های بانک اطلاعاتی که مورد پشتیبانی لاراول است قابل استفاده می باشد. query builder چارچوب نرم افزاری لاراول (جهت گنجاندن مقادیر در query ها) از PDO parameter binding برای محافظت از اپلیکیشن تحت وب شما در برابر حملات SQL injection بهره می گیرد. از اینرو لزومی ندارد رشته های ارسالی به عنوان پارامتر (binding ها) را برای کسب اطمینان از عدم وجود کدهای مخرب چک کنید. واکشی تمامی سطرهای یک جدول برای نوشتن کوئری، ابتدا متد table را در façade DB درج می کنیم. متد table یک نمونه ی query builder از جدول مورد پرس و جو برگردانده و بدین وسیله به شما امکان می دهد قیود (constraint های) بیشتری را به صورت زنجیره ای به کوئری الحاق کنید و در نهایت نتایج مد نظر را در خروجی دریافت نمایید. در مثال زیر با فراخوانی متد get کلیه ی رکوردها را از جدول مورد نظر استخراج می کنیم: &lt;?php namespace App\Http\Controllers; use Illuminate\Support\Facades\DB; use App\Http\Controllers\Controller; class UserController extends Controller { /** * Show a list of all of the application&#39;s users. * * @return Response */ public function index() { $users = DB::table(&#39;users&#39;)-&gt;get(); return view(&#39;user.index&#39;, [&#39;users&#39; =&gt; $users]); } } متد get یک Illuminate \ Support \ Collection را که شامل نتایجی است که در آن هر نتیجه یک نمونه شی از کلاس PHP StdClass می باشد. می توانید به مقدار هر ستون به صورت یک property (از شی) دسترسی داشته باشید (می توان با دسترسی به ستون به صورت یکproperty از شی مورد نظر، به مقدار آن ستون دست یافت): foreach ($users as $user) { echo $user-&gt;name; } بازیابی تنها یک سطر / ستون از جدول مورد نظر برای دسترسی به تنها یک سطر از جدول مورد نظر، می توان متد first را بکار برد. این متد تنها یک شی StdClass را در خروجی برمی گرداند: $user = DB::table(&#39;users&#39;)-&gt;where(&#39;name&#39;, &#39;John&#39;)-&gt;first(); echo $user-&gt;name; اگر به کل یک سطر نیازی نیست، می توانید یک تک مقدار را با فراخوانی متد value از رکورد واکشی کنید. این متد مقدار ستون را به صورت مستقیم در خروجی برمی گرداند: $email = DB::table(&#39;users&#39;)-&gt;where(&#39;name&#39;, &#39;John&#39;)-&gt;value(&#39;email&#39;); بازیابی لیستی از مقادیر ستون اگر می خواهید در خروجی یک آرایه داشته باشید که تمامی مقادیر یک ستون را دربرگیرد، می توانید متد pluck را بکار ببرید. در این مثال آرایه ای ازtitle ها را در خروجی دریافت می کنیم: $titles = DB::table(&#39;roles&#39;)-&gt;pluck(&#39;title&#39;); foreach ($titles as $title) { echo $title; } همچنین می توانید یک ستون کلید (key column) اختصاصی برای آرایه ی خروجی (نتیجه) مشخص نمایید: $roles = DB::table(&#39;roles&#39;)-&gt;pluck(&#39;title&#39;, &#39;name&#39;); foreach ($roles as $name =&gt; $title) { echo $title; } واکشی سطرها از جدول به صورت تکه تکه (متد chunk) در شرایطی که با هزاران رکورد سروکار دارید (مانند سناریوی واکشی هزاران رکورد)، توصیه می کنیم متد chunk را بکار ببرید. این متد در هر برهه ی زمانی تنها تکه ی کوچکی از داده ها را بازگردانده و سپس هر تکه را برای پردازش به تابع Closure می دهد. این متد برای نوشتن دستوراتArtisan که هزاران رکورد را یکجا پردازش می کنند، بسیار مفید واقع می شود. در نمونه ی زیر کل جدول users را در قالب رکورد صدتایی به صورت جدا پردازش می کنیم: DB::table(&#39;users&#39;)-&gt;orderBy(&#39;id&#39;)-&gt;chunk(100, function ($users) { foreach ($users as $user) { // } }); جهت توقف پردازش رکوردها به این شکل (پردازش رکوردها در گروه های صد تایی) کافی است مقدار false را از تابع Closure بازگردانید: DB::table(&#39;users&#39;)-&gt;orderBy(&#39;id&#39;)-&gt;chunk(100, function ($users) { // Process the records... return false; }); توابع تجمعی (Aggregate) query builder توابع متعددی برای اجرای عملیات مختلف بر روی یک کل را فراهم می آورد. این توابع یک مقدار را بر اساس داده های یک ستون محاسبه و بر می گرداند. توابع تجمعی عبارتند از: count، max، min، avg و sum. می توانید هر یک از این متدها را پس از ساخت کوئری خود فراخوانی نمایید: $users = DB::table(&#39;users&#39;)-&gt;count(); $price = DB::table(&#39;orders&#39;)-&gt;max(&#39;price&#39;); می توانید این متدها را با دیگر عبارات مانند دستورات شرطی where ترکیب نموده و کوئری های پیچیده تری بسازید: $price = DB::table(&#39;orders&#39;) -&gt;where(&#39;finalized&#39;, 1) -&gt;avg(&#39;price&#39;); دستور Select گاهی لزومی ندارد تمامی ستون های یک جدول را از پایگاه داده واکشی کنیم. متد select به شما این امکان را می دهد تا یک دستور Select سفارشی برای کوئری نوشته و تنها ستون های دلخواه را در خروجی دریافت نمایید: $users = DB::table(&#39;users&#39;)-&gt;select(&#39;name&#39;, &#39;email as user_email&#39;)-&gt;get(); متد distinct به شما این امکان را می دهد تا فقط ستون های غیر تکراری را در خروجی لحاظ نمایید: $users = DB::table(&#39;users&#39;)-&gt;distinct()-&gt;get(); چنانچه از قبل یک نمونه از query builder دارید و اکنون می خواهید یک ستون جدید به دستور select آن اضافه کنید، در آن صورت می توانید از متد addSelect استفاده نمایید: $query = DB::table(&#39;users&#39;)-&gt;select(&#39;name&#39;); $users = $query-&gt;addSelect(&#39;age&#39;)-&gt;get(); عبارت های خالص (raw expression) گاهی لازم می شود یک عبارت خالص در کوئری مورد نظرتان بکار ببرید. عبارت خالص به صورت رشته در کوئری تزریق می شوند. از این رو بایستی حین تزریق عبارت های خالص از ایجاد حفره ی امنیتی و فراهم آوردن زمینه برای حملات SQL injection خودداری نمایید. $users = DB::table(&#39;users&#39;) -&gt;select(DB::raw(&#39;count(*) as user_count, status&#39;)) -&gt;where(&#39;status&#39;, &#39;&lt;&gt;&#39;, 1) -&gt;groupBy(&#39;status&#39;) -&gt;get(); به منظور ایجاد یک عبارت خالص، می توان متد DB::raw را بکار برد (مورد استفاده ی این متد گنجاندن یک کوئری در دل کوئری دیگر است. لازم به ذکر است که این متد کوئری را از نظر کدهای مخرب چک نمی کند): متدهای Raw به جای استفاده از DB :: raw، شما همچنین ممکن است از روش های زیر برای قرار دادن یک عبارت خام به بخش های مختلف درخواست خود استفاده کنید. متد selectRaw متد selectRaw را می توان به جای (DB :: raw (...) استفاده کرد). این روش در آرگومان دوم خود یک آرایه اختیاری از مقادیر bindings را می پذیرد: $orders = DB::table(&#39;orders&#39;) -&gt;selectRaw(&#39;price * ? as price_with_tax&#39;, [1.0825]) -&gt;get(); متد whereRaw / orWhereRaw روشهای whereRaw و orWhereRaw را می توان برای تزریق یک جمله Raw به کار برد. این روش در آرگومان دوم خود یک آرایه اختیاری از مقادیر bindings را می پذیرد: $orders = DB::table(&#39;orders&#39;) -&gt;whereRaw(&#39;price &gt; IF(state = &quot;TX&quot;, ?, 100)&#39;, [200]) -&gt;get(); متد havingRaw / orHavingRaw متدهای havingRaw و orHavingRaw جهت نشاندن یک رشته Raw به عنوان مقدار having استفاده می شود : $orders = DB::table(&#39;orders&#39;) -&gt;select(&#39;department&#39;, DB::raw(&#39;SUM(price) as total_sales&#39;)) -&gt;groupBy(&#39;department&#39;) -&gt;havingRaw(&#39;SUM(price) &gt; 2500&#39;) -&gt;get(); متد orderByRaw متد orderByRaw جهت نشاندن یک رشته Raw به عنوان مقدار order by استفاده می شود : $orders = DB::table(&#39;orders&#39;) -&gt;orderByRaw(&#39;updated_at - created_at DESC&#39;) -&gt;get(); دستور Inner Join از query builder می توان جهت اجرای دستورات مختلف join بهره گرفت. برای اجرای یک عملیات ساده ی inner join اس کیو ال، کافی است متدjoin را بر روی نمونه ی ایجاد شده از جدول (نمونه ی query builder) فراخوانی کنید. اولین آرگومان ارسالی به این متد اسم جدولی است که می خواهید به آن عملیات پیوند را انجام دهید. دیگر آرگومان های پاس داده شده قیود و constraint های اعمال شده بر روی ستون ها در عملیات join را تعیین می کنند. همان طور که در این مثال مشاهده می کنید، در قالب تنها یک کوئری می توان به چندین جدول پیوند انجام داد: $users = DB::table(&#39;users&#39;) -&gt;join(&#39;contacts&#39;, &#39;users.id&#39;, &#39;=&#39;, &#39;contacts.user_id&#39;) -&gt;join(&#39;orders&#39;, &#39;users.id&#39;, &#39;=&#39;, &#39;orders.user_id&#39;) -&gt;select(&#39;users.*&#39;, &#39;contacts.phone&#39;, &#39;orders.price&#39;) -&gt;get(); دستور Left Join Clause اگر می خواهید بجای عملیات inner join، عملیات left join را بر روی جدولی اجرا کنید، کافی است متد leftJoin را به صورت زیر فراخوانی نمایید. لازم به ذکر است که متد نام برده از نظر نوع و تعدادی ورودی (signature) با متد join یکسان است: $users = DB::table(&#39;users&#39;) -&gt;leftJoin(&#39;posts&#39;, &#39;users.id&#39;, &#39;=&#39;, &#39;posts.user_id&#39;) -&gt;get(); دستور Cross Join Clause جهت اجرای عملیات cross join، کافی است متد crossJoin را فراخوانی کرده و اسم جدولی که می خواهید عملیات cross join بر روی آن اجرا شود را به عنوان آرگومان به آن پاس دهید. نتیجه ی عملیات cross join ترکیبی است که از قرار گرفتن هر سطر یا رکورد از جدول اول در کنار تمامی سطرهای جدول دوم بدست می آید، به عبارتی دیگر نتیجه cross join حاصلضرب دکارتی دو جدول در هم است. $users = DB::table(&#39;sizes&#39;) -&gt;crossJoin(&#39;colours&#39;) -&gt;get(); دستورات پیچیده ی join می توانید دستورات join پیچیده تری بنویسید. برای شروع یک تابع Closure به عنوان آرگومان دوم به متد join ارسال کنید. این تابع یک شیJoinClause به عنوان پارامتر ورودی می گیرد که به شما اجازه می دهد constraint ها و محدودیت هایی را در دستور join تعریف نمایید: DB::table(&#39;users&#39;) -&gt;join(&#39;contacts&#39;, function ($join) { $join-&gt;on(&#39;users.id&#39;, &#39;=&#39;, &#39;contacts.user_id&#39;)-&gt;orOn(...); }) -&gt;get(); می توانید دستورات join پیچیده تری بنویسید. برای شروع یک تابع Closure به عنوان آرگومان دوم به متد join ارسال کنید. این تابع یک شیJoinClause به عنوان پارامتر ورودی می گیرد که به شما اجازه می دهد constraint ها و محدودیت هایی را در دستور join تعریف نمایید: DB::table(&#39;users&#39;) -&gt;join(&#39;contacts&#39;, function ($join) { $join-&gt;on(&#39;users.id&#39;, &#39;=&#39;, &#39;contacts.user_id&#39;) -&gt;where(&#39;contacts.user_id&#39;, &#39;&gt;&#39;, 5); }) -&gt;get(); دستور Unions query builder به شما امکان می دهد تا نتیجه ی حاصل از اجرای دو کوئری را به راحتی با یکدیگر ادغام یا متحد نمایید. برای مثال یک کوئری اولیه ایجاد می کنیم و سپس با فراخوانی متد union، آن را با یک کوئری دیگر ترکیب می کنیم: $first = DB::table(&#39;users&#39;) -&gt;whereNull(&#39;first_name&#39;); $users = DB::table(&#39;users&#39;) -&gt;whereNull(&#39;last_name&#39;) -&gt;union($first) -&gt;get(); می توان متد unionAll را برای لحاظ کردن مقادیر تکراری صدا زد. این متد از نظر signature با متد union تفاوتی ندارد. دستور Where به منظور افزودن دستورات where به کوئری، می توانید متد where را بر روی نمونه ی query builder صدا بزنید. در ساده ترین نوع فراخوانی متد where، ارسال سه آرگومان الزامی می باشد. اولین آرگومان اسم ستون می باشد. دومین آرگومان یکی از عملگرهای مورد پشتیبانی پایگاه داده است. سومین آرگومان مقداری است که با ستون مورد نظر از جدول مقایسه می شود. در مثال زیر بررسی می کنیم آیا مقدار ستون &quot;votes&quot; برابر 100 هست یا خیر: $users = DB::table(&#39;users&#39;)-&gt;where(&#39;votes&#39;, &#39;=&#39;, 100)-&gt;get(); به منظور سادگی بیشتر، اگر فقط می خواهید بررسی کنید مقدار یک ستون برابر با یک مقدار مشخص هست یا خیر، می توانید مقدار دلخواه را به طور مسقیم به عنوان آرگومان دوم به متد where ارسال کنید: $users = DB::table(&#39;users&#39;)-&gt;where(&#39;votes&#39;, 100)-&gt;get(); مسلما می توان از دیگر عملگرهای مورد پشتیبانی پایگاه داده در عبارت where استفاده کرد: $users = DB::table(&#39;users&#39;) -&gt;where(&#39;votes&#39;, &#39;&gt;=&#39;, 100) -&gt;get(); $users = DB::table(&#39;users&#39;) -&gt;where(&#39;votes&#39;, &#39;&lt;&gt;&#39;, 100) -&gt;get(); $users = DB::table(&#39;users&#39;) -&gt;where(&#39;name&#39;, &#39;like&#39;, &#39;T%&#39;) -&gt;get(); می توان آرایه ای از شرط ها را به تابع where ارسال کرد: $users = DB::table(&#39;users&#39;)-&gt;where([ [&#39;status&#39;, &#39;=&#39;, &#39;1&#39;], [&#39;subscribed&#39;, &#39;&lt;&gt;&#39;, &#39;1&#39;], ])-&gt;get(); دستورات Or می توان علاوه بر افزودن constraint های عبارت where (قیودی که در قالب عبارت where به کوئری اعمال می شوند) به صورت زنجیره ای، عبارتor را نیز به کوئری اضافه کرد. query builder این کار با ارائه ی متد orWhere امکان پذیر ساخته است. متد مزبور از نظر آرگومان های ورودی با متد where تفاوتی ندارد: $users = DB::table(&#39;users&#39;) -&gt;where(&#39;votes&#39;, &#39;&gt;&#39;, 100) -&gt;orWhere(&#39;name&#39;, &#39;John&#39;) -&gt;get(); دیگر دستورات where دستور whereBetween متد whereBetween بررسی می کند آیا مقدار ستون مورد نظر بین دو رینج مشخص هست یا خیر: $users = DB::table(&#39;users&#39;) -&gt;whereBetween(&#39;votes&#39;, [1, 100])-&gt;get(); دستور whereNotBetween این متد بررسی می کند آیا مقدار ستون مورد نظر خارج از رینج یا دامنه ی دو مقدار مشخص شده هست یا خیر (ستون هایی که مقادیر آن ها داخل رینج عددی مشخص شده نباشد را جستجو می کند): $users = DB::table(&#39;users&#39;) -&gt;whereNotBetween(&#39;votes&#39;, [1, 100]) -&gt;get(); دستور whereIn / whereNotIn متد wherein ستون هایی را که مقدار آن ها داخل آرایه ی ورودی باشد را جستجو می کند: $users = DB::table(&#39;users&#39;) -&gt;whereIn(&#39;id&#39;, [1, 2, 3]) -&gt;get(); متد whereNotIn رکوردهایی را جستجو می کند که مقادیر آن ها محدود به آرایه ی ورودی نباشد (مقدار آن ها در آرایه ی ارسالی به عنوان آرگومان نباشد): $users = DB::table(&#39;users&#39;) -&gt;whereNotIn(&#39;id&#39;, [1, 2, 3]) -&gt;get(); دستور whereNull / whereNotNull متد whereNull ستون هایی را برمی گرداند که مقدار آن ها NULL باشد: $users = DB::table(&#39;users&#39;) -&gt;whereNull(&#39;updated_at&#39;) -&gt;get(); متد whereNotNull رکوردهایی را جستجو و برمی گرداند که مقدار آن ها NULL نباشد: $users = DB::table(&#39;users&#39;) -&gt;whereNotNull(&#39;updated_at&#39;) -&gt;get(); دستورات whereDate / whereMonth / whereDay / whereYear / whereTime برای مقایسه مقادیر ستون با یک تاریخ، از متد whereDate استفاده می شود : $users = DB::table(&#39;users&#39;) -&gt;whereDate(&#39;created_at&#39;, &#39;2016-12-31&#39;) -&gt;get(); برای مقایسه مقادیر ستون با ماه یک سال، از متد whereMonth استفاده می شود : $users = DB::table(&#39;users&#39;) -&gt;whereMonth(&#39;created_at&#39;, &#39;12&#39;) -&gt;get(); برای مقایسه مقادیر ستون با روز یک سال، از متد whereDay استفاده می شود : $users = DB::table(&#39;users&#39;) -&gt;whereDay(&#39;created_at&#39;, &#39;31&#39;) -&gt;get(); برای مقایسه مقادیر ستون با یک سال، از متد whereYear استفاده می شود : $users = DB::table(&#39;users&#39;) -&gt;whereYear(&#39;created_at&#39;, &#39;2016&#39;) -&gt;get(); برای مقایسه مقادیر ستون با یک زمان، از متد whereTime استفاده می شود : $users = DB::table(&#39;users&#39;) -&gt;whereTime(&#39;created_at&#39;, &#39;=&#39;, &#39;11:20&#39;) -&gt;get(); whereColumn متد whereColumn را می توان جهت مقایسه و کسب اطمینان از برابر بودن دو ستون مورد استفاده قرار داد: $users = DB::table(&#39;users&#39;) -&gt;whereColumn(&#39;first_name&#39;, &#39;last_name&#39;) -&gt;get(); همچنین می توان یک عملگر مقایسه ای به متد پاس داد: $users = DB::table(&#39;users&#39;) -&gt;whereColumn(&#39;updated_at&#39;, &#39;&gt;&#39;, &#39;created_at&#39;) -&gt;get(); متد whereColumn نیز می تواند آرایه ای از چندین شرط را به عنوان آرگومان بپذیرد. این شرط ها توسط عملگر and با یکدیگر پیوند می خورند: $users = DB::table(&#39;users&#39;) -&gt;whereColumn([ [&#39;first_name&#39;, &#39;=&#39;, &#39;last_name&#39;], [&#39;updated_at&#39;, &#39;&gt;&#39;, &#39;created_at&#39;] ])-&gt;get(); کوئری های تودرتو گاهی اوقات ملزوم به ساخت دستورات شرطی (where) پیچیده تری می شوید. از جمله می توان به عبارت های &quot;where exists&quot; (برای بررسی وجود ستون) یا کوئری های تودرتو اشاره کرد. query builder فریم ورک Laravel انجام این کار را هم برای شما آسان می سازد. برای شروع، به مثال ساده ای که در آن where های تودرتو نوشته و constraint ها داخل پرانتز گروه بندی شده اند می پردازیم: DB::table(&#39;users&#39;) -&gt;where(&#39;name&#39;, &#39;=&#39;, &#39;John&#39;) -&gt;orWhere(function ($query) { $query-&gt;where(&#39;votes&#39;, &#39;&gt;&#39;, 100) -&gt;where(&#39;title&#39;, &#39;&lt;&gt;&#39;, &#39;Admin&#39;); }) -&gt;get(); همان طور که مشاهده می کنید، ارسال تابع Closure به متد orWhere به عنوان آرگومان به query builder اعلان کرده که باید محدودیت ها را گروه بندی کرده و داخل پرانتز قرار دهد. Closure یک نمونه query builder به عنوان ورودی گرفته که شما با استفاده از آن می توانید محدودیت هایی که باید به صورت گروه بندی شده در پرانتز قرار گیرد را اعمال کنید. مثال فوق کوئری زیر را تولید می کند: select * from users where name = &#39;John&#39; or (votes &gt; 100 and title &lt;&gt; &#39;Admin&#39;) متد whereExists متد whereExists به شما اجازه می دهد عبارت های where exists بنویسید. این متد یک تابع Closure به عنوان آرگومان می گیرد. خود این تابع یک نمونه ی query builder به عنوان ورودی دریافت کرده که با استفاده از آن کوئری را تعریف می کنید: DB::table(&#39;users&#39;) -&gt;whereExists(function ($query) { $query-&gt;select(DB::raw(1)) -&gt;from(&#39;orders&#39;) -&gt;whereRaw(&#39;orders.user_id = users.id&#39;); }) -&gt;get(); کوئری فوق دستور ساده ی SQL زیر را تولید می کند: select * from users where exists ( select 1 from orders where orders.user_id = users.id ) کوئری گرفتن از ستون های از نوع JSON لاراول به شما امکان می دهد از ستون های از نوع JSON کوئری بگیرید. در حال حاضر این قابلیت تنها در پایگاه داده ی MySQL ویرایش 5.7 وPostgres پشتیبانی می شود. برای گرفتن کوئری از ستون از نوع JSON، می بایست عملگر -&gt; را مورد استفاده قرار دهید: $users = DB::table(&#39;users&#39;) -&gt;where(&#39;options-&gt;language&#39;, &#39;en&#39;) -&gt;get(); $users = DB::table(&#39;users&#39;) -&gt;where(&#39;preferences-&gt;dining-&gt;meal&#39;, &#39;salad&#39;) -&gt;get(); متد orderBy متد orderBy به شما امکان می دهد تا نتایج حاصل از اجرای یک کوئری را مرتب سازی کنید. اولین آرگومان ارسالی به این متد باید اسم ستونی باشد که می خواهید نتایج بر اساس آن مرتب شوند، در حالی که آرگومان دوم ترتیب مرتب سازی اعم از نزولی (asc) یا صعودی (desc) را کنترل می کند: $users = DB::table(&#39;users&#39;) -&gt;orderBy(&#39;name&#39;, &#39;desc&#39;) -&gt;get(); متد های latest / oldest متدهای latest and oldest به شما اجازه می دهند نتایج را براساس تاریخ مرتب کنید. به طور پیش فرض نتایج براساس ستون created_at مرتب می شوند. همچنین می توانید نام ستونی که می خواهید نتایج براساس آن مرتب شوند را مشخص نمایید : $user = DB::table(&#39;users&#39;) -&gt;latest() -&gt;first(); متد inRandomOrder متد inRandomOrder نتایج یک کوئری را به صورت تصادفی مرتب سازی می کند. در مثال زیر با فراخوانی این متد یک کاربر را به طور تصادفی از جدول واکشی می کنیم: $randomUser = DB::table(&#39;users&#39;) -&gt;inRandomOrder() -&gt;first(); متدهای groupBy / having توابع groupByو having را می توان جهت گروه بندی نتایج کوئری مورد استفاده قرار داد. متد having از نظر نوع و تعداد پارامتر ورودی (signature) با متد where یکسان می باشد: $users = DB::table(&#39;users&#39;) -&gt;groupBy(&#39;account_id&#39;) -&gt;having(&#39;account_id&#39;, &#39;&gt;&#39;, 100) -&gt;get(); همچنین می توانید چندیدن ستون را جهت گروه بندی انتخاب نمایید : $users = DB::table(&#39;users&#39;) -&gt;groupBy(&#39;first_name&#39;, &#39;status&#39;) -&gt;having(&#39;account_id&#39;, &#39;&gt;&#39;, 100) -&gt;get(); skip / take به منظور محدود سازی نتایج حاصل از اجرای کوئری یا لحاظ نکردن تعداد خاصی از نتایج در کوئری (OFFSET)، می توان متدهای skip و take را مورد استفاده قرار داد: $users = DB::table(&#39;users&#39;)-&gt;skip(10)-&gt;take(5)-&gt;get(); همچنین می توانید از متدهای limit و offset نیز استفاده نمایید : $users = DB::table(&#39;users&#39;) -&gt;offset(10) -&gt;limit(5) -&gt;get(); دستورات شرطی گاهی می خواهید یک شرط تنها زمانی به یک کوئری اعمال شود که شرط دیگری صادق باشد. به عنوان مثال ممکن است بخواهید یک شرط where تنها در صورتی اعمال شود که درخواست ورودی دارای مقدار خاصی باشد. این کار را می توانید با فراخوانی متد when انجام دهید: $role = $request-&gt;input(&#39;role&#39;); $users = DB::table(&#39;users&#39;) -&gt;when($role, function ($query) use ($role) { return $query-&gt;where(&#39;role_id&#39;, $role); }) -&gt;get(); متد when تنها زمانی تابع Closure را اجرا می کند که اولین پارامتر true باشد. در صورتی که اولین پارامتر false باشد، تابع Closure اجرا نخواهد شد. همچنین می توان تابع Closure دیگری به عنوان آرگومان سوم مشخص کرد که در صورتیکه اولین پارامتر false باشد آن دستورات اجرا شوند : $sortBy = null; $users = DB::table(&#39;users&#39;) -&gt;when($sortBy, function ($query) use ($sortBy) { return $query-&gt;orderBy($sortBy); }, function ($query) { return $query-&gt;orderBy(&#39;name&#39;); }) -&gt;get(); متد Inserts query builder همچنین یک متد به نام insert ارائه می کند که توسط آن می توانید رکوردهایی را داخل جدول درج نمایید. متد insert آرایه ای از اسم و مقادیر ستون ها را به عنوان ورودی گرفته و در جدول درج می کند: DB::table(&#39;users&#39;)-&gt;insert( [&#39;email&#39; =&gt; &#39;john@example.com&#39;, &#39;votes&#39; =&gt; 0] ); می توان با یکبار فراخوانی تابع insert تعداد زیادی رکورد را در جدول وارد کرد. برای این منظور کافی است آرایه ای از آرایه ها را به عنوان آرگومان به تابع ذکر شده ارسال نمایید. هر آرایه نشانگر یک سطر است که در جدول درج می شود: DB::table(&#39;users&#39;)-&gt;insert([ [&#39;email&#39; =&gt; &#39;taylor@example.com&#39;, &#39;votes&#39; =&gt; 0], [&#39;email&#39; =&gt; &#39;dayle@example.com&#39;, &#39;votes&#39; =&gt; 0] ]); ستون Auto-Incrementing IDs اگر جدول مورد نظر دارای یک ستون خود افزاینده id است، در آن صورت می توان با فراخوانی متد insertGetId یک رکورد را وارد جدول کرده و سپس ID آن را بازیابی کنید: $id = DB::table(&#39;users&#39;)-&gt;insertGetId( [&#39;email&#39; =&gt; &#39;john@example.com&#39;, &#39;votes&#39; =&gt; 0] ); اگر از پایگاه داده ی PostgreSQL استفاده می کنید، در آن صورت بایستی اسم ستون خود افزاینده (auto-incrementing یا کلید اصلی) را id تنظیم کنید (در واقع این پایگاه داده انتظار دارد اسم ستون نام برده id باشد). اگر می خواهید id را از sequence دیگری بازیابی کنید، آنگاه بایستی اسم sequence را به عنوان آرگومان دوم به متد insertGetId ارسال نمایید. دستور Updates query builder با ارائه ی متد update به شما اجازه می دهد رکوردهای جاری را بروز رسانی کنید. این متد مانند insert، آرایه ای از جفت اسم و مقادیر ستون (column / value pair) را برای بروز رسانی به عنوان ورودی می پذیرد. با استفاده از دستورات شرطی where می توانید بر روی کوئری update قید اعمال کرده و آن را محدود نمایید: DB::table(&#39;users&#39;) -&gt;where(&#39;id&#39;, 1) -&gt;update([&#39;votes&#39; =&gt; 1]); بروز رسانی ستون هایی از نوع JSON هنگام به روز رسانی ستون JSON، شما باید از -&gt; برای دسترسی به کلید مناسب در شی JSON استفاده کنید. این عملیات تنها در پایگاه های داده پشتیبانی می شود که ستون های JSON را پشتیبانی می کنند: DB::table(&#39;users&#39;) -&gt;where(&#39;id&#39;, 1) -&gt;update([&#39;options-&gt;enabled&#39; =&gt; true]); توابع Increment و Decrement query builder چارچوب نرم افزاری لاراول متدهایی را هم برای افزایش یا کاهش مقدار ستون مورد نظر فراهم می کند. این دو متد صرفا یک نوع میان برای دستور update محسوب می شوند. دو متد نام برده حداقل یک آرگومان می پذیرند: 1. اسم ستونی که بروز آوری می شود. در صورت تمایل می توان یک آرگومان دوم به تابع ارسال کرد که واحد افزایش یا کاهش مقدار ستون را مشخص می کند: DB::table(&#39;users&#39;)-&gt;increment(&#39;votes&#39;); DB::table(&#39;users&#39;)-&gt;increment(&#39;votes&#39;, 5); DB::table(&#39;users&#39;)-&gt;decrement(&#39;votes&#39;); DB::table(&#39;users&#39;)-&gt;decrement(&#39;votes&#39;, 5); می توان ستون های بیشتری را برای بروز رسانی مشخص کنید: DB::table(&#39;users&#39;)-&gt;increment(&#39;votes&#39;, 1, [&#39;name&#39; =&gt; &#39;John&#39;]); متد Deletes query builder همچنین یک متد به نام delete فراهم می کند که توسط آن می توان رکوردهای دلخواه را از پایگاه داده حذف کرد: می توانید با اضافه کردن عبارت های شرطی where به کوئری، دستورات delete را محدود نمایید (قیودی را بر کوئری اعمال کنید): DB::table(&#39;users&#39;)-&gt;delete(); DB::table(&#39;users&#39;)-&gt;where(&#39;votes&#39;, &#39;&gt;&#39;, 100)-&gt;delete(); اگر می خواهید جدول را کاملا خالی کنید (تمامی سطرهای آن را حذف و ستون شمارشی ID را به صفر بازگردانید)، کافی است متد truncate را صدا بزنید: DB::table(&#39;users&#39;)-&gt;truncate(); قفل گذاری بدبینانه (Pessimistic Locking) query builder با ارائه ی تعدادی تابع به شما امکان می دهد به راحتی بر روی دستورات select خود قفل های pessimistic اعمال کنید. برای اجرای دستور با یک قفل مشترک (shared lock)، می توان متد sharedLock را بر روی کوئری صدا زد. قفل مشترک مانع از این می شود که سطرهای انتخابی پیش از اتمام تایید ثبت و commit شدن کامل تراکنش، ویرایش شوند (قفل اشتراکی یا shared lock به زمان اطلاق می شود که دو تراکنش مجوز در سطح خواندن / read access دریافت کنند). در واقع با استفاده از متد sharedLock یک قفل pessimistic برای دستورSelect ایجاد می کنیم: DB::table(&#39;users&#39;)-&gt;where(&#39;votes&#39;, &#39;&gt;&#39;, 100)-&gt;sharedLock()-&gt;get(); می توانید بجای متد نام برده از lockForUpdate استفاده کنید. این متد حین اجرای دستور select مانع از بروز رسانی و ویرایش سطرها می شود: DB::table(&#39;users&#39;)-&gt;where(&#39;votes&#39;, &#39;&gt;&#39;, 100)-&gt;lockForUpdate()-&gt;get();" />
+<meta property="og:description" content="ابزار کوئری ساز یا به انگلیسی Query Builder یک interface بهینه و کارآمد برای ایجاد و اجرای کوئری جهت پرس و جو از پایگاه داده فراهم می کند. این ابزار قابلیت اجرای غالب عملیات مورد نظر در پایگاه داده ی اپلیکشن را دارا بوده و نیز برای تمامی سیستم های بانک اطلاعاتی که مورد پشتیبانی لاراول است قابل استفاده می باشد. query builder چارچوب نرم افزاری لاراول (جهت گنجاندن مقادیر در query ها) از PDO parameter binding برای محافظت از اپلیکیشن تحت وب شما در برابر حملات SQL injection بهره می گیرد. از اینرو لزومی ندارد رشته های ارسالی به عنوان پارامتر (binding ها) را برای کسب اطمینان از عدم وجود کدهای مخرب چک کنید. واکشی تمامی سطرهای یک جدول برای نوشتن کوئری، ابتدا متد table را در façade DB درج می کنیم. متد table یک نمونه ی query builder از جدول مورد پرس و جو برگردانده و بدین وسیله به شما امکان می دهد قیود (constraint های) بیشتری را به صورت زنجیره ای به کوئری الحاق کنید و در نهایت نتایج مد نظر را در خروجی دریافت نمایید. در مثال زیر با فراخوانی متد get کلیه ی رکوردها را از جدول مورد نظر استخراج می کنیم: &lt;?php namespace App\Http\Controllers; use Illuminate\Support\Facades\DB; use App\Http\Controllers\Controller; class UserController extends Controller { /** * Show a list of all of the application&#39;s users. * * @return Response */ public function index() { $users = DB::table(&#39;users&#39;)-&gt;get(); return view(&#39;user.index&#39;, [&#39;users&#39; =&gt; $users]); } } متد get یک Illuminate \ Support \ Collection را که شامل نتایجی است که در آن هر نتیجه یک نمونه شی از کلاس PHP StdClass می باشد. می توانید به مقدار هر ستون به صورت یک property (از شی) دسترسی داشته باشید (می توان با دسترسی به ستون به صورت یکproperty از شی مورد نظر، به مقدار آن ستون دست یافت): foreach ($users as $user) { echo $user-&gt;name; } بازیابی تنها یک سطر / ستون از جدول مورد نظر برای دسترسی به تنها یک سطر از جدول مورد نظر، می توان متد first را بکار برد. این متد تنها یک شی StdClass را در خروجی برمی گرداند: $user = DB::table(&#39;users&#39;)-&gt;where(&#39;name&#39;, &#39;John&#39;)-&gt;first(); echo $user-&gt;name; اگر به کل یک سطر نیازی نیست، می توانید یک تک مقدار را با فراخوانی متد value از رکورد واکشی کنید. این متد مقدار ستون را به صورت مستقیم در خروجی برمی گرداند: $email = DB::table(&#39;users&#39;)-&gt;where(&#39;name&#39;, &#39;John&#39;)-&gt;value(&#39;email&#39;); بازیابی لیستی از مقادیر ستون اگر می خواهید در خروجی یک آرایه داشته باشید که تمامی مقادیر یک ستون را دربرگیرد، می توانید متد pluck را بکار ببرید. در این مثال آرایه ای ازtitle ها را در خروجی دریافت می کنیم: $titles = DB::table(&#39;roles&#39;)-&gt;pluck(&#39;title&#39;); foreach ($titles as $title) { echo $title; } همچنین می توانید یک ستون کلید (key column) اختصاصی برای آرایه ی خروجی (نتیجه) مشخص نمایید: $roles = DB::table(&#39;roles&#39;)-&gt;pluck(&#39;title&#39;, &#39;name&#39;); foreach ($roles as $name =&gt; $title) { echo $title; } واکشی سطرها از جدول به صورت تکه تکه (متد chunk) در شرایطی که با هزاران رکورد سروکار دارید (مانند سناریوی واکشی هزاران رکورد)، توصیه می کنیم متد chunk را بکار ببرید. این متد در هر برهه ی زمانی تنها تکه ی کوچکی از داده ها را بازگردانده و سپس هر تکه را برای پردازش به تابع Closure می دهد. این متد برای نوشتن دستوراتArtisan که هزاران رکورد را یکجا پردازش می کنند، بسیار مفید واقع می شود. در نمونه ی زیر کل جدول users را در قالب رکورد صدتایی به صورت جدا پردازش می کنیم: DB::table(&#39;users&#39;)-&gt;orderBy(&#39;id&#39;)-&gt;chunk(100, function ($users) { foreach ($users as $user) { // } }); جهت توقف پردازش رکوردها به این شکل (پردازش رکوردها در گروه های صد تایی) کافی است مقدار false را از تابع Closure بازگردانید: DB::table(&#39;users&#39;)-&gt;orderBy(&#39;id&#39;)-&gt;chunk(100, function ($users) { // Process the records... return false; }); توابع تجمعی (Aggregate) query builder توابع متعددی برای اجرای عملیات مختلف بر روی یک کل را فراهم می آورد. این توابع یک مقدار را بر اساس داده های یک ستون محاسبه و بر می گرداند. توابع تجمعی عبارتند از: count، max، min، avg و sum. می توانید هر یک از این متدها را پس از ساخت کوئری خود فراخوانی نمایید: $users = DB::table(&#39;users&#39;)-&gt;count(); $price = DB::table(&#39;orders&#39;)-&gt;max(&#39;price&#39;); می توانید این متدها را با دیگر عبارات مانند دستورات شرطی where ترکیب نموده و کوئری های پیچیده تری بسازید: $price = DB::table(&#39;orders&#39;) -&gt;where(&#39;finalized&#39;, 1) -&gt;avg(&#39;price&#39;); دستور Select گاهی لزومی ندارد تمامی ستون های یک جدول را از پایگاه داده واکشی کنیم. متد select به شما این امکان را می دهد تا یک دستور Select سفارشی برای کوئری نوشته و تنها ستون های دلخواه را در خروجی دریافت نمایید: $users = DB::table(&#39;users&#39;)-&gt;select(&#39;name&#39;, &#39;email as user_email&#39;)-&gt;get(); متد distinct به شما این امکان را می دهد تا فقط ستون های غیر تکراری را در خروجی لحاظ نمایید: $users = DB::table(&#39;users&#39;)-&gt;distinct()-&gt;get(); چنانچه از قبل یک نمونه از query builder دارید و اکنون می خواهید یک ستون جدید به دستور select آن اضافه کنید، در آن صورت می توانید از متد addSelect استفاده نمایید: $query = DB::table(&#39;users&#39;)-&gt;select(&#39;name&#39;); $users = $query-&gt;addSelect(&#39;age&#39;)-&gt;get(); عبارت های خالص (raw expression) گاهی لازم می شود یک عبارت خالص در کوئری مورد نظرتان بکار ببرید. عبارت خالص به صورت رشته در کوئری تزریق می شوند. از این رو بایستی حین تزریق عبارت های خالص از ایجاد حفره ی امنیتی و فراهم آوردن زمینه برای حملات SQL injection خودداری نمایید. $users = DB::table(&#39;users&#39;) -&gt;select(DB::raw(&#39;count(*) as user_count, status&#39;)) -&gt;where(&#39;status&#39;, &#39;&lt;&gt;&#39;, 1) -&gt;groupBy(&#39;status&#39;) -&gt;get(); به منظور ایجاد یک عبارت خالص، می توان متد DB::raw را بکار برد (مورد استفاده ی این متد گنجاندن یک کوئری در دل کوئری دیگر است. لازم به ذکر است که این متد کوئری را از نظر کدهای مخرب چک نمی کند): متدهای Raw به جای استفاده از DB :: raw، شما همچنین ممکن است از روش های زیر برای قرار دادن یک عبارت خام به بخش های مختلف درخواست خود استفاده کنید. متد selectRaw متد selectRaw را می توان به جای (DB :: raw (...) استفاده کرد). این روش در آرگومان دوم خود یک آرایه اختیاری از مقادیر bindings را می پذیرد: $orders = DB::table(&#39;orders&#39;) -&gt;selectRaw(&#39;price * ? as price_with_tax&#39;, [1.0825]) -&gt;get(); متد whereRaw / orWhereRaw روشهای whereRaw و orWhereRaw را می توان برای تزریق یک جمله Raw به کار برد. این روش در آرگومان دوم خود یک آرایه اختیاری از مقادیر bindings را می پذیرد: $orders = DB::table(&#39;orders&#39;) -&gt;whereRaw(&#39;price &gt; IF(state = &quot;TX&quot;, ?, 100)&#39;, [200]) -&gt;get(); متد havingRaw / orHavingRaw متدهای havingRaw و orHavingRaw جهت نشاندن یک رشته Raw به عنوان مقدار having استفاده می شود : $orders = DB::table(&#39;orders&#39;) -&gt;select(&#39;department&#39;, DB::raw(&#39;SUM(price) as total_sales&#39;)) -&gt;groupBy(&#39;department&#39;) -&gt;havingRaw(&#39;SUM(price) &gt; 2500&#39;) -&gt;get(); متد orderByRaw متد orderByRaw جهت نشاندن یک رشته Raw به عنوان مقدار order by استفاده می شود : $orders = DB::table(&#39;orders&#39;) -&gt;orderByRaw(&#39;updated_at - created_at DESC&#39;) -&gt;get(); دستور Inner Join از query builder می توان جهت اجرای دستورات مختلف join بهره گرفت. برای اجرای یک عملیات ساده ی inner join اس کیو ال، کافی است متدjoin را بر روی نمونه ی ایجاد شده از جدول (نمونه ی query builder) فراخوانی کنید. اولین آرگومان ارسالی به این متد اسم جدولی است که می خواهید به آن عملیات پیوند را انجام دهید. دیگر آرگومان های پاس داده شده قیود و constraint های اعمال شده بر روی ستون ها در عملیات join را تعیین می کنند. همان طور که در این مثال مشاهده می کنید، در قالب تنها یک کوئری می توان به چندین جدول پیوند انجام داد: $users = DB::table(&#39;users&#39;) -&gt;join(&#39;contacts&#39;, &#39;users.id&#39;, &#39;=&#39;, &#39;contacts.user_id&#39;) -&gt;join(&#39;orders&#39;, &#39;users.id&#39;, &#39;=&#39;, &#39;orders.user_id&#39;) -&gt;select(&#39;users.*&#39;, &#39;contacts.phone&#39;, &#39;orders.price&#39;) -&gt;get(); دستور Left Join Clause اگر می خواهید بجای عملیات inner join، عملیات left join را بر روی جدولی اجرا کنید، کافی است متد leftJoin را به صورت زیر فراخوانی نمایید. لازم به ذکر است که متد نام برده از نظر نوع و تعدادی ورودی (signature) با متد join یکسان است: $users = DB::table(&#39;users&#39;) -&gt;leftJoin(&#39;posts&#39;, &#39;users.id&#39;, &#39;=&#39;, &#39;posts.user_id&#39;) -&gt;get(); دستور Cross Join Clause جهت اجرای عملیات cross join، کافی است متد crossJoin را فراخوانی کرده و اسم جدولی که می خواهید عملیات cross join بر روی آن اجرا شود را به عنوان آرگومان به آن پاس دهید. نتیجه ی عملیات cross join ترکیبی است که از قرار گرفتن هر سطر یا رکورد از جدول اول در کنار تمامی سطرهای جدول دوم بدست می آید، به عبارتی دیگر نتیجه cross join حاصلضرب دکارتی دو جدول در هم است. $users = DB::table(&#39;sizes&#39;) -&gt;crossJoin(&#39;colours&#39;) -&gt;get(); دستورات پیچیده ی join می توانید دستورات join پیچیده تری بنویسید. برای شروع یک تابع Closure به عنوان آرگومان دوم به متد join ارسال کنید. این تابع یک شیJoinClause به عنوان پارامتر ورودی می گیرد که به شما اجازه می دهد constraint ها و محدودیت هایی را در دستور join تعریف نمایید: DB::table(&#39;users&#39;) -&gt;join(&#39;contacts&#39;, function ($join) { $join-&gt;on(&#39;users.id&#39;, &#39;=&#39;, &#39;contacts.user_id&#39;)-&gt;orOn(...); }) -&gt;get(); می توانید دستورات join پیچیده تری بنویسید. برای شروع یک تابع Closure به عنوان آرگومان دوم به متد join ارسال کنید. این تابع یک شیJoinClause به عنوان پارامتر ورودی می گیرد که به شما اجازه می دهد constraint ها و محدودیت هایی را در دستور join تعریف نمایید: DB::table(&#39;users&#39;) -&gt;join(&#39;contacts&#39;, function ($join) { $join-&gt;on(&#39;users.id&#39;, &#39;=&#39;, &#39;contacts.user_id&#39;) -&gt;where(&#39;contacts.user_id&#39;, &#39;&gt;&#39;, 5); }) -&gt;get(); دستور Unions query builder به شما امکان می دهد تا نتیجه ی حاصل از اجرای دو کوئری را به راحتی با یکدیگر ادغام یا متحد نمایید. برای مثال یک کوئری اولیه ایجاد می کنیم و سپس با فراخوانی متد union، آن را با یک کوئری دیگر ترکیب می کنیم: $first = DB::table(&#39;users&#39;) -&gt;whereNull(&#39;first_name&#39;); $users = DB::table(&#39;users&#39;) -&gt;whereNull(&#39;last_name&#39;) -&gt;union($first) -&gt;get(); می توان متد unionAll را برای لحاظ کردن مقادیر تکراری صدا زد. این متد از نظر signature با متد union تفاوتی ندارد. دستور Where به منظور افزودن دستورات where به کوئری، می توانید متد where را بر روی نمونه ی query builder صدا بزنید. در ساده ترین نوع فراخوانی متد where، ارسال سه آرگومان الزامی می باشد. اولین آرگومان اسم ستون می باشد. دومین آرگومان یکی از عملگرهای مورد پشتیبانی پایگاه داده است. سومین آرگومان مقداری است که با ستون مورد نظر از جدول مقایسه می شود. در مثال زیر بررسی می کنیم آیا مقدار ستون &quot;votes&quot; برابر 100 هست یا خیر: $users = DB::table(&#39;users&#39;)-&gt;where(&#39;votes&#39;, &#39;=&#39;, 100)-&gt;get(); به منظور سادگی بیشتر، اگر فقط می خواهید بررسی کنید مقدار یک ستون برابر با یک مقدار مشخص هست یا خیر، می توانید مقدار دلخواه را به طور مسقیم به عنوان آرگومان دوم به متد where ارسال کنید: $users = DB::table(&#39;users&#39;)-&gt;where(&#39;votes&#39;, 100)-&gt;get(); مسلما می توان از دیگر عملگرهای مورد پشتیبانی پایگاه داده در عبارت where استفاده کرد: $users = DB::table(&#39;users&#39;) -&gt;where(&#39;votes&#39;, &#39;&gt;=&#39;, 100) -&gt;get(); $users = DB::table(&#39;users&#39;) -&gt;where(&#39;votes&#39;, &#39;&lt;&gt;&#39;, 100) -&gt;get(); $users = DB::table(&#39;users&#39;) -&gt;where(&#39;name&#39;, &#39;like&#39;, &#39;T%&#39;) -&gt;get(); می توان آرایه ای از شرط ها را به تابع where ارسال کرد: $users = DB::table(&#39;users&#39;)-&gt;where([ [&#39;status&#39;, &#39;=&#39;, &#39;1&#39;], [&#39;subscribed&#39;, &#39;&lt;&gt;&#39;, &#39;1&#39;], ])-&gt;get(); دستورات Or می توان علاوه بر افزودن constraint های عبارت where (قیودی که در قالب عبارت where به کوئری اعمال می شوند) به صورت زنجیره ای، عبارتor را نیز به کوئری اضافه کرد. query builder این کار با ارائه ی متد orWhere امکان پذیر ساخته است. متد مزبور از نظر آرگومان های ورودی با متد where تفاوتی ندارد: $users = DB::table(&#39;users&#39;) -&gt;where(&#39;votes&#39;, &#39;&gt;&#39;, 100) -&gt;orWhere(&#39;name&#39;, &#39;John&#39;) -&gt;get(); دیگر دستورات where دستور whereBetween متد whereBetween بررسی می کند آیا مقدار ستون مورد نظر بین دو رینج مشخص هست یا خیر: $users = DB::table(&#39;users&#39;) -&gt;whereBetween(&#39;votes&#39;, [1, 100])-&gt;get(); دستور whereNotBetween این متد بررسی می کند آیا مقدار ستون مورد نظر خارج از رینج یا دامنه ی دو مقدار مشخص شده هست یا خیر (ستون هایی که مقادیر آن ها داخل رینج عددی مشخص شده نباشد را جستجو می کند): $users = DB::table(&#39;users&#39;) -&gt;whereNotBetween(&#39;votes&#39;, [1, 100]) -&gt;get(); دستور whereIn / whereNotIn متد wherein ستون هایی را که مقدار آن ها داخل آرایه ی ورودی باشد را جستجو می کند: $users = DB::table(&#39;users&#39;) -&gt;whereIn(&#39;id&#39;, [1, 2, 3]) -&gt;get(); متد whereNotIn رکوردهایی را جستجو می کند که مقادیر آن ها محدود به آرایه ی ورودی نباشد (مقدار آن ها در آرایه ی ارسالی به عنوان آرگومان نباشد): $users = DB::table(&#39;users&#39;) -&gt;whereNotIn(&#39;id&#39;, [1, 2, 3]) -&gt;get(); دستور whereNull / whereNotNull متد whereNull ستون هایی را برمی گرداند که مقدار آن ها NULL باشد: $users = DB::table(&#39;users&#39;) -&gt;whereNull(&#39;updated_at&#39;) -&gt;get(); متد whereNotNull رکوردهایی را جستجو و برمی گرداند که مقدار آن ها NULL نباشد: $users = DB::table(&#39;users&#39;) -&gt;whereNotNull(&#39;updated_at&#39;) -&gt;get(); دستورات whereDate / whereMonth / whereDay / whereYear / whereTime برای مقایسه مقادیر ستون با یک تاریخ، از متد whereDate استفاده می شود : $users = DB::table(&#39;users&#39;) -&gt;whereDate(&#39;created_at&#39;, &#39;2016-12-31&#39;) -&gt;get(); برای مقایسه مقادیر ستون با ماه یک سال، از متد whereMonth استفاده می شود : $users = DB::table(&#39;users&#39;) -&gt;whereMonth(&#39;created_at&#39;, &#39;12&#39;) -&gt;get(); برای مقایسه مقادیر ستون با روز یک سال، از متد whereDay استفاده می شود : $users = DB::table(&#39;users&#39;) -&gt;whereDay(&#39;created_at&#39;, &#39;31&#39;) -&gt;get(); برای مقایسه مقادیر ستون با یک سال، از متد whereYear استفاده می شود : $users = DB::table(&#39;users&#39;) -&gt;whereYear(&#39;created_at&#39;, &#39;2016&#39;) -&gt;get(); برای مقایسه مقادیر ستون با یک زمان، از متد whereTime استفاده می شود : $users = DB::table(&#39;users&#39;) -&gt;whereTime(&#39;created_at&#39;, &#39;=&#39;, &#39;11:20&#39;) -&gt;get(); whereColumn متد whereColumn را می توان جهت مقایسه و کسب اطمینان از برابر بودن دو ستون مورد استفاده قرار داد: $users = DB::table(&#39;users&#39;) -&gt;whereColumn(&#39;first_name&#39;, &#39;last_name&#39;) -&gt;get(); همچنین می توان یک عملگر مقایسه ای به متد پاس داد: $users = DB::table(&#39;users&#39;) -&gt;whereColumn(&#39;updated_at&#39;, &#39;&gt;&#39;, &#39;created_at&#39;) -&gt;get(); متد whereColumn نیز می تواند آرایه ای از چندین شرط را به عنوان آرگومان بپذیرد. این شرط ها توسط عملگر and با یکدیگر پیوند می خورند: $users = DB::table(&#39;users&#39;) -&gt;whereColumn([ [&#39;first_name&#39;, &#39;=&#39;, &#39;last_name&#39;], [&#39;updated_at&#39;, &#39;&gt;&#39;, &#39;created_at&#39;] ])-&gt;get(); کوئری های تودرتو گاهی اوقات ملزوم به ساخت دستورات شرطی (where) پیچیده تری می شوید. از جمله می توان به عبارت های &quot;where exists&quot; (برای بررسی وجود ستون) یا کوئری های تودرتو اشاره کرد. query builder فریم ورک Laravel انجام این کار را هم برای شما آسان می سازد. برای شروع، به مثال ساده ای که در آن where های تودرتو نوشته و constraint ها داخل پرانتز گروه بندی شده اند می پردازیم: DB::table(&#39;users&#39;) -&gt;where(&#39;name&#39;, &#39;=&#39;, &#39;John&#39;) -&gt;orWhere(function ($query) { $query-&gt;where(&#39;votes&#39;, &#39;&gt;&#39;, 100) -&gt;where(&#39;title&#39;, &#39;&lt;&gt;&#39;, &#39;Admin&#39;); }) -&gt;get(); همان طور که مشاهده می کنید، ارسال تابع Closure به متد orWhere به عنوان آرگومان به query builder اعلان کرده که باید محدودیت ها را گروه بندی کرده و داخل پرانتز قرار دهد. Closure یک نمونه query builder به عنوان ورودی گرفته که شما با استفاده از آن می توانید محدودیت هایی که باید به صورت گروه بندی شده در پرانتز قرار گیرد را اعمال کنید. مثال فوق کوئری زیر را تولید می کند: select * from users where name = &#39;John&#39; or (votes &gt; 100 and title &lt;&gt; &#39;Admin&#39;) متد whereExists متد whereExists به شما اجازه می دهد عبارت های where exists بنویسید. این متد یک تابع Closure به عنوان آرگومان می گیرد. خود این تابع یک نمونه ی query builder به عنوان ورودی دریافت کرده که با استفاده از آن کوئری را تعریف می کنید: DB::table(&#39;users&#39;) -&gt;whereExists(function ($query) { $query-&gt;select(DB::raw(1)) -&gt;from(&#39;orders&#39;) -&gt;whereRaw(&#39;orders.user_id = users.id&#39;); }) -&gt;get(); کوئری فوق دستور ساده ی SQL زیر را تولید می کند: select * from users where exists ( select 1 from orders where orders.user_id = users.id ) کوئری گرفتن از ستون های از نوع JSON لاراول به شما امکان می دهد از ستون های از نوع JSON کوئری بگیرید. در حال حاضر این قابلیت تنها در پایگاه داده ی MySQL ویرایش 5.7 وPostgres پشتیبانی می شود. برای گرفتن کوئری از ستون از نوع JSON، می بایست عملگر -&gt; را مورد استفاده قرار دهید: $users = DB::table(&#39;users&#39;) -&gt;where(&#39;options-&gt;language&#39;, &#39;en&#39;) -&gt;get(); $users = DB::table(&#39;users&#39;) -&gt;where(&#39;preferences-&gt;dining-&gt;meal&#39;, &#39;salad&#39;) -&gt;get(); متد orderBy متد orderBy به شما امکان می دهد تا نتایج حاصل از اجرای یک کوئری را مرتب سازی کنید. اولین آرگومان ارسالی به این متد باید اسم ستونی باشد که می خواهید نتایج بر اساس آن مرتب شوند، در حالی که آرگومان دوم ترتیب مرتب سازی اعم از نزولی (asc) یا صعودی (desc) را کنترل می کند: $users = DB::table(&#39;users&#39;) -&gt;orderBy(&#39;name&#39;, &#39;desc&#39;) -&gt;get(); متد های latest / oldest متدهای latest and oldest به شما اجازه می دهند نتایج را براساس تاریخ مرتب کنید. به طور پیش فرض نتایج براساس ستون created_at مرتب می شوند. همچنین می توانید نام ستونی که می خواهید نتایج براساس آن مرتب شوند را مشخص نمایید : $user = DB::table(&#39;users&#39;) -&gt;latest() -&gt;first(); متد inRandomOrder متد inRandomOrder نتایج یک کوئری را به صورت تصادفی مرتب سازی می کند. در مثال زیر با فراخوانی این متد یک کاربر را به طور تصادفی از جدول واکشی می کنیم: $randomUser = DB::table(&#39;users&#39;) -&gt;inRandomOrder() -&gt;first(); متدهای groupBy / having توابع groupByو having را می توان جهت گروه بندی نتایج کوئری مورد استفاده قرار داد. متد having از نظر نوع و تعداد پارامتر ورودی (signature) با متد where یکسان می باشد: $users = DB::table(&#39;users&#39;) -&gt;groupBy(&#39;account_id&#39;) -&gt;having(&#39;account_id&#39;, &#39;&gt;&#39;, 100) -&gt;get(); همچنین می توانید چندیدن ستون را جهت گروه بندی انتخاب نمایید : $users = DB::table(&#39;users&#39;) -&gt;groupBy(&#39;first_name&#39;, &#39;status&#39;) -&gt;having(&#39;account_id&#39;, &#39;&gt;&#39;, 100) -&gt;get(); skip / take به منظور محدود سازی نتایج حاصل از اجرای کوئری یا لحاظ نکردن تعداد خاصی از نتایج در کوئری (OFFSET)، می توان متدهای skip و take را مورد استفاده قرار داد: $users = DB::table(&#39;users&#39;)-&gt;skip(10)-&gt;take(5)-&gt;get(); همچنین می توانید از متدهای limit و offset نیز استفاده نمایید : $users = DB::table(&#39;users&#39;) -&gt;offset(10) -&gt;limit(5) -&gt;get(); دستورات شرطی گاهی می خواهید یک شرط تنها زمانی به یک کوئری اعمال شود که شرط دیگری صادق باشد. به عنوان مثال ممکن است بخواهید یک شرط where تنها در صورتی اعمال شود که درخواست ورودی دارای مقدار خاصی باشد. این کار را می توانید با فراخوانی متد when انجام دهید: $role = $request-&gt;input(&#39;role&#39;); $users = DB::table(&#39;users&#39;) -&gt;when($role, function ($query) use ($role) { return $query-&gt;where(&#39;role_id&#39;, $role); }) -&gt;get(); متد when تنها زمانی تابع Closure را اجرا می کند که اولین پارامتر true باشد. در صورتی که اولین پارامتر false باشد، تابع Closure اجرا نخواهد شد. همچنین می توان تابع Closure دیگری به عنوان آرگومان سوم مشخص کرد که در صورتیکه اولین پارامتر false باشد آن دستورات اجرا شوند : $sortBy = null; $users = DB::table(&#39;users&#39;) -&gt;when($sortBy, function ($query) use ($sortBy) { return $query-&gt;orderBy($sortBy); }, function ($query) { return $query-&gt;orderBy(&#39;name&#39;); }) -&gt;get(); متد Inserts query builder همچنین یک متد به نام insert ارائه می کند که توسط آن می توانید رکوردهایی را داخل جدول درج نمایید. متد insert آرایه ای از اسم و مقادیر ستون ها را به عنوان ورودی گرفته و در جدول درج می کند: DB::table(&#39;users&#39;)-&gt;insert( [&#39;email&#39; =&gt; &#39;john@example.com&#39;, &#39;votes&#39; =&gt; 0] ); می توان با یکبار فراخوانی تابع insert تعداد زیادی رکورد را در جدول وارد کرد. برای این منظور کافی است آرایه ای از آرایه ها را به عنوان آرگومان به تابع ذکر شده ارسال نمایید. هر آرایه نشانگر یک سطر است که در جدول درج می شود: DB::table(&#39;users&#39;)-&gt;insert([ [&#39;email&#39; =&gt; &#39;taylor@example.com&#39;, &#39;votes&#39; =&gt; 0], [&#39;email&#39; =&gt; &#39;dayle@example.com&#39;, &#39;votes&#39; =&gt; 0] ]); ستون Auto-Incrementing IDs اگر جدول مورد نظر دارای یک ستون خود افزاینده id است، در آن صورت می توان با فراخوانی متد insertGetId یک رکورد را وارد جدول کرده و سپس ID آن را بازیابی کنید: $id = DB::table(&#39;users&#39;)-&gt;insertGetId( [&#39;email&#39; =&gt; &#39;john@example.com&#39;, &#39;votes&#39; =&gt; 0] ); اگر از پایگاه داده ی PostgreSQL استفاده می کنید، در آن صورت بایستی اسم ستون خود افزاینده (auto-incrementing یا کلید اصلی) را id تنظیم کنید (در واقع این پایگاه داده انتظار دارد اسم ستون نام برده id باشد). اگر می خواهید id را از sequence دیگری بازیابی کنید، آنگاه بایستی اسم sequence را به عنوان آرگومان دوم به متد insertGetId ارسال نمایید. دستور Updates query builder با ارائه ی متد update به شما اجازه می دهد رکوردهای جاری را بروز رسانی کنید. این متد مانند insert، آرایه ای از جفت اسم و مقادیر ستون (column / value pair) را برای بروز رسانی به عنوان ورودی می پذیرد. با استفاده از دستورات شرطی where می توانید بر روی کوئری update قید اعمال کرده و آن را محدود نمایید: DB::table(&#39;users&#39;) -&gt;where(&#39;id&#39;, 1) -&gt;update([&#39;votes&#39; =&gt; 1]); بروز رسانی ستون هایی از نوع JSON هنگام به روز رسانی ستون JSON، شما باید از -&gt; برای دسترسی به کلید مناسب در شی JSON استفاده کنید. این عملیات تنها در پایگاه های داده پشتیبانی می شود که ستون های JSON را پشتیبانی می کنند: DB::table(&#39;users&#39;) -&gt;where(&#39;id&#39;, 1) -&gt;update([&#39;options-&gt;enabled&#39; =&gt; true]); توابع Increment و Decrement query builder چارچوب نرم افزاری لاراول متدهایی را هم برای افزایش یا کاهش مقدار ستون مورد نظر فراهم می کند. این دو متد صرفا یک نوع میان برای دستور update محسوب می شوند. دو متد نام برده حداقل یک آرگومان می پذیرند: 1. اسم ستونی که بروز آوری می شود. در صورت تمایل می توان یک آرگومان دوم به تابع ارسال کرد که واحد افزایش یا کاهش مقدار ستون را مشخص می کند: DB::table(&#39;users&#39;)-&gt;increment(&#39;votes&#39;); DB::table(&#39;users&#39;)-&gt;increment(&#39;votes&#39;, 5); DB::table(&#39;users&#39;)-&gt;decrement(&#39;votes&#39;); DB::table(&#39;users&#39;)-&gt;decrement(&#39;votes&#39;, 5); می توان ستون های بیشتری را برای بروز رسانی مشخص کنید: DB::table(&#39;users&#39;)-&gt;increment(&#39;votes&#39;, 1, [&#39;name&#39; =&gt; &#39;John&#39;]); متد Deletes query builder همچنین یک متد به نام delete فراهم می کند که توسط آن می توان رکوردهای دلخواه را از پایگاه داده حذف کرد: می توانید با اضافه کردن عبارت های شرطی where به کوئری، دستورات delete را محدود نمایید (قیودی را بر کوئری اعمال کنید): DB::table(&#39;users&#39;)-&gt;delete(); DB::table(&#39;users&#39;)-&gt;where(&#39;votes&#39;, &#39;&gt;&#39;, 100)-&gt;delete(); اگر می خواهید جدول را کاملا خالی کنید (تمامی سطرهای آن را حذف و ستون شمارشی ID را به صفر بازگردانید)، کافی است متد truncate را صدا بزنید: DB::table(&#39;users&#39;)-&gt;truncate(); قفل گذاری بدبینانه (Pessimistic Locking) query builder با ارائه ی تعدادی تابع به شما امکان می دهد به راحتی بر روی دستورات select خود قفل های pessimistic اعمال کنید. برای اجرای دستور با یک قفل مشترک (shared lock)، می توان متد sharedLock را بر روی کوئری صدا زد. قفل مشترک مانع از این می شود که سطرهای انتخابی پیش از اتمام تایید ثبت و commit شدن کامل تراکنش، ویرایش شوند (قفل اشتراکی یا shared lock به زمان اطلاق می شود که دو تراکنش مجوز در سطح خواندن / read access دریافت کنند). در واقع با استفاده از متد sharedLock یک قفل pessimistic برای دستورSelect ایجاد می کنیم: DB::table(&#39;users&#39;)-&gt;where(&#39;votes&#39;, &#39;&gt;&#39;, 100)-&gt;sharedLock()-&gt;get(); می توانید بجای متد نام برده از lockForUpdate استفاده کنید. این متد حین اجرای دستور select مانع از بروز رسانی و ویرایش سطرها می شود: DB::table(&#39;users&#39;)-&gt;where(&#39;votes&#39;, &#39;&gt;&#39;, 100)-&gt;lockForUpdate()-&gt;get();" />
+<link rel="canonical" href="http://localhost:4000/documentation/laravel/Database/queries" />
+<meta property="og:url" content="http://localhost:4000/documentation/laravel/Database/queries" />
+<meta property="og:site_name" content="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-12-26T20:37:42+03:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="آشنایی با Query Builder" />
+<meta name="twitter:site" content="@farhadmirzapour" />
+<meta name="twitter:creator" content="@Farhad Mirzapour" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"آشنایی با Query Builder","url":"http://localhost:4000/documentation/laravel/Database/queries","datePublished":"2017-12-26T20:37:42+03:30","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"dateModified":"2017-12-26T20:37:42+03:30","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/documentation/laravel/Database/queries"},"author":{"@type":"Person","name":"Farhad Mirzapour"},"description":"ابزار کوئری ساز یا به انگلیسی Query Builder یک interface بهینه و کارآمد برای ایجاد و اجرای کوئری جهت پرس و جو از پایگاه داده فراهم می کند. این ابزار قابلیت اجرای غالب عملیات مورد نظر در پایگاه داده ی اپلیکشن را دارا بوده و نیز برای تمامی سیستم های بانک اطلاعاتی که مورد پشتیبانی لاراول است قابل استفاده می باشد. query builder چارچوب نرم افزاری لاراول (جهت گنجاندن مقادیر در query ها) از PDO parameter binding برای محافظت از اپلیکیشن تحت وب شما در برابر حملات SQL injection بهره می گیرد. از اینرو لزومی ندارد رشته های ارسالی به عنوان پارامتر (binding ها) را برای کسب اطمینان از عدم وجود کدهای مخرب چک کنید. واکشی تمامی سطرهای یک جدول برای نوشتن کوئری، ابتدا متد table را در façade DB درج می کنیم. متد table یک نمونه ی query builder از جدول مورد پرس و جو برگردانده و بدین وسیله به شما امکان می دهد قیود (constraint های) بیشتری را به صورت زنجیره ای به کوئری الحاق کنید و در نهایت نتایج مد نظر را در خروجی دریافت نمایید. در مثال زیر با فراخوانی متد get کلیه ی رکوردها را از جدول مورد نظر استخراج می کنیم: &lt;?php namespace App\\Http\\Controllers; use Illuminate\\Support\\Facades\\DB; use App\\Http\\Controllers\\Controller; class UserController extends Controller { /** * Show a list of all of the application&#39;s users. * * @return Response */ public function index() { $users = DB::table(&#39;users&#39;)-&gt;get(); return view(&#39;user.index&#39;, [&#39;users&#39; =&gt; $users]); } } متد get یک Illuminate \\ Support \\ Collection را که شامل نتایجی است که در آن هر نتیجه یک نمونه شی از کلاس PHP StdClass می باشد. می توانید به مقدار هر ستون به صورت یک property (از شی) دسترسی داشته باشید (می توان با دسترسی به ستون به صورت یکproperty از شی مورد نظر، به مقدار آن ستون دست یافت): foreach ($users as $user) { echo $user-&gt;name; } بازیابی تنها یک سطر / ستون از جدول مورد نظر برای دسترسی به تنها یک سطر از جدول مورد نظر، می توان متد first را بکار برد. این متد تنها یک شی StdClass را در خروجی برمی گرداند: $user = DB::table(&#39;users&#39;)-&gt;where(&#39;name&#39;, &#39;John&#39;)-&gt;first(); echo $user-&gt;name; اگر به کل یک سطر نیازی نیست، می توانید یک تک مقدار را با فراخوانی متد value از رکورد واکشی کنید. این متد مقدار ستون را به صورت مستقیم در خروجی برمی گرداند: $email = DB::table(&#39;users&#39;)-&gt;where(&#39;name&#39;, &#39;John&#39;)-&gt;value(&#39;email&#39;); بازیابی لیستی از مقادیر ستون اگر می خواهید در خروجی یک آرایه داشته باشید که تمامی مقادیر یک ستون را دربرگیرد، می توانید متد pluck را بکار ببرید. در این مثال آرایه ای ازtitle ها را در خروجی دریافت می کنیم: $titles = DB::table(&#39;roles&#39;)-&gt;pluck(&#39;title&#39;); foreach ($titles as $title) { echo $title; } همچنین می توانید یک ستون کلید (key column) اختصاصی برای آرایه ی خروجی (نتیجه) مشخص نمایید: $roles = DB::table(&#39;roles&#39;)-&gt;pluck(&#39;title&#39;, &#39;name&#39;); foreach ($roles as $name =&gt; $title) { echo $title; } واکشی سطرها از جدول به صورت تکه تکه (متد chunk) در شرایطی که با هزاران رکورد سروکار دارید (مانند سناریوی واکشی هزاران رکورد)، توصیه می کنیم متد chunk را بکار ببرید. این متد در هر برهه ی زمانی تنها تکه ی کوچکی از داده ها را بازگردانده و سپس هر تکه را برای پردازش به تابع Closure می دهد. این متد برای نوشتن دستوراتArtisan که هزاران رکورد را یکجا پردازش می کنند، بسیار مفید واقع می شود. در نمونه ی زیر کل جدول users را در قالب رکورد صدتایی به صورت جدا پردازش می کنیم: DB::table(&#39;users&#39;)-&gt;orderBy(&#39;id&#39;)-&gt;chunk(100, function ($users) { foreach ($users as $user) { // } }); جهت توقف پردازش رکوردها به این شکل (پردازش رکوردها در گروه های صد تایی) کافی است مقدار false را از تابع Closure بازگردانید: DB::table(&#39;users&#39;)-&gt;orderBy(&#39;id&#39;)-&gt;chunk(100, function ($users) { // Process the records... return false; }); توابع تجمعی (Aggregate) query builder توابع متعددی برای اجرای عملیات مختلف بر روی یک کل را فراهم می آورد. این توابع یک مقدار را بر اساس داده های یک ستون محاسبه و بر می گرداند. توابع تجمعی عبارتند از: count، max، min، avg و sum. می توانید هر یک از این متدها را پس از ساخت کوئری خود فراخوانی نمایید: $users = DB::table(&#39;users&#39;)-&gt;count(); $price = DB::table(&#39;orders&#39;)-&gt;max(&#39;price&#39;); می توانید این متدها را با دیگر عبارات مانند دستورات شرطی where ترکیب نموده و کوئری های پیچیده تری بسازید: $price = DB::table(&#39;orders&#39;) -&gt;where(&#39;finalized&#39;, 1) -&gt;avg(&#39;price&#39;); دستور Select گاهی لزومی ندارد تمامی ستون های یک جدول را از پایگاه داده واکشی کنیم. متد select به شما این امکان را می دهد تا یک دستور Select سفارشی برای کوئری نوشته و تنها ستون های دلخواه را در خروجی دریافت نمایید: $users = DB::table(&#39;users&#39;)-&gt;select(&#39;name&#39;, &#39;email as user_email&#39;)-&gt;get(); متد distinct به شما این امکان را می دهد تا فقط ستون های غیر تکراری را در خروجی لحاظ نمایید: $users = DB::table(&#39;users&#39;)-&gt;distinct()-&gt;get(); چنانچه از قبل یک نمونه از query builder دارید و اکنون می خواهید یک ستون جدید به دستور select آن اضافه کنید، در آن صورت می توانید از متد addSelect استفاده نمایید: $query = DB::table(&#39;users&#39;)-&gt;select(&#39;name&#39;); $users = $query-&gt;addSelect(&#39;age&#39;)-&gt;get(); عبارت های خالص (raw expression) گاهی لازم می شود یک عبارت خالص در کوئری مورد نظرتان بکار ببرید. عبارت خالص به صورت رشته در کوئری تزریق می شوند. از این رو بایستی حین تزریق عبارت های خالص از ایجاد حفره ی امنیتی و فراهم آوردن زمینه برای حملات SQL injection خودداری نمایید. $users = DB::table(&#39;users&#39;) -&gt;select(DB::raw(&#39;count(*) as user_count, status&#39;)) -&gt;where(&#39;status&#39;, &#39;&lt;&gt;&#39;, 1) -&gt;groupBy(&#39;status&#39;) -&gt;get(); به منظور ایجاد یک عبارت خالص، می توان متد DB::raw را بکار برد (مورد استفاده ی این متد گنجاندن یک کوئری در دل کوئری دیگر است. لازم به ذکر است که این متد کوئری را از نظر کدهای مخرب چک نمی کند): متدهای Raw به جای استفاده از DB :: raw، شما همچنین ممکن است از روش های زیر برای قرار دادن یک عبارت خام به بخش های مختلف درخواست خود استفاده کنید. متد selectRaw متد selectRaw را می توان به جای (DB :: raw (...) استفاده کرد). این روش در آرگومان دوم خود یک آرایه اختیاری از مقادیر bindings را می پذیرد: $orders = DB::table(&#39;orders&#39;) -&gt;selectRaw(&#39;price * ? as price_with_tax&#39;, [1.0825]) -&gt;get(); متد whereRaw / orWhereRaw روشهای whereRaw و orWhereRaw را می توان برای تزریق یک جمله Raw به کار برد. این روش در آرگومان دوم خود یک آرایه اختیاری از مقادیر bindings را می پذیرد: $orders = DB::table(&#39;orders&#39;) -&gt;whereRaw(&#39;price &gt; IF(state = &quot;TX&quot;, ?, 100)&#39;, [200]) -&gt;get(); متد havingRaw / orHavingRaw متدهای havingRaw و orHavingRaw جهت نشاندن یک رشته Raw به عنوان مقدار having استفاده می شود : $orders = DB::table(&#39;orders&#39;) -&gt;select(&#39;department&#39;, DB::raw(&#39;SUM(price) as total_sales&#39;)) -&gt;groupBy(&#39;department&#39;) -&gt;havingRaw(&#39;SUM(price) &gt; 2500&#39;) -&gt;get(); متد orderByRaw متد orderByRaw جهت نشاندن یک رشته Raw به عنوان مقدار order by استفاده می شود : $orders = DB::table(&#39;orders&#39;) -&gt;orderByRaw(&#39;updated_at - created_at DESC&#39;) -&gt;get(); دستور Inner Join از query builder می توان جهت اجرای دستورات مختلف join بهره گرفت. برای اجرای یک عملیات ساده ی inner join اس کیو ال، کافی است متدjoin را بر روی نمونه ی ایجاد شده از جدول (نمونه ی query builder) فراخوانی کنید. اولین آرگومان ارسالی به این متد اسم جدولی است که می خواهید به آن عملیات پیوند را انجام دهید. دیگر آرگومان های پاس داده شده قیود و constraint های اعمال شده بر روی ستون ها در عملیات join را تعیین می کنند. همان طور که در این مثال مشاهده می کنید، در قالب تنها یک کوئری می توان به چندین جدول پیوند انجام داد: $users = DB::table(&#39;users&#39;) -&gt;join(&#39;contacts&#39;, &#39;users.id&#39;, &#39;=&#39;, &#39;contacts.user_id&#39;) -&gt;join(&#39;orders&#39;, &#39;users.id&#39;, &#39;=&#39;, &#39;orders.user_id&#39;) -&gt;select(&#39;users.*&#39;, &#39;contacts.phone&#39;, &#39;orders.price&#39;) -&gt;get(); دستور Left Join Clause اگر می خواهید بجای عملیات inner join، عملیات left join را بر روی جدولی اجرا کنید، کافی است متد leftJoin را به صورت زیر فراخوانی نمایید. لازم به ذکر است که متد نام برده از نظر نوع و تعدادی ورودی (signature) با متد join یکسان است: $users = DB::table(&#39;users&#39;) -&gt;leftJoin(&#39;posts&#39;, &#39;users.id&#39;, &#39;=&#39;, &#39;posts.user_id&#39;) -&gt;get(); دستور Cross Join Clause جهت اجرای عملیات cross join، کافی است متد crossJoin را فراخوانی کرده و اسم جدولی که می خواهید عملیات cross join بر روی آن اجرا شود را به عنوان آرگومان به آن پاس دهید. نتیجه ی عملیات cross join ترکیبی است که از قرار گرفتن هر سطر یا رکورد از جدول اول در کنار تمامی سطرهای جدول دوم بدست می آید، به عبارتی دیگر نتیجه cross join حاصلضرب دکارتی دو جدول در هم است. $users = DB::table(&#39;sizes&#39;) -&gt;crossJoin(&#39;colours&#39;) -&gt;get(); دستورات پیچیده ی join می توانید دستورات join پیچیده تری بنویسید. برای شروع یک تابع Closure به عنوان آرگومان دوم به متد join ارسال کنید. این تابع یک شیJoinClause به عنوان پارامتر ورودی می گیرد که به شما اجازه می دهد constraint ها و محدودیت هایی را در دستور join تعریف نمایید: DB::table(&#39;users&#39;) -&gt;join(&#39;contacts&#39;, function ($join) { $join-&gt;on(&#39;users.id&#39;, &#39;=&#39;, &#39;contacts.user_id&#39;)-&gt;orOn(...); }) -&gt;get(); می توانید دستورات join پیچیده تری بنویسید. برای شروع یک تابع Closure به عنوان آرگومان دوم به متد join ارسال کنید. این تابع یک شیJoinClause به عنوان پارامتر ورودی می گیرد که به شما اجازه می دهد constraint ها و محدودیت هایی را در دستور join تعریف نمایید: DB::table(&#39;users&#39;) -&gt;join(&#39;contacts&#39;, function ($join) { $join-&gt;on(&#39;users.id&#39;, &#39;=&#39;, &#39;contacts.user_id&#39;) -&gt;where(&#39;contacts.user_id&#39;, &#39;&gt;&#39;, 5); }) -&gt;get(); دستور Unions query builder به شما امکان می دهد تا نتیجه ی حاصل از اجرای دو کوئری را به راحتی با یکدیگر ادغام یا متحد نمایید. برای مثال یک کوئری اولیه ایجاد می کنیم و سپس با فراخوانی متد union، آن را با یک کوئری دیگر ترکیب می کنیم: $first = DB::table(&#39;users&#39;) -&gt;whereNull(&#39;first_name&#39;); $users = DB::table(&#39;users&#39;) -&gt;whereNull(&#39;last_name&#39;) -&gt;union($first) -&gt;get(); می توان متد unionAll را برای لحاظ کردن مقادیر تکراری صدا زد. این متد از نظر signature با متد union تفاوتی ندارد. دستور Where به منظور افزودن دستورات where به کوئری، می توانید متد where را بر روی نمونه ی query builder صدا بزنید. در ساده ترین نوع فراخوانی متد where، ارسال سه آرگومان الزامی می باشد. اولین آرگومان اسم ستون می باشد. دومین آرگومان یکی از عملگرهای مورد پشتیبانی پایگاه داده است. سومین آرگومان مقداری است که با ستون مورد نظر از جدول مقایسه می شود. در مثال زیر بررسی می کنیم آیا مقدار ستون &quot;votes&quot; برابر 100 هست یا خیر: $users = DB::table(&#39;users&#39;)-&gt;where(&#39;votes&#39;, &#39;=&#39;, 100)-&gt;get(); به منظور سادگی بیشتر، اگر فقط می خواهید بررسی کنید مقدار یک ستون برابر با یک مقدار مشخص هست یا خیر، می توانید مقدار دلخواه را به طور مسقیم به عنوان آرگومان دوم به متد where ارسال کنید: $users = DB::table(&#39;users&#39;)-&gt;where(&#39;votes&#39;, 100)-&gt;get(); مسلما می توان از دیگر عملگرهای مورد پشتیبانی پایگاه داده در عبارت where استفاده کرد: $users = DB::table(&#39;users&#39;) -&gt;where(&#39;votes&#39;, &#39;&gt;=&#39;, 100) -&gt;get(); $users = DB::table(&#39;users&#39;) -&gt;where(&#39;votes&#39;, &#39;&lt;&gt;&#39;, 100) -&gt;get(); $users = DB::table(&#39;users&#39;) -&gt;where(&#39;name&#39;, &#39;like&#39;, &#39;T%&#39;) -&gt;get(); می توان آرایه ای از شرط ها را به تابع where ارسال کرد: $users = DB::table(&#39;users&#39;)-&gt;where([ [&#39;status&#39;, &#39;=&#39;, &#39;1&#39;], [&#39;subscribed&#39;, &#39;&lt;&gt;&#39;, &#39;1&#39;], ])-&gt;get(); دستورات Or می توان علاوه بر افزودن constraint های عبارت where (قیودی که در قالب عبارت where به کوئری اعمال می شوند) به صورت زنجیره ای، عبارتor را نیز به کوئری اضافه کرد. query builder این کار با ارائه ی متد orWhere امکان پذیر ساخته است. متد مزبور از نظر آرگومان های ورودی با متد where تفاوتی ندارد: $users = DB::table(&#39;users&#39;) -&gt;where(&#39;votes&#39;, &#39;&gt;&#39;, 100) -&gt;orWhere(&#39;name&#39;, &#39;John&#39;) -&gt;get(); دیگر دستورات where دستور whereBetween متد whereBetween بررسی می کند آیا مقدار ستون مورد نظر بین دو رینج مشخص هست یا خیر: $users = DB::table(&#39;users&#39;) -&gt;whereBetween(&#39;votes&#39;, [1, 100])-&gt;get(); دستور whereNotBetween این متد بررسی می کند آیا مقدار ستون مورد نظر خارج از رینج یا دامنه ی دو مقدار مشخص شده هست یا خیر (ستون هایی که مقادیر آن ها داخل رینج عددی مشخص شده نباشد را جستجو می کند): $users = DB::table(&#39;users&#39;) -&gt;whereNotBetween(&#39;votes&#39;, [1, 100]) -&gt;get(); دستور whereIn / whereNotIn متد wherein ستون هایی را که مقدار آن ها داخل آرایه ی ورودی باشد را جستجو می کند: $users = DB::table(&#39;users&#39;) -&gt;whereIn(&#39;id&#39;, [1, 2, 3]) -&gt;get(); متد whereNotIn رکوردهایی را جستجو می کند که مقادیر آن ها محدود به آرایه ی ورودی نباشد (مقدار آن ها در آرایه ی ارسالی به عنوان آرگومان نباشد): $users = DB::table(&#39;users&#39;) -&gt;whereNotIn(&#39;id&#39;, [1, 2, 3]) -&gt;get(); دستور whereNull / whereNotNull متد whereNull ستون هایی را برمی گرداند که مقدار آن ها NULL باشد: $users = DB::table(&#39;users&#39;) -&gt;whereNull(&#39;updated_at&#39;) -&gt;get(); متد whereNotNull رکوردهایی را جستجو و برمی گرداند که مقدار آن ها NULL نباشد: $users = DB::table(&#39;users&#39;) -&gt;whereNotNull(&#39;updated_at&#39;) -&gt;get(); دستورات whereDate / whereMonth / whereDay / whereYear / whereTime برای مقایسه مقادیر ستون با یک تاریخ، از متد whereDate استفاده می شود : $users = DB::table(&#39;users&#39;) -&gt;whereDate(&#39;created_at&#39;, &#39;2016-12-31&#39;) -&gt;get(); برای مقایسه مقادیر ستون با ماه یک سال، از متد whereMonth استفاده می شود : $users = DB::table(&#39;users&#39;) -&gt;whereMonth(&#39;created_at&#39;, &#39;12&#39;) -&gt;get(); برای مقایسه مقادیر ستون با روز یک سال، از متد whereDay استفاده می شود : $users = DB::table(&#39;users&#39;) -&gt;whereDay(&#39;created_at&#39;, &#39;31&#39;) -&gt;get(); برای مقایسه مقادیر ستون با یک سال، از متد whereYear استفاده می شود : $users = DB::table(&#39;users&#39;) -&gt;whereYear(&#39;created_at&#39;, &#39;2016&#39;) -&gt;get(); برای مقایسه مقادیر ستون با یک زمان، از متد whereTime استفاده می شود : $users = DB::table(&#39;users&#39;) -&gt;whereTime(&#39;created_at&#39;, &#39;=&#39;, &#39;11:20&#39;) -&gt;get(); whereColumn متد whereColumn را می توان جهت مقایسه و کسب اطمینان از برابر بودن دو ستون مورد استفاده قرار داد: $users = DB::table(&#39;users&#39;) -&gt;whereColumn(&#39;first_name&#39;, &#39;last_name&#39;) -&gt;get(); همچنین می توان یک عملگر مقایسه ای به متد پاس داد: $users = DB::table(&#39;users&#39;) -&gt;whereColumn(&#39;updated_at&#39;, &#39;&gt;&#39;, &#39;created_at&#39;) -&gt;get(); متد whereColumn نیز می تواند آرایه ای از چندین شرط را به عنوان آرگومان بپذیرد. این شرط ها توسط عملگر and با یکدیگر پیوند می خورند: $users = DB::table(&#39;users&#39;) -&gt;whereColumn([ [&#39;first_name&#39;, &#39;=&#39;, &#39;last_name&#39;], [&#39;updated_at&#39;, &#39;&gt;&#39;, &#39;created_at&#39;] ])-&gt;get(); کوئری های تودرتو گاهی اوقات ملزوم به ساخت دستورات شرطی (where) پیچیده تری می شوید. از جمله می توان به عبارت های &quot;where exists&quot; (برای بررسی وجود ستون) یا کوئری های تودرتو اشاره کرد. query builder فریم ورک Laravel انجام این کار را هم برای شما آسان می سازد. برای شروع، به مثال ساده ای که در آن where های تودرتو نوشته و constraint ها داخل پرانتز گروه بندی شده اند می پردازیم: DB::table(&#39;users&#39;) -&gt;where(&#39;name&#39;, &#39;=&#39;, &#39;John&#39;) -&gt;orWhere(function ($query) { $query-&gt;where(&#39;votes&#39;, &#39;&gt;&#39;, 100) -&gt;where(&#39;title&#39;, &#39;&lt;&gt;&#39;, &#39;Admin&#39;); }) -&gt;get(); همان طور که مشاهده می کنید، ارسال تابع Closure به متد orWhere به عنوان آرگومان به query builder اعلان کرده که باید محدودیت ها را گروه بندی کرده و داخل پرانتز قرار دهد. Closure یک نمونه query builder به عنوان ورودی گرفته که شما با استفاده از آن می توانید محدودیت هایی که باید به صورت گروه بندی شده در پرانتز قرار گیرد را اعمال کنید. مثال فوق کوئری زیر را تولید می کند: select * from users where name = &#39;John&#39; or (votes &gt; 100 and title &lt;&gt; &#39;Admin&#39;) متد whereExists متد whereExists به شما اجازه می دهد عبارت های where exists بنویسید. این متد یک تابع Closure به عنوان آرگومان می گیرد. خود این تابع یک نمونه ی query builder به عنوان ورودی دریافت کرده که با استفاده از آن کوئری را تعریف می کنید: DB::table(&#39;users&#39;) -&gt;whereExists(function ($query) { $query-&gt;select(DB::raw(1)) -&gt;from(&#39;orders&#39;) -&gt;whereRaw(&#39;orders.user_id = users.id&#39;); }) -&gt;get(); کوئری فوق دستور ساده ی SQL زیر را تولید می کند: select * from users where exists ( select 1 from orders where orders.user_id = users.id ) کوئری گرفتن از ستون های از نوع JSON لاراول به شما امکان می دهد از ستون های از نوع JSON کوئری بگیرید. در حال حاضر این قابلیت تنها در پایگاه داده ی MySQL ویرایش 5.7 وPostgres پشتیبانی می شود. برای گرفتن کوئری از ستون از نوع JSON، می بایست عملگر -&gt; را مورد استفاده قرار دهید: $users = DB::table(&#39;users&#39;) -&gt;where(&#39;options-&gt;language&#39;, &#39;en&#39;) -&gt;get(); $users = DB::table(&#39;users&#39;) -&gt;where(&#39;preferences-&gt;dining-&gt;meal&#39;, &#39;salad&#39;) -&gt;get(); متد orderBy متد orderBy به شما امکان می دهد تا نتایج حاصل از اجرای یک کوئری را مرتب سازی کنید. اولین آرگومان ارسالی به این متد باید اسم ستونی باشد که می خواهید نتایج بر اساس آن مرتب شوند، در حالی که آرگومان دوم ترتیب مرتب سازی اعم از نزولی (asc) یا صعودی (desc) را کنترل می کند: $users = DB::table(&#39;users&#39;) -&gt;orderBy(&#39;name&#39;, &#39;desc&#39;) -&gt;get(); متد های latest / oldest متدهای latest and oldest به شما اجازه می دهند نتایج را براساس تاریخ مرتب کنید. به طور پیش فرض نتایج براساس ستون created_at مرتب می شوند. همچنین می توانید نام ستونی که می خواهید نتایج براساس آن مرتب شوند را مشخص نمایید : $user = DB::table(&#39;users&#39;) -&gt;latest() -&gt;first(); متد inRandomOrder متد inRandomOrder نتایج یک کوئری را به صورت تصادفی مرتب سازی می کند. در مثال زیر با فراخوانی این متد یک کاربر را به طور تصادفی از جدول واکشی می کنیم: $randomUser = DB::table(&#39;users&#39;) -&gt;inRandomOrder() -&gt;first(); متدهای groupBy / having توابع groupByو having را می توان جهت گروه بندی نتایج کوئری مورد استفاده قرار داد. متد having از نظر نوع و تعداد پارامتر ورودی (signature) با متد where یکسان می باشد: $users = DB::table(&#39;users&#39;) -&gt;groupBy(&#39;account_id&#39;) -&gt;having(&#39;account_id&#39;, &#39;&gt;&#39;, 100) -&gt;get(); همچنین می توانید چندیدن ستون را جهت گروه بندی انتخاب نمایید : $users = DB::table(&#39;users&#39;) -&gt;groupBy(&#39;first_name&#39;, &#39;status&#39;) -&gt;having(&#39;account_id&#39;, &#39;&gt;&#39;, 100) -&gt;get(); skip / take به منظور محدود سازی نتایج حاصل از اجرای کوئری یا لحاظ نکردن تعداد خاصی از نتایج در کوئری (OFFSET)، می توان متدهای skip و take را مورد استفاده قرار داد: $users = DB::table(&#39;users&#39;)-&gt;skip(10)-&gt;take(5)-&gt;get(); همچنین می توانید از متدهای limit و offset نیز استفاده نمایید : $users = DB::table(&#39;users&#39;) -&gt;offset(10) -&gt;limit(5) -&gt;get(); دستورات شرطی گاهی می خواهید یک شرط تنها زمانی به یک کوئری اعمال شود که شرط دیگری صادق باشد. به عنوان مثال ممکن است بخواهید یک شرط where تنها در صورتی اعمال شود که درخواست ورودی دارای مقدار خاصی باشد. این کار را می توانید با فراخوانی متد when انجام دهید: $role = $request-&gt;input(&#39;role&#39;); $users = DB::table(&#39;users&#39;) -&gt;when($role, function ($query) use ($role) { return $query-&gt;where(&#39;role_id&#39;, $role); }) -&gt;get(); متد when تنها زمانی تابع Closure را اجرا می کند که اولین پارامتر true باشد. در صورتی که اولین پارامتر false باشد، تابع Closure اجرا نخواهد شد. همچنین می توان تابع Closure دیگری به عنوان آرگومان سوم مشخص کرد که در صورتیکه اولین پارامتر false باشد آن دستورات اجرا شوند : $sortBy = null; $users = DB::table(&#39;users&#39;) -&gt;when($sortBy, function ($query) use ($sortBy) { return $query-&gt;orderBy($sortBy); }, function ($query) { return $query-&gt;orderBy(&#39;name&#39;); }) -&gt;get(); متد Inserts query builder همچنین یک متد به نام insert ارائه می کند که توسط آن می توانید رکوردهایی را داخل جدول درج نمایید. متد insert آرایه ای از اسم و مقادیر ستون ها را به عنوان ورودی گرفته و در جدول درج می کند: DB::table(&#39;users&#39;)-&gt;insert( [&#39;email&#39; =&gt; &#39;john@example.com&#39;, &#39;votes&#39; =&gt; 0] ); می توان با یکبار فراخوانی تابع insert تعداد زیادی رکورد را در جدول وارد کرد. برای این منظور کافی است آرایه ای از آرایه ها را به عنوان آرگومان به تابع ذکر شده ارسال نمایید. هر آرایه نشانگر یک سطر است که در جدول درج می شود: DB::table(&#39;users&#39;)-&gt;insert([ [&#39;email&#39; =&gt; &#39;taylor@example.com&#39;, &#39;votes&#39; =&gt; 0], [&#39;email&#39; =&gt; &#39;dayle@example.com&#39;, &#39;votes&#39; =&gt; 0] ]); ستون Auto-Incrementing IDs اگر جدول مورد نظر دارای یک ستون خود افزاینده id است، در آن صورت می توان با فراخوانی متد insertGetId یک رکورد را وارد جدول کرده و سپس ID آن را بازیابی کنید: $id = DB::table(&#39;users&#39;)-&gt;insertGetId( [&#39;email&#39; =&gt; &#39;john@example.com&#39;, &#39;votes&#39; =&gt; 0] ); اگر از پایگاه داده ی PostgreSQL استفاده می کنید، در آن صورت بایستی اسم ستون خود افزاینده (auto-incrementing یا کلید اصلی) را id تنظیم کنید (در واقع این پایگاه داده انتظار دارد اسم ستون نام برده id باشد). اگر می خواهید id را از sequence دیگری بازیابی کنید، آنگاه بایستی اسم sequence را به عنوان آرگومان دوم به متد insertGetId ارسال نمایید. دستور Updates query builder با ارائه ی متد update به شما اجازه می دهد رکوردهای جاری را بروز رسانی کنید. این متد مانند insert، آرایه ای از جفت اسم و مقادیر ستون (column / value pair) را برای بروز رسانی به عنوان ورودی می پذیرد. با استفاده از دستورات شرطی where می توانید بر روی کوئری update قید اعمال کرده و آن را محدود نمایید: DB::table(&#39;users&#39;) -&gt;where(&#39;id&#39;, 1) -&gt;update([&#39;votes&#39; =&gt; 1]); بروز رسانی ستون هایی از نوع JSON هنگام به روز رسانی ستون JSON، شما باید از -&gt; برای دسترسی به کلید مناسب در شی JSON استفاده کنید. این عملیات تنها در پایگاه های داده پشتیبانی می شود که ستون های JSON را پشتیبانی می کنند: DB::table(&#39;users&#39;) -&gt;where(&#39;id&#39;, 1) -&gt;update([&#39;options-&gt;enabled&#39; =&gt; true]); توابع Increment و Decrement query builder چارچوب نرم افزاری لاراول متدهایی را هم برای افزایش یا کاهش مقدار ستون مورد نظر فراهم می کند. این دو متد صرفا یک نوع میان برای دستور update محسوب می شوند. دو متد نام برده حداقل یک آرگومان می پذیرند: 1. اسم ستونی که بروز آوری می شود. در صورت تمایل می توان یک آرگومان دوم به تابع ارسال کرد که واحد افزایش یا کاهش مقدار ستون را مشخص می کند: DB::table(&#39;users&#39;)-&gt;increment(&#39;votes&#39;); DB::table(&#39;users&#39;)-&gt;increment(&#39;votes&#39;, 5); DB::table(&#39;users&#39;)-&gt;decrement(&#39;votes&#39;); DB::table(&#39;users&#39;)-&gt;decrement(&#39;votes&#39;, 5); می توان ستون های بیشتری را برای بروز رسانی مشخص کنید: DB::table(&#39;users&#39;)-&gt;increment(&#39;votes&#39;, 1, [&#39;name&#39; =&gt; &#39;John&#39;]); متد Deletes query builder همچنین یک متد به نام delete فراهم می کند که توسط آن می توان رکوردهای دلخواه را از پایگاه داده حذف کرد: می توانید با اضافه کردن عبارت های شرطی where به کوئری، دستورات delete را محدود نمایید (قیودی را بر کوئری اعمال کنید): DB::table(&#39;users&#39;)-&gt;delete(); DB::table(&#39;users&#39;)-&gt;where(&#39;votes&#39;, &#39;&gt;&#39;, 100)-&gt;delete(); اگر می خواهید جدول را کاملا خالی کنید (تمامی سطرهای آن را حذف و ستون شمارشی ID را به صفر بازگردانید)، کافی است متد truncate را صدا بزنید: DB::table(&#39;users&#39;)-&gt;truncate(); قفل گذاری بدبینانه (Pessimistic Locking) query builder با ارائه ی تعدادی تابع به شما امکان می دهد به راحتی بر روی دستورات select خود قفل های pessimistic اعمال کنید. برای اجرای دستور با یک قفل مشترک (shared lock)، می توان متد sharedLock را بر روی کوئری صدا زد. قفل مشترک مانع از این می شود که سطرهای انتخابی پیش از اتمام تایید ثبت و commit شدن کامل تراکنش، ویرایش شوند (قفل اشتراکی یا shared lock به زمان اطلاق می شود که دو تراکنش مجوز در سطح خواندن / read access دریافت کنند). در واقع با استفاده از متد sharedLock یک قفل pessimistic برای دستورSelect ایجاد می کنیم: DB::table(&#39;users&#39;)-&gt;where(&#39;votes&#39;, &#39;&gt;&#39;, 100)-&gt;sharedLock()-&gt;get(); می توانید بجای متد نام برده از lockForUpdate استفاده کنید. این متد حین اجرای دستور select مانع از بروز رسانی و ویرایش سطرها می شود: DB::table(&#39;users&#39;)-&gt;where(&#39;votes&#39;, &#39;&gt;&#39;, 100)-&gt;lockForUpdate()-&gt;get();","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="stylesheet" href="/assets/prisma/prism.css">
+    <!-- favicons and rss -->
+    <link rel="alternate" type="application/rss+xml" title="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" href="/feed.xml">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- header -->
+<header class="header" role="banner" aria-label="Header">
+    <button class="hamburger-button" onclick="hamburgerMenu();" role="button" aria-label="Hamburger menu button">
+        <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    </button>
+    <a href="/" class="logo" role="link" aria-label="Home">
+        <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo">
+    </a>
+    <nav class="navigation" role="navigation" aria-label="Navigation">
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item">
+                <a href="/" class="logo" role="menuitem" aria-label="Home">
+                    <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo">
+                </a>
+            </li>
+            
+            <li role="menuitem"><a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a></li>
+            
+            <li role="menuitem"><a href="/contactus" role="menuitem" aria-label="تماس">تماس</a></li>
+            
+        </ul>
+    </nav>
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox">
+        </form>
+    </div>
+</header>
+
+<nav id="hamburger-menu" role="navigation" aria-label="Hamburger menu">
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox">
+        </form>
+    </div>
+    <div class="home-nav" role="navigation" aria-label="Site navigation">
+        <a href="/" role="menuitem" aria-label="Home">صفحه اصلی</a>
+        
+        <a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a>
+        
+        <a href="/contactus" role="menuitem" aria-label="تماس">تماس</a>
+        
+    </div>
+
+    
+    <div class="doc-nav" role="navigation" aria-label="Documentation navigation">
+        <p role="presentation" aria-label="Category name">
+            اصول آموزش Laravel
+        </p>
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/2017/12/18/laravel.html" class="doc-link" role="link" aria-label="آشنایی با Query Builder">مقدمه</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Digging-Deeper/collections" class="doc-link" role="link" aria-label="معرفی collections">معرفی collections</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Database/database" class="doc-link" role="link" aria-label="پایگاه داده ها">پایگاه داده ها</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Database/queries" class="doc-link" role="link" aria-label="آشنایی با Query Builder">آشنایی با Query Builder</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent" class="doc-link" role="link" aria-label="آشنایی با eloquent">آشنایی با eloquent</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-relationships" class="doc-link" role="link" aria-label="eloquent relationships  آموزش">eloquent relationships  آموزش</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-mutators" class="doc-link" role="link" aria-label="آشنایی با eloquent mutators">آشنایی با eloquent mutators</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-collections" class="doc-link" role="link" aria-label="آشنایی با eloquent collections">آشنایی با eloquent collections</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-serialization" class="doc-link" role="link" aria-label="آشنایی با eloquent serialization">آشنایی با eloquent serialization</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Architecture-Concepts/lifecycle" class="doc-link" role="link" aria-label="چرخه ی حیات درخواست (Request Lifecycle)">چرخه ی حیات درخواست (Request Lifecycle)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/routing" class="doc-link" role="link" aria-label="Routing یا مسیریابی در لاراول">Routing یا مسیریابی در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/middleware" class="doc-link" role="link" aria-label="آموزش Middleware">آموزش Middleware</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/csrf" class="doc-link" role="link" aria-label="حفاظت CSRF">حفاظت CSRF</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/controllers" class="doc-link" role="link" aria-label="استفاده از Controller">استفاده از Controller</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/requests" class="doc-link" role="link" aria-label="اصول requests">اصول requests</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/views" class="doc-link" role="link" aria-label="ایجاد view">ایجاد view</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/session" class="doc-link" role="link" aria-label="استفاده از  Session">استفاده از  Session</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/responses" class="doc-link" role="link" aria-label="پاسخ Response">پاسخ Response</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/urls" class="doc-link" role="link" aria-label="تولید URL در لاراول">تولید URL در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/validation" class="doc-link" role="link" aria-label="validation یا اعتبارسنجی در لاراول">validation یا اعتبارسنجی در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/errors" class="doc-link" role="link" aria-label="مدیریت Errors &amp; Logging">مدیریت Errors &amp; Logging</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/blade" class="doc-link" role="link" aria-label="Blade Templates">Blade Templates</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/localization" class="doc-link" role="link" aria-label="اصول localization">اصول localization</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/frontend" class="doc-link" role="link" aria-label="JavaScript &amp; CSS Scaffolding">JavaScript &amp; CSS Scaffolding</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </ul>
+    </div>
+    
+</nav>
+<!-- main content -->
+<main class="container" role="main">
+    <div class="rcdoccontainerimg">
+<div class="rc-DRTVBanner-new rc-DRTVBanner-bigsize">
+    <div style="background: url('/images/original/laravel.png'); " class="blurred_img"></div>
+    <div class="mask"></div>
+    <div class="bot"></div>
+    <div class="over">
+        <div class="container-rc">
+            <img class="image" src="/images/original/laravel.png" alt="آشنایی با Query Builder" height="190">
+            <div class="desktop-banner-container">
+                <h1 class="display-5-text headline">
+                    
+                    
+                    اصول آموزش Laravel
+                    </h1>
+                <!--<div class="tagslist"><ul class='lyda-tag-list'><li class='lyda-tag-list-title'>برچسب ها</li><li><a class="tags" href="/tag/لاراول">#لاراول</a></li><li><a class="tags" href="/tag/لاراول-5-5">#لاراول 5.5</a></li></ul></div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="bread-crumb">-->
+<!--<div class="container   ">-->
+<!--<div class="pull-right ">-->
+<!--<div class="bread-button text-custom b-left">-->
+<!--انتشار : 2 ماه پیش-->
+<!--</div>-->
+<!--<a href="/category/article/" class="bread-button back-to-all b-left hidden-xs">همه مقالات</a>-->
+<!--<div class="cat-lable">-->
+<!--<a href="/category/article/laravel/">-->
+<!--لاراول-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<script>
+    $(window).scroll(function(){
+        var sticky = $('.doc-menu'),
+            scroll = $(window).scrollTop();
+        if (scroll >= 101) {sticky.addClass('doc-header-scroll'); }
+        else {sticky.removeClass('doc-header-scroll'); };
+    });
+</script>
+</div>
+<div class="doc-container">
+
+    <div class="doc-menu">
+    
+    <ul>
+        <li>
+            <a href="/2017/12/18/laravel.html" class="active doc-link" role="link">
+                مقدمه
+            </a>
+        </li>
+        
+        <li>
+            <span class="caret">معماری Laravel</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="چرخه ی حیات درخواست (Request Lifecycle)" href="/documentation/laravel/Architecture-Concepts/lifecycle" class="active doc-link" role="link">
+                چرخه ی حیات درخواست (Request Lifecycle)
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم اساسی</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="Routing یا مسیریابی در لاراول" href="/documentation/laravel/The-Basics/routing" class="active doc-link" role="link">
+                Routing یا مسیریابی در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آموزش Middleware" href="/documentation/laravel/The-Basics/middleware" class="active doc-link" role="link">
+                آموزش Middleware
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="حفاظت CSRF" href="/documentation/laravel/The-Basics/csrf" class="active doc-link" role="link">
+                حفاظت CSRF
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="استفاده از Controller" href="/documentation/laravel/The-Basics/controllers" class="active doc-link" role="link">
+                استفاده از Controller
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول requests" href="/documentation/laravel/The-Basics/requests" class="active doc-link" role="link">
+                اصول requests
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="ایجاد view" href="/documentation/laravel/The-Basics/views" class="active doc-link" role="link">
+                ایجاد view
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="استفاده از  Session" href="/documentation/laravel/The-Basics/session" class="active doc-link" role="link">
+                استفاده از  Session
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="پاسخ Response" href="/documentation/laravel/The-Basics/responses" class="active doc-link" role="link">
+                پاسخ Response
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="تولید URL در لاراول" href="/documentation/laravel/The-Basics/urls" class="active doc-link" role="link">
+                تولید URL در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="validation یا اعتبارسنجی در لاراول" href="/documentation/laravel/The-Basics/validation" class="active doc-link" role="link">
+                validation یا اعتبارسنجی در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="مدیریت Errors &amp; Logging" href="/documentation/laravel/The-Basics/errors" class="active doc-link" role="link">
+                مدیریت Errors &amp; Logging
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">Front End</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="Blade Templates" href="/documentation/laravel/Frontend/blade" class="active doc-link" role="link">
+                Blade Templates
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول localization" href="/documentation/laravel/Frontend/localization" class="active doc-link" role="link">
+                اصول localization
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="JavaScript &amp; CSS Scaffolding" href="/documentation/laravel/Frontend/frontend" class="active doc-link" role="link">
+                JavaScript &amp; CSS Scaffolding
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم پیشرفته تر</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="معرفی collections" href="/documentation/laravel/Digging-Deeper/collections" class="active doc-link" role="link">
+                معرفی collections
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">پایگاه داده ها</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="پایگاه داده ها" href="/documentation/laravel/Database/database" class="active doc-link" role="link">
+                پایگاه داده ها
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با Query Builder" href="/documentation/laravel/Database/queries" class="active doc-link" role="link">
+                آشنایی با Query Builder
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">Eloquent ORM</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent" href="/documentation/laravel/Eloquent-ORM/eloquent" class="active doc-link" role="link">
+                آشنایی با eloquent
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="eloquent relationships  آموزش" href="/documentation/laravel/Eloquent-ORM/eloquent-relationships" class="active doc-link" role="link">
+                eloquent relationships  آموزش
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent mutators" href="/documentation/laravel/Eloquent-ORM/eloquent-mutators" class="active doc-link" role="link">
+                آشنایی با eloquent mutators
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent collections" href="/documentation/laravel/Eloquent-ORM/eloquent-collections" class="active doc-link" role="link">
+                آشنایی با eloquent collections
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent serialization" href="/documentation/laravel/Eloquent-ORM/eloquent-serialization" class="active doc-link" role="link">
+                آشنایی با eloquent serialization
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+    </ul>
+    
+</div>
+
+    <article class="documentation">
+        <header class="doc-header">
+            <div class="time">
+                    تاریخ :      سه شنبه 5 دی 1396
+            </div>
+                
+        </header>
+        <section class="anchored">
+            <p>
+ابزار کوئری ساز یا به انگلیسی Query Builder یک interface بهینه و کارآمد برای ایجاد و اجرای کوئری جهت پرس و جو از پایگاه داده فراهم می کند. این ابزار قابلیت اجرای غالب عملیات مورد نظر در پایگاه داده ی اپلیکشن را دارا بوده و نیز برای تمامی سیستم های بانک اطلاعاتی که مورد پشتیبانی لاراول است قابل استفاده می باشد.
+</p>
+<p>
+query builder چارچوب نرم افزاری لاراول (جهت گنجاندن مقادیر در query ها) از PDO parameter binding برای محافظت از اپلیکیشن تحت وب شما در برابر حملات SQL injection بهره می گیرد. از اینرو لزومی ندارد رشته های ارسالی به عنوان پارامتر (binding ها) را برای کسب اطمینان از عدم وجود کدهای مخرب چک کنید.
+</p>
+
+<p><br></p>
+<h3>واکشی تمامی سطرهای یک جدول</h3>
+<p>
+برای نوشتن کوئری، ابتدا متد table را در façade DB درج می کنیم. متد table یک نمونه ی query builder از جدول مورد پرس و جو برگردانده و بدین وسیله به شما امکان می دهد قیود (constraint های) بیشتری را به صورت زنجیره ای به کوئری الحاق کنید و در نهایت نتایج مد نظر را در خروجی دریافت نمایید. در مثال زیر با فراخوانی متد get کلیه ی رکوردها را از جدول مورد نظر استخراج می کنیم:
+</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+
+class UserController extends Controller
+{
+    /**
+     * Show a list of all of the application's users.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        $users = DB::table('users')-&gt;get();
+
+        return view('user.index', ['users' =&gt; $users]);
+    }
+}
+</code></pre>
+
+<p>
+متد get  یک Illuminate \ Support \ Collection را که شامل نتایجی است که در آن هر نتیجه یک نمونه شی از کلاس PHP StdClass می باشد. می توانید به مقدار هر ستون به صورت یک property (از شی) دسترسی داشته باشید (می توان با دسترسی به ستون به صورت یکproperty از شی مورد نظر، به مقدار آن ستون دست یافت):
+</p>
+
+<pre><code class="language-php  line-numbers">foreach ($users as $user) {
+    echo $user-&gt;name;
+}
+</code></pre>
+
+<p><br></p>
+<h3>بازیابی تنها یک سطر / ستون از جدول مورد نظر</h3>
+
+<p>
+برای دسترسی به تنها یک سطر از جدول مورد نظر، می توان متد first را بکار برد. این متد تنها یک شی StdClass را در خروجی برمی گرداند:
+</p>
+
+<pre><code class="language-php  line-numbers">$user = DB::table('users')-&gt;where('name', 'John')-&gt;first();
+
+echo $user-&gt;name;
+</code></pre>
+
+<p>
+اگر به کل یک سطر نیازی نیست، می توانید یک تک مقدار را با فراخوانی متد value از رکورد واکشی کنید. این متد مقدار ستون را به صورت مستقیم در خروجی برمی گرداند:
+</p>
+
+<pre><code class="language-php  line-numbers">$email = DB::table('users')-&gt;where('name', 'John')-&gt;value('email');
+</code></pre>
+
+<p><br></p>
+<h3>بازیابی  لیستی از مقادیر ستون</h3>
+<p>
+اگر می خواهید در خروجی یک آرایه داشته باشید که تمامی مقادیر یک ستون را دربرگیرد، می توانید متد pluck را بکار ببرید. در این مثال آرایه ای ازtitle ها را در خروجی دریافت می کنیم:
+</p>
+
+<pre><code class="language-php  line-numbers">$titles = DB::table('roles')-&gt;pluck('title');
+
+foreach ($titles as $title) {
+    echo $title;
+}
+</code></pre>
+
+<p>
+همچنین می توانید یک ستون کلید (key column) اختصاصی برای آرایه ی خروجی (نتیجه) مشخص نمایید:
+</p>
+
+<pre><code class="language-php  line-numbers">$roles = DB::table('roles')-&gt;pluck('title', 'name');
+
+foreach ($roles as $name =&gt; $title) {
+    echo $title;
+}
+</code></pre>
+
+<p><br></p>
+<h3>واکشی سطرها از جدول به صورت تکه تکه (متد chunk)</h3>
+
+<p>
+در شرایطی که با هزاران رکورد سروکار دارید (مانند سناریوی واکشی هزاران رکورد)، توصیه می کنیم متد chunk را بکار ببرید. این متد در هر برهه ی زمانی تنها تکه ی کوچکی از داده ها را بازگردانده و سپس هر تکه را برای پردازش به تابع Closure می دهد. این متد برای نوشتن دستوراتArtisan که هزاران رکورد را یکجا پردازش می کنند، بسیار مفید واقع می شود. در نمونه ی زیر کل جدول users را در قالب رکورد صدتایی به صورت جدا پردازش می کنیم:
+</p>
+
+<pre><code class="language-php  line-numbers">DB::table('users')-&gt;orderBy('id')-&gt;chunk(100, function ($users) {
+    foreach ($users as $user) {
+        //
+    }
+});
+</code></pre>
+
+<p>
+جهت توقف پردازش رکوردها به این شکل (پردازش رکوردها در گروه های صد تایی) کافی است مقدار false را از تابع Closure بازگردانید:
+</p>
+
+<pre><code class="language-php  line-numbers">DB::table('users')-&gt;orderBy('id')-&gt;chunk(100, function ($users) {
+    // Process the records...
+
+    return false;
+});
+</code></pre>
+
+<p><br></p>
+<h3>توابع تجمعی (Aggregate)</h3>
+<p>
+query builder توابع متعددی برای اجرای عملیات مختلف بر روی یک کل را فراهم می آورد. این توابع یک مقدار را بر اساس داده های یک ستون محاسبه و بر می گرداند. توابع تجمعی عبارتند از: count، max، min، avg و sum. می توانید هر یک از این متدها را پس از ساخت کوئری خود فراخوانی نمایید:
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')-&gt;count();
+
+$price = DB::table('orders')-&gt;max('price');
+</code></pre>
+
+<p>
+می توانید این متدها را با دیگر عبارات مانند دستورات شرطی where ترکیب نموده و کوئری های پیچیده تری بسازید:
+</p>
+
+<pre><code class="language-php  line-numbers">$price = DB::table('orders')
+                -&gt;where('finalized', 1)
+                -&gt;avg('price');
+</code></pre>
+
+<p><br></p>
+<h3>دستور Select</h3>
+<p>
+گاهی لزومی ندارد تمامی ستون های یک جدول را از پایگاه داده واکشی کنیم. متد select به شما این امکان را می دهد تا یک دستور Select سفارشی برای کوئری نوشته و تنها ستون های دلخواه را در خروجی دریافت نمایید:
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')-&gt;select('name', 'email as user_email')-&gt;get();
+</code></pre>
+
+<p>
+متد distinct به شما این امکان را می دهد تا فقط ستون های غیر تکراری را در خروجی لحاظ نمایید:
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')-&gt;distinct()-&gt;get();
+</code></pre>
+
+<p>
+چنانچه از قبل یک نمونه از query builder دارید و اکنون می خواهید یک ستون جدید به دستور select آن اضافه کنید، در آن صورت می توانید از متد addSelect استفاده نمایید:
+</p>
+
+<pre><code class="language-php  line-numbers">$query = DB::table('users')-&gt;select('name');
+
+$users = $query-&gt;addSelect('age')-&gt;get();
+</code></pre>
+
+<p><br></p>
+<h3>عبارت های خالص (raw expression)</h3>
+<p>
+گاهی لازم می شود یک عبارت خالص در کوئری مورد نظرتان بکار ببرید. عبارت خالص به صورت رشته در کوئری تزریق می شوند. از این رو بایستی حین تزریق عبارت های خالص از ایجاد حفره ی امنیتی و فراهم آوردن زمینه برای حملات SQL injection خودداری نمایید.
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+                     -&gt;select(DB::raw('count(*) as user_count, status'))
+                     -&gt;where('status', '&lt;&gt;', 1)
+                     -&gt;groupBy('status')
+                     -&gt;get();
+</code></pre>
+
+<blockquote>
+<p>
+به منظور ایجاد یک عبارت خالص، می توان متد DB::raw را بکار برد (مورد استفاده ی این متد گنجاندن یک کوئری در دل کوئری دیگر است. لازم به ذکر است که این متد کوئری را از نظر کدهای مخرب چک نمی کند):
+</p>
+</blockquote>
+
+<p><br></p>
+<h3> متدهای Raw</h3>
+<p>
+به جای استفاده از DB :: raw، شما همچنین ممکن است از روش های زیر برای قرار دادن یک عبارت خام به بخش های مختلف درخواست خود استفاده کنید.
+</p>
+
+<p><br></p>
+<h3>متد selectRaw</h3>
+<p>
+متد selectRaw را می توان به جای (DB :: raw (...) استفاده کرد). این روش در آرگومان دوم خود یک آرایه اختیاری از مقادیر bindings  را می پذیرد:
+</p>
+
+<pre><code class="language-php  line-numbers">$orders = DB::table('orders')
+                -&gt;selectRaw('price * ? as price_with_tax', [1.0825])
+                -&gt;get();
+</code></pre>
+
+<p><br></p>
+<h3>متد whereRaw <span class="token operator">/</span> orWhereRaw</h3>
+<p>
+روشهای whereRaw و orWhereRaw را می توان برای تزریق یک جمله Raw به کار برد. این روش در آرگومان دوم خود یک آرایه اختیاری از مقادیر bindings  را می پذیرد:
+</p>
+
+<pre><code class="language-php  line-numbers">$orders = DB::table('orders')
+                -&gt;whereRaw('price &gt; IF(state = "TX", ?, 100)', [200])
+                -&gt;get();
+</code></pre>
+
+<p><br></p>
+<h3>متد havingRaw <span class="token operator">/</span> orHavingRaw</h3>
+
+<p>
+متدهای havingRaw و orHavingRaw جهت نشاندن یک رشته Raw به عنوان مقدار having استفاده می شود :
+ </p>
+
+<pre><code class="language-php  line-numbers">$orders = DB::table('orders')
+                -&gt;select('department', DB::raw('SUM(price) as total_sales'))
+                -&gt;groupBy('department')
+                -&gt;havingRaw('SUM(price) &gt; 2500')
+                -&gt;get();
+</code></pre>
+
+<p><br></p>
+<h3> متد orderByRaw</h3>
+<p>
+متد orderByRaw  جهت نشاندن یک رشته Raw به عنوان مقدار order by استفاده می شود :
+ </p>
+
+<pre><code class="language-php  line-numbers">$orders = DB::table('orders')
+                -&gt;orderByRaw('updated_at - created_at DESC')
+                -&gt;get();
+</code></pre>
+
+<p><br></p>
+<h3>دستور Inner Join</h3>
+<p>
+از query builder می توان جهت اجرای دستورات مختلف join بهره گرفت. برای اجرای یک عملیات ساده ی inner join اس کیو ال، کافی است متدjoin را بر روی نمونه ی ایجاد شده از جدول (نمونه ی query builder) فراخوانی کنید. اولین آرگومان ارسالی به این متد اسم جدولی است که می خواهید به آن عملیات پیوند را انجام دهید. دیگر آرگومان های پاس داده شده قیود و constraint های اعمال شده بر روی ستون ها در عملیات join را تعیین می کنند. همان طور که در این مثال مشاهده می کنید، در قالب تنها یک کوئری می توان به چندین جدول پیوند انجام داد:
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+            -&gt;join('contacts', 'users.id', '=', 'contacts.user_id')
+            -&gt;join('orders', 'users.id', '=', 'orders.user_id')
+            -&gt;select('users.*', 'contacts.phone', 'orders.price')
+            -&gt;get();
+</code></pre>
+
+<p><br></p>
+<h3>دستور Left Join Clause</h3>
+
+<p>
+اگر می خواهید بجای عملیات inner join، عملیات left join را بر روی جدولی اجرا کنید، کافی است متد leftJoin را به صورت زیر فراخوانی نمایید. لازم به ذکر است که متد نام برده از نظر نوع و تعدادی ورودی (signature) با متد join یکسان است:
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+            -&gt;leftJoin('posts', 'users.id', '=', 'posts.user_id')
+            -&gt;get();
+</code></pre>
+
+<p><br></p>
+<h3>دستور Cross Join Clause</h3>
+<p>
+جهت اجرای عملیات cross join، کافی است متد crossJoin را فراخوانی کرده و اسم جدولی که می خواهید عملیات cross join بر روی آن اجرا شود را به عنوان آرگومان به آن پاس دهید. نتیجه ی عملیات cross join ترکیبی است که از قرار گرفتن هر سطر یا رکورد از جدول اول در کنار تمامی سطرهای جدول دوم بدست می آید، به عبارتی دیگر نتیجه cross join حاصلضرب دکارتی دو جدول در هم است.
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('sizes')
+            -&gt;crossJoin('colours')
+            -&gt;get();
+</code></pre>
+
+<p><br></p>
+<h3>دستورات پیچیده ی join</h3>
+<p>
+می توانید دستورات join پیچیده تری بنویسید. برای شروع یک تابع Closure به عنوان آرگومان دوم به متد join ارسال کنید. این تابع یک شیJoinClause به عنوان پارامتر ورودی می گیرد که به شما اجازه می دهد constraint ها و محدودیت هایی را در دستور join تعریف نمایید:
+</p>
+
+<pre><code class="language-php  line-numbers">DB::table('users')
+        -&gt;join('contacts', function ($join) {
+            $join-&gt;on('users.id', '=', 'contacts.user_id')-&gt;orOn(...);
+        })
+        -&gt;get();
+</code></pre>
+
+<p>
+می توانید دستورات join پیچیده تری بنویسید. برای شروع یک تابع Closure به عنوان آرگومان دوم به متد join ارسال کنید. این تابع یک شیJoinClause به عنوان پارامتر ورودی می گیرد که به شما اجازه می دهد constraint ها و محدودیت هایی را در دستور join تعریف نمایید:
+</p>
+
+<pre><code class="language-php  line-numbers">DB::table('users')
+        -&gt;join('contacts', function ($join) {
+            $join-&gt;on('users.id', '=', 'contacts.user_id')
+                 -&gt;where('contacts.user_id', '&gt;', 5);
+        })
+        -&gt;get();
+</code></pre>
+
+<p><br></p>
+<h3>دستور Unions</h3>
+<p>
+query builder به شما امکان می دهد تا نتیجه ی حاصل از اجرای دو کوئری را به راحتی با یکدیگر ادغام یا متحد نمایید. برای مثال یک کوئری اولیه ایجاد می کنیم و سپس با فراخوانی متد union، آن را با یک کوئری دیگر ترکیب می کنیم:
+</p>
+
+<pre><code class="language-php  line-numbers">$first = DB::table('users')
+            -&gt;whereNull('first_name');
+
+$users = DB::table('users')
+            -&gt;whereNull('last_name')
+            -&gt;union($first)
+            -&gt;get();
+</code></pre>
+
+<blockquote>
+می توان متد unionAll را برای لحاظ کردن مقادیر تکراری صدا زد. این متد از نظر signature با متد union تفاوتی ندارد.
+ </blockquote>
+
+<p><br></p>
+<h3>دستور Where</h3>
+<p>
+به منظور افزودن دستورات where به کوئری، می توانید متد where را بر روی نمونه ی query builder صدا بزنید. در ساده ترین نوع فراخوانی متد where، ارسال سه آرگومان الزامی می باشد. اولین آرگومان اسم ستون می باشد. دومین آرگومان یکی از عملگرهای مورد پشتیبانی پایگاه داده است. سومین آرگومان مقداری است که با ستون مورد نظر از جدول مقایسه می شود.
+</p>
+<p>
+در مثال زیر بررسی می کنیم آیا مقدار ستون "votes" برابر 100 هست یا خیر:
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')-&gt;where('votes', '=', 100)-&gt;get();
+</code></pre>
+
+<p>
+به منظور سادگی بیشتر، اگر فقط می خواهید بررسی کنید مقدار یک ستون برابر با یک مقدار مشخص هست یا خیر، می توانید مقدار دلخواه را به طور مسقیم به عنوان آرگومان دوم به متد where ارسال کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')-&gt;where('votes', 100)-&gt;get();
+</code></pre>
+
+<p>
+مسلما می توان از دیگر عملگرهای مورد پشتیبانی پایگاه داده در عبارت where استفاده کرد:
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+                -&gt;where('votes', '&gt;=', 100)
+                -&gt;get();
+
+$users = DB::table('users')
+                -&gt;where('votes', '&lt;&gt;', 100)
+                -&gt;get();
+
+$users = DB::table('users')
+                -&gt;where('name', 'like', 'T%')
+                -&gt;get();
+</code></pre>
+
+<p>
+می توان آرایه ای از شرط ها را به تابع where ارسال کرد:
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')-&gt;where([
+    ['status', '=', '1'],
+    ['subscribed', '&lt;&gt;', '1'],
+])-&gt;get();
+</code></pre>
+
+<p><br></p>
+<h3>دستورات Or</h3>
+<p>
+می توان علاوه بر افزودن constraint های عبارت where (قیودی که در قالب عبارت where به کوئری اعمال می شوند) به صورت زنجیره ای، عبارتor را نیز به کوئری اضافه کرد. query builder این کار با ارائه ی متد orWhere امکان پذیر ساخته است. متد مزبور از نظر آرگومان های ورودی با متد where تفاوتی ندارد:
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+                    -&gt;where('votes', '&gt;', 100)
+                    -&gt;orWhere('name', 'John')
+                    -&gt;get();
+</code></pre>
+
+<p><br></p>
+<h3>دیگر دستورات where</h3>
+
+<p><strong>دستور whereBetween</strong></p>
+<p>
+متد whereBetween بررسی می کند آیا مقدار ستون مورد نظر بین دو رینج مشخص هست یا خیر:
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+                    -&gt;whereBetween('votes', [1, 100])-&gt;get();
+</code></pre>
+
+<p><br></p>
+<p><strong>دستور whereNotBetween</strong></p>
+<p>
+این متد بررسی می کند آیا مقدار ستون مورد نظر خارج از رینج یا دامنه ی دو مقدار مشخص شده هست یا خیر (ستون هایی که مقادیر آن ها داخل رینج عددی مشخص شده نباشد را جستجو می کند):
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+                    -&gt;whereNotBetween('votes', [1, 100])
+                    -&gt;get();
+</code></pre>
+
+<p><br></p>
+<p><strong>دستور whereIn / whereNotIn</strong></p>
+<p>
+متد wherein ستون هایی را که مقدار آن ها داخل آرایه ی ورودی باشد را جستجو می کند:
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+                    -&gt;whereIn('id', [1, 2, 3])
+                    -&gt;get();
+</code></pre>
+
+<p>
+متد whereNotIn رکوردهایی را جستجو می کند که مقادیر آن ها محدود به آرایه ی ورودی نباشد (مقدار آن ها در آرایه ی ارسالی به عنوان آرگومان نباشد):
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+                    -&gt;whereNotIn('id', [1, 2, 3])
+                    -&gt;get();
+</code></pre>
+
+<p><br></p>
+<p><strong>دستور whereNull / whereNotNull</strong></p>
+<p>
+متد whereNull ستون هایی را برمی گرداند که مقدار آن ها NULL باشد:
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+                    -&gt;whereNull('updated_at')
+                    -&gt;get();
+</code></pre>
+
+<p>
+متد whereNotNull رکوردهایی را جستجو و برمی گرداند که مقدار آن ها NULL نباشد:
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+                    -&gt;whereNotNull('updated_at')
+                    -&gt;get();
+</code></pre>
+
+<p><br></p>
+<p><strong>دستورات whereDate / whereMonth / whereDay / whereYear / whereTime</strong></p>
+<p>
+برای مقایسه مقادیر ستون با یک تاریخ، از متد whereDate استفاده می شود :
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+                -&gt;whereDate('created_at', '2016-12-31')
+                -&gt;get();
+</code></pre>
+
+<p>
+برای مقایسه مقادیر ستون با ماه یک سال، از متد whereMonth استفاده می شود :
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+                -&gt;whereMonth('created_at', '12')
+                -&gt;get();
+</code></pre>
+
+<p>
+برای مقایسه مقادیر ستون با روز یک سال، از متد whereDay استفاده می شود :
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+                -&gt;whereDay('created_at', '31')
+                -&gt;get();
+</code></pre>
+
+<p>
+برای مقایسه مقادیر ستون با  یک سال، از متد whereYear استفاده می شود :
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+                -&gt;whereYear('created_at', '2016')
+                -&gt;get();
+</code></pre>
+
+<p>
+برای مقایسه مقادیر ستون با  یک زمان، از متد whereTime استفاده می شود :
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+                -&gt;whereTime('created_at', '=', '11:20')
+                -&gt;get();
+</code></pre>
+
+<p><br></p>
+<p><strong>whereColumn</strong></p>
+<p>
+متد whereColumn را می توان جهت مقایسه و کسب اطمینان از برابر بودن دو ستون مورد استفاده قرار داد:
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+                -&gt;whereColumn('first_name', 'last_name')
+                -&gt;get();
+</code></pre>
+
+<p>
+همچنین می توان یک عملگر مقایسه ای به متد پاس داد:
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+                -&gt;whereColumn('updated_at', '&gt;', 'created_at')
+                -&gt;get();
+</code></pre>
+
+<p>
+متد whereColumn نیز می تواند آرایه ای از چندین شرط را به عنوان آرگومان بپذیرد. این شرط ها توسط عملگر and با یکدیگر پیوند می خورند:
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+                -&gt;whereColumn([
+                    ['first_name', '=', 'last_name'],
+                    ['updated_at', '&gt;', 'created_at']
+                ])-&gt;get();
+</code></pre>
+
+<p><br></p>
+<h3>کوئری های تودرتو</h3>
+
+<p>
+گاهی اوقات ملزوم به ساخت دستورات شرطی (where) پیچیده تری می شوید. از جمله می توان به عبارت های "where exists" (برای بررسی وجود ستون) یا کوئری های تودرتو اشاره کرد. query builder فریم ورک Laravel انجام این کار را هم برای شما آسان می سازد. برای شروع، به مثال ساده ای که در آن where های تودرتو نوشته و constraint ها داخل پرانتز گروه بندی شده اند می پردازیم:
+</p>
+
+<pre><code class="language-php  line-numbers">DB::table('users')
+            -&gt;where('name', '=', 'John')
+            -&gt;orWhere(function ($query) {
+                $query-&gt;where('votes', '&gt;', 100)
+                      -&gt;where('title', '&lt;&gt;', 'Admin');
+            })
+            -&gt;get();
+</code></pre>
+
+<p>
+همان طور که مشاهده می کنید، ارسال تابع Closure به متد orWhere به عنوان آرگومان به query builder اعلان کرده که باید محدودیت ها را گروه بندی کرده و داخل پرانتز قرار دهد. Closure یک نمونه query builder به عنوان ورودی گرفته که شما با استفاده از آن می توانید محدودیت هایی که باید به صورت گروه بندی شده در پرانتز قرار گیرد را اعمال کنید. مثال فوق کوئری زیر را تولید می کند:
+</p>
+
+<pre><code class="language-php  line-numbers">select * from users where name = 'John' or (votes &gt; 100 and title &lt;&gt; 'Admin')
+</code></pre>
+
+<p><br></p>
+<h3>متد whereExists</h3>
+<p>
+متد whereExists به شما اجازه می دهد عبارت های where exists بنویسید. این متد یک تابع Closure به عنوان آرگومان می گیرد. خود این تابع یک نمونه ی query builder به عنوان ورودی دریافت کرده که با استفاده از آن کوئری را تعریف می کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">DB::table('users')
+            -&gt;whereExists(function ($query) {
+                $query-&gt;select(DB::raw(1))
+                      -&gt;from('orders')
+                      -&gt;whereRaw('orders.user_id = users.id');
+            })
+            -&gt;get();
+</code></pre>
+
+<p>
+کوئری فوق دستور ساده ی SQL زیر را تولید می کند:
+</p>
+
+<pre><code class="language-php  line-numbers">select * from users
+where exists (
+    select 1 from orders where orders.user_id = users.id
+)
+</code></pre>
+
+<p><a name="json-where-clauses"></a></p>
+
+<p><br></p>
+<h3>کوئری گرفتن از ستون های از نوع JSON</h3>
+
+<p>
+لاراول به شما امکان می دهد از ستون های از نوع JSON کوئری بگیرید. در حال حاضر این قابلیت تنها در پایگاه داده ی MySQL ویرایش 5.7 وPostgres پشتیبانی می شود. برای گرفتن کوئری از ستون از نوع JSON، می بایست عملگر -&gt; را مورد استفاده قرار دهید:
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+                -&gt;where('options-&gt;language', 'en')
+                -&gt;get();
+
+$users = DB::table('users')
+                -&gt;where('preferences-&gt;dining-&gt;meal', 'salad')
+                -&gt;get();
+</code></pre>
+
+<p><br></p>
+<h3>متد orderBy</h3>
+<p>
+متد orderBy به شما امکان می دهد تا نتایج حاصل از اجرای یک کوئری را مرتب سازی کنید. اولین آرگومان ارسالی به این متد باید اسم ستونی باشد که می خواهید نتایج بر اساس آن مرتب شوند، در حالی که آرگومان دوم ترتیب مرتب سازی اعم از نزولی (asc) یا صعودی (desc) را کنترل می کند:
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+                -&gt;orderBy('name', 'desc')
+                -&gt;get();
+</code></pre>
+
+<p><br></p>
+<h3>متد های latest / oldest</h3>
+<p>
+متدهای  latest and oldest  به شما اجازه می دهند نتایج را براساس تاریخ مرتب کنید. به طور پیش فرض نتایج براساس ستون created_at مرتب می شوند. همچنین می توانید نام ستونی که می خواهید نتایج براساس آن مرتب شوند را مشخص نمایید :
+</p>
+
+<pre><code class="language-php  line-numbers">$user = DB::table('users')
+                -&gt;latest()
+                -&gt;first();
+</code></pre>
+
+<p><br></p>
+<h3>متد inRandomOrder</h3>
+<p>
+متد inRandomOrder نتایج یک کوئری را به صورت تصادفی مرتب سازی می کند. در مثال زیر با فراخوانی این متد یک کاربر را به طور تصادفی از جدول واکشی می کنیم:
+</p>
+
+<pre><code class="language-php  line-numbers">$randomUser = DB::table('users')
+                -&gt;inRandomOrder()
+                -&gt;first();
+</code></pre>
+
+<p><br></p>
+<h3>متدهای groupBy / having</h3>
+<p>
+توابع groupByو having را می توان جهت گروه بندی نتایج کوئری مورد استفاده قرار داد. متد having از نظر نوع و تعداد پارامتر ورودی (signature) با متد where یکسان می باشد:
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+                -&gt;groupBy('account_id')
+                -&gt;having('account_id', '&gt;', 100)
+                -&gt;get();
+</code></pre>
+
+<p>
+همچنین می توانید چندیدن ستون را جهت گروه بندی انتخاب نمایید :
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+                -&gt;groupBy('first_name', 'status')
+                -&gt;having('account_id', '&gt;', 100)
+                -&gt;get();
+</code></pre>
+
+<p><br></p>
+<h3>skip / take</h3>
+
+<p>
+به منظور محدود سازی نتایج حاصل از اجرای کوئری یا لحاظ نکردن تعداد خاصی از نتایج در کوئری (OFFSET)، می توان متدهای skip و take را مورد استفاده قرار داد:
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')-&gt;skip(10)-&gt;take(5)-&gt;get();
+
+</code></pre>
+
+<p>
+همچنین می توانید از متدهای limit و offset نیز استفاده نمایید :
+</p>
+
+<pre><code class="language-php  line-numbers">$users = DB::table('users')
+                -&gt;offset(10)
+                -&gt;limit(5)
+                -&gt;get();
+</code></pre>
+
+<p><br></p>
+<h3>دستورات شرطی</h3>
+<p>
+گاهی می خواهید یک شرط تنها زمانی به یک کوئری اعمال شود که شرط دیگری صادق باشد. به عنوان مثال ممکن است بخواهید یک شرط where تنها در صورتی اعمال شود که درخواست ورودی دارای مقدار خاصی باشد. این کار را می توانید با فراخوانی متد when انجام دهید:
+</p>
+
+<pre><code class="language-php  line-numbers">$role = $request-&gt;input('role');
+
+$users = DB::table('users')
+                -&gt;when($role, function ($query) use ($role) {
+                    return $query-&gt;where('role_id', $role);
+                })
+                -&gt;get();
+</code></pre>
+
+<p>
+متد when تنها زمانی تابع Closure را اجرا می کند که اولین پارامتر true باشد. در صورتی که اولین پارامتر false باشد، تابع Closure اجرا نخواهد شد.
+</p>
+
+<p>
+همچنین می توان تابع Closure دیگری به عنوان آرگومان سوم مشخص کرد که در صورتیکه اولین پارامتر false  باشد آن دستورات اجرا شوند :
+</p>
+
+<pre><code class="language-php  line-numbers">$sortBy = null;
+
+$users = DB::table('users')
+                -&gt;when($sortBy, function ($query) use ($sortBy) {
+                    return $query-&gt;orderBy($sortBy);
+                }, function ($query) {
+                    return $query-&gt;orderBy('name');
+                })
+                -&gt;get();
+</code></pre>
+
+<p><br></p>
+<h3>متد Inserts</h3>
+<p>
+query builder همچنین یک متد به نام insert ارائه می کند که توسط آن می توانید رکوردهایی را داخل جدول درج نمایید. متد insert آرایه ای از اسم و مقادیر ستون ها را به عنوان ورودی گرفته و در جدول درج می کند:
+</p>
+
+<pre><code class="language-php  line-numbers">DB::table('users')-&gt;insert(
+    ['email' =&gt; 'john@example.com', 'votes' =&gt; 0]
+);
+</code></pre>
+
+<p>
+می توان با یکبار فراخوانی تابع insert تعداد زیادی رکورد را در جدول وارد کرد. برای این منظور کافی است آرایه ای از آرایه ها را به عنوان آرگومان به تابع ذکر شده ارسال نمایید. هر آرایه نشانگر یک سطر است که در جدول درج می شود:
+</p>
+
+<pre><code class="language-php  line-numbers">DB::table('users')-&gt;insert([
+    ['email' =&gt; 'taylor@example.com', 'votes' =&gt; 0],
+    ['email' =&gt; 'dayle@example.com', 'votes' =&gt; 0]
+]);
+</code></pre>
+
+<p><br></p>
+<h3> ستون Auto-Incrementing IDs</h3>
+
+<p>
+اگر جدول مورد نظر دارای یک ستون خود افزاینده id است، در آن صورت می توان با فراخوانی متد insertGetId یک رکورد را وارد جدول کرده و سپس ID آن را بازیابی کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">$id = DB::table('users')-&gt;insertGetId(
+    ['email' =&gt; 'john@example.com', 'votes' =&gt; 0]
+);
+</code></pre>
+
+<blockquote>
+اگر از پایگاه داده ی PostgreSQL استفاده می کنید، در آن صورت بایستی اسم ستون خود افزاینده (auto-incrementing یا کلید اصلی) را id تنظیم کنید (در واقع این پایگاه داده انتظار دارد اسم ستون نام برده id باشد). اگر می خواهید id را از sequence دیگری بازیابی کنید، آنگاه بایستی اسم sequence را به عنوان آرگومان دوم به متد insertGetId ارسال نمایید.
+</blockquote>
+
+<p><br></p>
+<h3>دستور Updates</h3>
+<p>
+query builder با ارائه ی متد update به شما اجازه می دهد رکوردهای جاری را بروز رسانی کنید. این متد مانند insert، آرایه ای از جفت اسم و مقادیر ستون (column / value pair) را برای بروز رسانی به عنوان ورودی می پذیرد. با استفاده از دستورات شرطی where می توانید بر روی کوئری update قید اعمال کرده و آن را محدود نمایید:
+</p>
+
+<pre><code class="language-php  line-numbers">DB::table('users')
+            -&gt;where('id', 1)
+            -&gt;update(['votes' =&gt; 1]);
+</code></pre>
+
+<p><br></p>
+<h3>بروز رسانی ستون هایی از نوع JSON</h3>
+<p>
+هنگام به روز رسانی ستون JSON، شما باید از -&gt;  برای دسترسی به کلید مناسب در شی JSON استفاده کنید. این عملیات تنها در پایگاه های داده پشتیبانی می شود که ستون های JSON را پشتیبانی می کنند:
+</p>
+
+<pre><code class="language-php  line-numbers">DB::table('users')
+            -&gt;where('id', 1)
+            -&gt;update(['options-&gt;enabled' =&gt; true]);
+</code></pre>
+
+<p><br></p>
+<h3>توابع Increment و Decrement</h3>
+
+<p>
+query builder چارچوب نرم افزاری لاراول متدهایی را هم برای افزایش یا کاهش مقدار ستون مورد نظر فراهم می کند. این دو متد صرفا یک نوع میان برای دستور update محسوب می شوند.
+</p>
+
+<p>
+دو متد نام برده حداقل یک آرگومان می پذیرند: 1. اسم ستونی که بروز آوری می شود. در صورت تمایل می توان یک آرگومان دوم به تابع ارسال کرد که واحد افزایش یا کاهش مقدار ستون را مشخص می کند:
+</p>
+
+<pre><code class="language-php  line-numbers">DB::table('users')-&gt;increment('votes');
+
+DB::table('users')-&gt;increment('votes', 5);
+
+DB::table('users')-&gt;decrement('votes');
+
+DB::table('users')-&gt;decrement('votes', 5);
+</code></pre>
+
+<p>
+می توان ستون های بیشتری را برای بروز رسانی مشخص کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">DB::table('users')-&gt;increment('votes', 1, ['name' =&gt; 'John']);
+</code></pre>
+
+<p><br></p>
+<h3>متد Deletes</h3>
+<p>
+query builder همچنین یک متد به نام delete فراهم می کند که توسط آن می توان رکوردهای دلخواه را از پایگاه داده حذف کرد:
+</p>
+
+<p>
+می توانید با اضافه کردن عبارت های شرطی where به کوئری، دستورات delete را محدود نمایید (قیودی را بر کوئری اعمال کنید):
+</p>
+
+<pre><code class="language-php  line-numbers">DB::table('users')-&gt;delete();
+
+DB::table('users')-&gt;where('votes', '&gt;', 100)-&gt;delete();
+</code></pre>
+
+<p>
+اگر می خواهید جدول را کاملا خالی کنید (تمامی سطرهای آن را حذف و ستون شمارشی ID را به صفر بازگردانید)، کافی است متد truncate را صدا بزنید:
+</p>
+
+<pre><code class="language-php  line-numbers">DB::table('users')-&gt;truncate();
+</code></pre>
+
+<p><br></p>
+<h3>قفل گذاری بدبینانه (Pessimistic Locking)</h3>
+<p>
+query builder با ارائه ی تعدادی تابع به شما امکان می دهد به راحتی بر روی دستورات select خود قفل های pessimistic اعمال کنید. برای اجرای دستور با یک قفل مشترک (shared lock)، می توان متد sharedLock را بر روی کوئری صدا زد. قفل مشترک مانع از این می شود که سطرهای انتخابی پیش از اتمام تایید ثبت و commit شدن کامل تراکنش، ویرایش شوند (قفل اشتراکی یا shared lock به زمان اطلاق می شود که دو تراکنش مجوز در سطح خواندن / read access دریافت کنند). در واقع با استفاده از متد sharedLock یک قفل pessimistic برای دستورSelect ایجاد می کنیم:
+</p>
+
+<pre><code class="language-php  line-numbers">DB::table('users')-&gt;where('votes', '&gt;', 100)-&gt;sharedLock()-&gt;get();
+</code></pre>
+
+<p>
+می توانید بجای متد نام برده از lockForUpdate استفاده کنید. این متد حین اجرای دستور select مانع از بروز رسانی و ویرایش سطرها می شود:
+</p>
+
+<pre><code class="language-php  line-numbers">DB::table('users')-&gt;where('votes', '&gt;', 100)-&gt;lockForUpdate()-&gt;get();
+</code></pre>
+
+        </section>
+        
+<hr>
+<p>
+</p>
+<div>منابع مورد مطالعه جهت جمع آوری این مطلب:</div>
+<div class="refrencehref">
+        https://laravel.com/docs/5.5/collections <br> www.tahlildadeh.com/ArticleDetails/آموزش-ابزار-Query-Builder-در-Laravel
+</div>
+
+
+        <hr>
+        <style>
+    #commentsdiv{
+        background-color: #f5f5f5;
+        border: 1px solid #c5c5c5;
+        border-bottom: 0px !important;
+        padding: 12px;
+    }
+    #commentsborder{
+        background-color: #fff;
+        border: 1px solid #c5c5c5;
+        white-space: normal;
+        padding: 20px;
+    }
+</style>
+
+<div id="commentsdiv">نظرات</div>
+<div id="commentsborder">
+<div id="wpac-comment"></div>
+</div>
+<script type="text/javascript">
+wpac_init = window.wpac_init || [];
+wpac_init.push({widget: 'Comment', id: 7878});
+(function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = 'https://embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+})();
+</script>
+
+    </article>
+</div>
+<script src="/assets/js/anchor.min.js"></script>
+<script>
+    anchors.options = {
+        placement: 'left',
+        visible: 'always',
+//        icon: '#',
+    };
+    anchors.add('.anchored h2,.anchored h3,.anchored h4,.anchored h5,.anchored h6');
+
+    (function($){
+        if(window.location.hash) {
+            var hash = decodeURIComponent(window.location.hash);
+            gotohash($(hash).offset().top);
+        }
+        $('a.anchorjs-link').click(function(){
+			gotohash($(this).offset().top);
+        });
+        $('a.anchorjs').click(function(){
+			var id = '#' + $(this).attr('title');
+			gotohash($(id).offset().top);
+        });		
+        function gotohash(top){
+            var headerHeight = 70; // Get fixed header height
+            $('html,body').animate({
+                scrollTop: top - headerHeight
+            }, 20);
+        }
+    })(jQuery);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+   $(document).ready(function (){
+
+     var scrollPosition = getParameterByName('scroll');
+     if(scrollPosition)
+      $(".doc-menu").scrollTop(scrollPosition);
+
+     $('.doc-link').click(function(){
+        var scrollTop = $(".doc-menu").scrollTop();
+        if(scrollTop > 0)
+          $(this).attr("href",this.href + "?scroll=" + $(".doc-menu").scrollTop());
+     });
+
+     function getParameterByName(name, url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+   });
+</script>
+    <div id="back-to-top" role="button" aria-label="Back to top">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+    </div>
+</main>
+<!-- footer -->
+
+<footer class="footer" role="contentinfo" aria-label="Site footer">
+    <div class="navigation" role="navigation" aria-label="Footer links">
+        <a href="http://localhost:4000" class="avatar" role="link"></a>
+        <ul role="menubar" aria-label="Footer links menubar">
+            <li class="footer-products" role="menuitem" aria-label="Products">
+                تولیدات
+                <ul role="menu" aria-hidden="true" aria-label="Products link">
+                </ul>
+            </li>
+            <li class="footer-blog" role="menuitem" aria-label="Blog">
+                مقالات
+                <ul role="menu" aria-hidden="true" aria-label="Blog link">
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2020/07/03/marriage.html" role="link" aria-label="ازدواج">ازدواج</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2019/10/11/vuejs.html" role="link" aria-label="آموزش vuejs">آموزش vuejs</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/18/laravel.html" role="link" aria-label="آموزش Laravel">آموزش Laravel</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/articles/2017/12/13/laravelcollective.html" role="link" aria-label="معرفی Laravel Collective">معرفی Laravel Collective</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/06/design-patterns.html" role="link" aria-label="معرفی  Design Pattern">معرفی  Design Pattern</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/blog" role="link" aria-label="Read more">Read More</a></li>
+                </ul>
+            </li>
+
+            <li class="footer-connect" role="menuitem" aria-label="Connect">
+                تماس
+                <ul role="menu" aria-hidden="true" aria-label="Connect link">
+                    <li role="listitem" aria-label="Connect link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub">GitHub</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://www.linkedin.com/in/farhad-mirzapour/" target="_blank" role="link" aria-label="Linkedin">Linkedin</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter">Twitter</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="socials" role="navigation" aria-label="Social links">
+        <ul role="menu" aria-hidden="true" aria-label="Social link">
+            <li role="listitem" aria-label="Social link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://www.linkedin.com/in/farhad-mirzapour-0043b862/" target="_blank" role="link" aria-label="Linkedin"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="/feed.xml" role="link" aria-label="RSS"><i class="fa fa-rss-square" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+    <div class="copyright" role="contentinfo" aria-label="Copyright">
+        <p>© <script type="text/javascript">document.write(new Date().getFullYear());</script> Farhad Mirzapour</p>
+    </div>
+</footer>
+
+<!-- scripts -->
+<script src="/assets/js/hamburger-menu.js"></script>
+
+<script src="/assets/js/elevator.min.js"></script>
+<script src="/assets/js/back-to-top.js"></script>
+<script src="/assets/prisma/prism.js"></script>
+<!-- google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108878564-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-108878564-1');
+</script>
+
+</body>
+</html>

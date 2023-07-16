@@ -1,0 +1,1958 @@
+<!DOCTYPE html>
+<html lang="">
+<!-- head -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Routing یا مسیریابی در لاراول | مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Routing یا مسیریابی در لاراول" />
+<meta name="author" content="Farhad Mirzapour" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="مسیرهای پایه در لاراول یک URI و یک تابع Closure می‌پذیرند که یک متد بسیار ساده برای تعریف مسیرها ارائه می‌دهد: Route::get(&#39;foo&#39;, function () { return &#39;Hello World&#39;; }); فایل‌های route پیش‌فرض در لاراول تمام مسیرهای لاراول در فایل‌های route که در دایرکتوری routes قرار می‌گیرند، تعریف شده‌ است. این فایل‌ها به صورت خودکار توسط فریم ورک بارگزاری می‌شوند. فایل routes/web.php مسیرهایی را برای رابط وب تعریف می‌کند. این مسیرها به گروه middlewareweb اختصاص داده می‌شوند که قابلیت‌هایی مانند حالت جلسه و حفاظت CSRF را ارائه می‌دهند. مسیرهای موجود در routes/api.php در گروه middleware api قرار می‌گیرند. دراکثر برنامه‌های کاربردی لاراول، بایستی کار خود را با تعریف مسیرها در فایل routes/web.php شروع کنید. می‌توان به مسیرهای تعریف شده در فایل routes/web.php با وارد کردن URL مسیر تعریف شده در مرورگر، دسترسی داشت. به عنوان مثال، اگر در مرورگر خود آدرس http://your-app.dev/user را وارد کنید، می‌توانید به مسیر زیر دسترسی داشته باشید: Route::get(&#39;/user&#39;, &#39;UserController@index&#39;); مسیرهای تعریف شده در فایل routes/api.php توسط RouteServiceProvider در یک گروه مسیر قرار می‌گیرند. در این گروه، پیشوند /api به صورت خودکار به URL اعمال می‌شود، در این صورت، دیگر لازم نیست به صورت دستی آن را به مسیرهای درون فایل اعمال کنید. می‌توان پیشوند و گزینه‌های دیگر در گروه مسیر با ایجاد تغییر در کلاس RouteServiceProvider تنظیم کرد. متدهای router قابل دسترس در مسیریابی لاراول توسط روتر می‌توان مسیرهایی را که به هر درخواست از HTTP پاسخ می‌دهند را ثبت و تعریف کرد: Route::get($uri, $callback); Route::post($uri, $callback); Route::put($uri, $callback); Route::patch($uri, $callback); Route::delete($uri, $callback); Route::options($uri, $callback); گاهی ممکن است لازم باشد مسیری را که به چندین درخواست HTTP پاسخ می‌دهد، ثبت کنید. می‌توان این کار را با استفاده از متد match انجام داد. حتی می‌توان با استفاده از متد any مسیری را ثبت کرد که به تمام درخواست‌های HTTP پاسخ می‌دهد: Route::match([&#39;get&#39;, &#39;post&#39;], &#39;/&#39;, function () { // }); Route::any(&#39;foo&#39;, function () { // }); در مسیریابی لاراول CSRF محافظت هر فرم‌ HTML که به مسیرهای POST ، PUT یا DELETE که در فایل مسیرهای web تعریف شده‌اند، اشاره دارد، باید شامل یک فیلد نشانه CSRF باشند. در غیر این صورت، درخواست رد خواهد شد. &lt;form method=&quot;POST&quot; action=&quot;/profile&quot;&gt; {{ csrf_field() }} ... &lt;/form&gt; تغییر مسیر یا redirect route در لاراول اگر مسیری را تعریف می‌کنید که باید به URI دیگری هدایت می‌شود، باید از متد Route::redirect استفاده کنید. این متد یک میانبر مناسب ارائه می‌دهد، به طوری که برای انجام یک تغییر مسیر (redirect) ساده دیگر نیازی به تعریف یک مسیر کامل یا یک کنترلر نخواهید داشت: Route::redirect(&#39;/here&#39;, &#39;/there&#39;, 301); مسیریابی در لاراول : مسیرهای view اگر مسیر یا route نیاز به برگرداندن یک view داشته باشد، می‌توانید از متد Route::view استفاده کنید. درست مثل متد redirect ، این متد نیز یک میانبر ساده ارائه می‌دهد، بنابراین نباید یک مسیر کامل یا کنترلر تعریف شود. متد view یک URI به عنوان آرگومان اول و نام یک view را به عنوان آرگومان دوم دریافت می‌کند. علاوه بر این می‌توان آرایه‌ای از داده‌ها را برای انتقال به view به عنوان آرگومان سوم منتقل کنید که استفاده از این آرگومان اختیاری است: Route::view(&#39;/welcome&#39;, &#39;welcome&#39;); Route::view(&#39;/welcome&#39;, &#39;welcome&#39;, [&#39;name&#39; =&gt; &#39;Taylor&#39;]); پارامترهای مسیر (route parameters) در مسیریابی لاراول گاهی ممکن است نیاز به گرفتن بخش‌هایی از URI در مسیر خود داشته باشید. برای مثال، ممکن است نیاز به دریافت شناسه کاربر (id) از URL داشته باشید. این کار را می‌توان با تعیین پارامترهای مسیر انجام داد. به مثال زیر توجه کنید: Route::get(&#39;user/{id}&#39;, function ($id) { return &#39;User &#39;.$id; }); همچنین می‌توان چند پارامتر موردنیاز را به صورت زیر تعریف کرد: Route::get(&#39;posts/{post}/comments/{comment}&#39;, function ($postId, $commentId) { // }); پارامترهای مسیر در داخل براکت {} قرار می‌گیرند و باید از حروف الفبا تشکیل شده باشند و نباید حاوی کاراکتر ( - ) باشد. به جای استفاده از کاراکتر ( - ) می‌توان از کاراکتر زیرخط ( _ ) استفاده کرد. پارامترهای مسیر به callback / controllers مسیر براساس سفارش تزریق می‌شوند. نام آرگومان‌های callback / controller زیاد مهم نیست. پارامترهای اختیاری یا Optional در مسیریابی لاراول گاهی ممکن است نیاز به تعیین پارامتر مسیر داشته باشید، اما استفاده از پارامتر مسیر را اختیاری کنید. این کار را می‌توان با قرار دادن یک علامت سوال ( ؟ ) بعد از نام پارامتر انجام داد: Route::get(&#39;user/{name?}&#39;, function ($name = null) { return $name; }); Route::get(&#39;user/{name?}&#39;, function ($name = &#39;John&#39;) { return $name; }); عبارات منظم (Regular Expression) در مسیریابی لاراول می‌توان فرمت پارامترهای مسیر را با استفاده از متد where در یک نمونه مسیر تنظیم کرد. متد where نام پارامتر را دریافت می کند و عبارت منظمی که پارامتر بوسیله آن باید محدود شود را تعریف می‌کند : Route::get(&#39;user/{name}&#39;, function ($name) { // })-&gt;where(&#39;name&#39;, &#39;[A-Za-z]+&#39;); Route::get(&#39;user/{id}&#39;, function ($id) { // })-&gt;where(&#39;id&#39;, &#39;[0-9]+&#39;); Route::get(&#39;user/{id}/{name}&#39;, function ($id, $name) { // })-&gt;where([&#39;id&#39; =&gt; &#39;[0-9]+&#39;, &#39;name&#39; =&gt; &#39;[a-z]+&#39;]); استفاده از عبارات منظم به صورت عمومی در مسیریابی لاراول اگر بخواهید یک پارامتر مسیر همواره با یک «عبارات منظم» خاص محدود شود، می‌توانید از متد pattern استفاده کنید. این الگوها را در متد boot مربوط به RouteServiceProvider خود تعریف کنید: /** * Define your route model bindings, pattern filters, etc. * * @return void */ public function boot() { Route::pattern(&#39;id&#39;, &#39;[0-9]+&#39;); parent::boot(); } زمانی که الگوی خاصی تعریف شده باشد، با استفاده از نام پارامتر به صورت خودکار به تمام مسیرها اعمال می‌شود: Route::get(&#39;user/{id}&#39;, function ($id) { // Only executed if {id} is numeric... }); مسیرهای نام‌گذاری شده در Routing مسیرهای نامگذاری شده (Named routes) این امکان را می‌دهد تا به راحتی برای آن‌ها URL تولید کنید یا از آن‌ها برای redirect کردن در برنامه استفاده کنید. برای اختصاص یک نام به یک مسیر از متد name در تعریف مسیر به صورت زیر استفاده کنید: Route::get(&#39;user/profile&#39;, function () { // })-&gt;name(&#39;profile&#39;); همچنین می‌توان نام مسیر را به اکشن‌های یک کنترلر به صورت زیر اختصاص داد: Route::get(&#39;user/profile&#39;, &#39;UserController@showProfile&#39;)-&gt;name(&#39;profile&#39;); تولید URLها برای مسیرهای نامگذاری شده در لاراول زمانی که یک نام برای یک مسیر مشخص اختصاص دادید، از طریق تابع route عمومی، می‌توانید از نام مسیر در زمان تولید URLها یا تغییرمسیرها (redirect) به صورت زیر استفاده کنید: // Generating URLs... $url = route(&#39;profile&#39;); // Generating Redirects... return redirect()-&gt;route(&#39;profile&#39;); اگر مسیر نامگذاری شده شامل پارامتر باشد، می‌توانید پارامترها را به عنوان آرگومان دوم به تابع route منتقل کنید. پارامترهای داده شده به صورت خودکار به URL تولید شده وارد می‌شوند: Route::get(&#39;user/{id}/profile&#39;, function ($id) { // })-&gt;name(&#39;profile&#39;); $url = route(&#39;profile&#39;, [&#39;id&#39; =&gt; 1]); بررسی مسیر فعلی در مسیر یابی لاراول برای مشخص کردن اینکه آیا درخواست فعلی HTTP به یک مسیر نامگذاری شده هدایت شده است، می‌توانید از متد named در نمونه Route استفاده کنید. برای مثال، می‌توانید نام مسیر فعلی را در middleware مسیر چک کنید: /** * Handle an incoming request. * * @param \Illuminate\Http\Request $request * @param \Closure $next * @return mixed */ public function handle($request, Closure $next) { if ($request-&gt;route()-&gt;named(&#39;profile&#39;)) { // } return $next($request); } گروه‌های مسیر در لاراول Route Groups ممکن است برخی از ویژگی‌های مسیر، مانند middleware یا فضای نامی (namespaces)، در تعداد زیادی از مسیرها مشترک باشد. می‌توان بدون نیاز به تعریف جداگانه این ویژگی‌ها در هر یک از مسیرها، از امکان گروه‌ بندی مسیرها استفاده کرد و آن ویژگی‌ها را به تمام مسیرهای موجود در گروه اختصاص داد. ویژگی‌های به اشتراک گذاشته شده در قالب آرایه به عنوان اولین پارامتر در متد Route::group تعیین می‌شوند. مسیریابی در Middleware برای اختصاص یک Middleware به تمامی مسیرهای موجود در یک گروه، قبل از تعریف گروه می‌توانید از متد middleware استفاده کنید. Middlewareها به ترتیبی که در آرایه لیست شده‌اند بر روی مسیرها اعمال می‌شوند: Route::middleware([&#39;first&#39;, &#39;second&#39;])-&gt;group(function () { Route::get(&#39;/&#39;, function () { // Uses first &amp; second Middleware }); Route::get(&#39;user/profile&#39;, function () { // Uses first &amp; second Middleware }); }); فضای نام Namespaces می‌توان یک فضای نامی PHP را به یک گروه از کنترلرها با استفاده از متد namespace اختصاص داد: Route::namespace(&#39;Admin&#39;)-&gt;group(function () { // Controllers Within The &quot;App\Http\Controllers\Admin&quot; Namespace }); در حالت پیش‌فرض، RouteServiceProvider فایل‌های مسیر را در یک گروه namespace قرار می‌دهد، که امکان می‌دهد تا مسیرهای کنترلر را بدون مشخص کردن پیشوند کامل App\Http\Controllers ثبت کنید. پس از آن فقط نیاز به مشخص کردن بخشی از فضای نامی دارید که بعد از App\Http\Controllers قرار دارد. در لاراول Sub-Domain مسیریابی از گروه‌های مسیر همچنین برای مدیریت مسیریابی زیر دامنه (Sub-Domain) استفاده می‌شود. زیر دامنه‌ها پارامترهای مسیر مثل URIهای مسیر را اختصاص داده و همچنین امکان می‌دهند تا بخشی از زیر دامنه را برای استفاده در مسیر یا کنترلر خود دریافت کنید. می‌توان زیر دامنه را قبل از تعریف گروه با فراخوانی متد domain مشخص کرد: Route::domain(&#39;{account}.myapp.com&#39;)-&gt;group(function () { Route::get(&#39;user/{id}&#39;, function ($account, $id) { // }); }); در مسیریابی لاراول Route پیشوندهای برای اضافه کردن پیشوند به هر مسیر موجود در گروه از متد prefix استفاده می‌شود . برای مثال، در صورتیکه بخواهید تمام مسیرهای URIهای موجود در گروه، پیشوند admin را داشته باشد، به صورت زیر عمل کنید: Route::prefix(&#39;admin&#39;)-&gt;group(function () { Route::get(&#39;users&#39;, function () { // Matches The &quot;/admin/users&quot; URL }); }); Route Model Binding در مسیریابی لاراول هنگام تزریق یک model ID به یک مسیر یا یک اکشن مربوط به کنترلر، اغلب یک پرس و جو برای بازیابی مدلی که مربوط به آن شناسه است، بکار می‌برید. binding مدل مسیر در لاراول راه مناسبی است که از طریق آن می‌توان به طور خودکار یک نمونه مدل را به طور مستقیم در مسیرها تزریق کرد. برای مثال، به جای تزریق یک شناسه کاربر (ID)، می‌توان کل نمونه مدل User که با شناسه داده شده مطابقت دارد را تزریق کرد. Implicit Binding : مسیریابی در لاراول لاراول به طور خودکار مدل‌های Eloquent تعریف شده در مسیرها یا اکشن‌های کنترلر که نام‌های متغیر type-hint شده آن‌ها با نام یک بخش از مسیر منطبق است را resolve می‌کند. مثال زیر را در نظر بگیرید: Route::get(&#39;api/users/{user}&#39;, function (App\User $user) { return $user-&gt;email; }); از آنجایی که متغیر $user به عنوان Eloquent modelApp\User اعلان نوع یا type-hint شده است و نام متغیر با بخش {user} در URI مطابق است، لاراول به طور خودکار نمونه مدلی را که شناسه یا ID آن با مقدار موجود در URI منطبق است را تزریق می‌کند. اگر نمونه مطابق در پایگاه داده یافت نشود، یک پاسخ 404 HTTP به طور اتوماتیک تولید می‌شود. مسیریابی در لاراول : سفارشی سازی نام کلید اگر بخواهید binding مدل در پایگاه داده از ستونی غیر از id در هنگام بازیابی یک کلاس مدل استفاده کند، می‌توانید متد getRouteKeyName را در مدل Eloquent بازنویسی کنید: /** * Get the route key for the model. * * @return string */ public function getRouteKeyName() { return &#39;slug&#39;; } Explicit Binding : مسیریابی در لاراول برای ثبت یک پیوند صریح (Explicit Binding)، از متد model روتر برای مشخص کردن کلاس برای یک پارامتر داده استفاده کنید. بایستی binding مدل صریح خود را در متد boot در کلاس RouteServiceProvider تعریف کنید: public function boot() { parent::boot(); Route::model(&#39;user&#39;, App\User::class); } سپس، مسیری را که شامل یک پارامتر {user} است را تعریف کنید: Route::get(&#39;profile/{user}&#39;, function (App\User $user) { // }); از آنجایی که ما تمام پارامترهای {user} را به مدل App\User محدود کرده‌ایم، نمونه‌ای از کلاس User به مسیر تزریق می‌شود. برای مثال، هنگام ایجاد یک درخواست برای profile/1 یک نمونه از کلاس User که دارای شناسه 1 است از پایگاه داده تزریق می‌شود. اگر نمونه مطابق با آن در پایگاه داده یافت نشود، یک پاسخ 404 HTTP به طور اتوماتیک تولید می‌شود. سفارشی سازی Resolution Logic در مسیریابی لاراول اگر بخواهید از Resolution Logic استفاده کنید، باید از متد Route::bind استفاده کنید. Closure به متد bind ، مقدار یک بخش از URI را دریافت می‌کند و نمونه کلاسی را که باید به مسیر تزریق شود را بازمی‌گرداند: public function boot() { parent::boot(); Route::bind(&#39;user&#39;, function ($value) { return App\User::where(&#39;name&#39;, $value)-&gt;first() ?? abort(404); }); } جعل متد فرم در مسیریابی در لاراول فرم‌های HTML از عملیات PUT ، PATCH یا DELETE پشتیبانی نمی‌کنند. بنابراین، هنگام تعریف مسیرهای PUT ، PATCH یا DELETE که از یک فرم HTML فراخوانی می‌شوند، نیاز دارید یک فیلد _method مخفی را به فرم اضافه کنید. مقدار فرستاده شده با فیلد _method به عنوان متد درخواست HTTP مورد استفاده قرار می‌گیرد: &lt;form action=&quot;/foo/bar&quot; method=&quot;POST&quot;&gt; &lt;input type=&quot;hidden&quot; name=&quot;_method&quot; value=&quot;PUT&quot;&gt; &lt;input type=&quot;hidden&quot; name=&quot;_token&quot; value=&quot;{{ csrf_token() }}&quot;&gt; &lt;/form&gt; می‌توانید از تابع کمکی method_field برای تولید فیلد _method استفاده کنید: method_field(&#39;PUT&#39;) دسترسی به مسیر فعلی در لاراول می‌توانید از متدهای current ، currentRouteName و currentRouteAction در facade Route برای دسترسی به اطلاعات مربوط به مسیر رسیدگی به درخواست ورودی استفاده کنید: $route = Route::current(); $name = Route::currentRouteName(); $action = Route::currentRouteAction(); برای کسب اطلاعات بیشتر درباره کلاس پایه Route facade و Route instance، به مستندات API مراجعه کنید." />
+<meta property="og:description" content="مسیرهای پایه در لاراول یک URI و یک تابع Closure می‌پذیرند که یک متد بسیار ساده برای تعریف مسیرها ارائه می‌دهد: Route::get(&#39;foo&#39;, function () { return &#39;Hello World&#39;; }); فایل‌های route پیش‌فرض در لاراول تمام مسیرهای لاراول در فایل‌های route که در دایرکتوری routes قرار می‌گیرند، تعریف شده‌ است. این فایل‌ها به صورت خودکار توسط فریم ورک بارگزاری می‌شوند. فایل routes/web.php مسیرهایی را برای رابط وب تعریف می‌کند. این مسیرها به گروه middlewareweb اختصاص داده می‌شوند که قابلیت‌هایی مانند حالت جلسه و حفاظت CSRF را ارائه می‌دهند. مسیرهای موجود در routes/api.php در گروه middleware api قرار می‌گیرند. دراکثر برنامه‌های کاربردی لاراول، بایستی کار خود را با تعریف مسیرها در فایل routes/web.php شروع کنید. می‌توان به مسیرهای تعریف شده در فایل routes/web.php با وارد کردن URL مسیر تعریف شده در مرورگر، دسترسی داشت. به عنوان مثال، اگر در مرورگر خود آدرس http://your-app.dev/user را وارد کنید، می‌توانید به مسیر زیر دسترسی داشته باشید: Route::get(&#39;/user&#39;, &#39;UserController@index&#39;); مسیرهای تعریف شده در فایل routes/api.php توسط RouteServiceProvider در یک گروه مسیر قرار می‌گیرند. در این گروه، پیشوند /api به صورت خودکار به URL اعمال می‌شود، در این صورت، دیگر لازم نیست به صورت دستی آن را به مسیرهای درون فایل اعمال کنید. می‌توان پیشوند و گزینه‌های دیگر در گروه مسیر با ایجاد تغییر در کلاس RouteServiceProvider تنظیم کرد. متدهای router قابل دسترس در مسیریابی لاراول توسط روتر می‌توان مسیرهایی را که به هر درخواست از HTTP پاسخ می‌دهند را ثبت و تعریف کرد: Route::get($uri, $callback); Route::post($uri, $callback); Route::put($uri, $callback); Route::patch($uri, $callback); Route::delete($uri, $callback); Route::options($uri, $callback); گاهی ممکن است لازم باشد مسیری را که به چندین درخواست HTTP پاسخ می‌دهد، ثبت کنید. می‌توان این کار را با استفاده از متد match انجام داد. حتی می‌توان با استفاده از متد any مسیری را ثبت کرد که به تمام درخواست‌های HTTP پاسخ می‌دهد: Route::match([&#39;get&#39;, &#39;post&#39;], &#39;/&#39;, function () { // }); Route::any(&#39;foo&#39;, function () { // }); در مسیریابی لاراول CSRF محافظت هر فرم‌ HTML که به مسیرهای POST ، PUT یا DELETE که در فایل مسیرهای web تعریف شده‌اند، اشاره دارد، باید شامل یک فیلد نشانه CSRF باشند. در غیر این صورت، درخواست رد خواهد شد. &lt;form method=&quot;POST&quot; action=&quot;/profile&quot;&gt; {{ csrf_field() }} ... &lt;/form&gt; تغییر مسیر یا redirect route در لاراول اگر مسیری را تعریف می‌کنید که باید به URI دیگری هدایت می‌شود، باید از متد Route::redirect استفاده کنید. این متد یک میانبر مناسب ارائه می‌دهد، به طوری که برای انجام یک تغییر مسیر (redirect) ساده دیگر نیازی به تعریف یک مسیر کامل یا یک کنترلر نخواهید داشت: Route::redirect(&#39;/here&#39;, &#39;/there&#39;, 301); مسیریابی در لاراول : مسیرهای view اگر مسیر یا route نیاز به برگرداندن یک view داشته باشد، می‌توانید از متد Route::view استفاده کنید. درست مثل متد redirect ، این متد نیز یک میانبر ساده ارائه می‌دهد، بنابراین نباید یک مسیر کامل یا کنترلر تعریف شود. متد view یک URI به عنوان آرگومان اول و نام یک view را به عنوان آرگومان دوم دریافت می‌کند. علاوه بر این می‌توان آرایه‌ای از داده‌ها را برای انتقال به view به عنوان آرگومان سوم منتقل کنید که استفاده از این آرگومان اختیاری است: Route::view(&#39;/welcome&#39;, &#39;welcome&#39;); Route::view(&#39;/welcome&#39;, &#39;welcome&#39;, [&#39;name&#39; =&gt; &#39;Taylor&#39;]); پارامترهای مسیر (route parameters) در مسیریابی لاراول گاهی ممکن است نیاز به گرفتن بخش‌هایی از URI در مسیر خود داشته باشید. برای مثال، ممکن است نیاز به دریافت شناسه کاربر (id) از URL داشته باشید. این کار را می‌توان با تعیین پارامترهای مسیر انجام داد. به مثال زیر توجه کنید: Route::get(&#39;user/{id}&#39;, function ($id) { return &#39;User &#39;.$id; }); همچنین می‌توان چند پارامتر موردنیاز را به صورت زیر تعریف کرد: Route::get(&#39;posts/{post}/comments/{comment}&#39;, function ($postId, $commentId) { // }); پارامترهای مسیر در داخل براکت {} قرار می‌گیرند و باید از حروف الفبا تشکیل شده باشند و نباید حاوی کاراکتر ( - ) باشد. به جای استفاده از کاراکتر ( - ) می‌توان از کاراکتر زیرخط ( _ ) استفاده کرد. پارامترهای مسیر به callback / controllers مسیر براساس سفارش تزریق می‌شوند. نام آرگومان‌های callback / controller زیاد مهم نیست. پارامترهای اختیاری یا Optional در مسیریابی لاراول گاهی ممکن است نیاز به تعیین پارامتر مسیر داشته باشید، اما استفاده از پارامتر مسیر را اختیاری کنید. این کار را می‌توان با قرار دادن یک علامت سوال ( ؟ ) بعد از نام پارامتر انجام داد: Route::get(&#39;user/{name?}&#39;, function ($name = null) { return $name; }); Route::get(&#39;user/{name?}&#39;, function ($name = &#39;John&#39;) { return $name; }); عبارات منظم (Regular Expression) در مسیریابی لاراول می‌توان فرمت پارامترهای مسیر را با استفاده از متد where در یک نمونه مسیر تنظیم کرد. متد where نام پارامتر را دریافت می کند و عبارت منظمی که پارامتر بوسیله آن باید محدود شود را تعریف می‌کند : Route::get(&#39;user/{name}&#39;, function ($name) { // })-&gt;where(&#39;name&#39;, &#39;[A-Za-z]+&#39;); Route::get(&#39;user/{id}&#39;, function ($id) { // })-&gt;where(&#39;id&#39;, &#39;[0-9]+&#39;); Route::get(&#39;user/{id}/{name}&#39;, function ($id, $name) { // })-&gt;where([&#39;id&#39; =&gt; &#39;[0-9]+&#39;, &#39;name&#39; =&gt; &#39;[a-z]+&#39;]); استفاده از عبارات منظم به صورت عمومی در مسیریابی لاراول اگر بخواهید یک پارامتر مسیر همواره با یک «عبارات منظم» خاص محدود شود، می‌توانید از متد pattern استفاده کنید. این الگوها را در متد boot مربوط به RouteServiceProvider خود تعریف کنید: /** * Define your route model bindings, pattern filters, etc. * * @return void */ public function boot() { Route::pattern(&#39;id&#39;, &#39;[0-9]+&#39;); parent::boot(); } زمانی که الگوی خاصی تعریف شده باشد، با استفاده از نام پارامتر به صورت خودکار به تمام مسیرها اعمال می‌شود: Route::get(&#39;user/{id}&#39;, function ($id) { // Only executed if {id} is numeric... }); مسیرهای نام‌گذاری شده در Routing مسیرهای نامگذاری شده (Named routes) این امکان را می‌دهد تا به راحتی برای آن‌ها URL تولید کنید یا از آن‌ها برای redirect کردن در برنامه استفاده کنید. برای اختصاص یک نام به یک مسیر از متد name در تعریف مسیر به صورت زیر استفاده کنید: Route::get(&#39;user/profile&#39;, function () { // })-&gt;name(&#39;profile&#39;); همچنین می‌توان نام مسیر را به اکشن‌های یک کنترلر به صورت زیر اختصاص داد: Route::get(&#39;user/profile&#39;, &#39;UserController@showProfile&#39;)-&gt;name(&#39;profile&#39;); تولید URLها برای مسیرهای نامگذاری شده در لاراول زمانی که یک نام برای یک مسیر مشخص اختصاص دادید، از طریق تابع route عمومی، می‌توانید از نام مسیر در زمان تولید URLها یا تغییرمسیرها (redirect) به صورت زیر استفاده کنید: // Generating URLs... $url = route(&#39;profile&#39;); // Generating Redirects... return redirect()-&gt;route(&#39;profile&#39;); اگر مسیر نامگذاری شده شامل پارامتر باشد، می‌توانید پارامترها را به عنوان آرگومان دوم به تابع route منتقل کنید. پارامترهای داده شده به صورت خودکار به URL تولید شده وارد می‌شوند: Route::get(&#39;user/{id}/profile&#39;, function ($id) { // })-&gt;name(&#39;profile&#39;); $url = route(&#39;profile&#39;, [&#39;id&#39; =&gt; 1]); بررسی مسیر فعلی در مسیر یابی لاراول برای مشخص کردن اینکه آیا درخواست فعلی HTTP به یک مسیر نامگذاری شده هدایت شده است، می‌توانید از متد named در نمونه Route استفاده کنید. برای مثال، می‌توانید نام مسیر فعلی را در middleware مسیر چک کنید: /** * Handle an incoming request. * * @param \Illuminate\Http\Request $request * @param \Closure $next * @return mixed */ public function handle($request, Closure $next) { if ($request-&gt;route()-&gt;named(&#39;profile&#39;)) { // } return $next($request); } گروه‌های مسیر در لاراول Route Groups ممکن است برخی از ویژگی‌های مسیر، مانند middleware یا فضای نامی (namespaces)، در تعداد زیادی از مسیرها مشترک باشد. می‌توان بدون نیاز به تعریف جداگانه این ویژگی‌ها در هر یک از مسیرها، از امکان گروه‌ بندی مسیرها استفاده کرد و آن ویژگی‌ها را به تمام مسیرهای موجود در گروه اختصاص داد. ویژگی‌های به اشتراک گذاشته شده در قالب آرایه به عنوان اولین پارامتر در متد Route::group تعیین می‌شوند. مسیریابی در Middleware برای اختصاص یک Middleware به تمامی مسیرهای موجود در یک گروه، قبل از تعریف گروه می‌توانید از متد middleware استفاده کنید. Middlewareها به ترتیبی که در آرایه لیست شده‌اند بر روی مسیرها اعمال می‌شوند: Route::middleware([&#39;first&#39;, &#39;second&#39;])-&gt;group(function () { Route::get(&#39;/&#39;, function () { // Uses first &amp; second Middleware }); Route::get(&#39;user/profile&#39;, function () { // Uses first &amp; second Middleware }); }); فضای نام Namespaces می‌توان یک فضای نامی PHP را به یک گروه از کنترلرها با استفاده از متد namespace اختصاص داد: Route::namespace(&#39;Admin&#39;)-&gt;group(function () { // Controllers Within The &quot;App\Http\Controllers\Admin&quot; Namespace }); در حالت پیش‌فرض، RouteServiceProvider فایل‌های مسیر را در یک گروه namespace قرار می‌دهد، که امکان می‌دهد تا مسیرهای کنترلر را بدون مشخص کردن پیشوند کامل App\Http\Controllers ثبت کنید. پس از آن فقط نیاز به مشخص کردن بخشی از فضای نامی دارید که بعد از App\Http\Controllers قرار دارد. در لاراول Sub-Domain مسیریابی از گروه‌های مسیر همچنین برای مدیریت مسیریابی زیر دامنه (Sub-Domain) استفاده می‌شود. زیر دامنه‌ها پارامترهای مسیر مثل URIهای مسیر را اختصاص داده و همچنین امکان می‌دهند تا بخشی از زیر دامنه را برای استفاده در مسیر یا کنترلر خود دریافت کنید. می‌توان زیر دامنه را قبل از تعریف گروه با فراخوانی متد domain مشخص کرد: Route::domain(&#39;{account}.myapp.com&#39;)-&gt;group(function () { Route::get(&#39;user/{id}&#39;, function ($account, $id) { // }); }); در مسیریابی لاراول Route پیشوندهای برای اضافه کردن پیشوند به هر مسیر موجود در گروه از متد prefix استفاده می‌شود . برای مثال، در صورتیکه بخواهید تمام مسیرهای URIهای موجود در گروه، پیشوند admin را داشته باشد، به صورت زیر عمل کنید: Route::prefix(&#39;admin&#39;)-&gt;group(function () { Route::get(&#39;users&#39;, function () { // Matches The &quot;/admin/users&quot; URL }); }); Route Model Binding در مسیریابی لاراول هنگام تزریق یک model ID به یک مسیر یا یک اکشن مربوط به کنترلر، اغلب یک پرس و جو برای بازیابی مدلی که مربوط به آن شناسه است، بکار می‌برید. binding مدل مسیر در لاراول راه مناسبی است که از طریق آن می‌توان به طور خودکار یک نمونه مدل را به طور مستقیم در مسیرها تزریق کرد. برای مثال، به جای تزریق یک شناسه کاربر (ID)، می‌توان کل نمونه مدل User که با شناسه داده شده مطابقت دارد را تزریق کرد. Implicit Binding : مسیریابی در لاراول لاراول به طور خودکار مدل‌های Eloquent تعریف شده در مسیرها یا اکشن‌های کنترلر که نام‌های متغیر type-hint شده آن‌ها با نام یک بخش از مسیر منطبق است را resolve می‌کند. مثال زیر را در نظر بگیرید: Route::get(&#39;api/users/{user}&#39;, function (App\User $user) { return $user-&gt;email; }); از آنجایی که متغیر $user به عنوان Eloquent modelApp\User اعلان نوع یا type-hint شده است و نام متغیر با بخش {user} در URI مطابق است، لاراول به طور خودکار نمونه مدلی را که شناسه یا ID آن با مقدار موجود در URI منطبق است را تزریق می‌کند. اگر نمونه مطابق در پایگاه داده یافت نشود، یک پاسخ 404 HTTP به طور اتوماتیک تولید می‌شود. مسیریابی در لاراول : سفارشی سازی نام کلید اگر بخواهید binding مدل در پایگاه داده از ستونی غیر از id در هنگام بازیابی یک کلاس مدل استفاده کند، می‌توانید متد getRouteKeyName را در مدل Eloquent بازنویسی کنید: /** * Get the route key for the model. * * @return string */ public function getRouteKeyName() { return &#39;slug&#39;; } Explicit Binding : مسیریابی در لاراول برای ثبت یک پیوند صریح (Explicit Binding)، از متد model روتر برای مشخص کردن کلاس برای یک پارامتر داده استفاده کنید. بایستی binding مدل صریح خود را در متد boot در کلاس RouteServiceProvider تعریف کنید: public function boot() { parent::boot(); Route::model(&#39;user&#39;, App\User::class); } سپس، مسیری را که شامل یک پارامتر {user} است را تعریف کنید: Route::get(&#39;profile/{user}&#39;, function (App\User $user) { // }); از آنجایی که ما تمام پارامترهای {user} را به مدل App\User محدود کرده‌ایم، نمونه‌ای از کلاس User به مسیر تزریق می‌شود. برای مثال، هنگام ایجاد یک درخواست برای profile/1 یک نمونه از کلاس User که دارای شناسه 1 است از پایگاه داده تزریق می‌شود. اگر نمونه مطابق با آن در پایگاه داده یافت نشود، یک پاسخ 404 HTTP به طور اتوماتیک تولید می‌شود. سفارشی سازی Resolution Logic در مسیریابی لاراول اگر بخواهید از Resolution Logic استفاده کنید، باید از متد Route::bind استفاده کنید. Closure به متد bind ، مقدار یک بخش از URI را دریافت می‌کند و نمونه کلاسی را که باید به مسیر تزریق شود را بازمی‌گرداند: public function boot() { parent::boot(); Route::bind(&#39;user&#39;, function ($value) { return App\User::where(&#39;name&#39;, $value)-&gt;first() ?? abort(404); }); } جعل متد فرم در مسیریابی در لاراول فرم‌های HTML از عملیات PUT ، PATCH یا DELETE پشتیبانی نمی‌کنند. بنابراین، هنگام تعریف مسیرهای PUT ، PATCH یا DELETE که از یک فرم HTML فراخوانی می‌شوند، نیاز دارید یک فیلد _method مخفی را به فرم اضافه کنید. مقدار فرستاده شده با فیلد _method به عنوان متد درخواست HTTP مورد استفاده قرار می‌گیرد: &lt;form action=&quot;/foo/bar&quot; method=&quot;POST&quot;&gt; &lt;input type=&quot;hidden&quot; name=&quot;_method&quot; value=&quot;PUT&quot;&gt; &lt;input type=&quot;hidden&quot; name=&quot;_token&quot; value=&quot;{{ csrf_token() }}&quot;&gt; &lt;/form&gt; می‌توانید از تابع کمکی method_field برای تولید فیلد _method استفاده کنید: method_field(&#39;PUT&#39;) دسترسی به مسیر فعلی در لاراول می‌توانید از متدهای current ، currentRouteName و currentRouteAction در facade Route برای دسترسی به اطلاعات مربوط به مسیر رسیدگی به درخواست ورودی استفاده کنید: $route = Route::current(); $name = Route::currentRouteName(); $action = Route::currentRouteAction(); برای کسب اطلاعات بیشتر درباره کلاس پایه Route facade و Route instance، به مستندات API مراجعه کنید." />
+<link rel="canonical" href="http://localhost:4000/documentation/laravel/The-Basics/routing" />
+<meta property="og:url" content="http://localhost:4000/documentation/laravel/The-Basics/routing" />
+<meta property="og:site_name" content="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-01-28T20:38:42+03:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Routing یا مسیریابی در لاراول" />
+<meta name="twitter:site" content="@farhadmirzapour" />
+<meta name="twitter:creator" content="@Farhad Mirzapour" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"Routing یا مسیریابی در لاراول","url":"http://localhost:4000/documentation/laravel/The-Basics/routing","datePublished":"2018-01-28T20:38:42+03:30","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"dateModified":"2018-01-28T20:38:42+03:30","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/documentation/laravel/The-Basics/routing"},"author":{"@type":"Person","name":"Farhad Mirzapour"},"description":"مسیرهای پایه در لاراول یک URI و یک تابع Closure می‌پذیرند که یک متد بسیار ساده برای تعریف مسیرها ارائه می‌دهد: Route::get(&#39;foo&#39;, function () { return &#39;Hello World&#39;; }); فایل‌های route پیش‌فرض در لاراول تمام مسیرهای لاراول در فایل‌های route که در دایرکتوری routes قرار می‌گیرند، تعریف شده‌ است. این فایل‌ها به صورت خودکار توسط فریم ورک بارگزاری می‌شوند. فایل routes/web.php مسیرهایی را برای رابط وب تعریف می‌کند. این مسیرها به گروه middlewareweb اختصاص داده می‌شوند که قابلیت‌هایی مانند حالت جلسه و حفاظت CSRF را ارائه می‌دهند. مسیرهای موجود در routes/api.php در گروه middleware api قرار می‌گیرند. دراکثر برنامه‌های کاربردی لاراول، بایستی کار خود را با تعریف مسیرها در فایل routes/web.php شروع کنید. می‌توان به مسیرهای تعریف شده در فایل routes/web.php با وارد کردن URL مسیر تعریف شده در مرورگر، دسترسی داشت. به عنوان مثال، اگر در مرورگر خود آدرس http://your-app.dev/user را وارد کنید، می‌توانید به مسیر زیر دسترسی داشته باشید: Route::get(&#39;/user&#39;, &#39;UserController@index&#39;); مسیرهای تعریف شده در فایل routes/api.php توسط RouteServiceProvider در یک گروه مسیر قرار می‌گیرند. در این گروه، پیشوند /api به صورت خودکار به URL اعمال می‌شود، در این صورت، دیگر لازم نیست به صورت دستی آن را به مسیرهای درون فایل اعمال کنید. می‌توان پیشوند و گزینه‌های دیگر در گروه مسیر با ایجاد تغییر در کلاس RouteServiceProvider تنظیم کرد. متدهای router قابل دسترس در مسیریابی لاراول توسط روتر می‌توان مسیرهایی را که به هر درخواست از HTTP پاسخ می‌دهند را ثبت و تعریف کرد: Route::get($uri, $callback); Route::post($uri, $callback); Route::put($uri, $callback); Route::patch($uri, $callback); Route::delete($uri, $callback); Route::options($uri, $callback); گاهی ممکن است لازم باشد مسیری را که به چندین درخواست HTTP پاسخ می‌دهد، ثبت کنید. می‌توان این کار را با استفاده از متد match انجام داد. حتی می‌توان با استفاده از متد any مسیری را ثبت کرد که به تمام درخواست‌های HTTP پاسخ می‌دهد: Route::match([&#39;get&#39;, &#39;post&#39;], &#39;/&#39;, function () { // }); Route::any(&#39;foo&#39;, function () { // }); در مسیریابی لاراول CSRF محافظت هر فرم‌ HTML که به مسیرهای POST ، PUT یا DELETE که در فایل مسیرهای web تعریف شده‌اند، اشاره دارد، باید شامل یک فیلد نشانه CSRF باشند. در غیر این صورت، درخواست رد خواهد شد. &lt;form method=&quot;POST&quot; action=&quot;/profile&quot;&gt; {{ csrf_field() }} ... &lt;/form&gt; تغییر مسیر یا redirect route در لاراول اگر مسیری را تعریف می‌کنید که باید به URI دیگری هدایت می‌شود، باید از متد Route::redirect استفاده کنید. این متد یک میانبر مناسب ارائه می‌دهد، به طوری که برای انجام یک تغییر مسیر (redirect) ساده دیگر نیازی به تعریف یک مسیر کامل یا یک کنترلر نخواهید داشت: Route::redirect(&#39;/here&#39;, &#39;/there&#39;, 301); مسیریابی در لاراول : مسیرهای view اگر مسیر یا route نیاز به برگرداندن یک view داشته باشد، می‌توانید از متد Route::view استفاده کنید. درست مثل متد redirect ، این متد نیز یک میانبر ساده ارائه می‌دهد، بنابراین نباید یک مسیر کامل یا کنترلر تعریف شود. متد view یک URI به عنوان آرگومان اول و نام یک view را به عنوان آرگومان دوم دریافت می‌کند. علاوه بر این می‌توان آرایه‌ای از داده‌ها را برای انتقال به view به عنوان آرگومان سوم منتقل کنید که استفاده از این آرگومان اختیاری است: Route::view(&#39;/welcome&#39;, &#39;welcome&#39;); Route::view(&#39;/welcome&#39;, &#39;welcome&#39;, [&#39;name&#39; =&gt; &#39;Taylor&#39;]); پارامترهای مسیر (route parameters) در مسیریابی لاراول گاهی ممکن است نیاز به گرفتن بخش‌هایی از URI در مسیر خود داشته باشید. برای مثال، ممکن است نیاز به دریافت شناسه کاربر (id) از URL داشته باشید. این کار را می‌توان با تعیین پارامترهای مسیر انجام داد. به مثال زیر توجه کنید: Route::get(&#39;user/{id}&#39;, function ($id) { return &#39;User &#39;.$id; }); همچنین می‌توان چند پارامتر موردنیاز را به صورت زیر تعریف کرد: Route::get(&#39;posts/{post}/comments/{comment}&#39;, function ($postId, $commentId) { // }); پارامترهای مسیر در داخل براکت {} قرار می‌گیرند و باید از حروف الفبا تشکیل شده باشند و نباید حاوی کاراکتر ( - ) باشد. به جای استفاده از کاراکتر ( - ) می‌توان از کاراکتر زیرخط ( _ ) استفاده کرد. پارامترهای مسیر به callback / controllers مسیر براساس سفارش تزریق می‌شوند. نام آرگومان‌های callback / controller زیاد مهم نیست. پارامترهای اختیاری یا Optional در مسیریابی لاراول گاهی ممکن است نیاز به تعیین پارامتر مسیر داشته باشید، اما استفاده از پارامتر مسیر را اختیاری کنید. این کار را می‌توان با قرار دادن یک علامت سوال ( ؟ ) بعد از نام پارامتر انجام داد: Route::get(&#39;user/{name?}&#39;, function ($name = null) { return $name; }); Route::get(&#39;user/{name?}&#39;, function ($name = &#39;John&#39;) { return $name; }); عبارات منظم (Regular Expression) در مسیریابی لاراول می‌توان فرمت پارامترهای مسیر را با استفاده از متد where در یک نمونه مسیر تنظیم کرد. متد where نام پارامتر را دریافت می کند و عبارت منظمی که پارامتر بوسیله آن باید محدود شود را تعریف می‌کند : Route::get(&#39;user/{name}&#39;, function ($name) { // })-&gt;where(&#39;name&#39;, &#39;[A-Za-z]+&#39;); Route::get(&#39;user/{id}&#39;, function ($id) { // })-&gt;where(&#39;id&#39;, &#39;[0-9]+&#39;); Route::get(&#39;user/{id}/{name}&#39;, function ($id, $name) { // })-&gt;where([&#39;id&#39; =&gt; &#39;[0-9]+&#39;, &#39;name&#39; =&gt; &#39;[a-z]+&#39;]); استفاده از عبارات منظم به صورت عمومی در مسیریابی لاراول اگر بخواهید یک پارامتر مسیر همواره با یک «عبارات منظم» خاص محدود شود، می‌توانید از متد pattern استفاده کنید. این الگوها را در متد boot مربوط به RouteServiceProvider خود تعریف کنید: /** * Define your route model bindings, pattern filters, etc. * * @return void */ public function boot() { Route::pattern(&#39;id&#39;, &#39;[0-9]+&#39;); parent::boot(); } زمانی که الگوی خاصی تعریف شده باشد، با استفاده از نام پارامتر به صورت خودکار به تمام مسیرها اعمال می‌شود: Route::get(&#39;user/{id}&#39;, function ($id) { // Only executed if {id} is numeric... }); مسیرهای نام‌گذاری شده در Routing مسیرهای نامگذاری شده (Named routes) این امکان را می‌دهد تا به راحتی برای آن‌ها URL تولید کنید یا از آن‌ها برای redirect کردن در برنامه استفاده کنید. برای اختصاص یک نام به یک مسیر از متد name در تعریف مسیر به صورت زیر استفاده کنید: Route::get(&#39;user/profile&#39;, function () { // })-&gt;name(&#39;profile&#39;); همچنین می‌توان نام مسیر را به اکشن‌های یک کنترلر به صورت زیر اختصاص داد: Route::get(&#39;user/profile&#39;, &#39;UserController@showProfile&#39;)-&gt;name(&#39;profile&#39;); تولید URLها برای مسیرهای نامگذاری شده در لاراول زمانی که یک نام برای یک مسیر مشخص اختصاص دادید، از طریق تابع route عمومی، می‌توانید از نام مسیر در زمان تولید URLها یا تغییرمسیرها (redirect) به صورت زیر استفاده کنید: // Generating URLs... $url = route(&#39;profile&#39;); // Generating Redirects... return redirect()-&gt;route(&#39;profile&#39;); اگر مسیر نامگذاری شده شامل پارامتر باشد، می‌توانید پارامترها را به عنوان آرگومان دوم به تابع route منتقل کنید. پارامترهای داده شده به صورت خودکار به URL تولید شده وارد می‌شوند: Route::get(&#39;user/{id}/profile&#39;, function ($id) { // })-&gt;name(&#39;profile&#39;); $url = route(&#39;profile&#39;, [&#39;id&#39; =&gt; 1]); بررسی مسیر فعلی در مسیر یابی لاراول برای مشخص کردن اینکه آیا درخواست فعلی HTTP به یک مسیر نامگذاری شده هدایت شده است، می‌توانید از متد named در نمونه Route استفاده کنید. برای مثال، می‌توانید نام مسیر فعلی را در middleware مسیر چک کنید: /** * Handle an incoming request. * * @param \\Illuminate\\Http\\Request $request * @param \\Closure $next * @return mixed */ public function handle($request, Closure $next) { if ($request-&gt;route()-&gt;named(&#39;profile&#39;)) { // } return $next($request); } گروه‌های مسیر در لاراول Route Groups ممکن است برخی از ویژگی‌های مسیر، مانند middleware یا فضای نامی (namespaces)، در تعداد زیادی از مسیرها مشترک باشد. می‌توان بدون نیاز به تعریف جداگانه این ویژگی‌ها در هر یک از مسیرها، از امکان گروه‌ بندی مسیرها استفاده کرد و آن ویژگی‌ها را به تمام مسیرهای موجود در گروه اختصاص داد. ویژگی‌های به اشتراک گذاشته شده در قالب آرایه به عنوان اولین پارامتر در متد Route::group تعیین می‌شوند. مسیریابی در Middleware برای اختصاص یک Middleware به تمامی مسیرهای موجود در یک گروه، قبل از تعریف گروه می‌توانید از متد middleware استفاده کنید. Middlewareها به ترتیبی که در آرایه لیست شده‌اند بر روی مسیرها اعمال می‌شوند: Route::middleware([&#39;first&#39;, &#39;second&#39;])-&gt;group(function () { Route::get(&#39;/&#39;, function () { // Uses first &amp; second Middleware }); Route::get(&#39;user/profile&#39;, function () { // Uses first &amp; second Middleware }); }); فضای نام Namespaces می‌توان یک فضای نامی PHP را به یک گروه از کنترلرها با استفاده از متد namespace اختصاص داد: Route::namespace(&#39;Admin&#39;)-&gt;group(function () { // Controllers Within The &quot;App\\Http\\Controllers\\Admin&quot; Namespace }); در حالت پیش‌فرض، RouteServiceProvider فایل‌های مسیر را در یک گروه namespace قرار می‌دهد، که امکان می‌دهد تا مسیرهای کنترلر را بدون مشخص کردن پیشوند کامل App\\Http\\Controllers ثبت کنید. پس از آن فقط نیاز به مشخص کردن بخشی از فضای نامی دارید که بعد از App\\Http\\Controllers قرار دارد. در لاراول Sub-Domain مسیریابی از گروه‌های مسیر همچنین برای مدیریت مسیریابی زیر دامنه (Sub-Domain) استفاده می‌شود. زیر دامنه‌ها پارامترهای مسیر مثل URIهای مسیر را اختصاص داده و همچنین امکان می‌دهند تا بخشی از زیر دامنه را برای استفاده در مسیر یا کنترلر خود دریافت کنید. می‌توان زیر دامنه را قبل از تعریف گروه با فراخوانی متد domain مشخص کرد: Route::domain(&#39;{account}.myapp.com&#39;)-&gt;group(function () { Route::get(&#39;user/{id}&#39;, function ($account, $id) { // }); }); در مسیریابی لاراول Route پیشوندهای برای اضافه کردن پیشوند به هر مسیر موجود در گروه از متد prefix استفاده می‌شود . برای مثال، در صورتیکه بخواهید تمام مسیرهای URIهای موجود در گروه، پیشوند admin را داشته باشد، به صورت زیر عمل کنید: Route::prefix(&#39;admin&#39;)-&gt;group(function () { Route::get(&#39;users&#39;, function () { // Matches The &quot;/admin/users&quot; URL }); }); Route Model Binding در مسیریابی لاراول هنگام تزریق یک model ID به یک مسیر یا یک اکشن مربوط به کنترلر، اغلب یک پرس و جو برای بازیابی مدلی که مربوط به آن شناسه است، بکار می‌برید. binding مدل مسیر در لاراول راه مناسبی است که از طریق آن می‌توان به طور خودکار یک نمونه مدل را به طور مستقیم در مسیرها تزریق کرد. برای مثال، به جای تزریق یک شناسه کاربر (ID)، می‌توان کل نمونه مدل User که با شناسه داده شده مطابقت دارد را تزریق کرد. Implicit Binding : مسیریابی در لاراول لاراول به طور خودکار مدل‌های Eloquent تعریف شده در مسیرها یا اکشن‌های کنترلر که نام‌های متغیر type-hint شده آن‌ها با نام یک بخش از مسیر منطبق است را resolve می‌کند. مثال زیر را در نظر بگیرید: Route::get(&#39;api/users/{user}&#39;, function (App\\User $user) { return $user-&gt;email; }); از آنجایی که متغیر $user به عنوان Eloquent modelApp\\User اعلان نوع یا type-hint شده است و نام متغیر با بخش {user} در URI مطابق است، لاراول به طور خودکار نمونه مدلی را که شناسه یا ID آن با مقدار موجود در URI منطبق است را تزریق می‌کند. اگر نمونه مطابق در پایگاه داده یافت نشود، یک پاسخ 404 HTTP به طور اتوماتیک تولید می‌شود. مسیریابی در لاراول : سفارشی سازی نام کلید اگر بخواهید binding مدل در پایگاه داده از ستونی غیر از id در هنگام بازیابی یک کلاس مدل استفاده کند، می‌توانید متد getRouteKeyName را در مدل Eloquent بازنویسی کنید: /** * Get the route key for the model. * * @return string */ public function getRouteKeyName() { return &#39;slug&#39;; } Explicit Binding : مسیریابی در لاراول برای ثبت یک پیوند صریح (Explicit Binding)، از متد model روتر برای مشخص کردن کلاس برای یک پارامتر داده استفاده کنید. بایستی binding مدل صریح خود را در متد boot در کلاس RouteServiceProvider تعریف کنید: public function boot() { parent::boot(); Route::model(&#39;user&#39;, App\\User::class); } سپس، مسیری را که شامل یک پارامتر {user} است را تعریف کنید: Route::get(&#39;profile/{user}&#39;, function (App\\User $user) { // }); از آنجایی که ما تمام پارامترهای {user} را به مدل App\\User محدود کرده‌ایم، نمونه‌ای از کلاس User به مسیر تزریق می‌شود. برای مثال، هنگام ایجاد یک درخواست برای profile/1 یک نمونه از کلاس User که دارای شناسه 1 است از پایگاه داده تزریق می‌شود. اگر نمونه مطابق با آن در پایگاه داده یافت نشود، یک پاسخ 404 HTTP به طور اتوماتیک تولید می‌شود. سفارشی سازی Resolution Logic در مسیریابی لاراول اگر بخواهید از Resolution Logic استفاده کنید، باید از متد Route::bind استفاده کنید. Closure به متد bind ، مقدار یک بخش از URI را دریافت می‌کند و نمونه کلاسی را که باید به مسیر تزریق شود را بازمی‌گرداند: public function boot() { parent::boot(); Route::bind(&#39;user&#39;, function ($value) { return App\\User::where(&#39;name&#39;, $value)-&gt;first() ?? abort(404); }); } جعل متد فرم در مسیریابی در لاراول فرم‌های HTML از عملیات PUT ، PATCH یا DELETE پشتیبانی نمی‌کنند. بنابراین، هنگام تعریف مسیرهای PUT ، PATCH یا DELETE که از یک فرم HTML فراخوانی می‌شوند، نیاز دارید یک فیلد _method مخفی را به فرم اضافه کنید. مقدار فرستاده شده با فیلد _method به عنوان متد درخواست HTTP مورد استفاده قرار می‌گیرد: &lt;form action=&quot;/foo/bar&quot; method=&quot;POST&quot;&gt; &lt;input type=&quot;hidden&quot; name=&quot;_method&quot; value=&quot;PUT&quot;&gt; &lt;input type=&quot;hidden&quot; name=&quot;_token&quot; value=&quot;{{ csrf_token() }}&quot;&gt; &lt;/form&gt; می‌توانید از تابع کمکی method_field برای تولید فیلد _method استفاده کنید: method_field(&#39;PUT&#39;) دسترسی به مسیر فعلی در لاراول می‌توانید از متدهای current ، currentRouteName و currentRouteAction در facade Route برای دسترسی به اطلاعات مربوط به مسیر رسیدگی به درخواست ورودی استفاده کنید: $route = Route::current(); $name = Route::currentRouteName(); $action = Route::currentRouteAction(); برای کسب اطلاعات بیشتر درباره کلاس پایه Route facade و Route instance، به مستندات API مراجعه کنید.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="stylesheet" href="/assets/prisma/prism.css">
+    <!-- favicons and rss -->
+    <link rel="alternate" type="application/rss+xml" title="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" href="/feed.xml">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- header -->
+<header class="header" role="banner" aria-label="Header">
+    <button class="hamburger-button" onclick="hamburgerMenu();" role="button" aria-label="Hamburger menu button">
+        <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    </button>
+    <a href="/" class="logo" role="link" aria-label="Home">
+        <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo">
+    </a>
+    <nav class="navigation" role="navigation" aria-label="Navigation">
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item">
+                <a href="/" class="logo" role="menuitem" aria-label="Home">
+                    <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo">
+                </a>
+            </li>
+            
+            <li role="menuitem"><a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a></li>
+            
+            <li role="menuitem"><a href="/contactus" role="menuitem" aria-label="تماس">تماس</a></li>
+            
+        </ul>
+    </nav>
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox">
+        </form>
+    </div>
+</header>
+
+<nav id="hamburger-menu" role="navigation" aria-label="Hamburger menu">
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox">
+        </form>
+    </div>
+    <div class="home-nav" role="navigation" aria-label="Site navigation">
+        <a href="/" role="menuitem" aria-label="Home">صفحه اصلی</a>
+        
+        <a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a>
+        
+        <a href="/contactus" role="menuitem" aria-label="تماس">تماس</a>
+        
+    </div>
+
+    
+    <div class="doc-nav" role="navigation" aria-label="Documentation navigation">
+        <p role="presentation" aria-label="Category name">
+            اصول آموزش Laravel
+        </p>
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/2017/12/18/laravel.html" class="doc-link" role="link" aria-label="Routing یا مسیریابی در لاراول">مقدمه</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Digging-Deeper/collections" class="doc-link" role="link" aria-label="معرفی collections">معرفی collections</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Database/database" class="doc-link" role="link" aria-label="پایگاه داده ها">پایگاه داده ها</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Database/queries" class="doc-link" role="link" aria-label="آشنایی با Query Builder">آشنایی با Query Builder</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent" class="doc-link" role="link" aria-label="آشنایی با eloquent">آشنایی با eloquent</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-relationships" class="doc-link" role="link" aria-label="eloquent relationships  آموزش">eloquent relationships  آموزش</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-mutators" class="doc-link" role="link" aria-label="آشنایی با eloquent mutators">آشنایی با eloquent mutators</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-collections" class="doc-link" role="link" aria-label="آشنایی با eloquent collections">آشنایی با eloquent collections</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-serialization" class="doc-link" role="link" aria-label="آشنایی با eloquent serialization">آشنایی با eloquent serialization</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Architecture-Concepts/lifecycle" class="doc-link" role="link" aria-label="چرخه ی حیات درخواست (Request Lifecycle)">چرخه ی حیات درخواست (Request Lifecycle)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/routing" class="doc-link" role="link" aria-label="Routing یا مسیریابی در لاراول">Routing یا مسیریابی در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/middleware" class="doc-link" role="link" aria-label="آموزش Middleware">آموزش Middleware</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/csrf" class="doc-link" role="link" aria-label="حفاظت CSRF">حفاظت CSRF</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/controllers" class="doc-link" role="link" aria-label="استفاده از Controller">استفاده از Controller</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/requests" class="doc-link" role="link" aria-label="اصول requests">اصول requests</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/views" class="doc-link" role="link" aria-label="ایجاد view">ایجاد view</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/session" class="doc-link" role="link" aria-label="استفاده از  Session">استفاده از  Session</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/responses" class="doc-link" role="link" aria-label="پاسخ Response">پاسخ Response</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/urls" class="doc-link" role="link" aria-label="تولید URL در لاراول">تولید URL در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/validation" class="doc-link" role="link" aria-label="validation یا اعتبارسنجی در لاراول">validation یا اعتبارسنجی در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/errors" class="doc-link" role="link" aria-label="مدیریت Errors &amp; Logging">مدیریت Errors &amp; Logging</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/blade" class="doc-link" role="link" aria-label="Blade Templates">Blade Templates</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/localization" class="doc-link" role="link" aria-label="اصول localization">اصول localization</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/frontend" class="doc-link" role="link" aria-label="JavaScript &amp; CSS Scaffolding">JavaScript &amp; CSS Scaffolding</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </ul>
+    </div>
+    
+</nav>
+<!-- main content -->
+<main class="container" role="main">
+    <div class="rcdoccontainerimg">
+<div class="rc-DRTVBanner-new rc-DRTVBanner-bigsize">
+    <div style="background: url('/images/original/laravel.png'); " class="blurred_img"></div>
+    <div class="mask"></div>
+    <div class="bot"></div>
+    <div class="over">
+        <div class="container-rc">
+            <img class="image" src="/images/original/laravel.png" alt="Routing یا مسیریابی در لاراول" height="190">
+            <div class="desktop-banner-container">
+                <h1 class="display-5-text headline">
+                    
+                    
+                    اصول آموزش Laravel
+                    </h1>
+                <!--<div class="tagslist"><ul class='lyda-tag-list'><li class='lyda-tag-list-title'>برچسب ها</li><li><a class="tags" href="/tag/لاراول">#لاراول</a></li><li><a class="tags" href="/tag/لاراول-5-5">#لاراول 5.5</a></li></ul></div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="bread-crumb">-->
+<!--<div class="container   ">-->
+<!--<div class="pull-right ">-->
+<!--<div class="bread-button text-custom b-left">-->
+<!--انتشار : 2 ماه پیش-->
+<!--</div>-->
+<!--<a href="/category/article/" class="bread-button back-to-all b-left hidden-xs">همه مقالات</a>-->
+<!--<div class="cat-lable">-->
+<!--<a href="/category/article/laravel/">-->
+<!--لاراول-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<script>
+    $(window).scroll(function(){
+        var sticky = $('.doc-menu'),
+            scroll = $(window).scrollTop();
+        if (scroll >= 101) {sticky.addClass('doc-header-scroll'); }
+        else {sticky.removeClass('doc-header-scroll'); };
+    });
+</script>
+</div>
+<div class="doc-container">
+
+    <div class="doc-menu">
+    
+    <ul>
+        <li>
+            <a href="/2017/12/18/laravel.html" class="active doc-link" role="link">
+                مقدمه
+            </a>
+        </li>
+        
+        <li>
+            <span class="caret">معماری Laravel</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="چرخه ی حیات درخواست (Request Lifecycle)" href="/documentation/laravel/Architecture-Concepts/lifecycle" class="active doc-link" role="link">
+                چرخه ی حیات درخواست (Request Lifecycle)
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم اساسی</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="Routing یا مسیریابی در لاراول" href="/documentation/laravel/The-Basics/routing" class="active doc-link" role="link">
+                Routing یا مسیریابی در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آموزش Middleware" href="/documentation/laravel/The-Basics/middleware" class="active doc-link" role="link">
+                آموزش Middleware
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="حفاظت CSRF" href="/documentation/laravel/The-Basics/csrf" class="active doc-link" role="link">
+                حفاظت CSRF
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="استفاده از Controller" href="/documentation/laravel/The-Basics/controllers" class="active doc-link" role="link">
+                استفاده از Controller
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول requests" href="/documentation/laravel/The-Basics/requests" class="active doc-link" role="link">
+                اصول requests
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="ایجاد view" href="/documentation/laravel/The-Basics/views" class="active doc-link" role="link">
+                ایجاد view
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="استفاده از  Session" href="/documentation/laravel/The-Basics/session" class="active doc-link" role="link">
+                استفاده از  Session
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="پاسخ Response" href="/documentation/laravel/The-Basics/responses" class="active doc-link" role="link">
+                پاسخ Response
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="تولید URL در لاراول" href="/documentation/laravel/The-Basics/urls" class="active doc-link" role="link">
+                تولید URL در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="validation یا اعتبارسنجی در لاراول" href="/documentation/laravel/The-Basics/validation" class="active doc-link" role="link">
+                validation یا اعتبارسنجی در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="مدیریت Errors &amp; Logging" href="/documentation/laravel/The-Basics/errors" class="active doc-link" role="link">
+                مدیریت Errors &amp; Logging
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">Front End</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="Blade Templates" href="/documentation/laravel/Frontend/blade" class="active doc-link" role="link">
+                Blade Templates
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول localization" href="/documentation/laravel/Frontend/localization" class="active doc-link" role="link">
+                اصول localization
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="JavaScript &amp; CSS Scaffolding" href="/documentation/laravel/Frontend/frontend" class="active doc-link" role="link">
+                JavaScript &amp; CSS Scaffolding
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم پیشرفته تر</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="معرفی collections" href="/documentation/laravel/Digging-Deeper/collections" class="active doc-link" role="link">
+                معرفی collections
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">پایگاه داده ها</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="پایگاه داده ها" href="/documentation/laravel/Database/database" class="active doc-link" role="link">
+                پایگاه داده ها
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با Query Builder" href="/documentation/laravel/Database/queries" class="active doc-link" role="link">
+                آشنایی با Query Builder
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">Eloquent ORM</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent" href="/documentation/laravel/Eloquent-ORM/eloquent" class="active doc-link" role="link">
+                آشنایی با eloquent
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="eloquent relationships  آموزش" href="/documentation/laravel/Eloquent-ORM/eloquent-relationships" class="active doc-link" role="link">
+                eloquent relationships  آموزش
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent mutators" href="/documentation/laravel/Eloquent-ORM/eloquent-mutators" class="active doc-link" role="link">
+                آشنایی با eloquent mutators
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent collections" href="/documentation/laravel/Eloquent-ORM/eloquent-collections" class="active doc-link" role="link">
+                آشنایی با eloquent collections
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent serialization" href="/documentation/laravel/Eloquent-ORM/eloquent-serialization" class="active doc-link" role="link">
+                آشنایی با eloquent serialization
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+    </ul>
+    
+</div>
+
+    <article class="documentation">
+        <header class="doc-header">
+            <div class="time">
+                    تاریخ :      یکشنبه 08 بهمن 1396
+            </div>
+                
+        </header>
+        <section class="anchored">
+            <p>
+مسیرهای پایه در لاراول یک URI و یک تابع Closure می‌پذیرند که یک متد بسیار ساده برای تعریف مسیرها ارائه می‌دهد:
+</p>
+<pre><code class="language-php  line-numbers">Route::get('foo', function () {
+    return 'Hello World';
+});
+</code></pre>
+
+<p><br></p>
+<h3>فایل‌های route پیش‌فرض در لاراول</h3>
+<p>
+تمام مسیرهای لاراول در فایل‌های route که در دایرکتوری routes قرار می‌گیرند، تعریف شده‌ است. این فایل‌ها به صورت خودکار توسط فریم ورک بارگزاری می‌شوند. فایل routes/web.php مسیرهایی را برای رابط وب تعریف می‌کند. این مسیرها به گروه middlewareweb اختصاص داده می‌شوند که قابلیت‌هایی مانند حالت جلسه و حفاظت CSRF را ارائه می‌دهند. مسیرهای موجود در routes/api.php در گروه middleware api  قرار می‌گیرند.
+</p>
+
+<p>
+دراکثر برنامه‌های کاربردی لاراول، بایستی کار خود را با تعریف مسیرها در فایل routes/web.php شروع کنید. می‌توان به مسیرهای تعریف شده در فایل routes/web.php با وارد کردن URL مسیر تعریف شده در مرورگر، دسترسی داشت. به عنوان مثال، اگر در مرورگر خود آدرس http://your-app.dev/user را وارد کنید، می‌توانید به مسیر زیر دسترسی داشته باشید:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('/user', 'UserController@index');
+</code></pre>
+
+<p>
+مسیرهای تعریف شده در فایل routes/api.php توسط RouteServiceProvider در یک گروه مسیر قرار می‌گیرند. در این گروه، پیشوند /api به صورت خودکار به URL اعمال می‌شود، در این صورت، دیگر لازم نیست به صورت دستی آن را به مسیرهای درون فایل اعمال کنید. می‌توان پیشوند و گزینه‌های دیگر در گروه مسیر با ایجاد تغییر در کلاس RouteServiceProvider تنظیم کرد.
+</p>
+
+<p><br></p>
+<h3>متدهای router قابل دسترس در مسیریابی لاراول</h3>
+<p>
+توسط روتر می‌توان مسیرهایی را که به هر درخواست از HTTP پاسخ می‌دهند را ثبت و تعریف کرد:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get($uri, $callback);
+Route::post($uri, $callback);
+Route::put($uri, $callback);
+Route::patch($uri, $callback);
+Route::delete($uri, $callback);
+Route::options($uri, $callback);
+</code></pre>
+
+<p>
+گاهی ممکن است لازم باشد مسیری را که به چندین درخواست HTTP پاسخ می‌دهد، ثبت کنید. می‌توان این کار را با استفاده از متد match انجام داد. حتی می‌توان با استفاده از متد any مسیری را ثبت کرد که به تمام درخواست‌های HTTP پاسخ می‌دهد:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::match(['get', 'post'], '/', function () {
+    //
+});
+Route::any('foo', function () {
+    //
+});
+</code></pre>
+
+<p><br></p>
+<h3>در مسیریابی لاراول CSRF محافظت</h3>
+<p>
+هر فرم‌ HTML که به مسیرهای POST ، PUT یا DELETE که در فایل مسیرهای web تعریف شده‌اند، اشاره دارد، باید شامل یک فیلد نشانه CSRF باشند. در غیر این صورت، درخواست رد خواهد شد.
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;form</span> <span class="na">method=</span><span class="s">"POST"</span> <span class="na">action=</span><span class="s">"/profile"</span><span class="nt">&gt;</span>
+    {{ csrf_field() }}
+    ...
+<span class="nt">&lt;/form&gt;</span>
+</code></pre></div></div>
+
+<p>
+<a name="redirect-routes"></a>
+</p>
+
+<p><br></p>
+<h3>تغییر مسیر یا redirect route در لاراول</h3>
+<p>
+اگر مسیری را تعریف می‌کنید که باید به URI دیگری هدایت می‌شود، باید از متد Route::redirect استفاده کنید. این متد یک میانبر مناسب ارائه می‌دهد، به طوری که برای انجام یک تغییر مسیر (redirect) ساده دیگر نیازی به تعریف یک مسیر کامل یا یک کنترلر نخواهید داشت:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::redirect('/here', '/there', 301);
+</code></pre>
+
+<p>
+<a name="view-routes"></a>
+</p>
+
+<p><br></p>
+<h3>مسیریابی در لاراول : مسیرهای view</h3>
+<p>
+اگر مسیر یا route نیاز به برگرداندن یک view داشته باشد، می‌توانید از متد Route::view استفاده کنید. درست مثل متد redirect ، این متد نیز یک میانبر ساده ارائه می‌دهد، بنابراین نباید یک مسیر کامل یا کنترلر تعریف شود. متد view یک URI به عنوان آرگومان اول و نام یک view را به عنوان آرگومان دوم دریافت می‌کند. علاوه بر این می‌توان آرایه‌ای از داده‌ها را برای انتقال به view به عنوان آرگومان سوم منتقل کنید که استفاده از این آرگومان اختیاری است:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::view('/welcome', 'welcome');
+Route::view('/welcome', 'welcome', ['name' =&gt; 'Taylor']);
+</code></pre>
+
+<p>
+<a name="route-parameters"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#route-parameters">پارامترهای مسیر (route parameters) در مسیریابی لاراول</a></h3>
+<p>
+گاهی ممکن است نیاز به گرفتن بخش‌هایی از URI در مسیر خود داشته باشید. برای مثال، ممکن است نیاز به دریافت شناسه کاربر (id) از URL داشته باشید. این کار را می‌توان با تعیین پارامترهای مسیر انجام داد. به مثال زیر توجه کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('user/{id}', function ($id) {
+    return 'User '.$id;
+});
+</code></pre>
+
+<p>
+همچنین می‌توان چند پارامتر موردنیاز را به صورت زیر تعریف کرد:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('posts/{post}/comments/{comment}', function ($postId, $commentId) {
+    //
+});
+</code></pre>
+
+<p>
+پارامترهای مسیر در داخل براکت {} قرار می‌گیرند و باید از حروف الفبا تشکیل شده باشند و نباید حاوی کاراکتر ( - ) باشد. به جای استفاده از کاراکتر ( - ) می‌توان از کاراکتر زیرخط ( _ ) استفاده کرد. پارامترهای مسیر به callback / controllers مسیر براساس سفارش تزریق می‌شوند. نام آرگومان‌های callback / controller زیاد مهم نیست.
+</p>
+
+<p>
+<a name="parameters-optional-parameters"></a>
+</p>
+
+<p><br></p>
+<h3>پارامترهای اختیاری یا Optional در مسیریابی لاراول</h3>
+<p>
+گاهی ممکن است نیاز به تعیین پارامتر مسیر داشته باشید، اما استفاده از پارامتر مسیر را اختیاری کنید. این کار را می‌توان با قرار دادن یک علامت سوال ( ؟ ) بعد از نام پارامتر انجام داد:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('user/{name?}', function ($name = null) {
+    return $name;
+});
+Route::get('user/{name?}', function ($name = 'John') {
+    return $name;
+});
+</code></pre>
+
+<p>
+<a name="parameters-regular-expression-constraints"></a>
+</p>
+
+<p><br></p>
+<h3>عبارات منظم (Regular Expression) در مسیریابی لاراول</h3>
+<p>
+می‌توان فرمت پارامترهای مسیر را با استفاده از متد where در یک نمونه مسیر تنظیم کرد. متد where نام پارامتر را دریافت می کند و عبارت منظمی که پارامتر بوسیله آن باید محدود شود را تعریف می‌کند :
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('user/{name}', function ($name) {
+    //
+})-&gt;where('name', '[A-Za-z]+');
+Route::get('user/{id}', function ($id) {
+    //
+})-&gt;where('id', '[0-9]+');
+Route::get('user/{id}/{name}', function ($id, $name) {
+    //
+})-&gt;where(['id' =&gt; '[0-9]+', 'name' =&gt; '[a-z]+']);
+</code></pre>
+
+<p>
+<a name="parameters-global-constraints"></a>
+</p>
+
+<p><br></p>
+<h3>استفاده از عبارات منظم به صورت عمومی در مسیریابی لاراول</h3>
+<p>
+اگر بخواهید یک پارامتر مسیر همواره با یک «عبارات منظم» خاص محدود شود، می‌توانید از متد pattern استفاده کنید. این الگوها را در متد boot مربوط به RouteServiceProvider خود تعریف کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">/**
+ * Define your route model bindings, pattern filters, etc.
+ *
+ * @return void
+ */
+public function boot()
+{
+    Route::pattern('id', '[0-9]+');
+    parent::boot();
+}
+</code></pre>
+
+<p>
+زمانی که الگوی خاصی تعریف شده باشد، با استفاده از نام پارامتر به صورت خودکار به تمام مسیرها اعمال می‌شود:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('user/{id}', function ($id) {
+    // Only executed if {id} is numeric...
+});
+</code></pre>
+
+<p>
+<a name="named-routes"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#named-routes">مسیرهای نام‌گذاری شده در Routing </a></h3>
+<p>
+مسیرهای نامگذاری شده (Named routes) این امکان را می‌دهد تا به راحتی برای آن‌ها URL تولید کنید یا از آن‌ها برای redirect کردن در برنامه استفاده کنید. برای اختصاص یک نام به یک مسیر از متد name در تعریف مسیر به صورت زیر استفاده کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('user/profile', function () {
+    //
+})-&gt;name('profile');
+</code></pre>
+
+<p>
+همچنین می‌توان نام مسیر را به اکشن‌های یک کنترلر به صورت زیر اختصاص داد:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('user/profile', 'UserController@showProfile')-&gt;name('profile');
+</code></pre>
+
+<p><br></p>
+<h3>تولید URLها برای مسیرهای نامگذاری شده در لاراول</h3>
+<p>
+زمانی که یک نام برای یک مسیر مشخص اختصاص دادید، از طریق تابع route عمومی، می‌توانید از نام مسیر در زمان تولید URLها یا تغییرمسیرها (redirect) به صورت زیر استفاده کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">// Generating URLs...
+$url = route('profile');
+// Generating Redirects...
+return redirect()-&gt;route('profile');
+</code></pre>
+
+<p>
+اگر مسیر نامگذاری شده شامل پارامتر باشد، می‌توانید پارامترها را به عنوان آرگومان دوم به تابع route منتقل کنید. پارامترهای داده شده به صورت خودکار به URL تولید شده وارد می‌شوند:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('user/{id}/profile', function ($id) {
+    //
+})-&gt;name('profile');
+$url = route('profile', ['id' =&gt; 1]);
+</code></pre>
+
+<p><br></p>
+<h3>بررسی مسیر فعلی در مسیر یابی لاراول</h3>
+<p>
+برای مشخص کردن اینکه آیا درخواست فعلی HTTP به یک مسیر نامگذاری شده هدایت شده است، می‌توانید از متد named در نمونه Route استفاده کنید. برای مثال، می‌توانید نام مسیر فعلی را در middleware مسیر چک کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">/**
+ * Handle an incoming request.
+ *
+ * @param  \Illuminate\Http\Request  $request
+ * @param  \Closure  $next
+ * @return mixed
+ */
+public function handle($request, Closure $next)
+{
+    if ($request-&gt;route()-&gt;named('profile')) {
+        //
+    }
+    return $next($request);
+}
+</code></pre>
+
+<p>
+<a name="route-groups"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#route-groups">گروه‌های مسیر در لاراول Route Groups</a></h3>
+<p>
+ممکن است برخی از ویژگی‌های مسیر، مانند middleware یا فضای نامی (namespaces)، در تعداد زیادی از مسیرها مشترک باشد. می‌توان بدون نیاز به تعریف جداگانه این ویژگی‌ها در هر یک از مسیرها، از امکان گروه‌ بندی مسیرها استفاده کرد و آن ویژگی‌ها را به تمام مسیرهای موجود در گروه اختصاص داد. ویژگی‌های به اشتراک گذاشته شده در قالب آرایه به عنوان اولین پارامتر در متد Route::group تعیین می‌شوند.
+</p>
+
+<p>
+<a name="route-group-middleware"></a>
+</p>
+
+<p><br></p>
+<h3>مسیریابی در Middleware</h3>
+<p>
+برای اختصاص یک Middleware به تمامی مسیرهای موجود در یک گروه، قبل از تعریف گروه می‌توانید از متد middleware استفاده کنید. Middlewareها به ترتیبی که در آرایه لیست شده‌اند بر روی مسیرها اعمال می‌شوند:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::middleware(['first', 'second'])-&gt;group(function () {
+    Route::get('/', function () {
+        // Uses first &amp; second Middleware
+    });
+    Route::get('user/profile', function () {
+        // Uses first &amp; second Middleware
+    });
+});
+</code></pre>
+
+<p>
+<a name="route-group-namespaces"></a>
+</p>
+
+<p><br></p>
+<h3>فضای نام Namespaces</h3>
+<p>
+می‌توان یک فضای نامی PHP را به یک گروه از کنترلرها با استفاده از متد namespace اختصاص داد:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::namespace('Admin')-&gt;group(function () {
+    // Controllers Within The "App\Http\Controllers\Admin" Namespace
+});
+</code></pre>
+
+<p>
+در حالت پیش‌فرض، RouteServiceProvider فایل‌های مسیر را در یک گروه namespace قرار می‌دهد، که امکان می‌دهد تا مسیرهای کنترلر را بدون مشخص کردن پیشوند کامل App\Http\Controllers ثبت کنید. پس از آن فقط نیاز به مشخص کردن بخشی از فضای نامی دارید که بعد از App\Http\Controllers قرار دارد.
+</p>
+
+<p>
+<a name="route-group-sub-domain-routing"></a>
+</p>
+
+<p><br></p>
+<h3>در لاراول Sub-Domain مسیریابی</h3>
+<p>
+از گروه‌های مسیر همچنین برای مدیریت مسیریابی زیر دامنه (Sub-Domain) استفاده می‌شود. زیر دامنه‌ها پارامترهای مسیر مثل URIهای مسیر را اختصاص داده و همچنین امکان می‌دهند تا بخشی از زیر دامنه را برای استفاده در مسیر یا کنترلر خود دریافت کنید. می‌توان زیر دامنه را قبل از تعریف گروه با فراخوانی متد domain مشخص کرد:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::domain('{account}.myapp.com')-&gt;group(function () {
+    Route::get('user/{id}', function ($account, $id) {
+        //
+    });
+});
+</code></pre>
+
+<p>
+<a name="route-group-prefixes"></a>
+</p>
+
+<p><br></p>
+<h3>در مسیریابی لاراول Route پیشوندهای</h3>
+<p>
+برای اضافه کردن پیشوند به هر مسیر موجود در گروه از متد prefix استفاده می‌شود . برای مثال، در صورتیکه بخواهید تمام مسیرهای URIهای موجود در گروه، پیشوند admin را داشته باشد، به صورت زیر عمل کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::prefix('admin')-&gt;group(function () {
+    Route::get('users', function () {
+        // Matches The "/admin/users" URL
+    });
+});
+</code></pre>
+
+<p>
+<a name="route-model-binding"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#route-model-binding">  Route Model Binding  در مسیریابی لاراول</a></h3>
+<p>
+هنگام تزریق یک model ID به یک مسیر یا یک اکشن مربوط به کنترلر، اغلب یک پرس و جو برای بازیابی مدلی که مربوط به آن شناسه است، بکار می‌برید. binding مدل مسیر در لاراول راه مناسبی است که از طریق آن می‌توان به طور خودکار یک نمونه مدل را به طور مستقیم در مسیرها تزریق کرد. برای مثال، به جای تزریق یک شناسه کاربر (ID)، می‌توان کل نمونه مدل User که با شناسه داده شده مطابقت دارد را تزریق کرد.
+</p>
+
+<p>
+<a name="implicit-binding"></a>
+</p>
+
+<p><br></p>
+<h3> Implicit Binding : مسیریابی در لاراول</h3>
+<p>
+لاراول به طور خودکار مدل‌های Eloquent تعریف شده در مسیرها یا اکشن‌های کنترلر که نام‌های متغیر type-hint شده آن‌ها با نام یک بخش از مسیر منطبق است را resolve می‌کند. مثال زیر را در نظر بگیرید:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('api/users/{user}', function (App\User $user) {
+    return $user-&gt;email;
+});
+</code></pre>
+
+<p>
+از آنجایی که متغیر $user به عنوان Eloquent modelApp\User  اعلان نوع یا type-hint شده است و نام متغیر با بخش {user} در URI مطابق است، لاراول به طور خودکار نمونه مدلی را که شناسه یا ID آن با مقدار موجود در URI منطبق است را تزریق می‌کند. اگر نمونه مطابق در پایگاه داده یافت نشود، یک پاسخ 404 HTTP به طور اتوماتیک تولید می‌شود.
+</p>
+
+<p><br></p>
+<h3> مسیریابی در لاراول : سفارشی سازی نام کلید</h3>
+<p>
+اگر بخواهید binding مدل در پایگاه داده از ستونی غیر از id در هنگام بازیابی یک کلاس مدل استفاده کند، می‌توانید متد getRouteKeyName را در مدل Eloquent بازنویسی کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">/**
+ * Get the route key for the model.
+ *
+ * @return string
+ */
+public function getRouteKeyName()
+{
+    return 'slug';
+}
+</code></pre>
+
+<p>
+<a name="explicit-binding"></a>
+</p>
+
+<p><br></p>
+<h3> Explicit Binding : مسیریابی در لاراول</h3>
+<p>
+برای ثبت یک پیوند صریح (Explicit Binding)، از متد model روتر برای مشخص کردن کلاس برای یک پارامتر داده استفاده کنید. بایستی binding مدل صریح خود را در متد boot در کلاس RouteServiceProvider تعریف کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">public function boot()
+{
+    parent::boot();
+    Route::model('user', App\User::class);
+}
+</code></pre>
+
+<p>
+سپس، مسیری را که شامل یک پارامتر {user} است را تعریف کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('profile/{user}', function (App\User $user) {
+    //
+});
+</code></pre>
+
+<p>
+از آنجایی که ما تمام پارامترهای {user} را به مدل App\User محدود کرده‌ایم، نمونه‌ای از کلاس User به مسیر تزریق می‌شود. برای مثال، هنگام ایجاد یک درخواست برای profile/1 یک نمونه از کلاس User که دارای شناسه 1 است از پایگاه داده تزریق می‌شود.
+</p>
+
+<p>
+اگر نمونه مطابق با آن در پایگاه داده یافت نشود، یک پاسخ 404 HTTP به طور اتوماتیک تولید می‌شود.
+</p>
+
+<p><br></p>
+<h3>سفارشی سازی Resolution Logic در مسیریابی لاراول</h3>
+<p>
+اگر بخواهید از Resolution Logic استفاده کنید، باید از متد Route::bind استفاده کنید. Closure به متد bind ، مقدار یک بخش از URI را دریافت می‌کند و نمونه کلاسی را که باید به مسیر تزریق شود را بازمی‌گرداند:
+</p>
+
+<pre><code class="language-php  line-numbers">public function boot()
+{
+    parent::boot();
+    Route::bind('user', function ($value) {
+        return App\User::where('name', $value)-&gt;first() ?? abort(404);
+    });
+}
+</code></pre>
+
+<p>
+<a name="form-method-spoofing"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#form-method-spoofing">جعل متد فرم در مسیریابی در لاراول</a></h3>
+<p>
+فرم‌های HTML از عملیات PUT ، PATCH یا DELETE پشتیبانی نمی‌کنند. بنابراین، هنگام تعریف مسیرهای PUT ، PATCH یا DELETE که از یک فرم HTML فراخوانی می‌شوند، نیاز دارید یک فیلد _method مخفی را به فرم اضافه کنید. مقدار فرستاده شده با فیلد _method به عنوان متد درخواست HTTP مورد استفاده قرار می‌گیرد:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">"/foo/bar"</span> <span class="na">method=</span><span class="s">"POST"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"_method"</span> <span class="na">value=</span><span class="s">"PUT"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"_token"</span> <span class="na">value=</span><span class="s">"{{ csrf_token() }}"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/form&gt;</span>
+</code></pre></div></div>
+
+<p>
+می‌توانید از تابع کمکی method_field برای تولید فیلد _method استفاده کنید:
+</p>
+
+<pre><code class="language-php  line-numbers"> method_field('PUT')
+</code></pre>
+
+<p>
+<a name="accessing-the-current-route"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#accessing-the-current-route">دسترسی به مسیر فعلی در لاراول</a></h3>
+<p>
+می‌توانید از متدهای current ، currentRouteName و currentRouteAction در  facade Route  برای دسترسی به اطلاعات مربوط به مسیر رسیدگی به درخواست ورودی استفاده کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">$route = Route::current();
+$name = Route::currentRouteName();
+$action = Route::currentRouteAction();
+</code></pre>
+
+<p>
+برای کسب اطلاعات بیشتر درباره کلاس پایه Route facade و Route instance، به مستندات API مراجعه کنید.
+</p>
+
+        </section>
+        
+<hr>
+<p>
+</p>
+<div>منابع مورد مطالعه جهت جمع آوری این مطلب:</div>
+<div class="refrencehref">
+        https://laravel.com/docs/5.5/routing <br> https://www.lydaweb.com/article/courses/laravel-5-5-tutorial/206/مسیریابی-لاراول
+</div>
+
+
+        <hr>
+        <style>
+    #commentsdiv{
+        background-color: #f5f5f5;
+        border: 1px solid #c5c5c5;
+        border-bottom: 0px !important;
+        padding: 12px;
+    }
+    #commentsborder{
+        background-color: #fff;
+        border: 1px solid #c5c5c5;
+        white-space: normal;
+        padding: 20px;
+    }
+</style>
+
+<div id="commentsdiv">نظرات</div>
+<div id="commentsborder">
+<div id="wpac-comment"></div>
+</div>
+<script type="text/javascript">
+wpac_init = window.wpac_init || [];
+wpac_init.push({widget: 'Comment', id: 7878});
+(function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = 'https://embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+})();
+</script>
+
+    </article>
+</div>
+<script src="/assets/js/anchor.min.js"></script>
+<script>
+    anchors.options = {
+        placement: 'left',
+        visible: 'always',
+//        icon: '#',
+    };
+    anchors.add('.anchored h2,.anchored h3,.anchored h4,.anchored h5,.anchored h6');
+
+    (function($){
+        if(window.location.hash) {
+            var hash = decodeURIComponent(window.location.hash);
+            gotohash($(hash).offset().top);
+        }
+        $('a.anchorjs-link').click(function(){
+			gotohash($(this).offset().top);
+        });
+        $('a.anchorjs').click(function(){
+			var id = '#' + $(this).attr('title');
+			gotohash($(id).offset().top);
+        });		
+        function gotohash(top){
+            var headerHeight = 70; // Get fixed header height
+            $('html,body').animate({
+                scrollTop: top - headerHeight
+            }, 20);
+        }
+    })(jQuery);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+   $(document).ready(function (){
+
+     var scrollPosition = getParameterByName('scroll');
+     if(scrollPosition)
+      $(".doc-menu").scrollTop(scrollPosition);
+
+     $('.doc-link').click(function(){
+        var scrollTop = $(".doc-menu").scrollTop();
+        if(scrollTop > 0)
+          $(this).attr("href",this.href + "?scroll=" + $(".doc-menu").scrollTop());
+     });
+
+     function getParameterByName(name, url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+   });
+</script>
+    <div id="back-to-top" role="button" aria-label="Back to top">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+    </div>
+</main>
+<!-- footer -->
+
+<footer class="footer" role="contentinfo" aria-label="Site footer">
+    <div class="navigation" role="navigation" aria-label="Footer links">
+        <a href="http://localhost:4000" class="avatar" role="link"></a>
+        <ul role="menubar" aria-label="Footer links menubar">
+            <li class="footer-products" role="menuitem" aria-label="Products">
+                تولیدات
+                <ul role="menu" aria-hidden="true" aria-label="Products link">
+                </ul>
+            </li>
+            <li class="footer-blog" role="menuitem" aria-label="Blog">
+                مقالات
+                <ul role="menu" aria-hidden="true" aria-label="Blog link">
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2020/07/03/marriage.html" role="link" aria-label="ازدواج">ازدواج</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2019/10/11/vuejs.html" role="link" aria-label="آموزش vuejs">آموزش vuejs</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/18/laravel.html" role="link" aria-label="آموزش Laravel">آموزش Laravel</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/articles/2017/12/13/laravelcollective.html" role="link" aria-label="معرفی Laravel Collective">معرفی Laravel Collective</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/06/design-patterns.html" role="link" aria-label="معرفی  Design Pattern">معرفی  Design Pattern</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/blog" role="link" aria-label="Read more">Read More</a></li>
+                </ul>
+            </li>
+
+            <li class="footer-connect" role="menuitem" aria-label="Connect">
+                تماس
+                <ul role="menu" aria-hidden="true" aria-label="Connect link">
+                    <li role="listitem" aria-label="Connect link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub">GitHub</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://www.linkedin.com/in/farhad-mirzapour/" target="_blank" role="link" aria-label="Linkedin">Linkedin</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter">Twitter</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="socials" role="navigation" aria-label="Social links">
+        <ul role="menu" aria-hidden="true" aria-label="Social link">
+            <li role="listitem" aria-label="Social link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://www.linkedin.com/in/farhad-mirzapour-0043b862/" target="_blank" role="link" aria-label="Linkedin"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="/feed.xml" role="link" aria-label="RSS"><i class="fa fa-rss-square" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+    <div class="copyright" role="contentinfo" aria-label="Copyright">
+        <p>© <script type="text/javascript">document.write(new Date().getFullYear());</script> Farhad Mirzapour</p>
+    </div>
+</footer>
+
+<!-- scripts -->
+<script src="/assets/js/hamburger-menu.js"></script>
+
+<script src="/assets/js/elevator.min.js"></script>
+<script src="/assets/js/back-to-top.js"></script>
+<script src="/assets/prisma/prism.js"></script>
+<!-- google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108878564-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-108878564-1');
+</script>
+
+</body>
+</html>

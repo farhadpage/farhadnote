@@ -1,0 +1,1729 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-05-22T23:41:59+04:30</updated><id>http://localhost:4000/feed.xml</id><title type="html">مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title><subtitle>مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</subtitle><author><name>Farhad Mirzapour</name></author><entry><title type="html">ازدواج</title><link href="http://localhost:4000/2020/07/03/marriage.html" rel="alternate" type="text/html" title="ازدواج" /><published>2020-07-03T23:00:00+04:30</published><updated>2020-07-03T23:00:00+04:30</updated><id>http://localhost:4000/2020/07/03/marriage</id><content type="html" xml:base="http://localhost:4000/2020/07/03/marriage.html">&lt;h3&gt;ازدواج &lt;/h3&gt;
+&lt;p&gt;
+ازدواج یکی ار مراحل مهم زندگی انسان ها محسوب می شود که بر خلاف سایر اتفاقات زندگی همچون مرگ و تولد که احساس می کنیم نقشی در آن نداریم ، در این بخش از زندگی ،نقش ما پررنگ تر دیده می شود
+&lt;/p&gt;
+
+&lt;p&gt;
+یکی از روانشناسان به نام بارنت آر.بریکنر می گوید:
+&lt;/p&gt;
+
+&lt;blockquote class=&quot;has-icon tip&quot;&gt;
+موفقیت در ازدواج با پیدا کردن بهترین همسر حاصل نمی شود، بلکه با بهترین  همسر بودن به دست می آید
+  &lt;/blockquote&gt;</content><author><name>Farhad Mirzapour</name></author><summary type="html">ازدواج ازدواج یکی ار مراحل مهم زندگی انسان ها محسوب می شود که بر خلاف سایر اتفاقات زندگی همچون مرگ و تولد که احساس می کنیم نقشی در آن نداریم ، در این بخش از زندگی ،نقش ما پررنگ تر دیده می شود یکی از روانشناسان به نام بارنت آر.بریکنر می گوید: موفقیت در ازدواج با پیدا کردن بهترین همسر حاصل نمی شود، بلکه با بهترین همسر بودن به دست می آید</summary></entry><entry><title type="html">آموزش vuejs</title><link href="http://localhost:4000/2019/10/11/vuejs.html" rel="alternate" type="text/html" title="آموزش vuejs" /><published>2019-10-11T17:26:42+03:30</published><updated>2019-10-11T17:26:42+03:30</updated><id>http://localhost:4000/2019/10/11/vuejs</id><content type="html" xml:base="http://localhost:4000/2019/10/11/vuejs.html">&lt;h3&gt;چرا Vue.js؟&lt;/h3&gt;
+&lt;p&gt;
+Vue (تلفظ / vjuː / ، مانند view) یک فریمورک پیشرفته برای ساخت رابط های کاربر است. برخلاف سایر فریمورک های یکپارچه ، Vue از پایه طراحی شده تا از نظر تدریجی قابل قبول باشد. کتابخانه اصلی فقط بر روی لایه view متمرکز شده است ، و انتخاب و ادغام آن با کتابخانه های دیگر یا پروژه های موجود آسان است. از طرف دیگر ، Vue همچنین قادر است در هنگام استفاده از کتابخانه های نوین و پشتیبانی از کتابخانه ها ، از برنامه های تک صفحه ای پیشرفته استفاده کند.
+&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3&gt;شروع&lt;/h3&gt;
+&lt;p&gt;
+ساده ترین راه برای امتحان کردن Vue.js استفاده از مثال سلام جهانی JSFiddle است. می توانید یک فایل index.html ایجاد کنید و Vue را با آن شامل کنید:
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-html  line-numbers&quot;&gt;&amp;#x3C;!-- development version, includes helpful console warnings --&amp;#x3E;
+&amp;#x3C;script src=&amp;#x22;https://cdn.jsdelivr.net/npm/vue/dist/vue.js&amp;#x22;&amp;#x3E;&amp;#x3C;/script&amp;#x3E;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;یا :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-html  line-numbers&quot;&gt;&amp;#x3C;!-- production version, optimized for size and speed --&amp;#x3E;
+&amp;#x3C;script src=&amp;#x22;https://cdn.jsdelivr.net/npm/vue&amp;#x22;&amp;#x3E;&amp;#x3C;/script&amp;#x3E;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+صفحه &lt;a href=&quot;https://vuejs.org/v2/guide/installation.html&quot; target=&quot;_blank&quot;&gt; Installation &lt;/a&gt;گزینه های بیشتری را برای نصب Vue ارائه می دهد. توجه: ما توصیه نمی کنیم که مبتدیان از vue-cli شروع کنند ، به خصوص اگر هنوز با ابزارهای ساخت مبتنی بر Node.js آشنا نیستید.
+&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3&gt;اعلان رندرینگ (Declarative Rendering)&lt;/h3&gt;
+
+&lt;p&gt;
+در هسته Vue.js سیستمی است که به ما امکان می دهد تا با استفاده از نحو الگوی ساده ، داده ها را به DOM ارائه دهیم:
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-html  line-numbers&quot;&gt;&amp;#x3C;div id=&amp;#x22;app&amp;#x22;&amp;#x3E;
+  &amp;#123;&amp;#123; message &amp;#125;&amp;#125;
+&amp;#x3C;/div&amp;#x3E;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-javascript  line-numbers&quot;&gt;var app = new Vue({
+  el: '#app',
+  data: {
+    message: 'Hello Vue!'
+  }
+})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;div id=&quot;app&quot; class=&quot;result-example&quot;&gt;
+    &amp;#123;&amp;#123; message &amp;#125;&amp;#125;
+&lt;/div&gt;
+
+&lt;p&gt;
+ما اولین برنامه Vue را ایجاد کرده ایم! به نظر می رسد بسیار شبیه به رندر الگوی رشته ای است ، اما Vue کارهای زیادی را در در پس زمینه انجام داده است. داده ها و DOM اکنون مرتبط شده اند ، و اکنون همه چیز واکنشی است. چگونه می دانیم؟ کنسول جاوا اسکریپت مرورگر خود را باز کنید (همین حالا) و app.message را به مقدار دیگری تنظیم کنید. بر این اساس باید مثال ارائه شده در بالا را به روز کنید.
+&lt;/p&gt;
+
+&lt;p&gt;
+علاوه بر جاگذاری متن ، ما همچنین می توانیم ویژگی های عناصر مانند زیر را به هم پیوند دهیم:
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-html  line-numbers&quot;&gt;&amp;#x3C;div id=&amp;#x22;app-2&amp;#x22;&amp;#x3E;
+  &amp;#x3C;span v-bind:title=&amp;#x22;message&amp;#x22;&amp;#x3E;
+    Hover your mouse over me for a few seconds
+    to see my dynamically bound title!
+  &amp;#x3C;/span&amp;#x3E;
+&amp;#x3C;/div&amp;#x3E;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-javascript  line-numbers&quot;&gt;var app2 = new Vue({
+  el: '#app-2',
+  data: {
+    message: 'You loaded this page on ' + new Date().toLocaleString()
+  }
+})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;div id=&quot;app-2&quot; class=&quot;result-example&quot;&gt;
+  &lt;span v-bind:title=&quot;message&quot;&gt;
+    Hover your mouse over me for a few seconds
+    to see my dynamically bound title!
+  &lt;/span&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+در اینجا با چیز جدیدی روبرو می شویم. ویژگی v-bind که می بینید دایرکتیو (directive) خوانده می شود. دایرکتیو ها با v- پیشوند شده اند تا نشان دهند که اینها ویژگی های خاصی هستند که توسط Vue ارائه شده است ، و همانطور که احتمالاً حدس زده اید ، آنها رفتار واکنشی ویژه ای را برای DOM ارائه شده اعمال می کنند. در اینجا ، اساساً گفته می شود &quot;ویژگی عنوان این عنصر را با ویژگی پیام در نمونه Vue به روز نگه دارید.&quot;
+&lt;/p&gt;
+
+&lt;p&gt;
+اگر کنسول جاوا اسکریپت خود را دوباره باز کنید و app2.message = 'some new message'  را وارد کنید ، یک بار دیگر خواهید دید که در HTML محدود - در این مورد ویژگی title  - به روز شده است.
+&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3&gt;شرط ها و حلقه ها (Conditionals and Loops)&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-html  line-numbers&quot;&gt;&amp;#x3C;div id=&amp;#x22;app-3&amp;#x22;&amp;#x3E;
+  &amp;#x3C;span v-if=&amp;#x22;seen&amp;#x22;&amp;#x3E;Now you see me&amp;#x3C;/span&amp;#x3E;
+&amp;#x3C;/div&amp;#x3E;
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-javascript  line-numbers&quot;&gt;var app3 = new Vue({
+  el: '#app-3',
+  data: {
+    seen: true
+  }
+})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;div id=&quot;app-3&quot; class=&quot;result-example&quot;&gt;
+    &lt;span v-if=&quot;seen&quot;&gt;Now you see me&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+در کنسول app3.seen = false  را وارد کنید. می بینید که پیام از بین می رود.
+&lt;/p&gt;
+
+&lt;p&gt;
+این مثال نشان می دهد که ما می توانیم داده ها را نه تنها به متن و ویژگی ها ، بلکه به ساختار DOM متصل کنیم. علاوه بر این ، Vue همچنین یک سیستم اثر گذار قدرتمند را فراهم می کند که می تواند هنگام inserted/updated/removed عناصر توسط Vue ، اثرات انتقال را بطور خودکار اعمال کند.
+&lt;/p&gt;
+
+&lt;p&gt;
+چند دستورالعمل دیگر نیز وجود دارد که هر کدام عملکرد ویژه خود را دارند. به عنوان مثال ، دایرکتیو v-for می تواند برای نمایش لیستی از موارد با استفاده از داده های یک Array استفاده شود:
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-html  line-numbers&quot;&gt;&amp;#x3C;div id=&amp;#x22;app-4&amp;#x22;&amp;#x3E;
+  &amp;#x3C;ol&amp;#x3E;
+    &amp;#x3C;li v-for=&amp;#x22;todo in todos&amp;#x22;&amp;#x3E;
+      &amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125;
+    &amp;#x3C;/li&amp;#x3E;
+  &amp;#x3C;/ol&amp;#x3E;
+&amp;#x3C;/div&amp;#x3E;
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-javascript  line-numbers&quot;&gt;var app4 = new Vue({
+  el: '#app-4',
+  data: {
+    todos: [
+      { text: 'Learn JavaScript' },
+      { text: 'Learn Vue' },
+      { text: 'Build something awesome' }
+    ]
+  }
+})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;div id=&quot;app-4&quot; class=&quot;result-example&quot;&gt;
+    &lt;ol&gt;
+        &lt;li v-for=&quot;todo in todos&quot;&gt;
+            &amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125;
+        &lt;/li&gt;
+    &lt;/ol&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+در کنسول ، app4.todos.push({ text: 'New item' }) را وارد کنید.  شما باید مورد جدید اضافه شده ای را در لیست ببینید.
+&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3&gt;کار با ورودی کاربران (Handling User Input)&lt;/h3&gt;
+
+&lt;p&gt;
+برای اینکه کاربران بتوانند با برنامه شما ارتباط برقرار کنند ، می توانیم از دایرکتیو v-on برای پیوستن به شنوندگان رویداد که در نمونه های Vue از متدها استفاده می کنند استفاده کنیم:
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-html  line-numbers&quot;&gt;
+&amp;#x3C;div id=&amp;#x22;app-5&amp;#x22;&amp;#x3E;
+  &amp;#x3C;p&amp;#x3E;&amp;#123;&amp;#123; message &amp;#125;&amp;#125;&amp;#x3C;/p&amp;#x3E;
+  &amp;#x3C;button v-on:click=&amp;#x22;reverseMessage&amp;#x22;&amp;#x3E;Reverse Message&amp;#x3C;/button&amp;#x3E;
+&amp;#x3C;/div&amp;#x3E;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-javascript  line-numbers&quot;&gt;var app5 = new Vue({
+  el: '#app-5',
+  data: {
+    message: 'Hello Vue.js!'
+  },
+  methods: {
+    reverseMessage: function () {
+      this.message = this.message.split('').reverse().join('')
+    }
+  }
+})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;div id=&quot;app-5&quot; class=&quot;result-example&quot;&gt;
+    &lt;p&gt;&amp;#123;&amp;#123; message &amp;#125;&amp;#125;&lt;/p&gt;
+    &lt;button v-on:click=&quot;reverseMessage&quot;&gt;Reverse Message&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+توجه داشته باشید که در این روش وضعیت برنامه خود را بدون دست زدن به DOM به روز می کنیم - کلیه دستکاری های DOM توسط Vue انجام می شود و کدی که می نویسید بر روی منطق اساسی متمرکز است.
+&lt;/p&gt;
+
+&lt;p&gt;
+Vue همچنین دایرکتیو v-model را ارائه می دهد که باعث می شود اتصال دو طرفه بین ورودی فرم و حالت برنامه برقرار شود:
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-html  line-numbers&quot;&gt;&amp;#x3C;div id=&amp;#x22;app-6&amp;#x22;&amp;#x3E;
+  &amp;#x3C;p&amp;#x3E;&amp;#123;&amp;#123; message &amp;#125;&amp;#125;&amp;#x3C;/p&amp;#x3E;
+  &amp;#x3C;input v-model=&amp;#x22;message&amp;#x22;&amp;#x3E;
+&amp;#x3C;/div&amp;#x3E;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-javascript  line-numbers&quot;&gt;var app6 = new Vue({
+  el: '#app-6',
+  data: {
+    message: 'Hello Vue!'
+  }
+})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;div id=&quot;app-6&quot; class=&quot;result-example&quot;&gt;
+    &lt;p&gt;&amp;#123;&amp;#123; message &amp;#125;&amp;#125;&lt;/p&gt;
+    &lt;input v-model=&quot;message&quot; /&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3&gt;ترکیب با کامپوننت ها (Composing with Components)&lt;/h3&gt;
+
+&lt;p&gt;
+سیستم کامپوننت مفهوم مهم دیگری در Vue است ، زیرا انتزاعی است که به ما امکان می دهد برنامه های بزرگی ایجاد کنیم که از اجزای کوچک ، خودمحور و اغلب قابل استفاده مجدد ساخته شده است.:
+&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/post/vuejs/components.png&quot; alt=&quot;ساختار app&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;
+در Vue ، یک کامپوننت در اصل یک نمونه Vue با گزینه های از پیش تعریف شده است. ثبت کامپوننت در Vue ساده است:
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-javascript  line-numbers&quot;&gt;// Define a new component called todo-item
+Vue.component('todo-item', {
+  template: '&amp;#x3C;li&amp;#x3E;This is a todo&amp;#x3C;/li&amp;#x3E;'
+})
+
+var app = new Vue(...)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+اکنون می توانید آن را در الگوی کامپوننت دیگر تنظیم کنید:
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-html  line-numbers&quot;&gt;&amp;#x3C;ol&amp;#x3E;
+  &amp;#x3C;!-- Create an instance of the todo-item component --&amp;#x3E;
+  &amp;#x3C;todo-item&amp;#x3E;&amp;#x3C;/todo-item&amp;#x3E;
+&amp;#x3C;/ol&amp;#x3E;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+اما این متن مشابه را برای هر یک از todo ارائه می دهد ، که اصلا جالب نیست. ما باید بتوانیم داده ها را از دامنه والدین به اجزای کودک منتقل کنیم. بیایید کامپوننت را با  prop تغییر دهیم:
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-javascript  line-numbers&quot;&gt;Vue.component('todo-item', {
+  // The todo-item component now accepts a
+  // &quot;prop&quot;, which is like a custom attribute.
+  // This prop is called todo.
+  props: ['todo'],
+  template: '&lt;li&gt;&amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125;&lt;/li&gt;'
+})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+اکنون می توانیم todo را به هر کامپوننت تکراری دیگر با استفاده از v-bind منتقل نماییم: 
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-html  line-numbers&quot;&gt;&amp;#x3C;div id=&amp;#x22;app-7&amp;#x22;&amp;#x3E;
+  &amp;#x3C;ol&amp;#x3E;
+    &amp;#x3C;!--
+      Now we provide each todo-item with the todo object
+      it&amp;#x27;s representing, so that its content can be dynamic.
+      We also need to provide each component with a &amp;#x22;key&amp;#x22;,
+      which will be explained later.
+    --&amp;#x3E;
+    &amp;#x3C;todo-item
+      v-for=&amp;#x22;item in groceryList&amp;#x22;
+      v-bind:todo=&amp;#x22;item&amp;#x22;
+      v-bind:key=&amp;#x22;item.id&amp;#x22;
+    &amp;#x3E;&amp;#x3C;/todo-item&amp;#x3E;
+  &amp;#x3C;/ol&amp;#x3E;
+&amp;#x3C;/div&amp;#x3E;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-javascript  line-numbers&quot;&gt;Vue.component('todo-item', {
+  props: ['todo'],
+  template: '&lt;li&gt;&amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125;&lt;/li&gt;'
+})
+
+var app7 = new Vue({
+  el: '#app-7',
+  data: {
+    groceryList: [
+      { id: 0, text: 'Vegetables' },
+      { id: 1, text: 'Cheese' },
+      { id: 2, text: 'Whatever else humans are supposed to eat' }
+    ]
+  }
+})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;div id=&quot;app-7&quot; class=&quot;result-example&quot;&gt;
+    &lt;ol&gt;
+        &lt;!--
+          Now we provide each todo-item with the todo object
+          it's representing, so that its content can be dynamic.
+          We also need to provide each component with a &quot;key&quot;,
+          which will be explained later.
+        --&gt;
+        &lt;todo-item v-for=&quot;item in groceryList&quot; v-bind:todo=&quot;item&quot; v-bind:key=&quot;item.id&quot;&gt;&lt;/todo-item&gt;
+    &lt;/ol&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+این یک مثال معقول است ، ما موفق شده ایم که برنامه خود را به دو واحد کوچکتر جدا کنیم و کودک به طور منطقی از والدین با استفاده از props جدا شده است. اکنون می توانیم مؤلفه &amp;#x3C;todo-item&amp;#x3E;
+ خود را با الگوی و منطق پیچیده تری بهبود بخشیم بدون اینکه روی برنامه والدین تأثیر بگذارد.
+&lt;/p&gt;
+
+&lt;p&gt;
+در یک برنامه بزرگ ، لازم است کل برنامه را به اجزای کوچکتر تقسیم کنید تا توسعه برنامه قابل مدیریت باشد. ما بعداً در راهنمای بیشتر در مورد مؤلفه ها صحبت خواهیم کرد ، اما یک مثال (تخیلی) که قالب یک برنامه ممکن است با اجزای کامپوننت چگونه باشد:
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-javascript  line-numbers&quot;&gt;&amp;#x3C;div id=&amp;#x22;app&amp;#x22;&amp;#x3E;
+  &amp;#x3C;app-nav&amp;#x3E;&amp;#x3C;/app-nav&amp;#x3E;
+  &amp;#x3C;app-view&amp;#x3E;
+    &amp;#x3C;app-sidebar&amp;#x3E;&amp;#x3C;/app-sidebar&amp;#x3E;
+    &amp;#x3C;app-content&amp;#x3E;&amp;#x3C;/app-content&amp;#x3E;
+  &amp;#x3C;/app-view&amp;#x3E;
+&amp;#x3C;/div&amp;#x3E;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/vue&quot;&gt;&lt;/script&gt;
+
+&lt;script&gt;
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue!'
+        }
+    })
+    var app2 = new Vue({
+        el: '#app-2',
+        data: {
+            message: 'You loaded this page on ' + new Date().toLocaleString()
+        }
+    })
+    var app3 = new Vue({
+        el: '#app-3',
+        data: {
+            seen: true
+        }
+    })
+    var app4 = new Vue({
+        el: '#app-4',
+        data: {
+            todos: [
+                { text: 'Learn JavaScript' },
+                { text: 'Learn Vue' },
+                { text: 'Build something awesome' }
+            ]
+        }
+    })
+    var app5 = new Vue({
+        el: '#app-5',
+        data: {
+            message: 'Hello Vue.js!'
+        },
+        methods: {
+            reverseMessage: function () {
+                this.message = this.message.split('').reverse().join('')
+            }
+        }
+    })
+    var app6 = new Vue({
+        el: '#app-6',
+        data: {
+            message: 'Hello Vue!'
+        }
+    })
+    Vue.component('todo-item', {
+        props: ['todo'],
+        template: '&lt;li&gt;&amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125;&lt;/li&gt;'
+    })
+
+    var app7 = new Vue({
+        el: '#app-7',
+        data: {
+            groceryList: [
+                { id: 0, text: 'Vegetables' },
+                { id: 1, text: 'Cheese' },
+                { id: 2, text: 'Whatever else humans are supposed to eat' }
+            ]
+        }
+    })
+&lt;/script&gt;</content><author><name>Farhad Mirzapour</name></author><summary type="html">چرا Vue.js؟ Vue (تلفظ / vjuː / ، مانند view) یک فریمورک پیشرفته برای ساخت رابط های کاربر است. برخلاف سایر فریمورک های یکپارچه ، Vue از پایه طراحی شده تا از نظر تدریجی قابل قبول باشد. کتابخانه اصلی فقط بر روی لایه view متمرکز شده است ، و انتخاب و ادغام آن با کتابخانه های دیگر یا پروژه های موجود آسان است. از طرف دیگر ، Vue همچنین قادر است در هنگام استفاده از کتابخانه های نوین و پشتیبانی از کتابخانه ها ، از برنامه های تک صفحه ای پیشرفته استفاده کند. شروع ساده ترین راه برای امتحان کردن Vue.js استفاده از مثال سلام جهانی JSFiddle است. می توانید یک فایل index.html ایجاد کنید و Vue را با آن شامل کنید: &amp;#x3C;!-- development version, includes helpful console warnings --&amp;#x3E; &amp;#x3C;script src=&amp;#x22;https://cdn.jsdelivr.net/npm/vue/dist/vue.js&amp;#x22;&amp;#x3E;&amp;#x3C;/script&amp;#x3E; یا : &amp;#x3C;!-- production version, optimized for size and speed --&amp;#x3E; &amp;#x3C;script src=&amp;#x22;https://cdn.jsdelivr.net/npm/vue&amp;#x22;&amp;#x3E;&amp;#x3C;/script&amp;#x3E; صفحه Installation گزینه های بیشتری را برای نصب Vue ارائه می دهد. توجه: ما توصیه نمی کنیم که مبتدیان از vue-cli شروع کنند ، به خصوص اگر هنوز با ابزارهای ساخت مبتنی بر Node.js آشنا نیستید. اعلان رندرینگ (Declarative Rendering) در هسته Vue.js سیستمی است که به ما امکان می دهد تا با استفاده از نحو الگوی ساده ، داده ها را به DOM ارائه دهیم: &amp;#x3C;div id=&amp;#x22;app&amp;#x22;&amp;#x3E; &amp;#123;&amp;#123; message &amp;#125;&amp;#125; &amp;#x3C;/div&amp;#x3E; var app = new Vue({ el: '#app', data: { message: 'Hello Vue!' } }) &amp;#123;&amp;#123; message &amp;#125;&amp;#125; ما اولین برنامه Vue را ایجاد کرده ایم! به نظر می رسد بسیار شبیه به رندر الگوی رشته ای است ، اما Vue کارهای زیادی را در در پس زمینه انجام داده است. داده ها و DOM اکنون مرتبط شده اند ، و اکنون همه چیز واکنشی است. چگونه می دانیم؟ کنسول جاوا اسکریپت مرورگر خود را باز کنید (همین حالا) و app.message را به مقدار دیگری تنظیم کنید. بر این اساس باید مثال ارائه شده در بالا را به روز کنید. علاوه بر جاگذاری متن ، ما همچنین می توانیم ویژگی های عناصر مانند زیر را به هم پیوند دهیم: &amp;#x3C;div id=&amp;#x22;app-2&amp;#x22;&amp;#x3E; &amp;#x3C;span v-bind:title=&amp;#x22;message&amp;#x22;&amp;#x3E; Hover your mouse over me for a few seconds to see my dynamically bound title! &amp;#x3C;/span&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var app2 = new Vue({ el: '#app-2', data: { message: 'You loaded this page on ' + new Date().toLocaleString() } }) Hover your mouse over me for a few seconds to see my dynamically bound title! در اینجا با چیز جدیدی روبرو می شویم. ویژگی v-bind که می بینید دایرکتیو (directive) خوانده می شود. دایرکتیو ها با v- پیشوند شده اند تا نشان دهند که اینها ویژگی های خاصی هستند که توسط Vue ارائه شده است ، و همانطور که احتمالاً حدس زده اید ، آنها رفتار واکنشی ویژه ای را برای DOM ارائه شده اعمال می کنند. در اینجا ، اساساً گفته می شود &quot;ویژگی عنوان این عنصر را با ویژگی پیام در نمونه Vue به روز نگه دارید.&quot; اگر کنسول جاوا اسکریپت خود را دوباره باز کنید و app2.message = 'some new message' را وارد کنید ، یک بار دیگر خواهید دید که در HTML محدود - در این مورد ویژگی title - به روز شده است. شرط ها و حلقه ها (Conditionals and Loops) &amp;#x3C;div id=&amp;#x22;app-3&amp;#x22;&amp;#x3E; &amp;#x3C;span v-if=&amp;#x22;seen&amp;#x22;&amp;#x3E;Now you see me&amp;#x3C;/span&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var app3 = new Vue({ el: '#app-3', data: { seen: true } }) Now you see me در کنسول app3.seen = false را وارد کنید. می بینید که پیام از بین می رود. این مثال نشان می دهد که ما می توانیم داده ها را نه تنها به متن و ویژگی ها ، بلکه به ساختار DOM متصل کنیم. علاوه بر این ، Vue همچنین یک سیستم اثر گذار قدرتمند را فراهم می کند که می تواند هنگام inserted/updated/removed عناصر توسط Vue ، اثرات انتقال را بطور خودکار اعمال کند. چند دستورالعمل دیگر نیز وجود دارد که هر کدام عملکرد ویژه خود را دارند. به عنوان مثال ، دایرکتیو v-for می تواند برای نمایش لیستی از موارد با استفاده از داده های یک Array استفاده شود: &amp;#x3C;div id=&amp;#x22;app-4&amp;#x22;&amp;#x3E; &amp;#x3C;ol&amp;#x3E; &amp;#x3C;li v-for=&amp;#x22;todo in todos&amp;#x22;&amp;#x3E; &amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125; &amp;#x3C;/li&amp;#x3E; &amp;#x3C;/ol&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var app4 = new Vue({ el: '#app-4', data: { todos: [ { text: 'Learn JavaScript' }, { text: 'Learn Vue' }, { text: 'Build something awesome' } ] } }) &amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125; در کنسول ، app4.todos.push({ text: 'New item' }) را وارد کنید. شما باید مورد جدید اضافه شده ای را در لیست ببینید. کار با ورودی کاربران (Handling User Input) برای اینکه کاربران بتوانند با برنامه شما ارتباط برقرار کنند ، می توانیم از دایرکتیو v-on برای پیوستن به شنوندگان رویداد که در نمونه های Vue از متدها استفاده می کنند استفاده کنیم: &amp;#x3C;div id=&amp;#x22;app-5&amp;#x22;&amp;#x3E; &amp;#x3C;p&amp;#x3E;&amp;#123;&amp;#123; message &amp;#125;&amp;#125;&amp;#x3C;/p&amp;#x3E; &amp;#x3C;button v-on:click=&amp;#x22;reverseMessage&amp;#x22;&amp;#x3E;Reverse Message&amp;#x3C;/button&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var app5 = new Vue({ el: '#app-5', data: { message: 'Hello Vue.js!' }, methods: { reverseMessage: function () { this.message = this.message.split('').reverse().join('') } } }) &amp;#123;&amp;#123; message &amp;#125;&amp;#125; Reverse Message توجه داشته باشید که در این روش وضعیت برنامه خود را بدون دست زدن به DOM به روز می کنیم - کلیه دستکاری های DOM توسط Vue انجام می شود و کدی که می نویسید بر روی منطق اساسی متمرکز است. Vue همچنین دایرکتیو v-model را ارائه می دهد که باعث می شود اتصال دو طرفه بین ورودی فرم و حالت برنامه برقرار شود: &amp;#x3C;div id=&amp;#x22;app-6&amp;#x22;&amp;#x3E; &amp;#x3C;p&amp;#x3E;&amp;#123;&amp;#123; message &amp;#125;&amp;#125;&amp;#x3C;/p&amp;#x3E; &amp;#x3C;input v-model=&amp;#x22;message&amp;#x22;&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var app6 = new Vue({ el: '#app-6', data: { message: 'Hello Vue!' } }) &amp;#123;&amp;#123; message &amp;#125;&amp;#125; ترکیب با کامپوننت ها (Composing with Components) سیستم کامپوننت مفهوم مهم دیگری در Vue است ، زیرا انتزاعی است که به ما امکان می دهد برنامه های بزرگی ایجاد کنیم که از اجزای کوچک ، خودمحور و اغلب قابل استفاده مجدد ساخته شده است.: در Vue ، یک کامپوننت در اصل یک نمونه Vue با گزینه های از پیش تعریف شده است. ثبت کامپوننت در Vue ساده است: // Define a new component called todo-item Vue.component('todo-item', { template: '&amp;#x3C;li&amp;#x3E;This is a todo&amp;#x3C;/li&amp;#x3E;' }) var app = new Vue(...) اکنون می توانید آن را در الگوی کامپوننت دیگر تنظیم کنید: &amp;#x3C;ol&amp;#x3E; &amp;#x3C;!-- Create an instance of the todo-item component --&amp;#x3E; &amp;#x3C;todo-item&amp;#x3E;&amp;#x3C;/todo-item&amp;#x3E; &amp;#x3C;/ol&amp;#x3E; اما این متن مشابه را برای هر یک از todo ارائه می دهد ، که اصلا جالب نیست. ما باید بتوانیم داده ها را از دامنه والدین به اجزای کودک منتقل کنیم. بیایید کامپوننت را با prop تغییر دهیم: Vue.component('todo-item', { // The todo-item component now accepts a // &quot;prop&quot;, which is like a custom attribute. // This prop is called todo. props: ['todo'], template: '&amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125;' }) اکنون می توانیم todo را به هر کامپوننت تکراری دیگر با استفاده از v-bind منتقل نماییم: &amp;#x3C;div id=&amp;#x22;app-7&amp;#x22;&amp;#x3E; &amp;#x3C;ol&amp;#x3E; &amp;#x3C;!-- Now we provide each todo-item with the todo object it&amp;#x27;s representing, so that its content can be dynamic. We also need to provide each component with a &amp;#x22;key&amp;#x22;, which will be explained later. --&amp;#x3E; &amp;#x3C;todo-item v-for=&amp;#x22;item in groceryList&amp;#x22; v-bind:todo=&amp;#x22;item&amp;#x22; v-bind:key=&amp;#x22;item.id&amp;#x22; &amp;#x3E;&amp;#x3C;/todo-item&amp;#x3E; &amp;#x3C;/ol&amp;#x3E; &amp;#x3C;/div&amp;#x3E; Vue.component('todo-item', { props: ['todo'], template: '&amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125;' }) var app7 = new Vue({ el: '#app-7', data: { groceryList: [ { id: 0, text: 'Vegetables' }, { id: 1, text: 'Cheese' }, { id: 2, text: 'Whatever else humans are supposed to eat' } ] } }) این یک مثال معقول است ، ما موفق شده ایم که برنامه خود را به دو واحد کوچکتر جدا کنیم و کودک به طور منطقی از والدین با استفاده از props جدا شده است. اکنون می توانیم مؤلفه &amp;#x3C;todo-item&amp;#x3E; خود را با الگوی و منطق پیچیده تری بهبود بخشیم بدون اینکه روی برنامه والدین تأثیر بگذارد. در یک برنامه بزرگ ، لازم است کل برنامه را به اجزای کوچکتر تقسیم کنید تا توسعه برنامه قابل مدیریت باشد. ما بعداً در راهنمای بیشتر در مورد مؤلفه ها صحبت خواهیم کرد ، اما یک مثال (تخیلی) که قالب یک برنامه ممکن است با اجزای کامپوننت چگونه باشد: &amp;#x3C;div id=&amp;#x22;app&amp;#x22;&amp;#x3E; &amp;#x3C;app-nav&amp;#x3E;&amp;#x3C;/app-nav&amp;#x3E; &amp;#x3C;app-view&amp;#x3E; &amp;#x3C;app-sidebar&amp;#x3E;&amp;#x3C;/app-sidebar&amp;#x3E; &amp;#x3C;app-content&amp;#x3E;&amp;#x3C;/app-content&amp;#x3E; &amp;#x3C;/app-view&amp;#x3E; &amp;#x3C;/div&amp;#x3E;</summary></entry><entry><title type="html">آموزش Laravel</title><link href="http://localhost:4000/2017/12/18/laravel.html" rel="alternate" type="text/html" title="آموزش Laravel" /><published>2017-12-18T11:18:42+03:30</published><updated>2017-12-18T11:18:42+03:30</updated><id>http://localhost:4000/2017/12/18/laravel</id><content type="html" xml:base="http://localhost:4000/2017/12/18/laravel.html">&lt;p&gt;
+لاراول (به انگلیسی Laravel) یک چارچوب متن باز پی اچ پی (PHP) است که توسط تیلور اوتول، برای توسعه نرم‌افزارهای وب بر پایه معماری MVC طراحی شده‌است. بعضی از ویژگی‌های لاراول به صورت ماژولار و بسته‌بندی شده ارائه شده‌است. در مارس ۲۰۱۵، لاراول به عنوان معروف‌ترین فریم ورک php شناخته شد، سایر فریم ورک‌های محبوب از قبیل symfony2,Nette,CodeIgniter,Yii2 و سایر فریم ورک‌ها بودند. کدهای باز لاراول برروی github میزبانی می‌شود؛ و تحت لیسانس MIT License ارائه شده‌است.
+&lt;/p&gt;
+
+&lt;div align=&quot;center&quot;&gt;
+&lt;img src=&quot;/images/post/laravel.jpg&quot; alt=&quot;آموزش Laravel&quot; /&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+پیدایش لاراول به این صورت بود که تیلور اوتول قصد داشت فریم ورکی ایجاد کند که بر پایه CodeIgniter باشد، در حالی که قابلیت‌های پیشرفته‌تری نسبت به آن ارائه دهد. زیرا با رشد CodeIgniter مشکلاتی برای برنامه نویسان و طراحان وب به وجود آمده بود. اگر دوست دارید بدانید لاراول تا الان که به نسخه لاراول 5.5 رسیده است، چه مسیری را طی کرده، با ادامه مقاله همراه لیداوب باشید تا نسخه‌های مختلف لاراول را با هم بررسی کنیم.
+&lt;/p&gt;
+
+&lt;p&gt;پیدایش لاراول به این صورت بود که تیلور اوتول قصد داشت فریم ورکی ایجاد کند که بر پایه CodeIgniter باشد، در حالی که قابلیت‌های پیشرفته‌تری نسبت به آن ارائه دهد. زیرا با رشد CodeIgniter مشکلاتی برای برنامه نویسان و طراحان وب به وجود آمده بود. اگر دوست دارید بدانید لاراول تا الان که به نسخه لاراول 5.5 رسیده است، چه مسیری را طی کرده، با ادامه مقاله همراه لیداوب باشید تا نسخه‌های مختلف لاراول را با هم بررسی کنیم.&lt;/p&gt;
+&lt;h3&gt;لاراول 1&lt;/h3&gt;
+&lt;p&gt;تیلور اوتول در سال ۲۰۱۱ اولین نسخه از لاراول را منتشر کرد که مکانیزم‌های model، session، view و مسیریابی را ارائه می‌داد، ولی این نسخه در نبود کنترلر حالت mvc واقعی را از دست داده بود.&lt;/p&gt;
+&lt;h3&gt;لاراول 2&lt;/h3&gt;
+&lt;p&gt;در سپتامبر ۲۰۱۱ اوتول با انجام بهینه سازی‌های متعدد لاراول&amp;nbsp;2 را منتشر کرد. از مهم‌ترین تغییرات نسخه ۲ وجود کنترلرها بود که باعث می‌شد لاراول رسماً به عنوان یک فریم ورک MVC شناخته شود. همچنین سیستم قالب بندی blade نیز در نسخه&amp;nbsp;دوم&amp;nbsp;به این فریم ورک اضافه شد.&lt;/p&gt;
+&lt;h3&gt;لاراول 3&lt;/h3&gt;
+&lt;p&gt;در فوریه سال ۲۰۱۲ لاراول&amp;nbsp;3 با تغییرات جدیدی وارد عرصه شد. انتشار لاراول&amp;nbsp;3 با معرفی سایت این فریم ورک با آدرس&amp;nbsp;&lt;a href=&quot;https://laravel.com/&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;http://laravel.com&lt;/a&gt;&amp;nbsp;که امکان استفاده از یک داکیومنت قوی را برای کاربرانش فراهم می‌کرد، همراه بود. از مهم‌ترین قابلیت‌های لاراول&amp;nbsp;3 استفاده از خط فرمان CLI به نام artisan بود. پشتیبانی داخلی از مدیریت سیستم بانک اطلاعاتی، migrationها، لایه‌های بانک اطلاعاتی، پشتیبانی از رویدادها، همگام سازی لاراول با unit testing و همچنین سیستم پکیجینگ یا bundle از دیگر قابلیت‌های مهم لاراول در نسخه&amp;nbsp;سوم لاراول بود که محبوبیت آن را فزونی بخشید.&lt;/p&gt;
+
+&lt;p style=&quot;clear: both;&quot;&gt;
+&lt;img class=&quot;img-responsive&quot; style=&quot;display: block; margin-right: auto; margin-left: auto;&quot; src=&quot;/images/post/laravel-development.jpg&quot; alt=&quot;فریم ورک لاراول &quot; /&gt;
+&lt;/p&gt;
+
+&lt;h3&gt;لاراول 4&lt;/h3&gt;
+&lt;p&gt;اکنون دیگر لاراول به جایگاه خوبی در بین کاربران دست یافته بود. پس از آن در می سال ۲۰۱۳ نسخه&amp;nbsp;چهارم لاراول&amp;nbsp;بر پایه کدهای Illuminate منتشر شد. در نسخه&amp;nbsp;4 با بهره بردن از مدیر بسته‌ها یا composer تحول بزرگی در چارچوب لاراول ایجاد شد. زیرا این امکان فراهم شده بود که توسط composer کاربران بتوانند از بسته‌ها و کامپوننت‌های متعددی که توسط برنامه نویسان PHP در سراسر جهان نوشته شده بود، استفاده کنند. از قابلیت‌های دیگر ارائه شده توسط نسخه ۴ لاراول پشتیبانی از database seeding، پشتیبانی از صف‌های پیام، ارسال انواع مختلفی از ایمیل و پشتیبانی از soft deletion یا تاخیر در حذف رکوردهای پایگاه داده بود.&lt;/p&gt;
+&lt;h3&gt;لاراول 5&lt;/h3&gt;
+&lt;p&gt;سیر تکامل لاراول ادامه داشت تا اینکه در فوریه سال ۲۰۱۵ نسخه&amp;nbsp;پنجم لاراول&amp;nbsp;با تغییر در نسخه&amp;nbsp;4.3 منتشر شد. قابلیت‌های مهم و ویژه‌ای به این نسخه اضافه شده بود. برنامه‌ ریزی برای اجرای وظایف از طریق بسته‌ای به نام scheduler، بهینه سازی بسته‌های assets از طریق Elixir، ساده شدن عملیات احراز هویت از طریق بسته Socialite، همچنین ارائه ساختار درختی برای توسعه برنامه از قابلیت‌های لاراول در نسخه&amp;nbsp;5 بود.&lt;/p&gt;
+&lt;p&gt;پس از آن، نسخه‌های لاراول&amp;nbsp;5 به ترتیب منتشر شدند و در هر کدام از آن‌ها ویژگی‌های جدید و منحصربه فردی ارائه شد. نتیجه این تلاش‌ها این است که هم اکنون یک فریم ورک PHP با امکانات کامل و جامع در اختیار برنامه نویسان قرار دارد که تمام نیازهای یک برنامه نویس تحت وب را برطرف می‌کند. در عین حال راحتی و سهولت استفاده از آن مهم‌ترین ویژگی آن به شمار می‌رود. در ادامه نسخه‌های مختلف ورژن 5 لاراول را جهت درک بهتر تفاوت آن‌ها بررسی می‌کنیم.&lt;/p&gt;
+
+&lt;h4&gt;لاراول 5.1&lt;/h4&gt;
+&lt;p&gt;لاراول&amp;nbsp;5.1 در ژوئن سال ۲۰۱۵ منتشر شد. باگ‌های زیادی در نسخه&amp;nbsp;5.1&amp;nbsp;لاراول برطرف شده بود. در عین حال مهم‌ترین ویژگی نسخه 5.1 انتشار آن به صورت یک نسخه با پشتیبانی طولانی مدت یا LTS بود. امکان پشتیبانی رفع مشکلات تا ۲ سال و پشتیبانی امنیتی تا سه سال در این نسخه فراهم شده بود.&lt;/p&gt;
+&lt;h4&gt;لاراول&amp;nbsp;5.2&lt;/h4&gt;
+&lt;p&gt;در ۲۱ دسامبر ۲۰۱۵ لاراول&amp;nbsp;5.2 منتشر شد که تغییرات کوچکی در آن اعمال شده بود.&lt;/p&gt;
+&lt;h4&gt;لاراول&amp;nbsp;5.3&lt;/h4&gt;
+&lt;p&gt;لاراول&amp;nbsp;5.3 با پشتیبانی ۶ ماهه برای رفع مشکلات و پشتیبانی یک ساله برای مشکلات امنیتی در ۲۳ اوت ۲۰۱۶ منتشر شد. ویژگی‌های جدید زیادی به این نسخه اضافه شده بود که مهم‌ترین آن تمرکز بر بهبود سرعت توسعه برای برنامه نویسان با ایجاد بهبود‌های خلاقانه جهت انجام کارهای رایج بود.&lt;/p&gt;
+&lt;p style=&quot;clear: both;&quot;&gt;&lt;img class=&quot;img-responsive&quot; style=&quot;display: block; margin-right: auto; margin-left: auto;&quot; src=&quot;/images/post/laravel-framework.jpg&quot; alt=&quot;لاراول چیست&quot; /&gt;&lt;/p&gt;
+&lt;h4&gt;لاراول&amp;nbsp;5.4&lt;/h4&gt;
+&lt;p&gt;لاراول&amp;nbsp;۵/۴ در ۲۴ ژانویه ۲۰۱۷ منتشر شد. این نسخه بسیاری از ویژگی‌های جدید لاراول از جمله Laravel Dusk، Laravel Mix، Blade Components and Slots، Markdown Emails، Automatic Facades، بهبود مسیر یا route و ویژگی‌های دیگر را شامل می‌شد.&lt;/p&gt;
+
+&lt;h4&gt;لاراول&amp;nbsp;5.5&lt;/h4&gt;
+&lt;p&gt;تیم توسعه لاراول همواره درصدد توسعه و افزودن قابلیت‌های جدید به آن هستند و در همین راستا لاراول&amp;nbsp;5.5 را در ۳۰ اگوست ۲۰۱۷ با پشتیبانی طولانی مدت و به صورت LTS منتشر کردند. این نسخه کامل امکان پشتیبانی برای رفع مشکلات تا دو سال و پشتیبانی برای رفع مسائل امنیتی تا سه سال را ایجاد کرده است. این نسخه ویژگی‌های مهم و جدید بسیاری دارد که ما در لیداوب به شرح کامل تمام ویژگی‌های جدید نسخه&amp;nbsp;5.5 پرداخته ایم.&lt;/p&gt;
+
+&lt;p&gt;&amp;lt;h3مزایای استفاده از فریم ورک لاراول&amp;lt;/h3&amp;gt;&lt;/p&gt;
+&lt;p&gt;در ادامه دلیل رشد بسیار سریع لاراول و اینکه چرا در مدت زمان کوتاهی توانسته در رقابت با فریم ورک‌های دیگر PHP، نظر جامعه برنامه ‌نویسان را به خود جلب کند را بررسی می‌کنیم. مهم‌ترین ویژگی‌ لاراول سرعت بالا و همچنین سادگی و سهولت کار با‌ آن است. لاراول قابلیت‌های مهم فراوانی دارد که آن را به انتخاب اول برنامه نویسان PHP تبدیل کرده است. از جمله مهم‌ترین قابلیت‌های لاراول می‌توان به موارد زیر اشاره کرد:&lt;/p&gt;
+&lt;p style=&quot;clear: both;&quot;&gt;&lt;strong&gt;استفاده از معماری MVC در لاراول:&lt;/strong&gt;&amp;nbsp;در تعریف معماری MVC و فریم ورک‌های مبتنی بر آن می‌توان گفت که این معماری تلفیقی از سه لایه model-view-controller است. کار با پایگاه داده از وظایف بخش model است. وظیفه ارتباط با کاربر نهایی بر عهده بخش view است. و وظیفه کنترل و ایجاد ارتباط بین دو لایه view و model برعهده بخش controller است. تقسیم بندی برنامه به این سه قسمت مزایای فراوانی دارد که از جمله مهم‌ترین مزیت‌های آن جداسازی منطق برنامه از بخش view سایت است که این امر باعث می‌شود؛ هنگام ایجاد تغییر در view، این تغییرات منطق برنامه را تحت تاثیر قرار ندهند. فریم ورک لاراول بر پایه معماری MVC است.&amp;nbsp;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;انتشار به صورت متن باز:&lt;/strong&gt;&amp;nbsp;انتشار به صورت متن باز امکان تغییر این فریم ورک طبق چیزی که می‌خواهید را فراهم می‌کند.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;امکان تعریف RESTFUL controllers:&lt;/strong&gt;&amp;nbsp;منطقی برای سهولت استفاده از کنترلرها و کاهش کدها در آن بر پایه درخواست‌های GET و POST است.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;استفاده از خصوصیت auto-loading:&lt;/strong&gt;&amp;nbsp;خصوصیت auto-loading در لاراول امکان لود اتوماتیک کلاس‌ها و کامپوننت‌ها را در صورت نیاز به‌ آن‌ها فراهم کرده است.&lt;br /&gt;&lt;strong&gt;راحتی استفاده از پایگاه داده:&lt;/strong&gt;&amp;nbsp;با استفاده از سیستم ORM یا همان ابزار Elequent در لاراول می‌توانید با انواع پایگاه داده‌ها ارتباط برقرار کرده و انواع کوئری‌ها را در آن به کار بگیرید.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;استفاده از ابزار unit testing:&lt;/strong&gt;&amp;nbsp;با استفاده از ابزار تست لاراول به راحتی می‌توانید برنامه‌های خود را تست کنید.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;استفاده از قالب blade:&lt;/strong&gt;&amp;nbsp;می‌توان از داده‌های برنامه در view توسط قالب blade استفاده کرد.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;ایجاد پکیج‌ها:&lt;/strong&gt;&amp;nbsp;در لاراول به راحتی می‌توانید پکیج‌های موردنظر خود را ایجاد کنید و از آن در برنامه‌های خود بهره ببرید، یا آن را با دیگران به اشتراک بگذارید.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;استفاده از خط فرمان artisan:&lt;/strong&gt;&amp;nbsp;استفاده از خط فرمان artisan این امکان را می‌دهد تا کارهای پیچیده‌ای را توسط چند خط کد ساده انجام دهیم.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;استفاده از migration:&lt;/strong&gt;&amp;nbsp;استفاده از این قابلیت این امکان را فراهم کرده است که تغییرات بانک اطلاعاتی به همراه سورس کد پروژه قابل انتقال باشد.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;نصب آسان:&lt;/strong&gt;&amp;nbsp;از مزیت‌های لاراول این است که نصب این فریم ورک و کار با آن بسیار راحت است.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;استفاده از کامپوننت‌ها:&lt;/strong&gt;&amp;nbsp;لاراول از پکیج‌ها و کامپوننت‌های زیادی بهره می‌برد که به راحتی بر روی پروژه نصب و استفاده می‌شوند.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;امنیت:&lt;/strong&gt;&amp;nbsp;یکی از مهم‌ترین مسائلی که برای یک برنامه نویس اهمیت دارد، امنیت برنامه‌ی در حال ساخت است. لاراول از سطح بالایی از امنیت برخوردار است.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;مسیریابی:&lt;/strong&gt;&amp;nbsp;راحتی کار و قدرت مسیریابی لاراول از مهم‌ترین ‌ویژگی‌های لاراول است.&lt;/p&gt;</content><author><name>Farhad Mirzapour</name></author><summary type="html">لاراول (به انگلیسی Laravel) یک چارچوب متن باز پی اچ پی (PHP) است که توسط تیلور اوتول، برای توسعه نرم‌افزارهای وب بر پایه معماری MVC طراحی شده‌است. بعضی از ویژگی‌های لاراول به صورت ماژولار و بسته‌بندی شده ارائه شده‌است. در مارس ۲۰۱۵، لاراول به عنوان معروف‌ترین فریم ورک php شناخته شد، سایر فریم ورک‌های محبوب از قبیل symfony2,Nette,CodeIgniter,Yii2 و سایر فریم ورک‌ها بودند. کدهای باز لاراول برروی github میزبانی می‌شود؛ و تحت لیسانس MIT License ارائه شده‌است. پیدایش لاراول به این صورت بود که تیلور اوتول قصد داشت فریم ورکی ایجاد کند که بر پایه CodeIgniter باشد، در حالی که قابلیت‌های پیشرفته‌تری نسبت به آن ارائه دهد. زیرا با رشد CodeIgniter مشکلاتی برای برنامه نویسان و طراحان وب به وجود آمده بود. اگر دوست دارید بدانید لاراول تا الان که به نسخه لاراول 5.5 رسیده است، چه مسیری را طی کرده، با ادامه مقاله همراه لیداوب باشید تا نسخه‌های مختلف لاراول را با هم بررسی کنیم. پیدایش لاراول به این صورت بود که تیلور اوتول قصد داشت فریم ورکی ایجاد کند که بر پایه CodeIgniter باشد، در حالی که قابلیت‌های پیشرفته‌تری نسبت به آن ارائه دهد. زیرا با رشد CodeIgniter مشکلاتی برای برنامه نویسان و طراحان وب به وجود آمده بود. اگر دوست دارید بدانید لاراول تا الان که به نسخه لاراول 5.5 رسیده است، چه مسیری را طی کرده، با ادامه مقاله همراه لیداوب باشید تا نسخه‌های مختلف لاراول را با هم بررسی کنیم. لاراول 1 تیلور اوتول در سال ۲۰۱۱ اولین نسخه از لاراول را منتشر کرد که مکانیزم‌های model، session، view و مسیریابی را ارائه می‌داد، ولی این نسخه در نبود کنترلر حالت mvc واقعی را از دست داده بود. لاراول 2 در سپتامبر ۲۰۱۱ اوتول با انجام بهینه سازی‌های متعدد لاراول&amp;nbsp;2 را منتشر کرد. از مهم‌ترین تغییرات نسخه ۲ وجود کنترلرها بود که باعث می‌شد لاراول رسماً به عنوان یک فریم ورک MVC شناخته شود. همچنین سیستم قالب بندی blade نیز در نسخه&amp;nbsp;دوم&amp;nbsp;به این فریم ورک اضافه شد. لاراول 3 در فوریه سال ۲۰۱۲ لاراول&amp;nbsp;3 با تغییرات جدیدی وارد عرصه شد. انتشار لاراول&amp;nbsp;3 با معرفی سایت این فریم ورک با آدرس&amp;nbsp;http://laravel.com&amp;nbsp;که امکان استفاده از یک داکیومنت قوی را برای کاربرانش فراهم می‌کرد، همراه بود. از مهم‌ترین قابلیت‌های لاراول&amp;nbsp;3 استفاده از خط فرمان CLI به نام artisan بود. پشتیبانی داخلی از مدیریت سیستم بانک اطلاعاتی، migrationها، لایه‌های بانک اطلاعاتی، پشتیبانی از رویدادها، همگام سازی لاراول با unit testing و همچنین سیستم پکیجینگ یا bundle از دیگر قابلیت‌های مهم لاراول در نسخه&amp;nbsp;سوم لاراول بود که محبوبیت آن را فزونی بخشید. لاراول 4 اکنون دیگر لاراول به جایگاه خوبی در بین کاربران دست یافته بود. پس از آن در می سال ۲۰۱۳ نسخه&amp;nbsp;چهارم لاراول&amp;nbsp;بر پایه کدهای Illuminate منتشر شد. در نسخه&amp;nbsp;4 با بهره بردن از مدیر بسته‌ها یا composer تحول بزرگی در چارچوب لاراول ایجاد شد. زیرا این امکان فراهم شده بود که توسط composer کاربران بتوانند از بسته‌ها و کامپوننت‌های متعددی که توسط برنامه نویسان PHP در سراسر جهان نوشته شده بود، استفاده کنند. از قابلیت‌های دیگر ارائه شده توسط نسخه ۴ لاراول پشتیبانی از database seeding، پشتیبانی از صف‌های پیام، ارسال انواع مختلفی از ایمیل و پشتیبانی از soft deletion یا تاخیر در حذف رکوردهای پایگاه داده بود. لاراول 5 سیر تکامل لاراول ادامه داشت تا اینکه در فوریه سال ۲۰۱۵ نسخه&amp;nbsp;پنجم لاراول&amp;nbsp;با تغییر در نسخه&amp;nbsp;4.3 منتشر شد. قابلیت‌های مهم و ویژه‌ای به این نسخه اضافه شده بود. برنامه‌ ریزی برای اجرای وظایف از طریق بسته‌ای به نام scheduler، بهینه سازی بسته‌های assets از طریق Elixir، ساده شدن عملیات احراز هویت از طریق بسته Socialite، همچنین ارائه ساختار درختی برای توسعه برنامه از قابلیت‌های لاراول در نسخه&amp;nbsp;5 بود. پس از آن، نسخه‌های لاراول&amp;nbsp;5 به ترتیب منتشر شدند و در هر کدام از آن‌ها ویژگی‌های جدید و منحصربه فردی ارائه شد. نتیجه این تلاش‌ها این است که هم اکنون یک فریم ورک PHP با امکانات کامل و جامع در اختیار برنامه نویسان قرار دارد که تمام نیازهای یک برنامه نویس تحت وب را برطرف می‌کند. در عین حال راحتی و سهولت استفاده از آن مهم‌ترین ویژگی آن به شمار می‌رود. در ادامه نسخه‌های مختلف ورژن 5 لاراول را جهت درک بهتر تفاوت آن‌ها بررسی می‌کنیم. لاراول 5.1 لاراول&amp;nbsp;5.1 در ژوئن سال ۲۰۱۵ منتشر شد. باگ‌های زیادی در نسخه&amp;nbsp;5.1&amp;nbsp;لاراول برطرف شده بود. در عین حال مهم‌ترین ویژگی نسخه 5.1 انتشار آن به صورت یک نسخه با پشتیبانی طولانی مدت یا LTS بود. امکان پشتیبانی رفع مشکلات تا ۲ سال و پشتیبانی امنیتی تا سه سال در این نسخه فراهم شده بود. لاراول&amp;nbsp;5.2 در ۲۱ دسامبر ۲۰۱۵ لاراول&amp;nbsp;5.2 منتشر شد که تغییرات کوچکی در آن اعمال شده بود. لاراول&amp;nbsp;5.3 لاراول&amp;nbsp;5.3 با پشتیبانی ۶ ماهه برای رفع مشکلات و پشتیبانی یک ساله برای مشکلات امنیتی در ۲۳ اوت ۲۰۱۶ منتشر شد. ویژگی‌های جدید زیادی به این نسخه اضافه شده بود که مهم‌ترین آن تمرکز بر بهبود سرعت توسعه برای برنامه نویسان با ایجاد بهبود‌های خلاقانه جهت انجام کارهای رایج بود. لاراول&amp;nbsp;5.4 لاراول&amp;nbsp;۵/۴ در ۲۴ ژانویه ۲۰۱۷ منتشر شد. این نسخه بسیاری از ویژگی‌های جدید لاراول از جمله Laravel Dusk، Laravel Mix، Blade Components and Slots، Markdown Emails، Automatic Facades، بهبود مسیر یا route و ویژگی‌های دیگر را شامل می‌شد. لاراول&amp;nbsp;5.5 تیم توسعه لاراول همواره درصدد توسعه و افزودن قابلیت‌های جدید به آن هستند و در همین راستا لاراول&amp;nbsp;5.5 را در ۳۰ اگوست ۲۰۱۷ با پشتیبانی طولانی مدت و به صورت LTS منتشر کردند. این نسخه کامل امکان پشتیبانی برای رفع مشکلات تا دو سال و پشتیبانی برای رفع مسائل امنیتی تا سه سال را ایجاد کرده است. این نسخه ویژگی‌های مهم و جدید بسیاری دارد که ما در لیداوب به شرح کامل تمام ویژگی‌های جدید نسخه&amp;nbsp;5.5 پرداخته ایم. &amp;lt;h3مزایای استفاده از فریم ورک لاراول&amp;lt;/h3&amp;gt; در ادامه دلیل رشد بسیار سریع لاراول و اینکه چرا در مدت زمان کوتاهی توانسته در رقابت با فریم ورک‌های دیگر PHP، نظر جامعه برنامه ‌نویسان را به خود جلب کند را بررسی می‌کنیم. مهم‌ترین ویژگی‌ لاراول سرعت بالا و همچنین سادگی و سهولت کار با‌ آن است. لاراول قابلیت‌های مهم فراوانی دارد که آن را به انتخاب اول برنامه نویسان PHP تبدیل کرده است. از جمله مهم‌ترین قابلیت‌های لاراول می‌توان به موارد زیر اشاره کرد: استفاده از معماری MVC در لاراول:&amp;nbsp;در تعریف معماری MVC و فریم ورک‌های مبتنی بر آن می‌توان گفت که این معماری تلفیقی از سه لایه model-view-controller است. کار با پایگاه داده از وظایف بخش model است. وظیفه ارتباط با کاربر نهایی بر عهده بخش view است. و وظیفه کنترل و ایجاد ارتباط بین دو لایه view و model برعهده بخش controller است. تقسیم بندی برنامه به این سه قسمت مزایای فراوانی دارد که از جمله مهم‌ترین مزیت‌های آن جداسازی منطق برنامه از بخش view سایت است که این امر باعث می‌شود؛ هنگام ایجاد تغییر در view، این تغییرات منطق برنامه را تحت تاثیر قرار ندهند. فریم ورک لاراول بر پایه معماری MVC است.&amp;nbsp; انتشار به صورت متن باز:&amp;nbsp;انتشار به صورت متن باز امکان تغییر این فریم ورک طبق چیزی که می‌خواهید را فراهم می‌کند. امکان تعریف RESTFUL controllers:&amp;nbsp;منطقی برای سهولت استفاده از کنترلرها و کاهش کدها در آن بر پایه درخواست‌های GET و POST است. استفاده از خصوصیت auto-loading:&amp;nbsp;خصوصیت auto-loading در لاراول امکان لود اتوماتیک کلاس‌ها و کامپوننت‌ها را در صورت نیاز به‌ آن‌ها فراهم کرده است.راحتی استفاده از پایگاه داده:&amp;nbsp;با استفاده از سیستم ORM یا همان ابزار Elequent در لاراول می‌توانید با انواع پایگاه داده‌ها ارتباط برقرار کرده و انواع کوئری‌ها را در آن به کار بگیرید. استفاده از ابزار unit testing:&amp;nbsp;با استفاده از ابزار تست لاراول به راحتی می‌توانید برنامه‌های خود را تست کنید. استفاده از قالب blade:&amp;nbsp;می‌توان از داده‌های برنامه در view توسط قالب blade استفاده کرد. ایجاد پکیج‌ها:&amp;nbsp;در لاراول به راحتی می‌توانید پکیج‌های موردنظر خود را ایجاد کنید و از آن در برنامه‌های خود بهره ببرید، یا آن را با دیگران به اشتراک بگذارید. استفاده از خط فرمان artisan:&amp;nbsp;استفاده از خط فرمان artisan این امکان را می‌دهد تا کارهای پیچیده‌ای را توسط چند خط کد ساده انجام دهیم. استفاده از migration:&amp;nbsp;استفاده از این قابلیت این امکان را فراهم کرده است که تغییرات بانک اطلاعاتی به همراه سورس کد پروژه قابل انتقال باشد. نصب آسان:&amp;nbsp;از مزیت‌های لاراول این است که نصب این فریم ورک و کار با آن بسیار راحت است. استفاده از کامپوننت‌ها:&amp;nbsp;لاراول از پکیج‌ها و کامپوننت‌های زیادی بهره می‌برد که به راحتی بر روی پروژه نصب و استفاده می‌شوند. امنیت:&amp;nbsp;یکی از مهم‌ترین مسائلی که برای یک برنامه نویس اهمیت دارد، امنیت برنامه‌ی در حال ساخت است. لاراول از سطح بالایی از امنیت برخوردار است. مسیریابی:&amp;nbsp;راحتی کار و قدرت مسیریابی لاراول از مهم‌ترین ‌ویژگی‌های لاراول است.</summary></entry><entry><title type="html">معرفی Laravel Collective</title><link href="http://localhost:4000/articles/2017/12/13/laravelcollective.html" rel="alternate" type="text/html" title="معرفی Laravel Collective" /><published>2017-12-13T21:06:42+03:30</published><updated>2017-12-13T21:06:42+03:30</updated><id>http://localhost:4000/articles/2017/12/13/laravelcollective</id><content type="html" xml:base="http://localhost:4000/articles/2017/12/13/laravelcollective.html">&lt;p&gt;
+Laravel Collective جهت ایجاد فرم های ایمن و سریع در فریم ورک laravel کاربرد دارد به عبارتی پس از آنکه ما این امکان جانبی را نصب نمودیم دیگر نیاز به کدنویسی های پیچیده html برای فرم های خود نداریم و به سادگی می توانیم از طریق داکیومنتی که خود لاراول کالکتیو در اختیار ما قرار می دهد هر عملیاتی را انجام دهیم.
+&lt;/p&gt;
+
+&lt;h3&gt;نصب&lt;/h3&gt;
+&lt;p&gt;
+جهت نصب این پکیج با استفاده از composer ، فایل composer.json پروژه خود را همانند زیر ویرایش نمائید :
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-json  line-numbers&quot;&gt;composer require &quot;laravelcollective/html&quot;:&quot;^5.4.0&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+سپس، provider جدید خود را به آرایه providers واقع در config / app.php اضافه کنید:
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;'providers' =&amp;gt; [
+    // ...
+    Collective\Html\HtmlServiceProvider::class,
+    // ...
+  ],
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+نهایتا دو نام مستعار کلاس  را به آرایه aliases واقع در config / app.php اضافه نمایید :
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;  'aliases' =&amp;gt; [
+    // ...
+      'Form' =&amp;gt; Collective\Html\FormFacade::class,
+      'Html' =&amp;gt; Collective\Html\HtmlFacade::class,
+    // ...
+  ],
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3&gt;ایجاد Form&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;{{ Form::open(['url' =&amp;gt; 'foo/bar']) }}
+    //
+{{ Form::close() }}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+به طور پیش فرض، از روش POST جهت ارسال اطلاعات در فرم استفاده می شود، با این حال، شما می توانید روش دیگری را مشخص کنید:
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::open(['url' =&amp;gt; 'foo/bar', 'method' =&amp;gt; 'put'])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+توجه داشته باشید: از آنجا که فرمهای HTML فقط از POST و GET پشتیبانی می کنند، جهت استفاده از روشهای  PUT و DELETE ، بطور اتوماتیک  یک فیلد پنهان method_ به فرم شما اضافه می گردد.
+&lt;/blockquote&gt;
+
+&lt;p&gt;جهت ارسال اطلاعات فرم به route و یا action  کنترلر همانند زیر عمل می کنیم :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::open(['route' =&amp;gt; 'route.name'])
+echo Form::open(['action' =&amp;gt; 'Controller@method'])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;همچنین جهت ارسال پارامتر به route و یا action کنترلر  همانند زیر عمل می کنیم:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::open(['route' =&amp;gt; ['route.name', $user-&amp;gt;id]])
+
+echo Form::open(['action' =&amp;gt; ['Controller@method', $user-&amp;gt;id]])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+همچنین جهت آپلود و ارسال فایل مانند زیر عمل کنید :
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::open(['url' =&amp;gt; 'foo/bar', 'files' =&amp;gt; true])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3&gt;
+استفاده از توکن CSRF در فرم
+&lt;/h3&gt;
+&lt;p&gt;
+Laravel  روش آسانی برای حفاظت از اپلیکیشن شما در برابر حملات cross-site request forgeries  فراهم کرده است. اگر شما از روش Form::open با استفاده از POST، PUT یا DELETE استفاده کنید، نشانه CSRF به صورت خودکار به عنوان فیلد پنهان به فرم شما اضافه می شود. همچنین، اگر شما مایل به ایجاد HTML برای فیلد پنهان CSRF هستید، می توانید از روش  token استفاده کنید:
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::token();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;افزودن CSRF به Route :&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;Route::post('profile',
+    [
+        'before' =&amp;gt; 'csrf',
+        function()
+        {
+            //
+        }
+    ]
+);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3&gt;ایجاد فرم با استفاده از Model&lt;/h3&gt;
+&lt;p&gt;
+ممکن است بخواهید فرم را بر اساس محتویات یک model پر کنید. برای انجام این کار، از روش Form::model استفاده کنید:
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::model($user, ['route' =&amp;gt; ['user.update', $user-&amp;gt;id]])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+زمانیکه که شما یک عنصر در فرم همانند یک text input را تولید می کنید، ، مقدار این text input به صورت خودکار برابر با مقدار نام آیتم موجود در Model تنظیم می گردد. با این حال موارد دیگری نیز وجود دارد. اگر یک آیتم در Session flash data مطابق با نام ورودی وجود داشته باشد، بر روی مقدار مدل اولویت خواهد داشت. بنابراین ترتیب اولویت ها بدین صورت است :
+&lt;/p&gt;
+
+&lt;ol style=&quot;direction:ltr&quot;&gt;
+&lt;li&gt;Session Flash Data (Old Input)&lt;/li&gt;
+&lt;li&gt;Explicitly Passed Value&lt;/li&gt;
+&lt;li&gt;Model Attribute Data&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;
+این امر به شما اجازه می دهد تا سریعا فرم هایی را ایجاد کنید که نه تنها به مقادیر model پیوند دارند، بلکه اگر خطای اعتبارسنجی روی سرور وجود داشته باشد، به راحتی مقادیر فرم دوباره پر شود!
+&lt;/p&gt;
+
+&lt;blockquote&gt;
+توجه: هنگام استفاده از Form :: model، باید فرم خود را با Form::close ببندید!
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3&gt;بررسی Form Model Accessors&lt;/h3&gt;
+&lt;p&gt;
+Eloquent Accessor  در Laravel  اجازه می دهد ویژگی model را تا قبل از بازگشت دستکاری کنید. برای مثال، برای تعیین فرمت های تاریخ جهانی، این می تواند بسیار مفید باشد. با این حال، فرمت تاریخ مورد استفاده برای نمایش ممکن است با قالب تاریخی مورد استفاده برای عناصر فرم سازگار نباشد. شما می توانید این را با ایجاد دو دسترسی جداگانه حل کنید: یک دسترسی استاندارد و یا یک فرم دسترسی.
+&lt;/p&gt;
+
+&lt;p&gt;
+برای تعریف دسترسی به فرم، یک متد formFooAttribute را در model خود ایجاد کنید که در آن Foo نام ستونی است که میخواهید به آن دسترسی پیدا کنید.
+&lt;/p&gt;
+&lt;p&gt;
+در این مثال، یک accessor برای ویژگی date_of_birth تعریف می کنیم. زمانیکه   ()Form::model جهت پر کردن  فرم استفاده شود، Accessor به صورت خودکار توسط ایجاد کننده فرم فراخوانی می  گردد.
+&lt;/p&gt;
+
+&lt;p&gt;
+شما باید با استفاده از روش trait کلاس FormAccessible را به model خود include  نمایید.
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;&amp;lt;?php
+
+namespace App;
+
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
+use Collective\Html\Eloquent\FormAccessible;
+
+class User extends Model
+{
+    use FormAccessible;     
+
+    /**
+     * Get the user's first name.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getDateOfBirthAttribute($value)
+    {
+        return Carbon::parse($value)-&amp;gt;format('m/d/Y');
+    }
+
+    /**
+     * Get the user's first name for forms.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function formDateOfBirthAttribute($value)
+    {
+        return Carbon::parse($value)-&amp;gt;format('Y-m-d');
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3&gt;ایجاد Label در فرم&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::label('email', 'E-Mail Address');
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+تعیین ویژگی های HTML  در Label :
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::label('email', 'E-Mail Address', ['class' =&amp;gt; 'awesome']);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+نکته: پس از ایجاد یک Label، هر عنصر فرم که با نامی مطابق با نام Label ایجاد می کند، به طور خودکار یک شناسه مطابق با نام Label نیز دریافت می کند.
+&lt;/blockquote&gt;
+
+&lt;h3&gt;ایجاد Text Input&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::text('username');
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+تعیین  یک مقدار پیش فرض در Text Input :
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::text('email', 'example@gmail.com');
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3&gt;ایجاد Password Input&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::password('password', ['class' =&amp;gt; 'awesome']);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3&gt;ایجاد Input  های Email  و File&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::email('name', $value = null, $attributes = []);
+echo Form::file('name', $attributes = []);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3&gt;ایجاد Checkbox و Radio Input&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::checkbox('name', 'value');
+
+echo Form::radio('name', 'value');
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+Checkbox Or Radio Input که ویژگی تیک خورده اند :
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::checkbox('name', 'value', true);
+
+echo Form::radio('name', 'value', true);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3&gt;ایجاد Number Input&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::number('name', 'value');
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3&gt;ایجاد Date Input&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::date('name', \Carbon\Carbon::now());
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3&gt;ایجاد File Input&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::file('image');
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+نکته: خاصیت files  باید در هنگام ایجاد فرم برابر true باشد
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3&gt;ایجاد Drop-Down List&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::select('size', ['L' =&amp;gt; 'Large', 'S' =&amp;gt; 'Small']);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ایجاد Drop-Down List با گزینه انتخاب شده پیش فرض :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::select('size', ['L' =&amp;gt; 'Large', 'S' =&amp;gt; 'Small'], 'S');
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ایجاد Drop-Down List همراه با placeholder : &lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::select('size', ['L' =&amp;gt; 'Large', 'S' =&amp;gt; 'Small'], null, ['placeholder' =&amp;gt; 'Pick a size...']);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;در زیر نحوه ایجاد Grouped List را مشاهده می کنید :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::select('animal',[
+    'Cats' =&amp;gt; ['leopard' =&amp;gt; 'Leopard'],
+    'Dogs' =&amp;gt; ['spaniel' =&amp;gt; 'Spaniel'],
+]);&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ایجاد Grouped List با یک رنج عددی :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::selectRange('number', 10, 20);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3&gt;ایجاد List  با یک Month Names :&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::selectMonth('month');
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3&gt;ایجاد Submit Button&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::submit('Click Me!');
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3&gt;ایجاد Form Macro&lt;/h3&gt;
+&lt;p&gt;
+به Form class helpers شخصی، اصطلاحا macro  گفته می شود.
+&lt;/p&gt;
+&lt;p&gt;جهت ایجاد Macro  همانند زیر عمل می کنیم :&lt;/p&gt;
+
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Form::macro('myField', function()
+{
+    return '&lt;span class=&quot;nt&quot;&gt;&amp;lt;input&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;awesome&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;';
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;هم اکنون با استفاده از نام Macro  می توانیم آنرا فراخوانی کنیم :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::myField();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3&gt;ایجاد Custom Component&lt;/h3&gt;
+&lt;p&gt;
+component  شبیه macro  های سفارشی می باشند با این تفاوت که در ماکروها خروجی مستقیما تگ های HTML  است ولی در کامپوننت محتوای موجود در قالب Laravel Blade Templates  می باشد
+&lt;/p&gt;
+
+&lt;p&gt;
+جهت ثبت یک کامپوننت از روش زیر استفاده می کنیم
+&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;Form::component('bsText', 'components.form.text', ['name', 'value', 'attributes']);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+برای مثال فرض کنید یک view  مانند زیر داشته باشیم :
+&lt;/p&gt;
+
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// resources/views/components/form/text.blade.php
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;form-group&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    {{ Form::label($name, null, ['class' =&amp;gt; 'control-label']) }}
+    {{ Form::text($name, $value, array_merge(['class' =&amp;gt; 'form-control'], $attributes)) }}
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;آنگاه جهت ثبت آن بصورت component  خواهیم داشت :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;Form::component('bsText', 'components.form.text', ['name', 'value' =&amp;gt; null, 'attributes' =&amp;gt; []]);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+و برای فراخوانی components  ثبت شده :
+&lt;/p&gt;
+
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;{{ Form::bsText('first_name') }}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;که خروجی آن HTML  موجود در view  مشخص شده می باشد :&lt;/p&gt;
+
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;form-group&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;label&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;for=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;first_name&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;First Name&lt;span class=&quot;nt&quot;&gt;&amp;lt;/label&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;input&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;text&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;first_name&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;value=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;form-control&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3&gt;ایجاد URLs&lt;/h3&gt;
+&lt;p&gt;ایجاد یک لینک به یک آدرس URL  مشخص :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo link_to('foo/bar', $title = null, $attributes = [], $secure = null);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ایجاد یک لینک برای اتصل به یک asset :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo link_to_asset('foo/bar.zip', $title = null, $attributes = [], $secure = null);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ایجاد لینک به یک route :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo link_to_route('route.name', $title = null, $parameters = [], $attributes = []);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ایجاد لینک به یک controller action :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo link_to_action('HomeController@getIndex', $title = null, $parameters = [], $attributes = []);
+&lt;/code&gt;&lt;/pre&gt;</content><author><name>Farhad Mirzapour</name></author><category term="articles" /><summary type="html">Laravel Collective جهت ایجاد فرم های ایمن و سریع در فریم ورک laravel کاربرد دارد به عبارتی پس از آنکه ما این امکان جانبی را نصب نمودیم دیگر نیاز به کدنویسی های پیچیده html برای فرم های خود نداریم و به سادگی می توانیم از طریق داکیومنتی که خود لاراول کالکتیو در اختیار ما قرار می دهد هر عملیاتی را انجام دهیم. نصب جهت نصب این پکیج با استفاده از composer ، فایل composer.json پروژه خود را همانند زیر ویرایش نمائید : composer require &quot;laravelcollective/html&quot;:&quot;^5.4.0&quot; سپس، provider جدید خود را به آرایه providers واقع در config / app.php اضافه کنید: 'providers' =&amp;gt; [ // ... Collective\Html\HtmlServiceProvider::class, // ... ], نهایتا دو نام مستعار کلاس را به آرایه aliases واقع در config / app.php اضافه نمایید : 'aliases' =&amp;gt; [ // ... 'Form' =&amp;gt; Collective\Html\FormFacade::class, 'Html' =&amp;gt; Collective\Html\HtmlFacade::class, // ... ], ایجاد Form {{ Form::open(['url' =&amp;gt; 'foo/bar']) }} // {{ Form::close() }} به طور پیش فرض، از روش POST جهت ارسال اطلاعات در فرم استفاده می شود، با این حال، شما می توانید روش دیگری را مشخص کنید: echo Form::open(['url' =&amp;gt; 'foo/bar', 'method' =&amp;gt; 'put']) توجه داشته باشید: از آنجا که فرمهای HTML فقط از POST و GET پشتیبانی می کنند، جهت استفاده از روشهای PUT و DELETE ، بطور اتوماتیک یک فیلد پنهان method_ به فرم شما اضافه می گردد. جهت ارسال اطلاعات فرم به route و یا action کنترلر همانند زیر عمل می کنیم : echo Form::open(['route' =&amp;gt; 'route.name']) echo Form::open(['action' =&amp;gt; 'Controller@method']) همچنین جهت ارسال پارامتر به route و یا action کنترلر همانند زیر عمل می کنیم: echo Form::open(['route' =&amp;gt; ['route.name', $user-&amp;gt;id]]) echo Form::open(['action' =&amp;gt; ['Controller@method', $user-&amp;gt;id]]) همچنین جهت آپلود و ارسال فایل مانند زیر عمل کنید : echo Form::open(['url' =&amp;gt; 'foo/bar', 'files' =&amp;gt; true]) استفاده از توکن CSRF در فرم Laravel روش آسانی برای حفاظت از اپلیکیشن شما در برابر حملات cross-site request forgeries فراهم کرده است. اگر شما از روش Form::open با استفاده از POST، PUT یا DELETE استفاده کنید، نشانه CSRF به صورت خودکار به عنوان فیلد پنهان به فرم شما اضافه می شود. همچنین، اگر شما مایل به ایجاد HTML برای فیلد پنهان CSRF هستید، می توانید از روش token استفاده کنید: echo Form::token(); افزودن CSRF به Route : Route::post('profile', [ 'before' =&amp;gt; 'csrf', function() { // } ] ); ایجاد فرم با استفاده از Model ممکن است بخواهید فرم را بر اساس محتویات یک model پر کنید. برای انجام این کار، از روش Form::model استفاده کنید: echo Form::model($user, ['route' =&amp;gt; ['user.update', $user-&amp;gt;id]]) زمانیکه که شما یک عنصر در فرم همانند یک text input را تولید می کنید، ، مقدار این text input به صورت خودکار برابر با مقدار نام آیتم موجود در Model تنظیم می گردد. با این حال موارد دیگری نیز وجود دارد. اگر یک آیتم در Session flash data مطابق با نام ورودی وجود داشته باشد، بر روی مقدار مدل اولویت خواهد داشت. بنابراین ترتیب اولویت ها بدین صورت است : Session Flash Data (Old Input) Explicitly Passed Value Model Attribute Data این امر به شما اجازه می دهد تا سریعا فرم هایی را ایجاد کنید که نه تنها به مقادیر model پیوند دارند، بلکه اگر خطای اعتبارسنجی روی سرور وجود داشته باشد، به راحتی مقادیر فرم دوباره پر شود! توجه: هنگام استفاده از Form :: model، باید فرم خود را با Form::close ببندید! بررسی Form Model Accessors Eloquent Accessor در Laravel اجازه می دهد ویژگی model را تا قبل از بازگشت دستکاری کنید. برای مثال، برای تعیین فرمت های تاریخ جهانی، این می تواند بسیار مفید باشد. با این حال، فرمت تاریخ مورد استفاده برای نمایش ممکن است با قالب تاریخی مورد استفاده برای عناصر فرم سازگار نباشد. شما می توانید این را با ایجاد دو دسترسی جداگانه حل کنید: یک دسترسی استاندارد و یا یک فرم دسترسی. برای تعریف دسترسی به فرم، یک متد formFooAttribute را در model خود ایجاد کنید که در آن Foo نام ستونی است که میخواهید به آن دسترسی پیدا کنید. در این مثال، یک accessor برای ویژگی date_of_birth تعریف می کنیم. زمانیکه ()Form::model جهت پر کردن فرم استفاده شود، Accessor به صورت خودکار توسط ایجاد کننده فرم فراخوانی می گردد. شما باید با استفاده از روش trait کلاس FormAccessible را به model خود include نمایید. &amp;lt;?php namespace App; use Carbon\Carbon; use Illuminate\Database\Eloquent\Model; use Collective\Html\Eloquent\FormAccessible; class User extends Model { use FormAccessible; /** * Get the user's first name. * * @param string $value * @return string */ public function getDateOfBirthAttribute($value) { return Carbon::parse($value)-&amp;gt;format('m/d/Y'); } /** * Get the user's first name for forms. * * @param string $value * @return string */ public function formDateOfBirthAttribute($value) { return Carbon::parse($value)-&amp;gt;format('Y-m-d'); } } ایجاد Label در فرم echo Form::label('email', 'E-Mail Address'); تعیین ویژگی های HTML در Label : echo Form::label('email', 'E-Mail Address', ['class' =&amp;gt; 'awesome']); نکته: پس از ایجاد یک Label، هر عنصر فرم که با نامی مطابق با نام Label ایجاد می کند، به طور خودکار یک شناسه مطابق با نام Label نیز دریافت می کند. ایجاد Text Input echo Form::text('username'); تعیین یک مقدار پیش فرض در Text Input : echo Form::text('email', 'example@gmail.com'); ایجاد Password Input echo Form::password('password', ['class' =&amp;gt; 'awesome']); ایجاد Input های Email و File echo Form::email('name', $value = null, $attributes = []); echo Form::file('name', $attributes = []); ایجاد Checkbox و Radio Input echo Form::checkbox('name', 'value'); echo Form::radio('name', 'value'); Checkbox Or Radio Input که ویژگی تیک خورده اند : echo Form::checkbox('name', 'value', true); echo Form::radio('name', 'value', true); ایجاد Number Input echo Form::number('name', 'value'); ایجاد Date Input echo Form::date('name', \Carbon\Carbon::now()); ایجاد File Input echo Form::file('image'); نکته: خاصیت files باید در هنگام ایجاد فرم برابر true باشد ایجاد Drop-Down List echo Form::select('size', ['L' =&amp;gt; 'Large', 'S' =&amp;gt; 'Small']); ایجاد Drop-Down List با گزینه انتخاب شده پیش فرض : echo Form::select('size', ['L' =&amp;gt; 'Large', 'S' =&amp;gt; 'Small'], 'S'); ایجاد Drop-Down List همراه با placeholder : echo Form::select('size', ['L' =&amp;gt; 'Large', 'S' =&amp;gt; 'Small'], null, ['placeholder' =&amp;gt; 'Pick a size...']); در زیر نحوه ایجاد Grouped List را مشاهده می کنید : echo Form::select('animal',[ 'Cats' =&amp;gt; ['leopard' =&amp;gt; 'Leopard'], 'Dogs' =&amp;gt; ['spaniel' =&amp;gt; 'Spaniel'], ]); ایجاد Grouped List با یک رنج عددی : echo Form::selectRange('number', 10, 20); ایجاد List با یک Month Names : echo Form::selectMonth('month'); ایجاد Submit Button echo Form::submit('Click Me!'); ایجاد Form Macro به Form class helpers شخصی، اصطلاحا macro گفته می شود. جهت ایجاد Macro همانند زیر عمل می کنیم : Form::macro('myField', function() { return '&amp;lt;input type=&quot;awesome&quot;&amp;gt;'; }); هم اکنون با استفاده از نام Macro می توانیم آنرا فراخوانی کنیم : echo Form::myField(); ایجاد Custom Component component شبیه macro های سفارشی می باشند با این تفاوت که در ماکروها خروجی مستقیما تگ های HTML است ولی در کامپوننت محتوای موجود در قالب Laravel Blade Templates می باشد جهت ثبت یک کامپوننت از روش زیر استفاده می کنیم Form::component('bsText', 'components.form.text', ['name', 'value', 'attributes']); برای مثال فرض کنید یک view مانند زیر داشته باشیم : // resources/views/components/form/text.blade.php &amp;lt;div class=&quot;form-group&quot;&amp;gt; {{ Form::label($name, null, ['class' =&amp;gt; 'control-label']) }} {{ Form::text($name, $value, array_merge(['class' =&amp;gt; 'form-control'], $attributes)) }} &amp;lt;/div&amp;gt; آنگاه جهت ثبت آن بصورت component خواهیم داشت : Form::component('bsText', 'components.form.text', ['name', 'value' =&amp;gt; null, 'attributes' =&amp;gt; []]); و برای فراخوانی components ثبت شده : {{ Form::bsText('first_name') }} که خروجی آن HTML موجود در view مشخص شده می باشد : &amp;lt;div class=&quot;form-group&quot;&amp;gt; &amp;lt;label for=&quot;first_name&quot;&amp;gt;First Name&amp;lt;/label&amp;gt; &amp;lt;input type=&quot;text&quot; name=&quot;first_name&quot; value=&quot;&quot; class=&quot;form-control&quot;&amp;gt; &amp;lt;/div&amp;gt; ایجاد URLs ایجاد یک لینک به یک آدرس URL مشخص : echo link_to('foo/bar', $title = null, $attributes = [], $secure = null); ایجاد یک لینک برای اتصل به یک asset : echo link_to_asset('foo/bar.zip', $title = null, $attributes = [], $secure = null); ایجاد لینک به یک route : echo link_to_route('route.name', $title = null, $parameters = [], $attributes = []); ایجاد لینک به یک controller action : echo link_to_action('HomeController@getIndex', $title = null, $parameters = [], $attributes = []);</summary></entry><entry><title type="html">معرفی Design Pattern</title><link href="http://localhost:4000/2017/12/06/design-patterns.html" rel="alternate" type="text/html" title="معرفی Design Pattern" /><published>2017-12-06T19:03:42+03:30</published><updated>2017-12-06T19:03:42+03:30</updated><id>http://localhost:4000/2017/12/06/design-patterns</id><content type="html" xml:base="http://localhost:4000/2017/12/06/design-patterns.html">&lt;p&gt;
+Design Patternها یکسری جواب های ثابت شده به مشکلات رایج در طراحی هستند. به وسیله آنها می توان یکسری راهکار برای حل مسائل بازگشتی در طراحی برنامه تعریف کرد.
+&lt;/p&gt;
+
+&lt;p&gt;
+به طور واضح، Design Patternها کدهای آماده ای نیستند که بتوان مستقیماً از آن ها استفاده کرد. اما یکسری رویکرد یا نظریه برای حل چالش های عادی طراحی ارائه می دهند.
+&lt;/p&gt;
+
+&lt;p&gt;
+هر الگو بیانگر یک مسئله و مشکل است که می تواند بارها و بارها روی بدهد همراه با راه حل آن مسئله، وشما می تواند از این راه حل برای میلیون ها بار استفاده کند بدون نیاز مجدد برای پیدا کردن راه حل.
+&lt;/p&gt;
+
+&lt;h3&gt;دسته بندی الگو ها
+&lt;/h3&gt;
+&lt;p&gt;
+در اوایل دهه ۱۹۹۰، افرادی زیادی روی الگوهای طراحی کار می کردند. اما چهار نفر به نام های، گاما، جاکوبسون، هلم و ولسایدز بیشترین تاثیر را در این زمینه با نوشتن کتابی به نام “Design Pattern: Elements of Reusable Object-Oriented Software”، داشتند. این چهار نویسنده به Gang of Four مشهور شدند. آنها در این کتاب ایده استفاده از الگوها را در طراحی نرم افزار به کار بردند و یک فرمت استاندارد را برای مستندسازی الگوها ایجاد کردند. الگوهای طراحی بیان شده در سه دسته تقسیم بندی شده اند و در مجموع 23 الگو هستند :
+&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;
+&lt;b&gt;
+الگوهای بوجود آورنده(Creational Pattern):
+&lt;/b&gt;
+&lt;p&gt;
+ همه الگو های که در این دسته قرار می کیرند در ارتباط با روش های ایجاد اشیاء هستند.آنها مسئولیت نمونه سازی از کلاس­ها را به یک نقطه منتقل می­کنند تا قواعد SRP و SoC رعایت گردند. الگوهای این گروه عبارتند از:
+&lt;/p&gt;
+&lt;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Factory :&lt;/b&gt; یک کلاس، وظیفه ایجاد یک شیء معتبر را به کلاسی دیگر واگذار می کند.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Abstract Factory :&lt;/b&gt; واسط هایی را ایجاد می­کند برای ساخت خانواده ای از&amp;nbsp; اشیای مرتبط.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Builder :&lt;/b&gt; امکان ساخت ویرایش های مختلف از یک شیء را با جدا سازی سازنده آن شیء فراهم می کند.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Prototype :&lt;/b&gt; امکان کپی اشیاء را به ایجاد یک نمونه جدید فراهم می کند.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Singleton :&lt;/b&gt; به کلاس این امکان را می دهد که فقط یک نمونه از خود ایجاد کرده و فقط یک نقطه واحد برای دسترسی به آن نمونه باشد.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;b&gt;
+الگوهای ساختاری(Structural Patten):
+&lt;/b&gt;
+&lt;p&gt;
+ این نوع الگوها شرح می دهند چگونه اشیاء و کلاس ها می توانند در ساختارهای بزرگتر باهم ترکیب شوند. الگوهای این گروه عبارتند از:
+&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Adapter :&lt;/b&gt; به کلاس­هایی از واسط های ناسازگاز اجازه کار با یکدیگر را می دهد.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Bridge :&lt;/b&gt; یک انتزاع را از پیاده سازی آن جدا می کند و اجازه می دهد که آنها مستقل از یکدیگر تغییر کند.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Composite :&lt;/b&gt; اجازه می دهد که یک گروه از اشیاء که به صورت سلسله مراتبی نمایش داده&amp;nbsp; می­شوند، درست مانند یک نمونه از یک شیء مورد استفاده قرار گیرد.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Decorator :&lt;/b&gt; به صورت پویا می­تواند یک کلاس را پوشش داده و رفتارهای آن را توسعه دهد.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Facade :&lt;/b&gt; یک واسط ساده ایجاد می­کند برای کنترل دسترسی به تعدادی از واسط­ها و زیر سیستم­های پیچیده.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Flyweight :&lt;/b&gt; روشی را برای اشتراک داده­ها بین تعداد زیادی از کلاس­های کوچک فراهم می­نماید.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Proxy :&lt;/b&gt; یک نگهداره برای یک کلاس پیچیده که نمونه گیری از آنها هزینه­ بر است را فراهم می­نماید.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;b&gt;
+الگوهای رفتاری(Behavioral Pattern):
+&lt;/b&gt;
+&lt;p&gt;
+به ارتباطات بین اشیاء بر مبنای مسئولیت­ها و الگوریتم­های آنها می­پردازد. این الگوها رفتارهای پیچیده سیستم را بسته بندی می­کنند و آن را از جریان کلی سیستم جدا می­نمایند تا سیستم­های پیچیده به خوبی درک شده و نگهداری شوند. الگوهای این گروه عبارتند از:
+&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Chain of Responsibility :&lt;/b&gt; اجازه می­دهد که دستورات با یکدیگر زنجیر شوند تا یک درخواست را انجام دهند.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Command :&lt;/b&gt; یک متد را در قالب یک شیء بسته بندی می کند و اجرای دستور &amp;nbsp;را از صادر کننده آن جدا می­سازد.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Interpreter :&lt;/b&gt; نحوه ارزیابی جملات در یک زبان را مشخص می­کند.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Iterator :&lt;/b&gt; نحوه پیمایش یک مجموعه را به صورت فرموله شده تعیین می­کند.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Mediator :&lt;/b&gt; شیء ایی را تعریف می­کند که امکان برقراری ارتباط بین دو شیء دیگر را فراهم می­نماید بدون آنکه آنها از یکدیگر مطلع باشند.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Memento :&lt;/b&gt; امکان برگشت دادن وضعیت یک شیء به حالت قبلی­اش را فراهم می­نماید.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Observer :&lt;/b&gt; روشی را تعریف می­کند که یک یا چند کلاس از تغییرات در یک کلاس مطلع گردند.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;State :&lt;/b&gt; اجازه می­دهد که یک شیء تغییر رفتار خود را به یک شیء دیگری واگذار کند.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Strategy :&lt;/b&gt; اجازه می­دهد که یک الگوریتم در یک کلاس بسته بندی شود و در زمان اجرا تعویض شود برای تغییر رفتار&amp;nbsp; یک شیء.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Template Method :&lt;/b&gt; کلاسی که کنترل جریان یک الگوریتم را تعریف نماید ولی به کلاس های مشتق اجازه می دهد گام های اجرایی آن را پیاده سازی نمایند.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Visitor :&lt;/b&gt; امکان کارکرد جدید برای یک کلاس را فراهم می نمایند بدون آنکه ساختار آن تغییر کند.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+
+&lt;/ol&gt;</content><author><name>Farhad Mirzapour</name></author><summary type="html">Design Patternها یکسری جواب های ثابت شده به مشکلات رایج در طراحی هستند. به وسیله آنها می توان یکسری راهکار برای حل مسائل بازگشتی در طراحی برنامه تعریف کرد. به طور واضح، Design Patternها کدهای آماده ای نیستند که بتوان مستقیماً از آن ها استفاده کرد. اما یکسری رویکرد یا نظریه برای حل چالش های عادی طراحی ارائه می دهند. هر الگو بیانگر یک مسئله و مشکل است که می تواند بارها و بارها روی بدهد همراه با راه حل آن مسئله، وشما می تواند از این راه حل برای میلیون ها بار استفاده کند بدون نیاز مجدد برای پیدا کردن راه حل. دسته بندی الگو ها در اوایل دهه ۱۹۹۰، افرادی زیادی روی الگوهای طراحی کار می کردند. اما چهار نفر به نام های، گاما، جاکوبسون، هلم و ولسایدز بیشترین تاثیر را در این زمینه با نوشتن کتابی به نام “Design Pattern: Elements of Reusable Object-Oriented Software”، داشتند. این چهار نویسنده به Gang of Four مشهور شدند. آنها در این کتاب ایده استفاده از الگوها را در طراحی نرم افزار به کار بردند و یک فرمت استاندارد را برای مستندسازی الگوها ایجاد کردند. الگوهای طراحی بیان شده در سه دسته تقسیم بندی شده اند و در مجموع 23 الگو هستند : الگوهای بوجود آورنده(Creational Pattern): همه الگو های که در این دسته قرار می کیرند در ارتباط با روش های ایجاد اشیاء هستند.آنها مسئولیت نمونه سازی از کلاس­ها را به یک نقطه منتقل می­کنند تا قواعد SRP و SoC رعایت گردند. الگوهای این گروه عبارتند از: Factory : یک کلاس، وظیفه ایجاد یک شیء معتبر را به کلاسی دیگر واگذار می کند. Abstract Factory : واسط هایی را ایجاد می­کند برای ساخت خانواده ای از&amp;nbsp; اشیای مرتبط. Builder : امکان ساخت ویرایش های مختلف از یک شیء را با جدا سازی سازنده آن شیء فراهم می کند. Prototype : امکان کپی اشیاء را به ایجاد یک نمونه جدید فراهم می کند. Singleton : به کلاس این امکان را می دهد که فقط یک نمونه از خود ایجاد کرده و فقط یک نقطه واحد برای دسترسی به آن نمونه باشد. الگوهای ساختاری(Structural Patten): این نوع الگوها شرح می دهند چگونه اشیاء و کلاس ها می توانند در ساختارهای بزرگتر باهم ترکیب شوند. الگوهای این گروه عبارتند از: Adapter : به کلاس­هایی از واسط های ناسازگاز اجازه کار با یکدیگر را می دهد. Bridge : یک انتزاع را از پیاده سازی آن جدا می کند و اجازه می دهد که آنها مستقل از یکدیگر تغییر کند. Composite : اجازه می دهد که یک گروه از اشیاء که به صورت سلسله مراتبی نمایش داده&amp;nbsp; می­شوند، درست مانند یک نمونه از یک شیء مورد استفاده قرار گیرد. Decorator : به صورت پویا می­تواند یک کلاس را پوشش داده و رفتارهای آن را توسعه دهد. Facade : یک واسط ساده ایجاد می­کند برای کنترل دسترسی به تعدادی از واسط­ها و زیر سیستم­های پیچیده. Flyweight : روشی را برای اشتراک داده­ها بین تعداد زیادی از کلاس­های کوچک فراهم می­نماید. Proxy : یک نگهداره برای یک کلاس پیچیده که نمونه گیری از آنها هزینه­ بر است را فراهم می­نماید. الگوهای رفتاری(Behavioral Pattern): به ارتباطات بین اشیاء بر مبنای مسئولیت­ها و الگوریتم­های آنها می­پردازد. این الگوها رفتارهای پیچیده سیستم را بسته بندی می­کنند و آن را از جریان کلی سیستم جدا می­نمایند تا سیستم­های پیچیده به خوبی درک شده و نگهداری شوند. الگوهای این گروه عبارتند از: Chain of Responsibility : اجازه می­دهد که دستورات با یکدیگر زنجیر شوند تا یک درخواست را انجام دهند. Command : یک متد را در قالب یک شیء بسته بندی می کند و اجرای دستور &amp;nbsp;را از صادر کننده آن جدا می­سازد. Interpreter : نحوه ارزیابی جملات در یک زبان را مشخص می­کند. Iterator : نحوه پیمایش یک مجموعه را به صورت فرموله شده تعیین می­کند. Mediator : شیء ایی را تعریف می­کند که امکان برقراری ارتباط بین دو شیء دیگر را فراهم می­نماید بدون آنکه آنها از یکدیگر مطلع باشند. Memento : امکان برگشت دادن وضعیت یک شیء به حالت قبلی­اش را فراهم می­نماید. Observer : روشی را تعریف می­کند که یک یا چند کلاس از تغییرات در یک کلاس مطلع گردند. State : اجازه می­دهد که یک شیء تغییر رفتار خود را به یک شیء دیگری واگذار کند. Strategy : اجازه می­دهد که یک الگوریتم در یک کلاس بسته بندی شود و در زمان اجرا تعویض شود برای تغییر رفتار&amp;nbsp; یک شیء. Template Method : کلاسی که کنترل جریان یک الگوریتم را تعریف نماید ولی به کلاس های مشتق اجازه می دهد گام های اجرایی آن را پیاده سازی نمایند. Visitor : امکان کارکرد جدید برای یک کلاس را فراهم می نمایند بدون آنکه ساختار آن تغییر کند.</summary></entry><entry><title type="html">آموزش PHPUnit</title><link href="http://localhost:4000/2017/11/27/php-unit.html" rel="alternate" type="text/html" title="آموزش PHPUnit" /><published>2017-11-27T21:50:42+03:30</published><updated>2017-11-27T21:50:42+03:30</updated><id>http://localhost:4000/2017/11/27/php-unit</id><content type="html" xml:base="http://localhost:4000/2017/11/27/php-unit.html">&lt;p&gt;
+PHPUnit فریم ورکی جهت تست کدهای php است، این فریمورک از معماری xUnit استفاده می‌کند.  سازندگان آن آلمانی هستند و هدف خودشان را از تولید این فریم ورک، استفاده خودشان جهت تست کدهایشان اعلام کرده اند. آنها میخواستند چند چیز مثل آرایه ها و … را در کدهایشان آزمایش کنند و به این فکر افتاده اند «ما که داریم این tester را می نویسیم، چرا کامل و کاربردی نباشد تا بتوان همیشه از آن استفاده کرد».  این ابزار کمک می کند تا پایداری و مقیاس پذیری(scalability) برنامه تان را تست کنید.
+&lt;/p&gt;
+
+&lt;h3&gt;نصب PHPUnit&lt;/h3&gt;
+
+&lt;p&gt;
+جهت نصب PHP unit  می توان از برنامه composer استفاده نمائیم . بنابراین دستور زیر را در ترمینال وارد نمائید تا مراحل نصب تکمیل گردد :
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash   line-numbers&quot;&gt;$ composer global require phpunit/phpunit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+برنامه بصورت global  نصب گرددید به این معنا که در تمامی پروژه ها و دایرکتوری ها می توان از این برنامه استفاده کرد. جهت اطمینان از صحت نصب، دستور زیر را در ترمینال وارد تا ورژن نصب شده نمایش داده شود :
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash   line-numbers&quot;&gt;$ phpunit --v
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+بسیار خب... می خواهیم از این قسمت به بعد مراحل تنظیمات و نوشتن تست را بصورت یک پروژه بیان کنیم. بنابراین دایرکتوری به نام myproject ایجاد و درون آن دایرکتوری دیگری به نام test  ایجادمی کنیم.
+&lt;/p&gt;
+&lt;p&gt;
+همچنین چون ما از روش PSR-4  جهت لودینگ کلاس ها استفاده می کنیم بنابراین فایلی به نام composer.json  را در مسیر اصلی پروژه ایجاد و کد زیر را درون آن قرار دهید :
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash   line-numbers&quot;&gt;{
+
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;سپس درون ترمینال دستور زیر را وارد تا پوشه vendor  ایجاد گردد :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash   line-numbers&quot;&gt;composer dump
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3&gt;تنظیمات PHP Unit  در پروژه&lt;/h3&gt;
+&lt;p&gt;
+جهت تنظیمات مورد نظرمان  از فایل phpunit.xml در شاخه اصلی پروژه استفاده می نمائیم. همانند کد زیر :
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-xml&quot;&gt;&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&lt;script type=&quot;prism-html-markup&quot;&gt;&gt;
+&lt;phpunit colors=&quot;true&quot; bootstrap=&quot;vendor/autoload.php&quot;&gt;
+    &lt;testsuites&gt;
+        &lt;testsuite name=&quot;Application Test Suite&quot;&gt;
+            &lt;directory&gt;test/&lt;/directory&gt;
+        &lt;/testsuite&gt;
+    &lt;/testsuites&gt;
+&lt;/phpunit&gt;
+&lt;/script&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+در کد بالا دو تنظیم انجام داده ایم که عبارتند از :
+&lt;ul&gt;
+&lt;li&gt;
+با استفاده از ویژگی colors=&quot;true&quot; تعیین کردیم که نتایج آزمایش بصورت رنگی در ترمینال نمایش داده شود
+&lt;/li&gt;
+
+&lt;li&gt;
+با استفاده از تگ directory تعیین کردیم که مسیر فایل های تست ما درون پوشه test  در شاخه اصلی قرار دارند.
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;</content><author><name>Farhad Mirzapour</name></author><summary type="html">PHPUnit فریم ورکی جهت تست کدهای php است، این فریمورک از معماری xUnit استفاده می‌کند. سازندگان آن آلمانی هستند و هدف خودشان را از تولید این فریم ورک، استفاده خودشان جهت تست کدهایشان اعلام کرده اند. آنها میخواستند چند چیز مثل آرایه ها و … را در کدهایشان آزمایش کنند و به این فکر افتاده اند «ما که داریم این tester را می نویسیم، چرا کامل و کاربردی نباشد تا بتوان همیشه از آن استفاده کرد». این ابزار کمک می کند تا پایداری و مقیاس پذیری(scalability) برنامه تان را تست کنید. نصب PHPUnit جهت نصب PHP unit می توان از برنامه composer استفاده نمائیم . بنابراین دستور زیر را در ترمینال وارد نمائید تا مراحل نصب تکمیل گردد : $ composer global require phpunit/phpunit برنامه بصورت global نصب گرددید به این معنا که در تمامی پروژه ها و دایرکتوری ها می توان از این برنامه استفاده کرد. جهت اطمینان از صحت نصب، دستور زیر را در ترمینال وارد تا ورژن نصب شده نمایش داده شود : $ phpunit --v بسیار خب... می خواهیم از این قسمت به بعد مراحل تنظیمات و نوشتن تست را بصورت یک پروژه بیان کنیم. بنابراین دایرکتوری به نام myproject ایجاد و درون آن دایرکتوری دیگری به نام test ایجادمی کنیم. همچنین چون ما از روش PSR-4 جهت لودینگ کلاس ها استفاده می کنیم بنابراین فایلی به نام composer.json را در مسیر اصلی پروژه ایجاد و کد زیر را درون آن قرار دهید : { } سپس درون ترمینال دستور زیر را وارد تا پوشه vendor ایجاد گردد : composer dump تنظیمات PHP Unit در پروژه جهت تنظیمات مورد نظرمان از فایل phpunit.xml در شاخه اصلی پروژه استفاده می نمائیم. همانند کد زیر : &amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;? در کد بالا دو تنظیم انجام داده ایم که عبارتند از : با استفاده از ویژگی colors=&quot;true&quot; تعیین کردیم که نتایج آزمایش بصورت رنگی در ترمینال نمایش داده شود با استفاده از تگ directory تعیین کردیم که مسیر فایل های تست ما درون پوشه test در شاخه اصلی قرار دارند.</summary></entry><entry><title type="html">اصول Test Driven Development</title><link href="http://localhost:4000/2017/11/15/test-driven-development.html" rel="alternate" type="text/html" title="اصول Test Driven Development" /><published>2017-11-15T10:00:42+03:30</published><updated>2017-11-15T10:00:42+03:30</updated><id>http://localhost:4000/2017/11/15/test-driven-development</id><content type="html" xml:base="http://localhost:4000/2017/11/15/test-driven-development.html">&lt;p&gt;
+ تست واحد نوع خاصی از آزمون با یک هدف بسیار مشخص و مجموعه ای از ویژگی ها است. خوشبختانه، تعریف پایه تست واحد نسبتا ساده است :
+ &lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;
+ Unit Test  یک تست است که یک نیاز مشخص برای یک متد مشخص را آزمایش می‌کند(قانون یک نیاز/یک متد one requirement/one method rule)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;
+آزمون‌های واحد که قانون یک نیاز/یک متد  را رعایت می‌کنند، ویژگی‌های زیر را هم به عنوان یک unit test‌ دارند:
+&lt;/p&gt;
+
+&lt;ul&gt;
+
+&lt;li&gt;
+&lt;p&gt;
+&lt;strong&gt; هدفمند (Targeted) : &lt;/strong&gt;
+ آزمون‌های واحدی که یک چیز (شامل مجموعه‌ای از ورودی‌ها) را در یک زمان آزمایش می‌کنند، هدف‌گیری‌شده هستند.
+&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;
+&lt;strong&gt; جدا شده  (Isolated) : &lt;/strong&gt;
+کدی که در حال تست آن هستید باید از کد اصلی برنامه و وابستگی‌های خارجی یا رویدادها جدا بوده و ایزوله شده باشد.
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;
+&lt;strong&gt;قابل تکرار و قابل پیش بینی  (Repeatable &amp;amp; Predictable) : &lt;/strong&gt;
+یک آزمون واحد باید قابلیت بارها تکرار مجدد را داشته باشد (Repeatable باشد) و با فرض اینکه کد در حال تست و خود تست تغییر نکنند، هر دفعه همان نتیجه را تولید کند (قابل پیش‌بینی یا Predictable باشد)
+&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;
+&lt;strong&gt;مستقل  (Independent) : &lt;/strong&gt;
+این آزمون‌ها باید مستقل باشد، به صورت کلی هیچ تضمینی در خصوص ترتیب اجرا unit test ها وجود ندارد و بنابراین تست‌های نوشته شده توسط شما نباید انتظار یا نیاز به این مساله داشته باشند.
+&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;/ul&gt;
+
+&lt;h3&gt;مفهوم Test DRIVEN Development&lt;/h3&gt;
+&lt;p&gt;
+بیشتر برنامه‌نویس‌هایی که کار با آزمون‌های واحد را شروع می‌کنند، ابتدا کد برنامه‌شان را می‌نویسند و بعد unit test ها را. این گام مشترک و حتی می‌توان گفت اولین گام منطقی برای ورود به دنیای TDD و unit testing است. بالاخره نمی‌شود یک تست نوشت وقتی چیزی برای تست کردن وجود ندارد. خیلی از این برنامه‌نویس‌ها این کار را با یک روش و نیت خوب شروع می‌کنند: حتماً بعد از نوشتن کد، تست مربوط به کد را هم می‌نویسند. آن‌ها نوشتن تست‌ها را فراموش نمی‌کنند یا به خاطر یک کار مهم دیگر به تاخیر نمی‌اندازند. اما در واقعیت، تعهد به نوشتن تست کار بسیار دشواری است و تقریباً همه برنامه‌نویس‌ها بعد از مدتی دچار TED یا Test Eventually Develpoment می‌شوند و در واقع می‌گویند که بالاخره یک روزی تستش می‌کنیم و تا آن یک روزی ممکن است زمان زیادی طول بکشد یا حتی هرگز فرا نرسد!اولین D در TDD مخفف Driven هست.
+&lt;/p&gt;
+
+&lt;p&gt;
+ ایده این روش این است که اولین کاری که برنامه‌نویس انجام می‌دهد نوشتن تست بر اساس ویژگی مورد انتظار فعلی نرم‌افزار (specification) است که روی آن کار می‌کند. این تست‌ها باید fail شوند چرا که قابلیتی که می‌خواهند آزمایش کنند هنوز به وجود نیامده است. در این شرایط کار برنامه‌نویس این خواهد بود که ساده‌ترین کد ممکن را بنویسد یا تست pass شود. اگر نرم‌افزار امکانات مورد انتظار (specification) بیشتری دارد، تست‌های بیشتری بنویسید و چرخه refactor و بهینه کردن کد را ادامه دهید. وقتی همه مشخصات نرم‌افزار تست داشتند و تست‌هایشان pass می‌شد نرم‌افزار شما آماده است. عرضه‌اش کنید!
+&lt;/p&gt;
+
+&lt;div align=&quot;center&quot;&gt;
+&lt;img src=&quot;/images/post/tdd_cycle-compressor.jpg&quot; alt=&quot;اصول Test Driven Development&quot; /&gt;
+&lt;/div&gt;
+
+&lt;p&gt;
+عمل TDD به نظر ساده است، اما این نشان دهنده یک تغییر اساسی در نحوه توسعه دهندگان برای دستیابی به توسعه نرم افزار است. در نتیجه، تمرین و نوشت تست کمی طول می کشد و چند بار استفاده از آن ممکن است کمی طبیعی باشد. اما اکثر توسعه دهندگان متوجه می شوند که در نهایت فقط نوشتن کد است، فقط شما ابتدا کد آزمون را می نویسید. سخت ترین بخش TDD حفظ نظم و انضباط و ادامه تمرین است.
+&lt;/p&gt;
+
+&lt;h3&gt;چرا باید از TDD استفاده کنم؟ &lt;/h3&gt;
+
+&lt;p&gt;
+ برخی از این مزایا واضح هستند و بعضی نه. شاید واضح‌ترین مزیت این باشد که کد شما وقتی کاملاً منطبق بر نیازهای مورد انتظار نرم‌افزار نیست،‌ مشکلات و باگ‌های کمتری خواهد داشت. یکی از انواع باگ‌هایی که TDD می‌تواند به صورت کامل حذفشان کند، &quot;باگ‌های زامبی&quot; هستند:
+&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;
+ باگ‌هایی که به نظر می‌رسد رفع شده‌اند ولی چند build‌ بعدتر دوباره ظاهر می‌شوند!
+&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;
+ وقتی رسیدگی به یک باگ یا مشکل به یک TDD کار محول می‌شود، اولین کاری که انجام می‌دهد نوشتن یک تست جدید است که باگ را آشکار و تست را fail می‌کند. بعد از این کار، برنامه‌نویس روش عادی کار در TDD را دنبال می‌کند:
+&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;
+ آن‌قدر کد بنویس که تست مورد نظر pass شود و بقیه تست‌ها هم همچنان pass شده باقی بمانند.
+&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;
+ مزیت دیگر استفاده از TDD بهبود کیفیت کد است. همان‌طور که گفته شد در TDD برنامه‌نویس‌ها باید ساده‌ترین کد برای pass شدن تست‌ها را بنویسند:
+&lt;/p&gt;
+
+&lt;p&gt;
+ ساده‌ترین و کوتاه‌ترین کد که معمولاً کیفیت بیشتری دارد. همچنین این کدها خوانایی بیشتری دارند که باعث می‌شود نگهداری کد ساده‌تر شود.
+ &lt;/p&gt;
+
+&lt;p&gt;
+ مزیت دیگر استفاده از TDD حذف موثر کدهای مرده از برنامه شماست.
+&lt;/p&gt;
+
+&lt;blockquote&gt;
+ &lt;p&gt;
+  کدهای مرده یا Dead Code کدهایی هستند که در برنامه هستند اما هیچ وقت اجرا نمی‌شوند. این کد ممکن است یک متد یا کلاس باشند که هیچ وقت فراخوانی یا ارجاع داده نشدند یا بخشی از یک شرط باشند که هیچ وقت محقق نخواهد شد.
+ &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;
+  با استفاده از TDD شما فقط کدهایی را می‌نویسید که برای pass شدن تست نیاز دارید. اگر تست‌ها بر اساس نیازمندی‌های نرم‌افزار باشند، هیچ کدی از برنامه نیست که اجرا نشود و کدهایی که با روش TDD ایجاد می‌شوند همیشه مورد استفاده قرار می‌گیرند. با این حال تغییرات در نرم‌افزار به مرور زمان ممکن است باعث شوند یک متد که امروز مورد استفاده قرار می‌گیرد فردا هیچ استفاده‌ای نداشته باشد.
+ &lt;/p&gt;
+
+&lt;p&gt;
+  با مانیتور کردن کدها در TDD اگر کدی داشته باشید که در تستی مورد استفاده قرار نگرفته از دو حال خارج نیست:
+ &lt;/p&gt;
+
+&lt;p&gt;
+  یا یک تست از دست شما در رفته، یا آن کد یک کد مرده (dead code) است و باید حذف شود.
+ &lt;/p&gt;
+
+&lt;p&gt;
+  شناخت و فهمیدن چندریختی مبتنی بر اینترفیس (interface based Polymorphism) از مهارت‌های ضروری TDD‌ است. وقتی در این سری نوشته‌ها به مبحث mocking‌ و وابستگی‌ها (dependencies) برسیم، دانش شما در این حوزه هر روز به کار خواهد آمد.
+  &lt;/p&gt;</content><author><name>Farhad Mirzapour</name></author><summary type="html">تست واحد نوع خاصی از آزمون با یک هدف بسیار مشخص و مجموعه ای از ویژگی ها است. خوشبختانه، تعریف پایه تست واحد نسبتا ساده است : Unit Test یک تست است که یک نیاز مشخص برای یک متد مشخص را آزمایش می‌کند(قانون یک نیاز/یک متد one requirement/one method rule) آزمون‌های واحد که قانون یک نیاز/یک متد را رعایت می‌کنند، ویژگی‌های زیر را هم به عنوان یک unit test‌ دارند: هدفمند (Targeted) : آزمون‌های واحدی که یک چیز (شامل مجموعه‌ای از ورودی‌ها) را در یک زمان آزمایش می‌کنند، هدف‌گیری‌شده هستند. جدا شده (Isolated) : کدی که در حال تست آن هستید باید از کد اصلی برنامه و وابستگی‌های خارجی یا رویدادها جدا بوده و ایزوله شده باشد. قابل تکرار و قابل پیش بینی (Repeatable &amp;amp; Predictable) : یک آزمون واحد باید قابلیت بارها تکرار مجدد را داشته باشد (Repeatable باشد) و با فرض اینکه کد در حال تست و خود تست تغییر نکنند، هر دفعه همان نتیجه را تولید کند (قابل پیش‌بینی یا Predictable باشد) مستقل (Independent) : این آزمون‌ها باید مستقل باشد، به صورت کلی هیچ تضمینی در خصوص ترتیب اجرا unit test ها وجود ندارد و بنابراین تست‌های نوشته شده توسط شما نباید انتظار یا نیاز به این مساله داشته باشند. مفهوم Test DRIVEN Development بیشتر برنامه‌نویس‌هایی که کار با آزمون‌های واحد را شروع می‌کنند، ابتدا کد برنامه‌شان را می‌نویسند و بعد unit test ها را. این گام مشترک و حتی می‌توان گفت اولین گام منطقی برای ورود به دنیای TDD و unit testing است. بالاخره نمی‌شود یک تست نوشت وقتی چیزی برای تست کردن وجود ندارد. خیلی از این برنامه‌نویس‌ها این کار را با یک روش و نیت خوب شروع می‌کنند: حتماً بعد از نوشتن کد، تست مربوط به کد را هم می‌نویسند. آن‌ها نوشتن تست‌ها را فراموش نمی‌کنند یا به خاطر یک کار مهم دیگر به تاخیر نمی‌اندازند. اما در واقعیت، تعهد به نوشتن تست کار بسیار دشواری است و تقریباً همه برنامه‌نویس‌ها بعد از مدتی دچار TED یا Test Eventually Develpoment می‌شوند و در واقع می‌گویند که بالاخره یک روزی تستش می‌کنیم و تا آن یک روزی ممکن است زمان زیادی طول بکشد یا حتی هرگز فرا نرسد!اولین D در TDD مخفف Driven هست. ایده این روش این است که اولین کاری که برنامه‌نویس انجام می‌دهد نوشتن تست بر اساس ویژگی مورد انتظار فعلی نرم‌افزار (specification) است که روی آن کار می‌کند. این تست‌ها باید fail شوند چرا که قابلیتی که می‌خواهند آزمایش کنند هنوز به وجود نیامده است. در این شرایط کار برنامه‌نویس این خواهد بود که ساده‌ترین کد ممکن را بنویسد یا تست pass شود. اگر نرم‌افزار امکانات مورد انتظار (specification) بیشتری دارد، تست‌های بیشتری بنویسید و چرخه refactor و بهینه کردن کد را ادامه دهید. وقتی همه مشخصات نرم‌افزار تست داشتند و تست‌هایشان pass می‌شد نرم‌افزار شما آماده است. عرضه‌اش کنید! عمل TDD به نظر ساده است، اما این نشان دهنده یک تغییر اساسی در نحوه توسعه دهندگان برای دستیابی به توسعه نرم افزار است. در نتیجه، تمرین و نوشت تست کمی طول می کشد و چند بار استفاده از آن ممکن است کمی طبیعی باشد. اما اکثر توسعه دهندگان متوجه می شوند که در نهایت فقط نوشتن کد است، فقط شما ابتدا کد آزمون را می نویسید. سخت ترین بخش TDD حفظ نظم و انضباط و ادامه تمرین است. چرا باید از TDD استفاده کنم؟ برخی از این مزایا واضح هستند و بعضی نه. شاید واضح‌ترین مزیت این باشد که کد شما وقتی کاملاً منطبق بر نیازهای مورد انتظار نرم‌افزار نیست،‌ مشکلات و باگ‌های کمتری خواهد داشت. یکی از انواع باگ‌هایی که TDD می‌تواند به صورت کامل حذفشان کند، &quot;باگ‌های زامبی&quot; هستند: باگ‌هایی که به نظر می‌رسد رفع شده‌اند ولی چند build‌ بعدتر دوباره ظاهر می‌شوند! وقتی رسیدگی به یک باگ یا مشکل به یک TDD کار محول می‌شود، اولین کاری که انجام می‌دهد نوشتن یک تست جدید است که باگ را آشکار و تست را fail می‌کند. بعد از این کار، برنامه‌نویس روش عادی کار در TDD را دنبال می‌کند: آن‌قدر کد بنویس که تست مورد نظر pass شود و بقیه تست‌ها هم همچنان pass شده باقی بمانند. مزیت دیگر استفاده از TDD بهبود کیفیت کد است. همان‌طور که گفته شد در TDD برنامه‌نویس‌ها باید ساده‌ترین کد برای pass شدن تست‌ها را بنویسند: ساده‌ترین و کوتاه‌ترین کد که معمولاً کیفیت بیشتری دارد. همچنین این کدها خوانایی بیشتری دارند که باعث می‌شود نگهداری کد ساده‌تر شود. مزیت دیگر استفاده از TDD حذف موثر کدهای مرده از برنامه شماست. کدهای مرده یا Dead Code کدهایی هستند که در برنامه هستند اما هیچ وقت اجرا نمی‌شوند. این کد ممکن است یک متد یا کلاس باشند که هیچ وقت فراخوانی یا ارجاع داده نشدند یا بخشی از یک شرط باشند که هیچ وقت محقق نخواهد شد. با استفاده از TDD شما فقط کدهایی را می‌نویسید که برای pass شدن تست نیاز دارید. اگر تست‌ها بر اساس نیازمندی‌های نرم‌افزار باشند، هیچ کدی از برنامه نیست که اجرا نشود و کدهایی که با روش TDD ایجاد می‌شوند همیشه مورد استفاده قرار می‌گیرند. با این حال تغییرات در نرم‌افزار به مرور زمان ممکن است باعث شوند یک متد که امروز مورد استفاده قرار می‌گیرد فردا هیچ استفاده‌ای نداشته باشد. با مانیتور کردن کدها در TDD اگر کدی داشته باشید که در تستی مورد استفاده قرار نگرفته از دو حال خارج نیست: یا یک تست از دست شما در رفته، یا آن کد یک کد مرده (dead code) است و باید حذف شود. شناخت و فهمیدن چندریختی مبتنی بر اینترفیس (interface based Polymorphism) از مهارت‌های ضروری TDD‌ است. وقتی در این سری نوشته‌ها به مبحث mocking‌ و وابستگی‌ها (dependencies) برسیم، دانش شما در این حوزه هر روز به کار خواهد آمد.</summary></entry><entry><title type="html">مفهوم Dependency Injection در PHP</title><link href="http://localhost:4000/articles/2017/11/14/dependency-injection.html" rel="alternate" type="text/html" title="مفهوم Dependency Injection در PHP" /><published>2017-11-14T22:00:00+03:30</published><updated>2017-11-14T22:00:00+03:30</updated><id>http://localhost:4000/articles/2017/11/14/dependency-injection</id><content type="html" xml:base="http://localhost:4000/articles/2017/11/14/dependency-injection.html">&lt;p&gt;
+تزریق وابستگی یا Dependency Injection یک پترن و الگوی طراحی است که هدف اصلی آن حذف وابستگی‌ های موجود بین دو کلاس با استفاده از یک رابط (Interface) است. در تزریق وابستگی ها دو اصطلاح داریم:
+&lt;/p&gt;
+
+&lt;p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;strong&gt;loosely coupled:&lt;/strong&gt; بدین معنی‌ست که کمترین وابستگی بین دو کلاس وجود دارد.
+&lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;tight coupled:&lt;/strong&gt; بدین معنی‌ست که بیشترین وابستگی بین دو کلاس وجود دارد.
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;
+بنابراین باید برنامه و نرم‌افزار خود را طوری طراحی کنیم که تا حد ممکن استحکام ضعیف (loosely coupled) باشد. هنگامیکه دو کلاس tight coupled هستند (یعنی به همدیگر وابستگی بسیار دارند یا به اصطلاح دیگری در هم چفت شده‌اند) با استفاده از یک رابطه‌ی باینری به یکدیگر متصل هستند و این امر انعطاف‌پذیری نرم‌افزار را به شدت پایین می‌آورد.
+&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;
+چرا بایستی کد وابستگی پایینی داشته باشد؟
+&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;strong&gt;Extensibility (توسعه پذیری) :&lt;/strong&gt; با افزودن یک کلاس به برنامه نیازمند تغییرات در بخش های دیگر نباشیم
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;strong&gt;Testability (قابلیت تست پذیری) :&lt;/strong&gt; فرآیند تست واحد به سهولت و بدون نیاز به در نظرگرفتن بخش های دیگر در آزمون انجام گیرد
+&lt;/li&gt;
+&lt;li&gt;
+&lt;strong&gt;Late Binding (انقیاد پویا) :&lt;/strong&gt; بتوان در زمان اجرا و کامپایل خدمات مورداستفاده برنامه را تغییر داد
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;strong&gt;Parallel Development (توسعه موازی) :&lt;/strong&gt; توسعه یک بخش از برنامه منوط به توسعه بخش خاص دیگری نباشد
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;strong&gt;Maintainability (قابلیت نگه داری) :&lt;/strong&gt; افزودن بخش های جدید به برنامه و تغییرات پرهزینه نشوند.
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+
+&lt;p&gt;
+استفاده از DI یک آینده نگری است. همه ما میدانیم که احتمال تغییرات در سورس همیشه وجود دارد. پس نحوه کد نویسی در بهترین حالت خود, با کمترین تغییرات در آینده بیشترین کارایی را فراهم می نماید. در حالت های کد نویسی آشفته و بی برنامه ممکن است کوچکترین تغییری نیازمند بررسی و تغییر چندین کلاس و چندین فایل و چندین ماژول باشد. اما با برنامه ریزی این تغییرات به حداقل خود خواهد رسید علاوه بر آن مدیریت تغییرات را برای شما آسوده تر خواهد کرد.
+&lt;/p&gt;
+
+&lt;p&gt;
+جهت مفهوم این مطلب به مثال زیر توجه کنید :
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;&amp;lt;?php
+class Photo {
+    /**
+     * @var PDO The connection to the database
+     */
+    protected $db;
+
+    /**
+     * Construct.
+     */
+    public function __construct()
+    {
+        $this-&amp;gt;db = DB::getInstance();
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+در نگاه اول، این کد ممکن است به نظر بی عیب و بی نقص باشد. اما باید درنظر گرفت کلاس Photo وابستگی زیادی  به اتصال پایگاه داده دارد(ممکن است در آینده بخواهیم از انواع مختلف پایگاه داده ها همانند sqlserver,mysql,oracle ... استفاده نماییم که مجبور به تغییرات زیاد در این بخش شده و  حتی منجر به ایجاد باگ های زیاد در صورت فراموشی تغییرات مربوطه می گردد). آیا به این فکر می کنید چرا باید کلاس Photo  با منابع خارجی ارتباط برقرار کند؟
+&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;
+ایده اصلی این است که هر کلاس مسئول یک وظیفه باشد و با توجه به این نکته مسئولیت اتصال به پایگاه داده طبیعی نیست. (&lt;a href=&quot;/documentation/solid-object-oriented-design/single-responsibility-principle&quot; target=&quot;_blank&quot; title=&quot;مفهوم Single Responsibility Principle&quot;&gt;اصل Single Responsibility Principle&lt;/a&gt;)
+&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;
+بیایید نگاه دوباره ای به  کلاس Photo بیاندازیم و اتصال پایگاه داده را به خارج از این کلاس انتقال دهیم. دو راه برای انجام این کار وجود دارد:
+&lt;/p&gt;
+&lt;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+Constructor Injection (تزریق با استفاده از سازنده کلاس)
+&lt;/li&gt;
+&lt;li&gt;
+Setter Injection (تزریق با استفاده از متدهای setter  کلاس)
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3&gt;تزریق با استفاده از سازنده کلاس (Constructor Injection)&lt;/h3&gt;
+
+&lt;p&gt;
+در این روش، زمانی که متد سازنده کلاس اجرا می شود، همه وابستگی های مورد نیاز را تزریق می کنیم. همانند کد زیر :
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;&amp;lt;?php
+class Photo {
+    /**
+     * @var PDO The connection to the database
+     */
+    protected $db;
+
+    /**
+     * Construct.
+     * @param PDO $db_conn The database connection
+     */
+    public function __construct($dbConn)
+    {
+        $this-&amp;gt;db = $dbConn;
+    }
+}
+
+$photo = new Photo($dbConn);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3&gt;تزریق با استفاده از متدهای setter  کلاس (Setter Injection)&lt;/h3&gt;
+
+&lt;p&gt;
+در این روش می توان با استفاده از متدهایی که درون کلاس تعریف می کنیم اشیا کلاس های دیگر را به درون کلاس تزریق نماییم. همانند کد زیر :
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;&amp;lt;?php
+class Photo {
+    /**
+     * @var PDO The connection to the database
+     */
+    protected $db;
+
+    public function __construct() {}
+
+    /**
+     * Sets the database connection
+     * @param PDO $dbConn The connection to the database.
+     */
+    public function setDB($dbConn)
+    {
+        $this-&amp;gt;db = $dbConn;
+    }
+}
+
+$photo = new Photo;
+$photo-&amp;gt;setDB($dbConn);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+با این تغییر ساده، کلاس دیگر وابسته به هیچ ارتباط خاص نیست. سیستم بیرونی کنترل کامل را حفظ می کند. این تکنیک باعث می شود که کلاس به راحتی تست شود، زیرا ما می توانیم در هنگام عملیات mock کردن دیتابیس در فرآیند تست واحد،از متد setDB استفاده نمائیم.
+&lt;/p&gt;
+
+&lt;p&gt;
+مشکل اساسی جهت استفاده از تزریق کننده ها این است که کاربر باید از وابستگی های کلاس کاملا آگاه باشد و باید آن را به نحوی تنظیم کند. همانند زیر :
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;$photo = new Photo;
+$photo-&amp;gt;setDB($dbConn);
+$photo-&amp;gt;setConfig($config);
+$photo-&amp;gt;setResponse($response);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+ قبل از این کاربر به سادگی می توانست نمونه جدیدی از کلاس Photo را ایجاد کند، اما اکنون باید تمام این وابستگی ها را به یاد داشته باشد که با همچنین در سردرگمی و پیچیدگی مواجه شدیم!!!
+&lt;/p&gt;
+
+&lt;p&gt;
+راه حل این مشکل استفاده از مفهوم  Inversion of Control) IoC) می باشد.
+&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3&gt;مفهوم Inversion of Control) IoC)&lt;/h3&gt;
+
+&lt;p&gt;
+مفهوم Inversion of Control) IoC) بدین صورت بیان می گردد:
+&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;
+ در این فریم ورک امکان تنظیم اولیه وابستگی‌های سیستم وجود دارد. برای مثال زمانیکه برنامه از یک IoC Container، نوع اینترفیس خاصی را درخواست می‌کند، این فریم ورک با توجه به تنظیمات اولیه‌اش، کلاسی مشخص را بازگشت خواهد داد.
+&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;
+به کلاس IoC کد زیر دقت نمایید :
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;// Also frequently called &quot;Container&quot;
+class IoC {
+    /**
+     * @var PDO The connection to the database
+     */
+    protected $db;
+
+    /**
+     * Create a new instance of Photo and set dependencies.
+     */
+    public static newPhoto()
+    {
+        $photo = new Photo;
+        $photo-&amp;gt;setDB(static::$db);
+        // $photo-&amp;gt;setConfig();
+        // $photo-&amp;gt;setResponse();
+
+        return $photo;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+همانطور که در کد بالا مشاهده می کنید ایجاد یک نمونه از کلاس و نیز فراخوانی وابستگی های مرتبط با آن درون متد newPhoto که بصورت static تعریف شده انجام می گردد. بنابراین هر زمان که به کلاس Photo نیاز داشتیم نیازی به خاطر سپردن وابستگی های مرتبط با آن نیست و تنها کافی است بصورت زیر عمل می کنیم :
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;$photo = IoC::newPhoto();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+بسیار خب فرض کنید علاوه بر کلاس Photo  کلاس های دیگری  نیز داشته باشیم، به جای ایجاد یک متد جدید در IoC  به ازای هر کلاس می توانیم از روش عمومی تر همانند زیر استفاده نمائیم :
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;// Also frequently called &quot;Container&quot;
+class IoC {
+    /**
+     * @var PDO The connection to the database
+     */
+    protected static $registry = array();
+
+    /**
+     * Add a new resolver to the registry array.
+     * @param  string $name The id
+     * @param  object $resolve Closure that creates instance
+     * @return void
+     */
+    public static function register($name, Closure $resolve)
+    {
+        static::$registry[$name] = $resolve;
+    }
+
+    /**
+     * Create the instance
+     * @param  string $name The id
+     * @return mixed
+     */
+    public static function resolve($name)
+    {
+        if ( static::registered($name) )
+        {
+            $name = static::$registry[$name];
+            return $name();
+        }
+
+        throw new Exception('Nothing registered with that name, fool.');
+    }
+
+    /**
+     * Determine whether the id is registered
+     * @param  string $name The id
+     * @return bool Whether to id exists or not
+     */
+    public static function registered($name)
+    {
+        return array_key_exists($name, static::$registry);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+در کد بالا یک آرایه به نام  registry$ ایجاد کرده ایم که با استفاده از متد register مقادیر کلید (نام کلاس) و دیتای متناظر با آن که یک تابع از نوع Closure می باشد مقدار دهی می شود. همچنین از تابع resolve و registered برای بررسی اینکه آیا نام کلاس در آرایه قبلا ثبت شده است و یا  خیر استفاده می شود.
+&lt;/p&gt;
+
+&lt;p&gt;
+بنابراین تنها کافی است  برای ثبت یک کلاس و وابستگی های مرتبط با آن و سپس فراخوانی کلاس مربوط به آن بدین صورت عمل کنیم :
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;// Add `photo` to the registry array, along with a resolver
+IoC::register('photo', function() {
+    $photo = new Photo;
+    $photo-&amp;gt;setDB('...');
+    $photo-&amp;gt;setConfig('...');
+
+    return $photo;
+});
+
+// Fetch new photo instance with dependencies set
+$photo = IoC::resolve('photo');
+&lt;/code&gt;&lt;/pre&gt;</content><author><name>Farhad Mirzapour</name></author><category term="articles" /><summary type="html">تزریق وابستگی یا Dependency Injection یک پترن و الگوی طراحی است که هدف اصلی آن حذف وابستگی‌ های موجود بین دو کلاس با استفاده از یک رابط (Interface) است. در تزریق وابستگی ها دو اصطلاح داریم: loosely coupled: بدین معنی‌ست که کمترین وابستگی بین دو کلاس وجود دارد. tight coupled: بدین معنی‌ست که بیشترین وابستگی بین دو کلاس وجود دارد. بنابراین باید برنامه و نرم‌افزار خود را طوری طراحی کنیم که تا حد ممکن استحکام ضعیف (loosely coupled) باشد. هنگامیکه دو کلاس tight coupled هستند (یعنی به همدیگر وابستگی بسیار دارند یا به اصطلاح دیگری در هم چفت شده‌اند) با استفاده از یک رابطه‌ی باینری به یکدیگر متصل هستند و این امر انعطاف‌پذیری نرم‌افزار را به شدت پایین می‌آورد. چرا بایستی کد وابستگی پایینی داشته باشد؟ Extensibility (توسعه پذیری) : با افزودن یک کلاس به برنامه نیازمند تغییرات در بخش های دیگر نباشیم Testability (قابلیت تست پذیری) : فرآیند تست واحد به سهولت و بدون نیاز به در نظرگرفتن بخش های دیگر در آزمون انجام گیرد Late Binding (انقیاد پویا) : بتوان در زمان اجرا و کامپایل خدمات مورداستفاده برنامه را تغییر داد Parallel Development (توسعه موازی) : توسعه یک بخش از برنامه منوط به توسعه بخش خاص دیگری نباشد Maintainability (قابلیت نگه داری) : افزودن بخش های جدید به برنامه و تغییرات پرهزینه نشوند. استفاده از DI یک آینده نگری است. همه ما میدانیم که احتمال تغییرات در سورس همیشه وجود دارد. پس نحوه کد نویسی در بهترین حالت خود, با کمترین تغییرات در آینده بیشترین کارایی را فراهم می نماید. در حالت های کد نویسی آشفته و بی برنامه ممکن است کوچکترین تغییری نیازمند بررسی و تغییر چندین کلاس و چندین فایل و چندین ماژول باشد. اما با برنامه ریزی این تغییرات به حداقل خود خواهد رسید علاوه بر آن مدیریت تغییرات را برای شما آسوده تر خواهد کرد. جهت مفهوم این مطلب به مثال زیر توجه کنید : &amp;lt;?php class Photo { /** * @var PDO The connection to the database */ protected $db; /** * Construct. */ public function __construct() { $this-&amp;gt;db = DB::getInstance(); } } در نگاه اول، این کد ممکن است به نظر بی عیب و بی نقص باشد. اما باید درنظر گرفت کلاس Photo وابستگی زیادی به اتصال پایگاه داده دارد(ممکن است در آینده بخواهیم از انواع مختلف پایگاه داده ها همانند sqlserver,mysql,oracle ... استفاده نماییم که مجبور به تغییرات زیاد در این بخش شده و حتی منجر به ایجاد باگ های زیاد در صورت فراموشی تغییرات مربوطه می گردد). آیا به این فکر می کنید چرا باید کلاس Photo با منابع خارجی ارتباط برقرار کند؟ ایده اصلی این است که هر کلاس مسئول یک وظیفه باشد و با توجه به این نکته مسئولیت اتصال به پایگاه داده طبیعی نیست. (اصل Single Responsibility Principle) بیایید نگاه دوباره ای به کلاس Photo بیاندازیم و اتصال پایگاه داده را به خارج از این کلاس انتقال دهیم. دو راه برای انجام این کار وجود دارد: Constructor Injection (تزریق با استفاده از سازنده کلاس) Setter Injection (تزریق با استفاده از متدهای setter کلاس) تزریق با استفاده از سازنده کلاس (Constructor Injection) در این روش، زمانی که متد سازنده کلاس اجرا می شود، همه وابستگی های مورد نیاز را تزریق می کنیم. همانند کد زیر : &amp;lt;?php class Photo { /** * @var PDO The connection to the database */ protected $db; /** * Construct. * @param PDO $db_conn The database connection */ public function __construct($dbConn) { $this-&amp;gt;db = $dbConn; } } $photo = new Photo($dbConn); تزریق با استفاده از متدهای setter کلاس (Setter Injection) در این روش می توان با استفاده از متدهایی که درون کلاس تعریف می کنیم اشیا کلاس های دیگر را به درون کلاس تزریق نماییم. همانند کد زیر : &amp;lt;?php class Photo { /** * @var PDO The connection to the database */ protected $db; public function __construct() {} /** * Sets the database connection * @param PDO $dbConn The connection to the database. */ public function setDB($dbConn) { $this-&amp;gt;db = $dbConn; } } $photo = new Photo; $photo-&amp;gt;setDB($dbConn); با این تغییر ساده، کلاس دیگر وابسته به هیچ ارتباط خاص نیست. سیستم بیرونی کنترل کامل را حفظ می کند. این تکنیک باعث می شود که کلاس به راحتی تست شود، زیرا ما می توانیم در هنگام عملیات mock کردن دیتابیس در فرآیند تست واحد،از متد setDB استفاده نمائیم. مشکل اساسی جهت استفاده از تزریق کننده ها این است که کاربر باید از وابستگی های کلاس کاملا آگاه باشد و باید آن را به نحوی تنظیم کند. همانند زیر : $photo = new Photo; $photo-&amp;gt;setDB($dbConn); $photo-&amp;gt;setConfig($config); $photo-&amp;gt;setResponse($response); قبل از این کاربر به سادگی می توانست نمونه جدیدی از کلاس Photo را ایجاد کند، اما اکنون باید تمام این وابستگی ها را به یاد داشته باشد که با همچنین در سردرگمی و پیچیدگی مواجه شدیم!!! راه حل این مشکل استفاده از مفهوم Inversion of Control) IoC) می باشد. مفهوم Inversion of Control) IoC) مفهوم Inversion of Control) IoC) بدین صورت بیان می گردد: در این فریم ورک امکان تنظیم اولیه وابستگی‌های سیستم وجود دارد. برای مثال زمانیکه برنامه از یک IoC Container، نوع اینترفیس خاصی را درخواست می‌کند، این فریم ورک با توجه به تنظیمات اولیه‌اش، کلاسی مشخص را بازگشت خواهد داد. به کلاس IoC کد زیر دقت نمایید : // Also frequently called &quot;Container&quot; class IoC { /** * @var PDO The connection to the database */ protected $db; /** * Create a new instance of Photo and set dependencies. */ public static newPhoto() { $photo = new Photo; $photo-&amp;gt;setDB(static::$db); // $photo-&amp;gt;setConfig(); // $photo-&amp;gt;setResponse(); return $photo; } } همانطور که در کد بالا مشاهده می کنید ایجاد یک نمونه از کلاس و نیز فراخوانی وابستگی های مرتبط با آن درون متد newPhoto که بصورت static تعریف شده انجام می گردد. بنابراین هر زمان که به کلاس Photo نیاز داشتیم نیازی به خاطر سپردن وابستگی های مرتبط با آن نیست و تنها کافی است بصورت زیر عمل می کنیم : $photo = IoC::newPhoto(); بسیار خب فرض کنید علاوه بر کلاس Photo کلاس های دیگری نیز داشته باشیم، به جای ایجاد یک متد جدید در IoC به ازای هر کلاس می توانیم از روش عمومی تر همانند زیر استفاده نمائیم : // Also frequently called &quot;Container&quot; class IoC { /** * @var PDO The connection to the database */ protected static $registry = array(); /** * Add a new resolver to the registry array. * @param string $name The id * @param object $resolve Closure that creates instance * @return void */ public static function register($name, Closure $resolve) { static::$registry[$name] = $resolve; } /** * Create the instance * @param string $name The id * @return mixed */ public static function resolve($name) { if ( static::registered($name) ) { $name = static::$registry[$name]; return $name(); } throw new Exception('Nothing registered with that name, fool.'); } /** * Determine whether the id is registered * @param string $name The id * @return bool Whether to id exists or not */ public static function registered($name) { return array_key_exists($name, static::$registry); } } در کد بالا یک آرایه به نام registry$ ایجاد کرده ایم که با استفاده از متد register مقادیر کلید (نام کلاس) و دیتای متناظر با آن که یک تابع از نوع Closure می باشد مقدار دهی می شود. همچنین از تابع resolve و registered برای بررسی اینکه آیا نام کلاس در آرایه قبلا ثبت شده است و یا خیر استفاده می شود. بنابراین تنها کافی است برای ثبت یک کلاس و وابستگی های مرتبط با آن و سپس فراخوانی کلاس مربوط به آن بدین صورت عمل کنیم : // Add `photo` to the registry array, along with a resolver IoC::register('photo', function() { $photo = new Photo; $photo-&amp;gt;setDB('...'); $photo-&amp;gt;setConfig('...'); return $photo; }); // Fetch new photo instance with dependencies set $photo = IoC::resolve('photo');</summary></entry><entry><title type="html">اصول S.O.L.I.D در طراحی شی گرا (OOD)</title><link href="http://localhost:4000/2017/11/10/solid-object-oriented-design.html" rel="alternate" type="text/html" title="اصول S.O.L.I.D در طراحی شی گرا (OOD)" /><published>2017-11-10T10:00:42+03:30</published><updated>2017-11-10T10:00:42+03:30</updated><id>http://localhost:4000/2017/11/10/solid-object-oriented-design</id><content type="html" xml:base="http://localhost:4000/2017/11/10/solid-object-oriented-design.html">&lt;p&gt;
+SOLID مخفف پنج اصل زیر بنایی طراحی شی گرا (Object-Oriented Design) است که اوایل سال ۲۰۰۰ میلادی توسط Robert C. Martin یا همان Uncle Bob معرفی شد.
+&lt;/p&gt;
+
+&lt;p&gt;
+یکی از مشکلاتی که طراحی نامناسب برنامه های شی گرا برای برنامه نویسان ایجاد می کند موضوع مدیریت وابستگی در اجزای برنامه می باشد. اگر این وابستگی به درستی مدیریت نشود مشکلاتی شبیه موارد زیر در برنامه ایجاد می شوند:
+&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;
+&lt;strong&gt;مشکل  Rigidity : &lt;/strong&gt;
+برنامه ی نوشته شده را نمی توان تغییر داد و یا قابلیت جدید اضافه کرد. دلیل آن هم این است که با ایجاد تغییر در قسمتی از برنامه، این تغییر به صورت آبشاری در بقیه ی قسمت ها منتشر می شود و مجبور خواهیم بود که قسمت های زیادی از برنامه را تغییر دهیم.
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;
+&lt;strong&gt;مشکل  Fragility : &lt;/strong&gt;
+تغییر دادن برنامه مشکل است و آن هم به این دلیل که با ایجاد تغییر در یک قسمت از برنامه، قسمت های دیگر برنامه از کار می افتند و دچار مشکل می شوند.
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;
+&lt;strong&gt;مشکل  Immobility : &lt;/strong&gt;
+قابلیت استفاده مجدد از اجزای برنامه وجود ندارد. در واقع، قسمت های مجدد برنامه ی شی گرای شما آنچنان به هم وابستگی تو در تو دارند که به هیچ وجه نمی توانید یک قسمت را جدا کرده و در برنامه ی دیگری استفاده کنید.
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;
+اگر هنگام طراحی و برنامه نویسی از این اصول پیروی کنیم و رعایت این اصول و قوانین را مد نظر داشته باشیم، نرم افزار توسعه یافته شده را میتوان راحتتر در طول زمان توسعه (Extensibility) داد و نگهداری (Maintainable) کرد.
+&lt;/p&gt;
+
+&lt;p&gt;
+اگر با Unit Testing یا همان تست واحد! آشنا باشید و در یک پروژه نسبتا قدیمی کار کنید و بخواهید برای این سیستم Unit Test بنویسید به زودی متوجه میشود که به راحتی نمیتوان برای آن تست درست حسابی نوشت. امکان دست زدن به کلاسها، جدا کردن کلاسها، جایگزین کردن آنها توسط Mock ها و Stub ها وجود ندارد و عملا امکان نوشتن Unit Test استاندارد و مفید وجود ندارد.
+&lt;/p&gt;
+
+&lt;p&gt;
+دلیل این مشکل این است که هنگام توسعه اولیه نرم افزار، نوشتن کدی که قابل تست باشد مد نظر نبوده است (یا اولویت نداشته) و یا اصول و قوانین پایه ای طراحی شی گرا رعایت نشده است. خب در این مرحله اکثر برنامه نویسان و توسعه دهندگان شروع به Refactoring یا بهینه سازی کدها میکنند. ولی باید از کجا شروع کرد؟
+&lt;/p&gt;
+
+&lt;p&gt;
+دقیقا در این نقطه این ۵ اصل به کمک ما می آیند و با استفاده از آنها میتوانیم کدهای فعلی را تا حد زیادی بهبود داده و مرحله به مرحله قابلیت تست را به آنها اضافه کنیم.
+&lt;/p&gt;
+
+&lt;p&gt;
+اگر هم از متدهای جدید برنامه نویسی مانند توسعه آزمایش محور (Test Driven Development) استفاده کنیم و واقعا TDD کار کنیم! ناخودآگاه بسیاری از این اصول در کدهای و کلاس های نوشته شده وجود دارند.
+&lt;/p&gt;
+
+&lt;p&gt;Solid پنج اصل پایه ای است که به ما کمک می کند معماری نرم افزار خوبی داشته باشیم. Solid مخفف:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;a href=&quot;/documentation/solid-object-oriented-design/single-responsibility-principle&quot; target=&quot;_blank&quot;&gt;S مخفف SRP) Single responsibility principle)&lt;/a&gt;
+&lt;p&gt;
+یک کلاس باید یک و تنها یک دلیل برای تغییر داشته باشد، به این معنی که یک کلاس فقط باید یک مسئولیت داشته باشد
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/documentation/solid-object-oriented-design/open-closed-principle&quot; target=&quot;_blank&quot;&gt;O مخفف OCP) Open closed principle)&lt;/a&gt;
+&lt;p&gt;
+شما باید بتوانید رفتار یک کلاس را توسعه دهید بدون اینکه آنرا تغییر دهید. (کد آنرا دستکاری کنید)
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/documentation/solid-object-oriented-design/liskov-substitution-principle&quot; target=&quot;_blank&quot;&gt;L مخفف LSP) Liskov substitution principle)&lt;/a&gt;
+&lt;p&gt;
+کلاسهای به ارث رفته (مشتق شده) باید بتوانند جایگزین کلاسهای اصلی شوند.
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/documentation/solid-object-oriented-design/interface-segregation-principle&quot; target=&quot;_blank&quot;&gt;I مخفف ISP) Interface segregation principle)&lt;/a&gt;
+&lt;p&gt;
+تعداد بیشتری اینترفیس کوچک و خاص، بهتر از یک اینترفیس بزرگ (چاق) با متدهای بیشتر است.
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/documentation/solid-object-oriented-design/dependency-inversion-principle&quot; target=&quot;_blank&quot;&gt;D مخفف DIP) Dependency inversion principle)&lt;/a&gt;
+&lt;p&gt;
+وابستگی به Abstraction و نه Concrete Implementation
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Farhad Mirzapour</name></author><summary type="html">SOLID مخفف پنج اصل زیر بنایی طراحی شی گرا (Object-Oriented Design) است که اوایل سال ۲۰۰۰ میلادی توسط Robert C. Martin یا همان Uncle Bob معرفی شد. یکی از مشکلاتی که طراحی نامناسب برنامه های شی گرا برای برنامه نویسان ایجاد می کند موضوع مدیریت وابستگی در اجزای برنامه می باشد. اگر این وابستگی به درستی مدیریت نشود مشکلاتی شبیه موارد زیر در برنامه ایجاد می شوند: مشکل Rigidity : برنامه ی نوشته شده را نمی توان تغییر داد و یا قابلیت جدید اضافه کرد. دلیل آن هم این است که با ایجاد تغییر در قسمتی از برنامه، این تغییر به صورت آبشاری در بقیه ی قسمت ها منتشر می شود و مجبور خواهیم بود که قسمت های زیادی از برنامه را تغییر دهیم. مشکل Fragility : تغییر دادن برنامه مشکل است و آن هم به این دلیل که با ایجاد تغییر در یک قسمت از برنامه، قسمت های دیگر برنامه از کار می افتند و دچار مشکل می شوند. مشکل Immobility : قابلیت استفاده مجدد از اجزای برنامه وجود ندارد. در واقع، قسمت های مجدد برنامه ی شی گرای شما آنچنان به هم وابستگی تو در تو دارند که به هیچ وجه نمی توانید یک قسمت را جدا کرده و در برنامه ی دیگری استفاده کنید. اگر هنگام طراحی و برنامه نویسی از این اصول پیروی کنیم و رعایت این اصول و قوانین را مد نظر داشته باشیم، نرم افزار توسعه یافته شده را میتوان راحتتر در طول زمان توسعه (Extensibility) داد و نگهداری (Maintainable) کرد. اگر با Unit Testing یا همان تست واحد! آشنا باشید و در یک پروژه نسبتا قدیمی کار کنید و بخواهید برای این سیستم Unit Test بنویسید به زودی متوجه میشود که به راحتی نمیتوان برای آن تست درست حسابی نوشت. امکان دست زدن به کلاسها، جدا کردن کلاسها، جایگزین کردن آنها توسط Mock ها و Stub ها وجود ندارد و عملا امکان نوشتن Unit Test استاندارد و مفید وجود ندارد. دلیل این مشکل این است که هنگام توسعه اولیه نرم افزار، نوشتن کدی که قابل تست باشد مد نظر نبوده است (یا اولویت نداشته) و یا اصول و قوانین پایه ای طراحی شی گرا رعایت نشده است. خب در این مرحله اکثر برنامه نویسان و توسعه دهندگان شروع به Refactoring یا بهینه سازی کدها میکنند. ولی باید از کجا شروع کرد؟ دقیقا در این نقطه این ۵ اصل به کمک ما می آیند و با استفاده از آنها میتوانیم کدهای فعلی را تا حد زیادی بهبود داده و مرحله به مرحله قابلیت تست را به آنها اضافه کنیم. اگر هم از متدهای جدید برنامه نویسی مانند توسعه آزمایش محور (Test Driven Development) استفاده کنیم و واقعا TDD کار کنیم! ناخودآگاه بسیاری از این اصول در کدهای و کلاس های نوشته شده وجود دارند. Solid پنج اصل پایه ای است که به ما کمک می کند معماری نرم افزار خوبی داشته باشیم. Solid مخفف: S مخفف SRP) Single responsibility principle) یک کلاس باید یک و تنها یک دلیل برای تغییر داشته باشد، به این معنی که یک کلاس فقط باید یک مسئولیت داشته باشد O مخفف OCP) Open closed principle) شما باید بتوانید رفتار یک کلاس را توسعه دهید بدون اینکه آنرا تغییر دهید. (کد آنرا دستکاری کنید) L مخفف LSP) Liskov substitution principle) کلاسهای به ارث رفته (مشتق شده) باید بتوانند جایگزین کلاسهای اصلی شوند. I مخفف ISP) Interface segregation principle) تعداد بیشتری اینترفیس کوچک و خاص، بهتر از یک اینترفیس بزرگ (چاق) با متدهای بیشتر است. D مخفف DIP) Dependency inversion principle) وابستگی به Abstraction و نه Concrete Implementation</summary></entry><entry><title type="html">Autoloading کلاس ها با Composer</title><link href="http://localhost:4000/articles/2017/11/09/composer-autoloading.html" rel="alternate" type="text/html" title="Autoloading کلاس ها با Composer" /><published>2017-11-09T10:01:42+03:30</published><updated>2017-11-09T10:01:42+03:30</updated><id>http://localhost:4000/articles/2017/11/09/composer-autoloading</id><content type="html" xml:base="http://localhost:4000/articles/2017/11/09/composer-autoloading.html">&lt;p&gt;
+  همانطور که می دانیم در php برای استفاده از هر کلاسی باید اون کلاس رو در صفحه ای که لازم داریم include یا require کنیم تا php آن کلاس را بشناسد و بتوان از آن استفاده کرد . خب مشکل اینجاست که اگر تعداد کلاس های مورد استفاده زیاد شود این include کردن هر کلاس واقعا مشکل ساز میشه و تمرکز مارو کم می کنه و بیشتر وقتمون میره سمت اینکه کلاس ها در داخل کدام دایرکتوری هستند و تک تک آن ها را به صفحه ی خودمون include کنیم .
+ &lt;/p&gt;
+
+&lt;p&gt;
+خوشبختانه composer این مشکل را برای ما حل کرده و خودش این موضوع را به عهده می گیرد و ما فقط کافی است بسته به نیازمون یکی از 3 روش زیر را که در فایل composer.json می باشد استفاده نماییم . داخل فایل composer آبجکتی به نام&amp;nbsp;autoload وجود دارد که داخل آن تعریف می کنیم که چه فایل هایی را و از چه طریق برای ما autoload بسازد.
+&lt;/p&gt;
+
+&lt;p&gt;3روش autoloading در composer عبارتند از :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class=&quot;anchorjs&quot; title=&quot;روش-file-based-autoloading&quot; href=&quot;#&quot;&gt;File Based Autoloading&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&quot;anchorjs&quot; title=&quot;روش-classmap-based-autoloading&quot; href=&quot;#&quot;&gt;Classmap Based Autoloading&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&quot;anchorjs&quot; title=&quot;روش-psr-4-based-autoloading&quot; href=&quot;#&quot;&gt;PSR-4 Autoloading&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;سایت اصلی composer روش&amp;nbsp;PSR-4 Autoloading را پیشنهاد می کند اما ما در این مقاله &amp;nbsp;هر 4 روش را بررسی می نماییم .&lt;/p&gt;
+
+&lt;h3&gt;روش File Based Autoloading&lt;/h3&gt;
+
+&lt;p&gt;
+&lt;ol&gt;
+&lt;li&gt;در روت (root) پروژه خودتون یک فولدر به نامaldemo ایجاد کنید .&lt;/li&gt;
+&lt;li&gt;سپس داخل فولدرaldemo یک فولدر دیگر به نام&amp;nbsp;mylibrary ایجاد می کنیم تا فایل های خودمون را داخل اش قرار بدهیم .&lt;/li&gt;
+&lt;li&gt;داخل فولدر&amp;nbsp;mylibrary یک فایل به نام&amp;nbsp;functions.php ایجاد و کدهای زیر را قرار دهید :
+&lt;pre&gt;&lt;code class=&quot;language-php line-numbers&quot;&gt;&amp;lt;?php
+
+function lego () {
+    return 'You are now a master builder.';
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;حالا داخل فولدر(aldemo) پروژه امون فایل composer.json را ایجاد و کدهای زیر را قرار می دهیم :
+&lt;pre&gt;&lt;code class=&quot;language-json line-numbers&quot;&gt;{
+    &quot;autoload&quot;: {
+        &quot;files&quot;: [&quot;mylibrary/functions.php&quot;]
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;همانطور که در بالا مشاهده می کنید یک آبجکت به نام autoload داریم و داخل آن &amp;nbsp;مشخص کردیم که به چه روشی&amp;nbsp;autoload برای ما ساخته شود . ما روش files را تعیین کردیم و جلوی آن فایل هایی که قرار است به صورت&amp;nbsp;autoload درآیند  را بصورت عناصر آرایه  مشخص می کنیم .&lt;/li&gt;
+&lt;li&gt;حالا برای ایجاد autoload باید ترمینال را باز کرده و به روت پروژه بروید و یکی از دستورات زیر را اجرا کنید :
+&lt;pre&gt;&lt;code class=&quot;language-bash line-numbers&quot;&gt;
+composer dump
+یا
+composer dumpautoload
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+بعد از اجرای فرمان بالا و زدن دکمه اینتر مشاهده می کنید که در روت پروژه , فولدری به نام vendor ساخته می شود .جهت مشاهده تغییرات وارد پوشه  vendor سپس پوشه composer شده و   فایل autoload_files.php را باز نمائید.
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php line-numbers&quot;&gt;&amp;lt;?php
+// autoload_files.php @generated by Composer
+
+$vendorDir = dirname(dirname(__FILE__));
+$baseDir = dirname($vendorDir);
+
+return array(
+    '239a881d87672da709af2b939c130dab' =&amp;gt; $baseDir . '/mylibrary/functions.php',
+);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+در خط 8 مشاهده می کنید مسیر فایل function.php به این فایل افزوده شده است.
+&lt;/p&gt;
+
+
+&lt;/li&gt;
+&lt;li&gt;اگر تمام مراحل بالا به درستی انجام شده باشد, فرایند ساخت autoload به وسیله composer و از روش files به موفقیت به اتمام رسیده است . حالا برای استفاده از فایل function.php کافی است در فولدر aldemo فایلی به نام index.php ایجاد کنید و کدهای زیر را قرار دهید :
+&lt;pre&gt;&lt;code class=&quot;language-php line-numbers&quot;&gt;&amp;lt;?php
+require 'vendor/autoload.php';
+echo lego();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+
+در کدهای بالا در خط اول لازم بود که autoload.php را به فایل index امان require کنید . و در خط بعدی از فانکشن lego که در فایل function.php موجود هست استفاده کردیم .
+
+&lt;/ol&gt;
+&lt;/p&gt;
+
+&lt;h3&gt;روش Classmap Based Autoloading&lt;/h3&gt;
+&lt;p&gt;
+این روش از روش File Based Autoloading بهتر است به این خاطر که شما لازم نیست مسیر واقعی فایل خود را مشخص کنید و تنها دایرکتوری که فایل در آن قرار دارد را مشخص می کنیم.
+&lt;/p&gt;
+&lt;p&gt;
+نکته : در این روش فقط می توان از کلاس ها استفاده نمود .
+&lt;/p&gt;
+&lt;p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+فولدری به نام classes در شاخه aldemo ایجاد نمائید.سپس فایل myclass.php را در آن ایجاد و کدهای زیر را در آن قرار دهید :
+&lt;pre&gt;&lt;code class=&quot;language-php line-numbers&quot;&gt;&amp;lt;?php
+Class Cmautoload {
+ 
+	  public function classmap () {
+		  return 'that knows how to autoload with a classmap! ';
+	  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;/li&gt;
+
+&lt;li&gt;
+فایل index.php  را مطابق زیر تغییر دهید :
+
+&lt;pre&gt;&lt;code class=&quot;language-php line-numbers&quot;&gt;&amp;lt;?php
+ 
+require 'vendor/autoload.php';
+ 
+echo lego();
+ 
+$cm = new Cmautoload;
+echo $cm-&amp;gt;classmap();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+
+
+&lt;li&gt;
+فایل composer.json  را مطابق زیر تغییر دهید :
+
+&lt;pre&gt;&lt;code class=&quot;language-json line-numbers&quot;&gt;{
+    &quot;autoload&quot;: {
+        &quot;files&quot;: [
+			&quot;mylibrary/functions.php&quot;
+		],
+		&quot;classmap&quot;: [
+			&quot;classes&quot;
+		]
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+
+&lt;li&gt;حالا برای ایجاد autoload باید ترمینال را باز کرده و به روت پروژه بروید و یکی از دستورات زیر را اجرا کنید :
+&lt;pre&gt;&lt;code class=&quot;language-bash line-numbers&quot;&gt;
+composer dump
+یا
+composer dumpautoload
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;
+جهت مشاهده تغییرات وارد پوشه vendor سپس پوشه composer شده و فایل autoload_classmap.php را باز نمائید.
+&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-php line-numbers&quot;&gt;&amp;lt;?php
+
+// autoload_classmap.php @generated by Composer
+
+$vendorDir = dirname(dirname(__FILE__));
+$baseDir = dirname($vendorDir);
+
+return array(
+    'Cmautoload' =&amp;gt; $baseDir . '/classes/myclass.php',
+);
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;
+در خط شماره 9 مشاهده می کنید مسیر کلیه کلاس های موجود در پوشه classes  افزوده شده است.
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/p&gt;
+
+&lt;h3&gt;روش PSR-4 Based Autoloading&lt;/h3&gt;
+&lt;p&gt;
+استاندارد psr-4 بر خلاف دو روش قبلی یعنی File Based Autoloading , Classmap Based Autoloading با namespace ها در کلاس ها سرو کار دارد .
+&lt;/p&gt;
+&lt;p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;
+مسیر زیر را در پروژه خود ایجاد نمائید:
+&lt;/p&gt;
+&lt;p align=&quot;left&quot;&gt;
+src/vegibit/library
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+فایل greeting.php را در مسیر بالا ایجاد و کدهای زیر را در آن قرار دهید:
+&lt;pre&gt;&lt;code class=&quot;language-php line-numbers&quot;&gt;&amp;lt;?php
+namespace VegibitLibrary;
+ 
+Class Greeting
+{
+    public function hi()
+    {
+        return &quot;We got you covered&quot;;
+    }
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+
+
+&lt;li&gt;
+&lt;p&gt;
+فایل index.php  را مطابق زیر تغییر دهید :
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-php line-numbers&quot;&gt;&amp;lt;?php
+ 
+require 'vendor/autoload.php';
+ 
+echo lego();
+ 
+$cm = new Cmautoload;
+echo $cm-&amp;gt;classmap();
+ 
+$obj = new VegibitLibrary\Greeting();
+
+echo $obj-&amp;gt;hi();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+فایل composer.json را مطابق زیر تغییر دهید:
+
+&lt;pre&gt;&lt;code class=&quot;language-json line-numbers&quot;&gt;
+{
+    &quot;autoload&quot;: {
+        &quot;files&quot;: [
+			&quot;mylibrary/functions.php&quot;
+		],
+		&quot;classmap&quot;: [
+			&quot;classes&quot;
+		],
+		&quot;psr-4&quot;: {
+			&quot;VegibitLibrary\\&quot; : &quot;src/vegibit/library/&quot;
+		}
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+
+&lt;li&gt;حالا برای ایجاد autoload باید ترمینال را باز کرده و به روت پروژه بروید و یکی از دستورات زیر را اجرا کنید :
+&lt;pre&gt;&lt;code class=&quot;language-bash line-numbers&quot;&gt;
+composer dump
+یا
+composer dumpautoload
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;
+جهت مشاهده تغییرات وارد پوشه vendor سپس پوشه composer شده و فایل autoload_psr4.php را باز نمائید.
+&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-php line-numbers&quot;&gt;&amp;lt;?php
+
+// autoload_psr4.php @generated by Composer
+
+$vendorDir = dirname(dirname(__FILE__));
+$baseDir = dirname($vendorDir);
+
+return array(
+    'VegibitLibrary\\' =&amp;gt; array($baseDir . '/src/vegibit/library'),
+);
+
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;
+در خط شماره 9 مشاهده می کنید آدرس فضای نام VegibitLibrary بصورت عنصر آرایه  افزوده شده است.
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p&gt;
+کلیه فایل های بالا را می توانید از لینک زیر دانلود نمایید:
+&lt;/p&gt;
+&lt;p align=&quot;left&quot;&gt;
+&lt;a href=&quot;/files/aldemo.zip&quot;&gt;aldemo.zip&lt;/a&gt;
+&lt;/p&gt;</content><author><name>Farhad Mirzapour</name></author><category term="articles" /><summary type="html">همانطور که می دانیم در php برای استفاده از هر کلاسی باید اون کلاس رو در صفحه ای که لازم داریم include یا require کنیم تا php آن کلاس را بشناسد و بتوان از آن استفاده کرد . خب مشکل اینجاست که اگر تعداد کلاس های مورد استفاده زیاد شود این include کردن هر کلاس واقعا مشکل ساز میشه و تمرکز مارو کم می کنه و بیشتر وقتمون میره سمت اینکه کلاس ها در داخل کدام دایرکتوری هستند و تک تک آن ها را به صفحه ی خودمون include کنیم . خوشبختانه composer این مشکل را برای ما حل کرده و خودش این موضوع را به عهده می گیرد و ما فقط کافی است بسته به نیازمون یکی از 3 روش زیر را که در فایل composer.json می باشد استفاده نماییم . داخل فایل composer آبجکتی به نام&amp;nbsp;autoload وجود دارد که داخل آن تعریف می کنیم که چه فایل هایی را و از چه طریق برای ما autoload بسازد. 3روش autoloading در composer عبارتند از : File Based Autoloading Classmap Based Autoloading PSR-4 Autoloading سایت اصلی composer روش&amp;nbsp;PSR-4 Autoloading را پیشنهاد می کند اما ما در این مقاله &amp;nbsp;هر 4 روش را بررسی می نماییم . روش File Based Autoloading در روت (root) پروژه خودتون یک فولدر به نامaldemo ایجاد کنید . سپس داخل فولدرaldemo یک فولدر دیگر به نام&amp;nbsp;mylibrary ایجاد می کنیم تا فایل های خودمون را داخل اش قرار بدهیم . داخل فولدر&amp;nbsp;mylibrary یک فایل به نام&amp;nbsp;functions.php ایجاد و کدهای زیر را قرار دهید : &amp;lt;?php function lego () { return 'You are now a master builder.'; } حالا داخل فولدر(aldemo) پروژه امون فایل composer.json را ایجاد و کدهای زیر را قرار می دهیم : { &quot;autoload&quot;: { &quot;files&quot;: [&quot;mylibrary/functions.php&quot;] } } همانطور که در بالا مشاهده می کنید یک آبجکت به نام autoload داریم و داخل آن &amp;nbsp;مشخص کردیم که به چه روشی&amp;nbsp;autoload برای ما ساخته شود . ما روش files را تعیین کردیم و جلوی آن فایل هایی که قرار است به صورت&amp;nbsp;autoload درآیند را بصورت عناصر آرایه مشخص می کنیم . حالا برای ایجاد autoload باید ترمینال را باز کرده و به روت پروژه بروید و یکی از دستورات زیر را اجرا کنید : composer dump یا composer dumpautoload بعد از اجرای فرمان بالا و زدن دکمه اینتر مشاهده می کنید که در روت پروژه , فولدری به نام vendor ساخته می شود .جهت مشاهده تغییرات وارد پوشه vendor سپس پوشه composer شده و فایل autoload_files.php را باز نمائید. &amp;lt;?php // autoload_files.php @generated by Composer $vendorDir = dirname(dirname(__FILE__)); $baseDir = dirname($vendorDir); return array( '239a881d87672da709af2b939c130dab' =&amp;gt; $baseDir . '/mylibrary/functions.php', ); در خط 8 مشاهده می کنید مسیر فایل function.php به این فایل افزوده شده است. اگر تمام مراحل بالا به درستی انجام شده باشد, فرایند ساخت autoload به وسیله composer و از روش files به موفقیت به اتمام رسیده است . حالا برای استفاده از فایل function.php کافی است در فولدر aldemo فایلی به نام index.php ایجاد کنید و کدهای زیر را قرار دهید : &amp;lt;?php require 'vendor/autoload.php'; echo lego(); در کدهای بالا در خط اول لازم بود که autoload.php را به فایل index امان require کنید . و در خط بعدی از فانکشن lego که در فایل function.php موجود هست استفاده کردیم . روش Classmap Based Autoloading این روش از روش File Based Autoloading بهتر است به این خاطر که شما لازم نیست مسیر واقعی فایل خود را مشخص کنید و تنها دایرکتوری که فایل در آن قرار دارد را مشخص می کنیم. نکته : در این روش فقط می توان از کلاس ها استفاده نمود . فولدری به نام classes در شاخه aldemo ایجاد نمائید.سپس فایل myclass.php را در آن ایجاد و کدهای زیر را در آن قرار دهید : &amp;lt;?php Class Cmautoload { public function classmap () { return 'that knows how to autoload with a classmap! '; } } فایل index.php را مطابق زیر تغییر دهید : &amp;lt;?php require 'vendor/autoload.php'; echo lego(); $cm = new Cmautoload; echo $cm-&amp;gt;classmap(); فایل composer.json را مطابق زیر تغییر دهید : { &quot;autoload&quot;: { &quot;files&quot;: [ &quot;mylibrary/functions.php&quot; ], &quot;classmap&quot;: [ &quot;classes&quot; ] } } حالا برای ایجاد autoload باید ترمینال را باز کرده و به روت پروژه بروید و یکی از دستورات زیر را اجرا کنید : composer dump یا composer dumpautoload جهت مشاهده تغییرات وارد پوشه vendor سپس پوشه composer شده و فایل autoload_classmap.php را باز نمائید. &amp;lt;?php // autoload_classmap.php @generated by Composer $vendorDir = dirname(dirname(__FILE__)); $baseDir = dirname($vendorDir); return array( 'Cmautoload' =&amp;gt; $baseDir . '/classes/myclass.php', ); در خط شماره 9 مشاهده می کنید مسیر کلیه کلاس های موجود در پوشه classes افزوده شده است. روش PSR-4 Based Autoloading استاندارد psr-4 بر خلاف دو روش قبلی یعنی File Based Autoloading , Classmap Based Autoloading با namespace ها در کلاس ها سرو کار دارد . مسیر زیر را در پروژه خود ایجاد نمائید: src/vegibit/library فایل greeting.php را در مسیر بالا ایجاد و کدهای زیر را در آن قرار دهید: &amp;lt;?php namespace VegibitLibrary; Class Greeting { public function hi() { return &quot;We got you covered&quot;; } } فایل index.php را مطابق زیر تغییر دهید : &amp;lt;?php require 'vendor/autoload.php'; echo lego(); $cm = new Cmautoload; echo $cm-&amp;gt;classmap(); $obj = new VegibitLibrary\Greeting(); echo $obj-&amp;gt;hi(); فایل composer.json را مطابق زیر تغییر دهید: { &quot;autoload&quot;: { &quot;files&quot;: [ &quot;mylibrary/functions.php&quot; ], &quot;classmap&quot;: [ &quot;classes&quot; ], &quot;psr-4&quot;: { &quot;VegibitLibrary\\&quot; : &quot;src/vegibit/library/&quot; } } } حالا برای ایجاد autoload باید ترمینال را باز کرده و به روت پروژه بروید و یکی از دستورات زیر را اجرا کنید : composer dump یا composer dumpautoload جهت مشاهده تغییرات وارد پوشه vendor سپس پوشه composer شده و فایل autoload_psr4.php را باز نمائید. &amp;lt;?php // autoload_psr4.php @generated by Composer $vendorDir = dirname(dirname(__FILE__)); $baseDir = dirname($vendorDir); return array( 'VegibitLibrary\\' =&amp;gt; array($baseDir . '/src/vegibit/library'), ); در خط شماره 9 مشاهده می کنید آدرس فضای نام VegibitLibrary بصورت عنصر آرایه افزوده شده است. کلیه فایل های بالا را می توانید از لینک زیر دانلود نمایید: aldemo.zip</summary></entry></feed>

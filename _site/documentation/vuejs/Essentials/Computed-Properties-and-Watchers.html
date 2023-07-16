@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="">
+<!-- head -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>خاصیت Computed و Watchers | مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="خاصیت Computed و Watchers" />
+<meta name="author" content="Farhad Mirzapour" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="بررسی (Computed Properties) استفاده از عبارات در قالب ها بسیار راحت است ، اما بیشتر برای عملیات ساده مورد استفاده قرار می گیرند. قرار دادن منطق بیش از حد در الگوها نگه داری آن را سخت می کند. مثلا: &amp;#x3C;div id=&amp;#x22;example&amp;#x22;&amp;#x3E; &#123;&#123; message.split(&amp;#x27;&amp;#x27;).reverse().join(&amp;#x27;&amp;#x27;) &#125;&#125; &amp;#x3C;/div&amp;#x3E; در این مثال ، قالب دیگر ساده و اعلامی نیست. وقتی می خواهید پیام معکوس شده را در الگوی خود بیش از یک بار بگنجانید این مشکل بدتر می شود. به همین دلیل برای هر منطق پیچیده ، باید از یک خاصیت computed (محاسبه شده) استفاده کنید. مثال ساده : &amp;#x3C;div id=&amp;#x22;example&amp;#x22;&amp;#x3E; &amp;#x3C;p&amp;#x3E;Original message: &amp;#x22; &#123;&#123; message &#125;&#125;&amp;#x22;&amp;#x3C;/p&amp;#x3E; &amp;#x3C;p&amp;#x3E;Computed reversed message: &amp;#x22; &#123;&#123; reversedMessage &#125;&#125;&amp;#x22;&amp;#x3C;/p&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var vm = new Vue({ el: &#39;#example&#39;, data: { message: &#39;Hello&#39; }, computed: { // a computed getter reversedMessage: function () { // `this` points to the vm instance return this.message.split(&#39;&#39;).reverse().join(&#39;&#39;) } } }) نتیجه: Original message: &quot;&#123;&#123; message &#125;&#125;&quot; Computed reversed message: &quot;&#123;&#123; reversedMessage &#125;&#125;&quot; در اینجا ما یک خاصیت computed به نام reversedMessage اعلان کرده ایم. تابعی که ارائه دادیم به عنوان تابع getter برای ویژگی vm.reversedMessage استفاده خواهد شد: console.log(vm.reversedMessage) // =&gt; &#39;olleH&#39; vm.message = &#39;Goodbye&#39; console.log(vm.reversedMessage) // =&gt; &#39;eybdooG&#39; می توانید console را باز کرده و با مثال vm خود کار کنید. مقدار vm.reversedMessage همیشه به مقدار vm.message بستگی دارد. شما می توانید داده ها را به خاصیت های computed در قالب ها دقیقاً همانند یک ویژگی معمولی متصل کنید. Vue می داند که vm.reversedMessage به vm.message بستگی دارد ، بنابراین هر اتصالی که وابسته به vm.reversedMessage باشد را زمانیکه vm.message تغییر کند به روز رسانی می کند. بهترین قسمت کار این است که ما این رابطه وابستگی را بصورت اعلانی ایجاد کرده ایم و این باعث می شود تست و درک آن آسان تر شود. مقایسه Computed Caching با Methods شاید متوجه شده باشید که با استفاده از method در عبارت می توانیم به نتیجه مشابه برسیم: &amp;#x3C;p&amp;#x3E;Reversed message: &amp;#x22;&#123;&#123; reverseMessage() &#125;&#125;&amp;#x22;&amp;#x3C;/p&amp;#x3E; // in component methods: { reverseMessage: function () { return this.message.split(&#39;&#39;).reverse().join(&#39;&#39;) } } به جای یک خاصیت computed ، می توانیم همان عملکرد را به عنوان یک method تعریف کنیم. نتایج برای هردو یکسان است. با این حال ، تفاوت در این است که خاصیت های computed بر اساس وابستگی واکنشی آنها ذخیره موقت (cached) می شوند. یک خاصیت computed فقط در صورت تغییر برخی از وابستگی های واکنشی آن ، دوباره ارزیابی می شود. این بدان معنی است تا زمانی که پیام تغییر نکرده ، دسترسی چندگانه به خاصیت computed (محاسبه شده) reversedMessage بلافاصله بدون نیاز به اجرای دوباره عملکرد ، نتیجه قبلاً محاسبه شده را برمی گرداند. این همچنین بدان معنی است که ویژگی computed زیر هرگز به روز نمی شود ، زیرا ()Date.now یک وابستگی واکنشی نیست: computed: { now: function () { return Date.now() } } در مقایسه ، method هر زمان که یک رندر دوباره(re-render) رخ دهد عملکرد را انجام می دهد. چرا ما نیاز به ذخیره سازی موقت محاسبات داریم؟ تصور کنید که ما یک خاصیت computed به نام A با محاسبات سنگین داشته باشیم که نیاز به حلقه زدن در یک Array عظیم و انجام محاسبات زیادی دارد. بنابراین ممکن است ما خاصیت های computed دیگری داشته باشیم که به نوبه خود به A بستگی داشته باشند . بدون ذخیره کردن ، چند بار بیشتر از حد لازم A را اجرا می کنیم! در مواردی که نمی خواهید حافظه پنهانی داشته باشید ، به جای آن از method استفاده کنید. مقایسه Computed با watch Vue روشی عمومی تر برای مشاهده و واکنش به تغییرات داده ها در یک نمونه فراهم می کند به نام خاصیت watch. چنانچه داده هایی دارید که بر اساس برخی داده های دیگر تغییر می کنند ، استفاده از watch می تواند بسیار وسوسه انگیز باشد به خصوص اگر قبلا با محیط کار AngularJS کار کرده باشید. با این حال ، اغلب ایده بهتر استفاده از خاصیت computed می باشد. این مثال را در نظر بگیرید: &amp;#x3C;div id=&amp;#x22;demo&amp;#x22;&amp;#x3E;&#123;&#123; fullName &#125;&#125;&amp;#x3C;/div&amp;#x3E; var vm = new Vue({ el: &#39;#demo&#39;, data: { firstName: &#39;Foo&#39;, lastName: &#39;Bar&#39;, fullName: &#39;Foo Bar&#39; }, watch: { firstName: function (val) { this.fullName = val + &#39; &#39; + this.lastName }, lastName: function (val) { this.fullName = this.firstName + &#39; &#39; + val } } }) کد بالا ضروری و تکراری است.حال آن را با یک نسخه computed مقایسه کنید: var vm = new Vue({ el: &#39;#demo&#39;, data: { firstName: &#39;Foo&#39;, lastName: &#39;Bar&#39; }, computed: { fullName: function () { return this.firstName + &#39; &#39; + this.lastName } } }) خیلی بهتر است ، اینطور نیست؟ افزودن Setter به Computed ویژگی های Computed به صورت پیش فرض فقط دارای getter می باشند ، اما می توانید در صورت نیاز به آن یک setter نیز اضافه نمایید: // ... computed: { fullName: { // getter get: function () { return this.firstName + &#39; &#39; + this.lastName }, // setter set: function (newValue) { var names = newValue.split(&#39; &#39;) this.firstName = names[0] this.lastName = names[names.length - 1] } } } // ... اکنون وقتی vm.fullName = &#39;John Doe&#39; را اجرا کردید ،setter فراخوانی می شود و vm.firstName و vm.lastName به همین ترتیب به روز می شوند. بررسی Watchers در حالی که خاصیت های computed در بیشتر موارد مناسب تر هستند ، مواقعی وجود دارد که یک watcher (مشاهده گر) سفارشی می تواند ضرورت داشته باشد. به همین دلیل است که Vue یک روش عمومی تر برای واکنش به تغییرات داده ها از طریق watch ارائه می دهد. بیشترین کاربرد زمانیست که بخواهید عملیات ناهمزمان (asynchronous) در پاسخ به تغییر داده ها ، داشته باشید. برای مثال: &amp;#x3C;div id=&amp;#x22;watch-example&amp;#x22;&amp;#x3E; &amp;#x3C;p&amp;#x3E; Ask a yes/no question: &amp;#x3C;input v-model=&amp;#x22;question&amp;#x22;&amp;#x3E; &amp;#x3C;/p&amp;#x3E; &amp;#x3C;p&amp;#x3E;&#123;&#123; answer &#125;&#125;&amp;#x3C;/p&amp;#x3E; &amp;#x3C;/div&amp;#x3E; &amp;#x3C;!-- Since there is already a rich ecosystem of ajax libraries --&amp;#x3E; &amp;#x3C;!-- and collections of general-purpose utility methods, Vue core --&amp;#x3E; &amp;#x3C;!-- is able to remain small by not reinventing them. This also --&amp;#x3E; &amp;#x3C;!-- gives you the freedom to use what you&amp;#x27;re familiar with. --&amp;#x3E; &amp;#x3C;script src=&amp;#x22;https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js&amp;#x22;&amp;#x3E;&amp;#x3C;/script&amp;#x3E; &amp;#x3C;script src=&amp;#x22;https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js&amp;#x22;&amp;#x3E;&amp;#x3C;/script&amp;#x3E; &amp;#x3C;script&amp;#x3E; var watchExampleVM = new Vue({ el: &amp;#x27;#watch-example&amp;#x27;, data: { question: &amp;#x27;&amp;#x27;, answer: &amp;#x27;I cannot give you an answer until you ask a question!&amp;#x27; }, watch: { // whenever question changes, this function will run question: function (newQuestion, oldQuestion) { this.answer = &amp;#x27;Waiting for you to stop typing...&amp;#x27; this.debouncedGetAnswer() } }, created: function () { // _.debounce is a function provided by lodash to limit how // often a particularly expensive operation can be run. // In this case, we want to limit how often we access // yesno.wtf/api, waiting until the user has completely // finished typing before making the ajax request. To learn // more about the _.debounce function (and its cousin // _.throttle), visit: https://lodash.com/docs#debounce this.debouncedGetAnswer = _.debounce(this.getAnswer, 500) }, methods: { getAnswer: function () { if (this.question.indexOf(&amp;#x27;?&amp;#x27;) === -1) { this.answer = &amp;#x27;Questions usually contain a question mark. ;-)&amp;#x27; return } this.answer = &amp;#x27;Thinking...&amp;#x27; var vm = this axios.get(&amp;#x27;https://yesno.wtf/api&amp;#x27;) .then(function (response) { vm.answer = _.capitalize(response.data.answer) }) .catch(function (error) { vm.answer = &amp;#x27;Error! Could not reach the API. &amp;#x27; + error }) } } }) &amp;#x3C;/script&amp;#x3E; در این حالت ، استفاده از گزینه Watch به ما این امکان را می دهد تا عملیاتی asynchronous (ناهمزمان) (دسترسی به یک API) را انجام دهیم ، تعداد دفعات عملیات را می توان محدود و حالت های واسطه را تنظیم کنیم تا پاسخ نهایی را بدست آوریم. هیچ یک از این موارد با خاصیت computed امکان پذیر نیست. علاوه بر گزینه Watch ، می توانید از vm.$watch API نیز استفاده کنید." />
+<meta property="og:description" content="بررسی (Computed Properties) استفاده از عبارات در قالب ها بسیار راحت است ، اما بیشتر برای عملیات ساده مورد استفاده قرار می گیرند. قرار دادن منطق بیش از حد در الگوها نگه داری آن را سخت می کند. مثلا: &amp;#x3C;div id=&amp;#x22;example&amp;#x22;&amp;#x3E; &#123;&#123; message.split(&amp;#x27;&amp;#x27;).reverse().join(&amp;#x27;&amp;#x27;) &#125;&#125; &amp;#x3C;/div&amp;#x3E; در این مثال ، قالب دیگر ساده و اعلامی نیست. وقتی می خواهید پیام معکوس شده را در الگوی خود بیش از یک بار بگنجانید این مشکل بدتر می شود. به همین دلیل برای هر منطق پیچیده ، باید از یک خاصیت computed (محاسبه شده) استفاده کنید. مثال ساده : &amp;#x3C;div id=&amp;#x22;example&amp;#x22;&amp;#x3E; &amp;#x3C;p&amp;#x3E;Original message: &amp;#x22; &#123;&#123; message &#125;&#125;&amp;#x22;&amp;#x3C;/p&amp;#x3E; &amp;#x3C;p&amp;#x3E;Computed reversed message: &amp;#x22; &#123;&#123; reversedMessage &#125;&#125;&amp;#x22;&amp;#x3C;/p&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var vm = new Vue({ el: &#39;#example&#39;, data: { message: &#39;Hello&#39; }, computed: { // a computed getter reversedMessage: function () { // `this` points to the vm instance return this.message.split(&#39;&#39;).reverse().join(&#39;&#39;) } } }) نتیجه: Original message: &quot;&#123;&#123; message &#125;&#125;&quot; Computed reversed message: &quot;&#123;&#123; reversedMessage &#125;&#125;&quot; در اینجا ما یک خاصیت computed به نام reversedMessage اعلان کرده ایم. تابعی که ارائه دادیم به عنوان تابع getter برای ویژگی vm.reversedMessage استفاده خواهد شد: console.log(vm.reversedMessage) // =&gt; &#39;olleH&#39; vm.message = &#39;Goodbye&#39; console.log(vm.reversedMessage) // =&gt; &#39;eybdooG&#39; می توانید console را باز کرده و با مثال vm خود کار کنید. مقدار vm.reversedMessage همیشه به مقدار vm.message بستگی دارد. شما می توانید داده ها را به خاصیت های computed در قالب ها دقیقاً همانند یک ویژگی معمولی متصل کنید. Vue می داند که vm.reversedMessage به vm.message بستگی دارد ، بنابراین هر اتصالی که وابسته به vm.reversedMessage باشد را زمانیکه vm.message تغییر کند به روز رسانی می کند. بهترین قسمت کار این است که ما این رابطه وابستگی را بصورت اعلانی ایجاد کرده ایم و این باعث می شود تست و درک آن آسان تر شود. مقایسه Computed Caching با Methods شاید متوجه شده باشید که با استفاده از method در عبارت می توانیم به نتیجه مشابه برسیم: &amp;#x3C;p&amp;#x3E;Reversed message: &amp;#x22;&#123;&#123; reverseMessage() &#125;&#125;&amp;#x22;&amp;#x3C;/p&amp;#x3E; // in component methods: { reverseMessage: function () { return this.message.split(&#39;&#39;).reverse().join(&#39;&#39;) } } به جای یک خاصیت computed ، می توانیم همان عملکرد را به عنوان یک method تعریف کنیم. نتایج برای هردو یکسان است. با این حال ، تفاوت در این است که خاصیت های computed بر اساس وابستگی واکنشی آنها ذخیره موقت (cached) می شوند. یک خاصیت computed فقط در صورت تغییر برخی از وابستگی های واکنشی آن ، دوباره ارزیابی می شود. این بدان معنی است تا زمانی که پیام تغییر نکرده ، دسترسی چندگانه به خاصیت computed (محاسبه شده) reversedMessage بلافاصله بدون نیاز به اجرای دوباره عملکرد ، نتیجه قبلاً محاسبه شده را برمی گرداند. این همچنین بدان معنی است که ویژگی computed زیر هرگز به روز نمی شود ، زیرا ()Date.now یک وابستگی واکنشی نیست: computed: { now: function () { return Date.now() } } در مقایسه ، method هر زمان که یک رندر دوباره(re-render) رخ دهد عملکرد را انجام می دهد. چرا ما نیاز به ذخیره سازی موقت محاسبات داریم؟ تصور کنید که ما یک خاصیت computed به نام A با محاسبات سنگین داشته باشیم که نیاز به حلقه زدن در یک Array عظیم و انجام محاسبات زیادی دارد. بنابراین ممکن است ما خاصیت های computed دیگری داشته باشیم که به نوبه خود به A بستگی داشته باشند . بدون ذخیره کردن ، چند بار بیشتر از حد لازم A را اجرا می کنیم! در مواردی که نمی خواهید حافظه پنهانی داشته باشید ، به جای آن از method استفاده کنید. مقایسه Computed با watch Vue روشی عمومی تر برای مشاهده و واکنش به تغییرات داده ها در یک نمونه فراهم می کند به نام خاصیت watch. چنانچه داده هایی دارید که بر اساس برخی داده های دیگر تغییر می کنند ، استفاده از watch می تواند بسیار وسوسه انگیز باشد به خصوص اگر قبلا با محیط کار AngularJS کار کرده باشید. با این حال ، اغلب ایده بهتر استفاده از خاصیت computed می باشد. این مثال را در نظر بگیرید: &amp;#x3C;div id=&amp;#x22;demo&amp;#x22;&amp;#x3E;&#123;&#123; fullName &#125;&#125;&amp;#x3C;/div&amp;#x3E; var vm = new Vue({ el: &#39;#demo&#39;, data: { firstName: &#39;Foo&#39;, lastName: &#39;Bar&#39;, fullName: &#39;Foo Bar&#39; }, watch: { firstName: function (val) { this.fullName = val + &#39; &#39; + this.lastName }, lastName: function (val) { this.fullName = this.firstName + &#39; &#39; + val } } }) کد بالا ضروری و تکراری است.حال آن را با یک نسخه computed مقایسه کنید: var vm = new Vue({ el: &#39;#demo&#39;, data: { firstName: &#39;Foo&#39;, lastName: &#39;Bar&#39; }, computed: { fullName: function () { return this.firstName + &#39; &#39; + this.lastName } } }) خیلی بهتر است ، اینطور نیست؟ افزودن Setter به Computed ویژگی های Computed به صورت پیش فرض فقط دارای getter می باشند ، اما می توانید در صورت نیاز به آن یک setter نیز اضافه نمایید: // ... computed: { fullName: { // getter get: function () { return this.firstName + &#39; &#39; + this.lastName }, // setter set: function (newValue) { var names = newValue.split(&#39; &#39;) this.firstName = names[0] this.lastName = names[names.length - 1] } } } // ... اکنون وقتی vm.fullName = &#39;John Doe&#39; را اجرا کردید ،setter فراخوانی می شود و vm.firstName و vm.lastName به همین ترتیب به روز می شوند. بررسی Watchers در حالی که خاصیت های computed در بیشتر موارد مناسب تر هستند ، مواقعی وجود دارد که یک watcher (مشاهده گر) سفارشی می تواند ضرورت داشته باشد. به همین دلیل است که Vue یک روش عمومی تر برای واکنش به تغییرات داده ها از طریق watch ارائه می دهد. بیشترین کاربرد زمانیست که بخواهید عملیات ناهمزمان (asynchronous) در پاسخ به تغییر داده ها ، داشته باشید. برای مثال: &amp;#x3C;div id=&amp;#x22;watch-example&amp;#x22;&amp;#x3E; &amp;#x3C;p&amp;#x3E; Ask a yes/no question: &amp;#x3C;input v-model=&amp;#x22;question&amp;#x22;&amp;#x3E; &amp;#x3C;/p&amp;#x3E; &amp;#x3C;p&amp;#x3E;&#123;&#123; answer &#125;&#125;&amp;#x3C;/p&amp;#x3E; &amp;#x3C;/div&amp;#x3E; &amp;#x3C;!-- Since there is already a rich ecosystem of ajax libraries --&amp;#x3E; &amp;#x3C;!-- and collections of general-purpose utility methods, Vue core --&amp;#x3E; &amp;#x3C;!-- is able to remain small by not reinventing them. This also --&amp;#x3E; &amp;#x3C;!-- gives you the freedom to use what you&amp;#x27;re familiar with. --&amp;#x3E; &amp;#x3C;script src=&amp;#x22;https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js&amp;#x22;&amp;#x3E;&amp;#x3C;/script&amp;#x3E; &amp;#x3C;script src=&amp;#x22;https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js&amp;#x22;&amp;#x3E;&amp;#x3C;/script&amp;#x3E; &amp;#x3C;script&amp;#x3E; var watchExampleVM = new Vue({ el: &amp;#x27;#watch-example&amp;#x27;, data: { question: &amp;#x27;&amp;#x27;, answer: &amp;#x27;I cannot give you an answer until you ask a question!&amp;#x27; }, watch: { // whenever question changes, this function will run question: function (newQuestion, oldQuestion) { this.answer = &amp;#x27;Waiting for you to stop typing...&amp;#x27; this.debouncedGetAnswer() } }, created: function () { // _.debounce is a function provided by lodash to limit how // often a particularly expensive operation can be run. // In this case, we want to limit how often we access // yesno.wtf/api, waiting until the user has completely // finished typing before making the ajax request. To learn // more about the _.debounce function (and its cousin // _.throttle), visit: https://lodash.com/docs#debounce this.debouncedGetAnswer = _.debounce(this.getAnswer, 500) }, methods: { getAnswer: function () { if (this.question.indexOf(&amp;#x27;?&amp;#x27;) === -1) { this.answer = &amp;#x27;Questions usually contain a question mark. ;-)&amp;#x27; return } this.answer = &amp;#x27;Thinking...&amp;#x27; var vm = this axios.get(&amp;#x27;https://yesno.wtf/api&amp;#x27;) .then(function (response) { vm.answer = _.capitalize(response.data.answer) }) .catch(function (error) { vm.answer = &amp;#x27;Error! Could not reach the API. &amp;#x27; + error }) } } }) &amp;#x3C;/script&amp;#x3E; در این حالت ، استفاده از گزینه Watch به ما این امکان را می دهد تا عملیاتی asynchronous (ناهمزمان) (دسترسی به یک API) را انجام دهیم ، تعداد دفعات عملیات را می توان محدود و حالت های واسطه را تنظیم کنیم تا پاسخ نهایی را بدست آوریم. هیچ یک از این موارد با خاصیت computed امکان پذیر نیست. علاوه بر گزینه Watch ، می توانید از vm.$watch API نیز استفاده کنید." />
+<link rel="canonical" href="http://localhost:4000/documentation/vuejs/Essentials/Computed-Properties-and-Watchers" />
+<meta property="og:url" content="http://localhost:4000/documentation/vuejs/Essentials/Computed-Properties-and-Watchers" />
+<meta property="og:site_name" content="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-10-03T08:08:42+03:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="خاصیت Computed و Watchers" />
+<meta name="twitter:site" content="@farhadmirzapour" />
+<meta name="twitter:creator" content="@Farhad Mirzapour" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"خاصیت Computed و Watchers","url":"http://localhost:4000/documentation/vuejs/Essentials/Computed-Properties-and-Watchers","datePublished":"2019-10-03T08:08:42+03:30","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"dateModified":"2019-10-03T08:08:42+03:30","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/documentation/vuejs/Essentials/Computed-Properties-and-Watchers"},"author":{"@type":"Person","name":"Farhad Mirzapour"},"description":"بررسی (Computed Properties) استفاده از عبارات در قالب ها بسیار راحت است ، اما بیشتر برای عملیات ساده مورد استفاده قرار می گیرند. قرار دادن منطق بیش از حد در الگوها نگه داری آن را سخت می کند. مثلا: &amp;#x3C;div id=&amp;#x22;example&amp;#x22;&amp;#x3E; &#123;&#123; message.split(&amp;#x27;&amp;#x27;).reverse().join(&amp;#x27;&amp;#x27;) &#125;&#125; &amp;#x3C;/div&amp;#x3E; در این مثال ، قالب دیگر ساده و اعلامی نیست. وقتی می خواهید پیام معکوس شده را در الگوی خود بیش از یک بار بگنجانید این مشکل بدتر می شود. به همین دلیل برای هر منطق پیچیده ، باید از یک خاصیت computed (محاسبه شده) استفاده کنید. مثال ساده : &amp;#x3C;div id=&amp;#x22;example&amp;#x22;&amp;#x3E; &amp;#x3C;p&amp;#x3E;Original message: &amp;#x22; &#123;&#123; message &#125;&#125;&amp;#x22;&amp;#x3C;/p&amp;#x3E; &amp;#x3C;p&amp;#x3E;Computed reversed message: &amp;#x22; &#123;&#123; reversedMessage &#125;&#125;&amp;#x22;&amp;#x3C;/p&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var vm = new Vue({ el: &#39;#example&#39;, data: { message: &#39;Hello&#39; }, computed: { // a computed getter reversedMessage: function () { // `this` points to the vm instance return this.message.split(&#39;&#39;).reverse().join(&#39;&#39;) } } }) نتیجه: Original message: &quot;&#123;&#123; message &#125;&#125;&quot; Computed reversed message: &quot;&#123;&#123; reversedMessage &#125;&#125;&quot; در اینجا ما یک خاصیت computed به نام reversedMessage اعلان کرده ایم. تابعی که ارائه دادیم به عنوان تابع getter برای ویژگی vm.reversedMessage استفاده خواهد شد: console.log(vm.reversedMessage) // =&gt; &#39;olleH&#39; vm.message = &#39;Goodbye&#39; console.log(vm.reversedMessage) // =&gt; &#39;eybdooG&#39; می توانید console را باز کرده و با مثال vm خود کار کنید. مقدار vm.reversedMessage همیشه به مقدار vm.message بستگی دارد. شما می توانید داده ها را به خاصیت های computed در قالب ها دقیقاً همانند یک ویژگی معمولی متصل کنید. Vue می داند که vm.reversedMessage به vm.message بستگی دارد ، بنابراین هر اتصالی که وابسته به vm.reversedMessage باشد را زمانیکه vm.message تغییر کند به روز رسانی می کند. بهترین قسمت کار این است که ما این رابطه وابستگی را بصورت اعلانی ایجاد کرده ایم و این باعث می شود تست و درک آن آسان تر شود. مقایسه Computed Caching با Methods شاید متوجه شده باشید که با استفاده از method در عبارت می توانیم به نتیجه مشابه برسیم: &amp;#x3C;p&amp;#x3E;Reversed message: &amp;#x22;&#123;&#123; reverseMessage() &#125;&#125;&amp;#x22;&amp;#x3C;/p&amp;#x3E; // in component methods: { reverseMessage: function () { return this.message.split(&#39;&#39;).reverse().join(&#39;&#39;) } } به جای یک خاصیت computed ، می توانیم همان عملکرد را به عنوان یک method تعریف کنیم. نتایج برای هردو یکسان است. با این حال ، تفاوت در این است که خاصیت های computed بر اساس وابستگی واکنشی آنها ذخیره موقت (cached) می شوند. یک خاصیت computed فقط در صورت تغییر برخی از وابستگی های واکنشی آن ، دوباره ارزیابی می شود. این بدان معنی است تا زمانی که پیام تغییر نکرده ، دسترسی چندگانه به خاصیت computed (محاسبه شده) reversedMessage بلافاصله بدون نیاز به اجرای دوباره عملکرد ، نتیجه قبلاً محاسبه شده را برمی گرداند. این همچنین بدان معنی است که ویژگی computed زیر هرگز به روز نمی شود ، زیرا ()Date.now یک وابستگی واکنشی نیست: computed: { now: function () { return Date.now() } } در مقایسه ، method هر زمان که یک رندر دوباره(re-render) رخ دهد عملکرد را انجام می دهد. چرا ما نیاز به ذخیره سازی موقت محاسبات داریم؟ تصور کنید که ما یک خاصیت computed به نام A با محاسبات سنگین داشته باشیم که نیاز به حلقه زدن در یک Array عظیم و انجام محاسبات زیادی دارد. بنابراین ممکن است ما خاصیت های computed دیگری داشته باشیم که به نوبه خود به A بستگی داشته باشند . بدون ذخیره کردن ، چند بار بیشتر از حد لازم A را اجرا می کنیم! در مواردی که نمی خواهید حافظه پنهانی داشته باشید ، به جای آن از method استفاده کنید. مقایسه Computed با watch Vue روشی عمومی تر برای مشاهده و واکنش به تغییرات داده ها در یک نمونه فراهم می کند به نام خاصیت watch. چنانچه داده هایی دارید که بر اساس برخی داده های دیگر تغییر می کنند ، استفاده از watch می تواند بسیار وسوسه انگیز باشد به خصوص اگر قبلا با محیط کار AngularJS کار کرده باشید. با این حال ، اغلب ایده بهتر استفاده از خاصیت computed می باشد. این مثال را در نظر بگیرید: &amp;#x3C;div id=&amp;#x22;demo&amp;#x22;&amp;#x3E;&#123;&#123; fullName &#125;&#125;&amp;#x3C;/div&amp;#x3E; var vm = new Vue({ el: &#39;#demo&#39;, data: { firstName: &#39;Foo&#39;, lastName: &#39;Bar&#39;, fullName: &#39;Foo Bar&#39; }, watch: { firstName: function (val) { this.fullName = val + &#39; &#39; + this.lastName }, lastName: function (val) { this.fullName = this.firstName + &#39; &#39; + val } } }) کد بالا ضروری و تکراری است.حال آن را با یک نسخه computed مقایسه کنید: var vm = new Vue({ el: &#39;#demo&#39;, data: { firstName: &#39;Foo&#39;, lastName: &#39;Bar&#39; }, computed: { fullName: function () { return this.firstName + &#39; &#39; + this.lastName } } }) خیلی بهتر است ، اینطور نیست؟ افزودن Setter به Computed ویژگی های Computed به صورت پیش فرض فقط دارای getter می باشند ، اما می توانید در صورت نیاز به آن یک setter نیز اضافه نمایید: // ... computed: { fullName: { // getter get: function () { return this.firstName + &#39; &#39; + this.lastName }, // setter set: function (newValue) { var names = newValue.split(&#39; &#39;) this.firstName = names[0] this.lastName = names[names.length - 1] } } } // ... اکنون وقتی vm.fullName = &#39;John Doe&#39; را اجرا کردید ،setter فراخوانی می شود و vm.firstName و vm.lastName به همین ترتیب به روز می شوند. بررسی Watchers در حالی که خاصیت های computed در بیشتر موارد مناسب تر هستند ، مواقعی وجود دارد که یک watcher (مشاهده گر) سفارشی می تواند ضرورت داشته باشد. به همین دلیل است که Vue یک روش عمومی تر برای واکنش به تغییرات داده ها از طریق watch ارائه می دهد. بیشترین کاربرد زمانیست که بخواهید عملیات ناهمزمان (asynchronous) در پاسخ به تغییر داده ها ، داشته باشید. برای مثال: &amp;#x3C;div id=&amp;#x22;watch-example&amp;#x22;&amp;#x3E; &amp;#x3C;p&amp;#x3E; Ask a yes/no question: &amp;#x3C;input v-model=&amp;#x22;question&amp;#x22;&amp;#x3E; &amp;#x3C;/p&amp;#x3E; &amp;#x3C;p&amp;#x3E;&#123;&#123; answer &#125;&#125;&amp;#x3C;/p&amp;#x3E; &amp;#x3C;/div&amp;#x3E; &amp;#x3C;!-- Since there is already a rich ecosystem of ajax libraries --&amp;#x3E; &amp;#x3C;!-- and collections of general-purpose utility methods, Vue core --&amp;#x3E; &amp;#x3C;!-- is able to remain small by not reinventing them. This also --&amp;#x3E; &amp;#x3C;!-- gives you the freedom to use what you&amp;#x27;re familiar with. --&amp;#x3E; &amp;#x3C;script src=&amp;#x22;https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js&amp;#x22;&amp;#x3E;&amp;#x3C;/script&amp;#x3E; &amp;#x3C;script src=&amp;#x22;https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js&amp;#x22;&amp;#x3E;&amp;#x3C;/script&amp;#x3E; &amp;#x3C;script&amp;#x3E; var watchExampleVM = new Vue({ el: &amp;#x27;#watch-example&amp;#x27;, data: { question: &amp;#x27;&amp;#x27;, answer: &amp;#x27;I cannot give you an answer until you ask a question!&amp;#x27; }, watch: { // whenever question changes, this function will run question: function (newQuestion, oldQuestion) { this.answer = &amp;#x27;Waiting for you to stop typing...&amp;#x27; this.debouncedGetAnswer() } }, created: function () { // _.debounce is a function provided by lodash to limit how // often a particularly expensive operation can be run. // In this case, we want to limit how often we access // yesno.wtf/api, waiting until the user has completely // finished typing before making the ajax request. To learn // more about the _.debounce function (and its cousin // _.throttle), visit: https://lodash.com/docs#debounce this.debouncedGetAnswer = _.debounce(this.getAnswer, 500) }, methods: { getAnswer: function () { if (this.question.indexOf(&amp;#x27;?&amp;#x27;) === -1) { this.answer = &amp;#x27;Questions usually contain a question mark. ;-)&amp;#x27; return } this.answer = &amp;#x27;Thinking...&amp;#x27; var vm = this axios.get(&amp;#x27;https://yesno.wtf/api&amp;#x27;) .then(function (response) { vm.answer = _.capitalize(response.data.answer) }) .catch(function (error) { vm.answer = &amp;#x27;Error! Could not reach the API. &amp;#x27; + error }) } } }) &amp;#x3C;/script&amp;#x3E; در این حالت ، استفاده از گزینه Watch به ما این امکان را می دهد تا عملیاتی asynchronous (ناهمزمان) (دسترسی به یک API) را انجام دهیم ، تعداد دفعات عملیات را می توان محدود و حالت های واسطه را تنظیم کنیم تا پاسخ نهایی را بدست آوریم. هیچ یک از این موارد با خاصیت computed امکان پذیر نیست. علاوه بر گزینه Watch ، می توانید از vm.$watch API نیز استفاده کنید.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="stylesheet" href="/assets/prisma/prism.css">
+    <!-- favicons and rss -->
+    <link rel="alternate" type="application/rss+xml" title="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" href="/feed.xml">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- header -->
+<header class="header" role="banner" aria-label="Header">
+    <button class="hamburger-button" onclick="hamburgerMenu();" role="button" aria-label="Hamburger menu button">
+        <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    </button>
+    <a href="/" class="logo" role="link" aria-label="Home">
+        <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo"/>
+    </a>
+    <nav class="navigation" role="navigation" aria-label="Navigation">
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item">
+                <a href="/" class="logo" role="menuitem" aria-label="Home">
+                    <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo"/>
+                </a>
+            </li>
+            
+            <li role="menuitem"><a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a></li>
+            
+            <li role="menuitem"><a href="/contactus" role="menuitem" aria-label="تماس">تماس</a></li>
+            
+        </ul>
+    </nav>
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox"/>
+        </form>
+    </div>
+</header>
+
+<nav id="hamburger-menu" role="navigation" aria-label="Hamburger menu">
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox"/>
+        </form>
+    </div>
+    <div class="home-nav" role="navigation" aria-label="Site navigation">
+        <a href="/" role="menuitem" aria-label="Home">صفحه اصلی</a>
+        
+        <a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a>
+        
+        <a href="/contactus" role="menuitem" aria-label="تماس">تماس</a>
+        
+    </div>
+
+    
+    <div class="doc-nav" role="navigation" aria-label="Documentation navigation">
+        <p role="presentation" aria-label="Category name">
+            اصول آموزش vuejs
+        </p>
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/2019/10/11/vuejs.html" class="doc-link" role="link" aria-label="خاصیت Computed و Watchers">مقدمه</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/The-Vue-Instance" class="doc-link" role="link" aria-label="ایجاد نمونه Vue">ایجاد نمونه Vue</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Template-Syntax" class="doc-link" role="link" aria-label="اصول قالب در Vue">اصول قالب در Vue</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Computed-Properties-and-Watchers" class="doc-link" role="link" aria-label="خاصیت Computed و Watchers">خاصیت Computed و Watchers</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Class-and-Style-Bindings" class="doc-link" role="link" aria-label="اتصال Class و Style">اتصال Class و Style</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Conditional-Rendering" class="doc-link" role="link" aria-label="رندرینگ شرطی  (Conditional Rendering)">رندرینگ شرطی  (Conditional Rendering)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/List-Rendering" class="doc-link" role="link" aria-label="رندر List (List Rendering)">رندر List (List Rendering)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Event-Handling" class="doc-link" role="link" aria-label="کار با رویدادها(Event Handling)">کار با رویدادها(Event Handling)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Form-Input-Bindings" class="doc-link" role="link" aria-label="اتصال داده به ورودی فرم (Form Input Bindings)">اتصال داده به ورودی فرم (Form Input Bindings)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Components-Basics" class="doc-link" role="link" aria-label="اصول پایه Component">اصول پایه Component</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Components-In-Depth/Component-Registration" class="doc-link" role="link" aria-label="ثبت Component">ثبت Component</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Components-In-Depth/components-props" class="doc-link" role="link" aria-label="props">props</a></li>
+            
+            
+        </ul>
+    </div>
+    
+</nav>
+<!-- main content -->
+<main class="container" role="main">
+    <div class="rcdoccontainerimg">
+<div class="rc-DRTVBanner-new rc-DRTVBanner-bigsize">
+    <div style="background: url('/images/original/vuejs.jpg'); " class="blurred_img"></div>
+    <div class="mask"></div>
+    <div class="bot"></div>
+    <div class="over">
+        <div class="container-rc">
+            <img class="image" src="/images/original/vuejs.jpg" alt="خاصیت Computed و Watchers" height="190">
+            <div class="desktop-banner-container">
+                <h1 class="display-5-text headline">
+                    
+                    
+                    اصول آموزش vuejs
+                    </h1>
+                <!--<div class="tagslist"><ul class='lyda-tag-list'><li class='lyda-tag-list-title'>برچسب ها</li><li><a class="tags" href="/tag/لاراول">#لاراول</a></li><li><a class="tags" href="/tag/لاراول-5-5">#لاراول 5.5</a></li></ul></div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="bread-crumb">-->
+<!--<div class="container   ">-->
+<!--<div class="pull-right ">-->
+<!--<div class="bread-button text-custom b-left">-->
+<!--انتشار : 2 ماه پیش-->
+<!--</div>-->
+<!--<a href="/category/article/" class="bread-button back-to-all b-left hidden-xs">همه مقالات</a>-->
+<!--<div class="cat-lable">-->
+<!--<a href="/category/article/laravel/">-->
+<!--لاراول-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<script>
+    $(window).scroll(function(){
+        var sticky = $('.doc-menu'),
+            scroll = $(window).scrollTop();
+        if (scroll >= 101) {sticky.addClass('doc-header-scroll'); }
+        else {sticky.removeClass('doc-header-scroll'); };
+    });
+</script>
+</div>
+<div class="doc-container">
+
+    <div class="doc-menu">
+    
+    <ul>
+        <li>
+            <a  href="/2019/10/11/vuejs.html" class="active doc-link" role="link">
+                مقدمه
+            </a>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم اساسی</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="ایجاد نمونه Vue" href="/documentation/vuejs/Essentials/The-Vue-Instance" class="active doc-link" role="link">
+                ایجاد نمونه Vue
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول قالب در Vue" href="/documentation/vuejs/Essentials/Template-Syntax" class="active doc-link" role="link">
+                اصول قالب در Vue
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="خاصیت Computed و Watchers" href="/documentation/vuejs/Essentials/Computed-Properties-and-Watchers" class="active doc-link" role="link">
+                خاصیت Computed و Watchers
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اتصال Class و Style" href="/documentation/vuejs/Essentials/Class-and-Style-Bindings" class="active doc-link" role="link">
+                اتصال Class و Style
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="رندرینگ شرطی  (Conditional Rendering)" href="/documentation/vuejs/Essentials/Conditional-Rendering" class="active doc-link" role="link">
+                رندرینگ شرطی  (Conditional Rendering)
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="رندر List (List Rendering)" href="/documentation/vuejs/Essentials/List-Rendering" class="active doc-link" role="link">
+                رندر List (List Rendering)
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="کار با رویدادها(Event Handling)" href="/documentation/vuejs/Essentials/Event-Handling" class="active doc-link" role="link">
+                کار با رویدادها(Event Handling)
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اتصال داده به ورودی فرم (Form Input Bindings)" href="/documentation/vuejs/Essentials/Form-Input-Bindings" class="active doc-link" role="link">
+                اتصال داده به ورودی فرم (Form Input Bindings)
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول پایه Component" href="/documentation/vuejs/Essentials/Components-Basics" class="active doc-link" role="link">
+                اصول پایه Component
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">کامپوننت ها</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="ثبت Component" href="/documentation/vuejs/Components-In-Depth/Component-Registration" class="active doc-link" role="link">
+                ثبت Component
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="props" href="/documentation/vuejs/Components-In-Depth/components-props" class="active doc-link" role="link">
+                props
+            </a>
+        </li>
+        
+        
+            </ul>
+        </li>
+        
+    </ul>
+    
+</div>
+
+    <article class="documentation">
+        <header class="doc-header">
+            <div class="time">
+                    تاریخ :      پنج شنبه 11 مهر 1398
+            </div>
+                
+        </header>
+        <section class="anchored">
+            <h3>  بررسی (Computed Properties)</h3>
+<p>
+استفاده از عبارات در قالب ها بسیار راحت است ، اما بیشتر برای عملیات ساده مورد استفاده قرار می گیرند. قرار دادن منطق بیش از حد در الگوها نگه داری آن را سخت می کند. مثلا:
+</p>
+
+<pre><code class="language-html  line-numbers">&#x3C;div id=&#x22;example&#x22;&#x3E;
+   &#123;&#123; message.split(&#x27;&#x27;).reverse().join(&#x27;&#x27;) &#125;&#125;
+&#x3C;/div&#x3E;
+</code></pre>
+
+<p>
+در این مثال ، قالب دیگر ساده و اعلامی نیست. وقتی می خواهید پیام معکوس شده را در الگوی خود بیش از یک بار بگنجانید این مشکل بدتر می شود.
+</p>
+
+<p>
+به همین دلیل برای هر منطق پیچیده ، باید از یک خاصیت computed  (محاسبه شده) استفاده کنید.
+</p>
+
+<h4>مثال ساده :</h4>
+
+<pre><code class="language-html  line-numbers">&#x3C;div id=&#x22;example&#x22;&#x3E;
+  &#x3C;p&#x3E;Original message: &#x22; &#123;&#123; message &#125;&#125;&#x22;&#x3C;/p&#x3E;
+  &#x3C;p&#x3E;Computed reversed message: &#x22; &#123;&#123; reversedMessage &#125;&#125;&#x22;&#x3C;/p&#x3E;
+&#x3C;/div&#x3E;
+</code></pre>
+
+<pre><code class="language-javascript  line-numbers">var vm = new Vue({
+  el: '#example',
+  data: {
+    message: 'Hello'
+  },
+  computed: {
+    // a computed getter
+    reversedMessage: function () {
+      // `this` points to the vm instance
+      return this.message.split('').reverse().join('')
+    }
+  }
+})
+</code></pre>
+
+<p>
+نتیجه:
+</p>
+
+<div id="example" class="result-example">
+  <p>Original message: "&#123;&#123; message &#125;&#125;"</p>
+  <p>Computed reversed message: "&#123;&#123; reversedMessage &#125;&#125;"</p>
+</div>
+
+<p>
+در اینجا ما یک  خاصیت computed  به نام reversedMessage اعلان کرده ایم. تابعی که ارائه دادیم به عنوان تابع getter  برای ویژگی vm.reversedMessage استفاده خواهد شد:
+</p>
+
+<pre><code class="language-javascript  line-numbers">console.log(vm.reversedMessage) // =&gt; 'olleH'
+vm.message = 'Goodbye'
+console.log(vm.reversedMessage) // =&gt; 'eybdooG'
+</code></pre>
+
+<p>
+می توانید console را باز کرده و با مثال vm خود کار کنید. مقدار vm.reversedMessage همیشه به مقدار vm.message بستگی دارد.
+</p>
+
+<p>
+شما  می توانید داده ها را به  خاصیت های computed در قالب ها دقیقاً همانند یک ویژگی معمولی متصل کنید.  Vue می داند که vm.reversedMessage به vm.message بستگی دارد ، بنابراین هر اتصالی که وابسته به vm.reversedMessage  باشد را زمانیکه   vm.message تغییر کند به روز رسانی می کند. بهترین قسمت کار این است که ما این رابطه وابستگی را بصورت اعلانی ایجاد کرده ایم و این باعث می شود تست و درک آن آسان تر شود.
+</p>
+
+<p><br /></p>
+
+<h3>  مقایسه Computed Caching  با  Methods</h3>
+<p>
+شاید متوجه شده باشید که با استفاده از method در عبارت می توانیم به نتیجه مشابه برسیم:
+</p>
+
+<pre><code class="language-html  line-numbers">&#x3C;p&#x3E;Reversed message: &#x22;&#123;&#123; reverseMessage() &#125;&#125;&#x22;&#x3C;/p&#x3E;
+</code></pre>
+
+<pre><code class="language-javascript  line-numbers">// in component
+methods: {
+  reverseMessage: function () {
+    return this.message.split('').reverse().join('')
+  }
+}
+</code></pre>
+
+<p>
+به جای یک خاصیت computed ، می توانیم همان عملکرد را به عنوان یک method تعریف کنیم. نتایج برای هردو یکسان است. با این حال ، تفاوت در این است که خاصیت های computed بر اساس وابستگی واکنشی آنها  ذخیره موقت (cached)  می شوند. یک خاصیت computed  فقط در صورت تغییر برخی از وابستگی های واکنشی آن ، دوباره ارزیابی می شود.  این بدان معنی است تا زمانی که پیام تغییر نکرده ، دسترسی چندگانه به خاصیت computed (محاسبه شده)  reversedMessage بلافاصله بدون نیاز به اجرای دوباره عملکرد ، نتیجه قبلاً محاسبه شده را برمی گرداند.
+</p>
+
+<p>
+این همچنین بدان معنی است که ویژگی computed  زیر هرگز به روز نمی شود ، زیرا  ()Date.now یک وابستگی واکنشی نیست:
+</p>
+
+<pre><code class="language-javascript  line-numbers">computed: {
+  now: function () {
+    return Date.now()
+  }
+}
+</code></pre>
+
+<p>
+در مقایسه ،  method هر زمان که یک رندر دوباره(re-render) رخ دهد عملکرد را انجام می دهد.
+</p>
+
+<p>
+چرا ما نیاز به ذخیره سازی موقت محاسبات داریم؟ تصور کنید که ما یک خاصیت  computed  به نام A  با محاسبات سنگین داشته باشیم  که نیاز به حلقه زدن در یک Array عظیم و انجام محاسبات زیادی دارد. بنابراین ممکن است ما خاصیت های  computed  دیگری داشته باشیم که به نوبه خود به A بستگی داشته باشند . بدون ذخیره کردن ، چند بار بیشتر از حد لازم A را اجرا  می کنیم! در مواردی که نمی خواهید حافظه پنهانی داشته باشید ، به جای آن از method استفاده کنید.
+</p>
+
+<p><br /></p>
+
+<h3>  مقایسه  Computed  با  watch</h3>
+<p>
+Vue روشی عمومی تر برای مشاهده و واکنش به تغییرات داده ها در یک نمونه فراهم می کند به نام خاصیت watch. چنانچه داده هایی دارید که بر اساس برخی داده های دیگر تغییر می کنند ، استفاده از watch می تواند بسیار وسوسه انگیز باشد  به خصوص اگر قبلا با محیط کار AngularJS  کار کرده باشید. با این حال ، اغلب ایده بهتر استفاده از خاصیت computed  می باشد. این مثال را در نظر بگیرید:
+</p>
+
+<pre><code class="language-html  line-numbers">&#x3C;div id=&#x22;demo&#x22;&#x3E;&#123;&#123; fullName &#125;&#125;&#x3C;/div&#x3E;
+</code></pre>
+
+<pre><code class="language-javascript  line-numbers">var vm = new Vue({
+  el: '#demo',
+  data: {
+    firstName: 'Foo',
+    lastName: 'Bar',
+    fullName: 'Foo Bar'
+  },
+  watch: {
+    firstName: function (val) {
+      this.fullName = val + ' ' + this.lastName
+    },
+    lastName: function (val) {
+      this.fullName = this.firstName + ' ' + val
+    }
+  }
+})
+</code></pre>
+
+<p>
+کد بالا ضروری و تکراری است.حال آن را با یک نسخه  computed مقایسه کنید:
+</p>
+
+<pre><code class="language-javascript  line-numbers">var vm = new Vue({
+  el: '#demo',
+  data: {
+    firstName: 'Foo',
+    lastName: 'Bar'
+  },
+  computed: {
+    fullName: function () {
+      return this.firstName + ' ' + this.lastName
+    }
+  }
+})
+</code></pre>
+
+<p>
+خیلی بهتر است ، اینطور نیست؟
+</p>
+
+<p><br /></p>
+
+<h3> افزودن Setter به Computed</h3>
+<p>
+ویژگی های Computed به صورت پیش فرض فقط دارای getter می باشند ، اما می توانید در صورت نیاز به آن یک setter نیز اضافه نمایید:
+</p>
+
+<pre><code class="language-javascript  line-numbers">// ...
+computed: {
+  fullName: {
+    // getter
+    get: function () {
+      return this.firstName + ' ' + this.lastName
+    },
+    // setter
+    set: function (newValue) {
+      var names = newValue.split(' ')
+      this.firstName = names[0]
+      this.lastName = names[names.length - 1]
+    }
+  }
+}
+// ...
+</code></pre>
+
+<p>
+اکنون وقتی vm.fullName = 'John Doe' را اجرا کردید ،setter فراخوانی می شود و vm.firstName و vm.lastName به همین ترتیب به روز می شوند.
+</p>
+
+<p><br /></p>
+
+<h3> بررسی Watchers</h3>
+
+<p>
+در حالی که خاصیت های computed  در بیشتر موارد مناسب تر هستند ، مواقعی وجود دارد که یک watcher (مشاهده گر) سفارشی می تواند ضرورت داشته باشد. به همین دلیل است که Vue یک روش عمومی تر برای واکنش به تغییرات داده ها از طریق watch  ارائه می دهد. بیشترین کاربرد زمانیست که بخواهید عملیات ناهمزمان (asynchronous) در پاسخ به تغییر داده ها ، داشته باشید.
+</p>
+
+<p>
+برای مثال:
+</p>
+
+<pre><code class="language-html  line-numbers">&#x3C;div id=&#x22;watch-example&#x22;&#x3E;
+  &#x3C;p&#x3E;
+    Ask a yes/no question:
+    &#x3C;input v-model=&#x22;question&#x22;&#x3E;
+  &#x3C;/p&#x3E;
+  &#x3C;p&#x3E;&#123;&#123; answer &#125;&#125;&#x3C;/p&#x3E;
+&#x3C;/div&#x3E;
+</code></pre>
+
+<pre><code class="language-html  line-numbers">&#x3C;!-- Since there is already a rich ecosystem of ajax libraries    --&#x3E;
+&#x3C;!-- and collections of general-purpose utility methods, Vue core --&#x3E;
+&#x3C;!-- is able to remain small by not reinventing them. This also   --&#x3E;
+&#x3C;!-- gives you the freedom to use what you&#x27;re familiar with.      --&#x3E;
+&#x3C;script src=&#x22;https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js&#x22;&#x3E;&#x3C;/script&#x3E;
+&#x3C;script src=&#x22;https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js&#x22;&#x3E;&#x3C;/script&#x3E;
+&#x3C;script&#x3E;
+var watchExampleVM = new Vue({
+  el: &#x27;#watch-example&#x27;,
+  data: {
+    question: &#x27;&#x27;,
+    answer: &#x27;I cannot give you an answer until you ask a question!&#x27;
+  },
+  watch: {
+    // whenever question changes, this function will run
+    question: function (newQuestion, oldQuestion) {
+      this.answer = &#x27;Waiting for you to stop typing...&#x27;
+      this.debouncedGetAnswer()
+    }
+  },
+  created: function () {
+    // _.debounce is a function provided by lodash to limit how
+    // often a particularly expensive operation can be run.
+    // In this case, we want to limit how often we access
+    // yesno.wtf/api, waiting until the user has completely
+    // finished typing before making the ajax request. To learn
+    // more about the _.debounce function (and its cousin
+    // _.throttle), visit: https://lodash.com/docs#debounce
+    this.debouncedGetAnswer = _.debounce(this.getAnswer, 500)
+  },
+  methods: {
+    getAnswer: function () {
+      if (this.question.indexOf(&#x27;?&#x27;) === -1) {
+        this.answer = &#x27;Questions usually contain a question mark. ;-)&#x27;
+        return
+      }
+      this.answer = &#x27;Thinking...&#x27;
+      var vm = this
+      axios.get(&#x27;https://yesno.wtf/api&#x27;)
+        .then(function (response) {
+          vm.answer = _.capitalize(response.data.answer)
+        })
+        .catch(function (error) {
+          vm.answer = &#x27;Error! Could not reach the API. &#x27; + error
+        })
+    }
+  }
+})
+&#x3C;/script&#x3E;
+</code></pre>
+
+<p>
+در این حالت ، استفاده از گزینه Watch به ما این امکان را می دهد تا عملیاتی asynchronous  (ناهمزمان) (دسترسی به یک API) را انجام دهیم ، تعداد دفعات عملیات را می توان محدود و حالت های واسطه را تنظیم کنیم تا پاسخ نهایی را بدست آوریم. هیچ یک از این موارد با خاصیت computed  امکان پذیر نیست.
+</p>
+
+<p>
+علاوه بر گزینه Watch ، می توانید از <a href="https://vuejs.org/v2/api/#vm-watch" target="_blank">vm.$watch API</a>  نیز استفاده کنید.
+</p>
+
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+<script>
+var vm = new Vue({
+  el: '#example',
+  data: {
+    message: 'Hello'
+  },
+  computed: {
+    // a computed getter
+    reversedMessage: function () {
+      // `this` points to the vm instance
+      return this.message.split('').reverse().join('')
+    }
+  }
+})
+</script>
+
+
+        </section>
+        
+<hr>
+<p>
+<div>منابع مورد مطالعه جهت جمع آوری این مطلب:</div>
+<div  class="refrencehref">
+        https://vuejs.org/v2/guide/computed.html
+</div>
+</p>
+
+        <hr>
+        <style>
+    #commentsdiv{
+        background-color: #f5f5f5;
+        border: 1px solid #c5c5c5;
+        border-bottom: 0px !important;
+        padding: 12px;
+    }
+    #commentsborder{
+        background-color: #fff;
+        border: 1px solid #c5c5c5;
+        white-space: normal;
+        padding: 20px;
+    }
+</style>
+
+<div id="commentsdiv">نظرات</div>
+<div id="commentsborder">
+<div id="wpac-comment"></div>
+</div>
+<script type="text/javascript">
+wpac_init = window.wpac_init || [];
+wpac_init.push({widget: 'Comment', id: 7878});
+(function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = 'https://embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+})();
+</script>
+
+    </article>
+</div>
+<script src="/assets/js/anchor.min.js"></script>
+<script>
+    anchors.options = {
+        placement: 'left',
+        visible: 'always',
+//        icon: '#',
+    };
+    anchors.add('.anchored h2,.anchored h3,.anchored h4,.anchored h5,.anchored h6');
+
+    (function($){
+        if(window.location.hash) {
+            var hash = decodeURIComponent(window.location.hash);
+            gotohash($(hash).offset().top);
+        }
+        $('a.anchorjs-link').click(function(){
+			gotohash($(this).offset().top);
+        });
+        $('a.anchorjs').click(function(){
+			var id = '#' + $(this).attr('title');
+			gotohash($(id).offset().top);
+        });		
+        function gotohash(top){
+            var headerHeight = 70; // Get fixed header height
+            $('html,body').animate({
+                scrollTop: top - headerHeight
+            }, 20);
+        }
+    })(jQuery);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+   $(document).ready(function (){
+
+     var scrollPosition = getParameterByName('scroll');
+     if(scrollPosition)
+      $(".doc-menu").scrollTop(scrollPosition);
+
+     $('.doc-link').click(function(){
+        var scrollTop = $(".doc-menu").scrollTop();
+        if(scrollTop > 0)
+          $(this).attr("href",this.href + "?scroll=" + $(".doc-menu").scrollTop());
+     });
+
+     function getParameterByName(name, url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+   });
+</script>
+    <div id="back-to-top" role="button" aria-label="Back to top">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+    </div>
+</main>
+<!-- footer -->
+
+<footer class="footer" role="contentinfo" aria-label="Site footer">
+    <div class="navigation" role="navigation" aria-label="Footer links">
+        <a href="http://localhost:4000" class="avatar" role="link" ></a>
+        <ul role="menubar" aria-label="Footer links menubar">
+            <li class="footer-products" role="menuitem" aria-label="Products">
+                تولیدات
+                <ul role="menu" aria-hidden="true" aria-label="Products link">
+                </ul>
+            </li>
+            <li class="footer-blog" role="menuitem" aria-label="Blog">
+                مقالات
+                <ul role="menu" aria-hidden="true" aria-label="Blog link">
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2020/07/03/marriage.html" role="link" aria-label="ازدواج">ازدواج</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2019/10/11/vuejs.html" role="link" aria-label="آموزش vuejs">آموزش vuejs</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/18/laravel.html" role="link" aria-label="آموزش Laravel">آموزش Laravel</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/articles/2017/12/13/laravelcollective.html" role="link" aria-label="معرفی Laravel Collective">معرفی Laravel Collective</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/06/design-patterns.html" role="link" aria-label="معرفی  Design Pattern">معرفی  Design Pattern</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/blog" role="link" aria-label="Read more">Read More</a></li>
+                </ul>
+            </li>
+
+            <li class="footer-connect" role="menuitem" aria-label="Connect">
+                تماس
+                <ul role="menu" aria-hidden="true" aria-label="Connect link">
+                    <li role="listitem" aria-label="Connect link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub">GitHub</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://www.linkedin.com/in/farhad-mirzapour/" target="_blank" role="link" aria-label="Linkedin">Linkedin</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter">Twitter</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="socials"  role="navigation" aria-label="Social links">
+        <ul role="menu" aria-hidden="true" aria-label="Social link">
+            <li role="listitem" aria-label="Social link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://www.linkedin.com/in/farhad-mirzapour-0043b862/" target="_blank" role="link" aria-label="Linkedin"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="/feed.xml" role="link" aria-label="RSS"><i class="fa fa-rss-square" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+    <div class="copyright" role="contentinfo" aria-label="Copyright">
+        <p>&copy; <script type="text/javascript">document.write(new Date().getFullYear());</script> Farhad Mirzapour</p>
+    </div>
+</footer>
+
+<!-- scripts -->
+<script src="/assets/js/hamburger-menu.js"></script>
+
+<script src="/assets/js/elevator.min.js"></script>
+<script src="/assets/js/back-to-top.js"></script>
+<script src="/assets/prisma/prism.js"></script>
+<!-- google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108878564-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-108878564-1');
+</script>
+
+</body>
+</html>

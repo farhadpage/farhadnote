@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="">
+<!-- head -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>ساختار کلاس در PHP | مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="ساختار کلاس در PHP" />
+<meta name="author" content="Farhad Mirzapour" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="ساختار کلاس ها در php یک کلاس با کلمه کلیدی (class) بوجود میاد و با یک اسپیس و تایپ یک اسم، شما اسم اون کلاس رو تعریف میکنید و در نهایت با قرار دادن براکت های باز و بسته ( { }&nbsp;) کار یک class رو شروع میکنید . دقیقا مثل مثال زیر : class MyClass { // class propertys and methods go here; } بعد از به وجود آوردن کلاس ما با استفاده از کلمه کلیدی new می تونیم از اون کلاس استفاده کنیم و یک شی (object) با همون کلاس بسازیم . در زیر میتونید این روش رو ببینید: $obj = new MyClass; شما با قرار دادن شی (obj$) در داخل var_dump میتونید محتوای کلاس رو مشاهده کنید: var_dump($obj); معرفی property ها برای اضافه کردن اطلاعات در کلاس ها از property ها استفاده میشه . کار اونها دقیقا شبیه متغیرها در php معمولیه و تنها تفاوتشون اینکه قبل از تایپ اسم property از کلمات کلیدی private ,&nbsp;protected و public استفاده میشه ، این کلمات کلیدی رو در کپسوله سازی (پنهان سازی) بطور کامل توضیح می دم فقط فعلا در همین حد بدونید که این کلمات باید برای تعریف property ها و method ها قبل از اسم اونها قرار بگیرند: class MyClass { public $name = &#39;john doe&#39;; } $obj = new MyClass; var_dump($obj); در بالا با استفاده از کلمه public تعیین کردیم که property مون برای استفاده در یک object قابل مشاهدست و همینطور property به اسم name$ تعریف و بعد اون رو مقدار دهی کردیم و بعد با تعریف یک شی و قرار دادن اون در var_dump اطلاعات کامل رو برگشت دادیم . شما به راحتی میتونید بعد از تعریف شی دوباره property رو مقداردهی کنید البته تنها در حالتی که اون property از نوع public باشه و همینطور به راحتی میتونید اون رو با استفاده از echo چاپ کنید . البته برای چاپ یا مقداردهی دوباره ، نیاز به دسترسی به اون property از طریق object دارید برای اینکار بعد از تایپ اسم object با قرار دادن یک فلش ( &lt;- ) و تایپ اسم property میتونید به اون دسترسی داشته باشید . به مثال زیر دقت کنید: class MyClass { public $name = &#39;John Doe&#39;; } $obj = new MyClass; echo $obj-&gt;name . &#39;&lt;/br &gt;&#39;; $obj-&gt;name = &#39;Hesam Mousavi&#39;; echo $obj-&gt;name ; معرفی method ها method ها دقیقا کار توابع رو در کلاس ها انجام میدن یعنی تفاوتی چندانی با هم ندارن method ها هم با قرار گرفتن کلمه کلیدی&nbsp;private&nbsp;,&nbsp;protected&nbsp;و&nbsp;public قبل از function تعریف میشن . یک method میتونه به شی ها کمک کنه که در داخل کلاس ها عملیاتی رو انجام بدن البته این عملیات توسط متدها مشخص میشه .&nbsp; برای مثال متدهایی برای set و get کردن اطلاعات property داخل کلاس می نویسیم . به کد زیر دقت کنید: class MyClass { public $name = &#39;John Doe&#39;; public function setProperty($newval) { $this-&gt;name = $newval; } public function getProperty() { return $this-&gt;name . &quot;&lt;/br &gt;&quot;; } } $obj = new MyClass; echo $obj-&gt;name; نکته : در کد بالا ما در دو جا از this$ استفاده کردیم و بعد با یک فلش و قرار دادن اسم property بهش دسترسی پیدا کردیم . در اصل این طریقه دسترسی به property ها و method ها در داخل یک method است . چون بطور معمولی شما نمی تونید با تایپ فقط اسم property یا method بهش دسترسی داشته باشید تنها زمانی که از this$ و با روش بالا عمل کنید میتونید به یک property و method از یک کلاس داخل یک method دسترسی پیدا کنید . در کد بالا من فقط با قرار دادن obj-&gt;name$ اومدم مقدار این property رو چاپ کردم اما در مثال زیر من ابتدا من با استفاده از متد getProperty میام مقدار فعلی name$ رو چاپ میکنم و بعد در مرحله بعدی با استفاده از متد setProperty و ارسال یک مقدار به عنوان آرگومان میام یک مقدار جدید برای name$ تعیین میکنم و بعد دوباره با چاپ کردن متد getProperty میام مقدار فعلیش رو چاپ می کنیم . این یک روش مهم برای set و get کردن property هاست که به زودی در قسمت بعد دلیلش رو هم میفهمید ولی فعلا از دید امتحان کردن یک متد بهش نگاه کنید: class MyClass { public $name = &quot;John Doe&quot;; public function setProperty($newval) { $this-&gt;name = $newval; } public function getProperty() { return $this-&gt;name . &quot;&quot;; } } $obj = new MyClass; echo $obj-&gt;getProperty(); // Get the property value $obj-&gt;setProperty(&quot;Hesam Mousavi&quot;); // Set a new one echo $obj-&gt;getProperty(); // Read it out again to show the change نتیجه زیر حاصل از اجرای کد بالاست: John Doe Hesam Mousavi ثابت ها یک ثابت چیزی شبیه به یک متغیر است، که می تواند یک مقدار را در خود نگاه دارد. یک بار که شما یک ثابت را تعریف کنید آن ثابت دیگر تغییر نخواهد کرد. class MyClass { const requiredMargin = 1.7; function __construct($incomingValue) { // Statements here run every time // an instance of the class // is created. } } در این کلاس، requiredMargin یک ثابت است. این ثابت با استفاده از کلمه کلیدی const اعلان شده است و تحت هیچ شرایطی مقدار آن بع غیر از 1.7 تغییر نخواهد کرد. توجه داشته باشید که نام ثابت پیشوند $ مشابه آنچه در مورد متغیرها به کار می رود ندارد. کلمه کلیدی static اعلان اعضا یا متدهای کلاس به صورت static آنها را بدون نیاز به نمونه سازی از کلاس در دسترس می کند. یک عضو اعلان شده به صورت static نمی تواند با یک شی کلاس نمونه سازی شده در دسترس باشد(البته از طریق یک متد استاتیک می تواند). &lt;?php class Foo { public static $my_static = &#39;foo&#39;; public function staticValue() { return self::$my_static; } } print Foo::$my_static . &quot;\n&quot;; $foo = new Foo(); print $foo-&gt;staticValue() . &quot;\n&quot;;" />
+<meta property="og:description" content="ساختار کلاس ها در php یک کلاس با کلمه کلیدی (class) بوجود میاد و با یک اسپیس و تایپ یک اسم، شما اسم اون کلاس رو تعریف میکنید و در نهایت با قرار دادن براکت های باز و بسته ( { }&nbsp;) کار یک class رو شروع میکنید . دقیقا مثل مثال زیر : class MyClass { // class propertys and methods go here; } بعد از به وجود آوردن کلاس ما با استفاده از کلمه کلیدی new می تونیم از اون کلاس استفاده کنیم و یک شی (object) با همون کلاس بسازیم . در زیر میتونید این روش رو ببینید: $obj = new MyClass; شما با قرار دادن شی (obj$) در داخل var_dump میتونید محتوای کلاس رو مشاهده کنید: var_dump($obj); معرفی property ها برای اضافه کردن اطلاعات در کلاس ها از property ها استفاده میشه . کار اونها دقیقا شبیه متغیرها در php معمولیه و تنها تفاوتشون اینکه قبل از تایپ اسم property از کلمات کلیدی private ,&nbsp;protected و public استفاده میشه ، این کلمات کلیدی رو در کپسوله سازی (پنهان سازی) بطور کامل توضیح می دم فقط فعلا در همین حد بدونید که این کلمات باید برای تعریف property ها و method ها قبل از اسم اونها قرار بگیرند: class MyClass { public $name = &#39;john doe&#39;; } $obj = new MyClass; var_dump($obj); در بالا با استفاده از کلمه public تعیین کردیم که property مون برای استفاده در یک object قابل مشاهدست و همینطور property به اسم name$ تعریف و بعد اون رو مقدار دهی کردیم و بعد با تعریف یک شی و قرار دادن اون در var_dump اطلاعات کامل رو برگشت دادیم . شما به راحتی میتونید بعد از تعریف شی دوباره property رو مقداردهی کنید البته تنها در حالتی که اون property از نوع public باشه و همینطور به راحتی میتونید اون رو با استفاده از echo چاپ کنید . البته برای چاپ یا مقداردهی دوباره ، نیاز به دسترسی به اون property از طریق object دارید برای اینکار بعد از تایپ اسم object با قرار دادن یک فلش ( &lt;- ) و تایپ اسم property میتونید به اون دسترسی داشته باشید . به مثال زیر دقت کنید: class MyClass { public $name = &#39;John Doe&#39;; } $obj = new MyClass; echo $obj-&gt;name . &#39;&lt;/br &gt;&#39;; $obj-&gt;name = &#39;Hesam Mousavi&#39;; echo $obj-&gt;name ; معرفی method ها method ها دقیقا کار توابع رو در کلاس ها انجام میدن یعنی تفاوتی چندانی با هم ندارن method ها هم با قرار گرفتن کلمه کلیدی&nbsp;private&nbsp;,&nbsp;protected&nbsp;و&nbsp;public قبل از function تعریف میشن . یک method میتونه به شی ها کمک کنه که در داخل کلاس ها عملیاتی رو انجام بدن البته این عملیات توسط متدها مشخص میشه .&nbsp; برای مثال متدهایی برای set و get کردن اطلاعات property داخل کلاس می نویسیم . به کد زیر دقت کنید: class MyClass { public $name = &#39;John Doe&#39;; public function setProperty($newval) { $this-&gt;name = $newval; } public function getProperty() { return $this-&gt;name . &quot;&lt;/br &gt;&quot;; } } $obj = new MyClass; echo $obj-&gt;name; نکته : در کد بالا ما در دو جا از this$ استفاده کردیم و بعد با یک فلش و قرار دادن اسم property بهش دسترسی پیدا کردیم . در اصل این طریقه دسترسی به property ها و method ها در داخل یک method است . چون بطور معمولی شما نمی تونید با تایپ فقط اسم property یا method بهش دسترسی داشته باشید تنها زمانی که از this$ و با روش بالا عمل کنید میتونید به یک property و method از یک کلاس داخل یک method دسترسی پیدا کنید . در کد بالا من فقط با قرار دادن obj-&gt;name$ اومدم مقدار این property رو چاپ کردم اما در مثال زیر من ابتدا من با استفاده از متد getProperty میام مقدار فعلی name$ رو چاپ میکنم و بعد در مرحله بعدی با استفاده از متد setProperty و ارسال یک مقدار به عنوان آرگومان میام یک مقدار جدید برای name$ تعیین میکنم و بعد دوباره با چاپ کردن متد getProperty میام مقدار فعلیش رو چاپ می کنیم . این یک روش مهم برای set و get کردن property هاست که به زودی در قسمت بعد دلیلش رو هم میفهمید ولی فعلا از دید امتحان کردن یک متد بهش نگاه کنید: class MyClass { public $name = &quot;John Doe&quot;; public function setProperty($newval) { $this-&gt;name = $newval; } public function getProperty() { return $this-&gt;name . &quot;&quot;; } } $obj = new MyClass; echo $obj-&gt;getProperty(); // Get the property value $obj-&gt;setProperty(&quot;Hesam Mousavi&quot;); // Set a new one echo $obj-&gt;getProperty(); // Read it out again to show the change نتیجه زیر حاصل از اجرای کد بالاست: John Doe Hesam Mousavi ثابت ها یک ثابت چیزی شبیه به یک متغیر است، که می تواند یک مقدار را در خود نگاه دارد. یک بار که شما یک ثابت را تعریف کنید آن ثابت دیگر تغییر نخواهد کرد. class MyClass { const requiredMargin = 1.7; function __construct($incomingValue) { // Statements here run every time // an instance of the class // is created. } } در این کلاس، requiredMargin یک ثابت است. این ثابت با استفاده از کلمه کلیدی const اعلان شده است و تحت هیچ شرایطی مقدار آن بع غیر از 1.7 تغییر نخواهد کرد. توجه داشته باشید که نام ثابت پیشوند $ مشابه آنچه در مورد متغیرها به کار می رود ندارد. کلمه کلیدی static اعلان اعضا یا متدهای کلاس به صورت static آنها را بدون نیاز به نمونه سازی از کلاس در دسترس می کند. یک عضو اعلان شده به صورت static نمی تواند با یک شی کلاس نمونه سازی شده در دسترس باشد(البته از طریق یک متد استاتیک می تواند). &lt;?php class Foo { public static $my_static = &#39;foo&#39;; public function staticValue() { return self::$my_static; } } print Foo::$my_static . &quot;\n&quot;; $foo = new Foo(); print $foo-&gt;staticValue() . &quot;\n&quot;;" />
+<link rel="canonical" href="http://localhost:4000/documentation/object-oriented-programming-in-php/class-structure" />
+<meta property="og:url" content="http://localhost:4000/documentation/object-oriented-programming-in-php/class-structure" />
+<meta property="og:site_name" content="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-11-01T20:53:42+03:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="ساختار کلاس در PHP" />
+<meta name="twitter:site" content="@farhadmirzapour" />
+<meta name="twitter:creator" content="@Farhad Mirzapour" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"ساختار کلاس در PHP","url":"http://localhost:4000/documentation/object-oriented-programming-in-php/class-structure","datePublished":"2017-11-01T20:53:42+03:30","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"dateModified":"2017-11-01T20:53:42+03:30","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/documentation/object-oriented-programming-in-php/class-structure"},"author":{"@type":"Person","name":"Farhad Mirzapour"},"description":"ساختار کلاس ها در php یک کلاس با کلمه کلیدی (class) بوجود میاد و با یک اسپیس و تایپ یک اسم، شما اسم اون کلاس رو تعریف میکنید و در نهایت با قرار دادن براکت های باز و بسته ( { }&nbsp;) کار یک class رو شروع میکنید . دقیقا مثل مثال زیر : class MyClass { // class propertys and methods go here; } بعد از به وجود آوردن کلاس ما با استفاده از کلمه کلیدی new می تونیم از اون کلاس استفاده کنیم و یک شی (object) با همون کلاس بسازیم . در زیر میتونید این روش رو ببینید: $obj = new MyClass; شما با قرار دادن شی (obj$) در داخل var_dump میتونید محتوای کلاس رو مشاهده کنید: var_dump($obj); معرفی property ها برای اضافه کردن اطلاعات در کلاس ها از property ها استفاده میشه . کار اونها دقیقا شبیه متغیرها در php معمولیه و تنها تفاوتشون اینکه قبل از تایپ اسم property از کلمات کلیدی private ,&nbsp;protected و public استفاده میشه ، این کلمات کلیدی رو در کپسوله سازی (پنهان سازی) بطور کامل توضیح می دم فقط فعلا در همین حد بدونید که این کلمات باید برای تعریف property ها و method ها قبل از اسم اونها قرار بگیرند: class MyClass { public $name = &#39;john doe&#39;; } $obj = new MyClass; var_dump($obj); در بالا با استفاده از کلمه public تعیین کردیم که property مون برای استفاده در یک object قابل مشاهدست و همینطور property به اسم name$ تعریف و بعد اون رو مقدار دهی کردیم و بعد با تعریف یک شی و قرار دادن اون در var_dump اطلاعات کامل رو برگشت دادیم . شما به راحتی میتونید بعد از تعریف شی دوباره property رو مقداردهی کنید البته تنها در حالتی که اون property از نوع public باشه و همینطور به راحتی میتونید اون رو با استفاده از echo چاپ کنید . البته برای چاپ یا مقداردهی دوباره ، نیاز به دسترسی به اون property از طریق object دارید برای اینکار بعد از تایپ اسم object با قرار دادن یک فلش ( &lt;- ) و تایپ اسم property میتونید به اون دسترسی داشته باشید . به مثال زیر دقت کنید: class MyClass { public $name = &#39;John Doe&#39;; } $obj = new MyClass; echo $obj-&gt;name . &#39;&lt;/br &gt;&#39;; $obj-&gt;name = &#39;Hesam Mousavi&#39;; echo $obj-&gt;name ; معرفی method ها method ها دقیقا کار توابع رو در کلاس ها انجام میدن یعنی تفاوتی چندانی با هم ندارن method ها هم با قرار گرفتن کلمه کلیدی&nbsp;private&nbsp;,&nbsp;protected&nbsp;و&nbsp;public قبل از function تعریف میشن . یک method میتونه به شی ها کمک کنه که در داخل کلاس ها عملیاتی رو انجام بدن البته این عملیات توسط متدها مشخص میشه .&nbsp; برای مثال متدهایی برای set و get کردن اطلاعات property داخل کلاس می نویسیم . به کد زیر دقت کنید: class MyClass { public $name = &#39;John Doe&#39;; public function setProperty($newval) { $this-&gt;name = $newval; } public function getProperty() { return $this-&gt;name . &quot;&lt;/br &gt;&quot;; } } $obj = new MyClass; echo $obj-&gt;name; نکته : در کد بالا ما در دو جا از this$ استفاده کردیم و بعد با یک فلش و قرار دادن اسم property بهش دسترسی پیدا کردیم . در اصل این طریقه دسترسی به property ها و method ها در داخل یک method است . چون بطور معمولی شما نمی تونید با تایپ فقط اسم property یا method بهش دسترسی داشته باشید تنها زمانی که از this$ و با روش بالا عمل کنید میتونید به یک property و method از یک کلاس داخل یک method دسترسی پیدا کنید . در کد بالا من فقط با قرار دادن obj-&gt;name$ اومدم مقدار این property رو چاپ کردم اما در مثال زیر من ابتدا من با استفاده از متد getProperty میام مقدار فعلی name$ رو چاپ میکنم و بعد در مرحله بعدی با استفاده از متد setProperty و ارسال یک مقدار به عنوان آرگومان میام یک مقدار جدید برای name$ تعیین میکنم و بعد دوباره با چاپ کردن متد getProperty میام مقدار فعلیش رو چاپ می کنیم . این یک روش مهم برای set و get کردن property هاست که به زودی در قسمت بعد دلیلش رو هم میفهمید ولی فعلا از دید امتحان کردن یک متد بهش نگاه کنید: class MyClass { public $name = &quot;John Doe&quot;; public function setProperty($newval) { $this-&gt;name = $newval; } public function getProperty() { return $this-&gt;name . &quot;&quot;; } } $obj = new MyClass; echo $obj-&gt;getProperty(); // Get the property value $obj-&gt;setProperty(&quot;Hesam Mousavi&quot;); // Set a new one echo $obj-&gt;getProperty(); // Read it out again to show the change نتیجه زیر حاصل از اجرای کد بالاست: John Doe Hesam Mousavi ثابت ها یک ثابت چیزی شبیه به یک متغیر است، که می تواند یک مقدار را در خود نگاه دارد. یک بار که شما یک ثابت را تعریف کنید آن ثابت دیگر تغییر نخواهد کرد. class MyClass { const requiredMargin = 1.7; function __construct($incomingValue) { // Statements here run every time // an instance of the class // is created. } } در این کلاس، requiredMargin یک ثابت است. این ثابت با استفاده از کلمه کلیدی const اعلان شده است و تحت هیچ شرایطی مقدار آن بع غیر از 1.7 تغییر نخواهد کرد. توجه داشته باشید که نام ثابت پیشوند $ مشابه آنچه در مورد متغیرها به کار می رود ندارد. کلمه کلیدی static اعلان اعضا یا متدهای کلاس به صورت static آنها را بدون نیاز به نمونه سازی از کلاس در دسترس می کند. یک عضو اعلان شده به صورت static نمی تواند با یک شی کلاس نمونه سازی شده در دسترس باشد(البته از طریق یک متد استاتیک می تواند). &lt;?php class Foo { public static $my_static = &#39;foo&#39;; public function staticValue() { return self::$my_static; } } print Foo::$my_static . &quot;\\n&quot;; $foo = new Foo(); print $foo-&gt;staticValue() . &quot;\\n&quot;;","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="stylesheet" href="/assets/prisma/prism.css">
+    <!-- favicons and rss -->
+    <link rel="alternate" type="application/rss+xml" title="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" href="/feed.xml">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- header -->
+<header class="header" role="banner" aria-label="Header">
+    <button class="hamburger-button" onclick="hamburgerMenu();" role="button" aria-label="Hamburger menu button">
+        <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    </button>
+    <a href="/" class="logo" role="link" aria-label="Home">
+        <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo"/>
+    </a>
+    <nav class="navigation" role="navigation" aria-label="Navigation">
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item">
+                <a href="/" class="logo" role="menuitem" aria-label="Home">
+                    <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo"/>
+                </a>
+            </li>
+            
+            <li role="menuitem"><a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a></li>
+            
+            <li role="menuitem"><a href="/contactus" role="menuitem" aria-label="تماس">تماس</a></li>
+            
+        </ul>
+    </nav>
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox"/>
+        </form>
+    </div>
+</header>
+
+<nav id="hamburger-menu" role="navigation" aria-label="Hamburger menu">
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox"/>
+        </form>
+    </div>
+    <div class="home-nav" role="navigation" aria-label="Site navigation">
+        <a href="/" role="menuitem" aria-label="Home">صفحه اصلی</a>
+        
+        <a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a>
+        
+        <a href="/contactus" role="menuitem" aria-label="تماس">تماس</a>
+        
+    </div>
+
+    
+    <div class="doc-nav" role="navigation" aria-label="Documentation navigation">
+        <p role="presentation" aria-label="Category name">
+            آموزش شی گرایی در php
+        </p>
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/2017/11/01/object-oriented-programming-in-php.html" class="doc-link" role="link" aria-label="ساختار کلاس در PHP">مقدمه</a></li>
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/object-oriented-programming-in-php/class-structure" class="doc-link" role="link" aria-label="ساختار کلاس در PHP">ساختار کلاس در PHP</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/object-oriented-programming-in-php/encapsulation" class="doc-link" role="link" aria-label="Encapsulation (کپسوله سازی)">Encapsulation (کپسوله سازی)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/object-oriented-programming-in-php/inheritance" class="doc-link" role="link" aria-label="Inheritance (وراثت)">Inheritance (وراثت)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/object-oriented-programming-in-php/magic-methods" class="doc-link" role="link" aria-label="متدهای جادوئی در شی گرایی php">متدهای جادوئی در شی گرایی php</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/object-oriented-programming-in-php/abstract-class" class="doc-link" role="link" aria-label="کلاس های Abstract (انتزاعی)">کلاس های Abstract (انتزاعی)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/object-oriented-programming-in-php/interface" class="doc-link" role="link" aria-label="interface در PHP">interface در PHP</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/object-oriented-programming-in-php/polymorphism" class="doc-link" role="link" aria-label="چندریختی (Polymorphism)">چندریختی (Polymorphism)</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </ul>
+    </div>
+    
+</nav>
+<!-- main content -->
+<main class="container" role="main">
+    <div class="rcdoccontainerimg">
+    <div class="rc-DRTVBanner-new rc-DRTVBanner-bigsize">
+    <div style="background: url('/images/original/phpOOPTutorialPAGE.png'); " class="blurred_img"></div>
+    <div class="mask"></div>
+    <div class="bot"></div>
+    <div class="over">
+        <div class="container-rc">
+            <img class="image" src="/images/original/phpOOPTutorialPAGE.png" alt="ساختار کلاس در PHP" height="190">
+            <div class="desktop-banner-container">
+                <h1 class="display-5-text headline">
+                    
+                    
+                    آموزش شی گرایی در php
+                    </h1>
+                <!--<div class="tagslist"><ul class='lyda-tag-list'><li class='lyda-tag-list-title'>برچسب ها</li><li><a class="tags" href="/tag/لاراول">#لاراول</a></li><li><a class="tags" href="/tag/لاراول-5-5">#لاراول 5.5</a></li></ul></div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="bread-crumb">-->
+<!--<div class="container   ">-->
+<!--<div class="pull-right ">-->
+<!--<div class="bread-button text-custom b-left">-->
+<!--انتشار : 2 ماه پیش-->
+<!--</div>-->
+<!--<a href="/category/article/" class="bread-button back-to-all b-left hidden-xs">همه مقالات</a>-->
+<!--<div class="cat-lable">-->
+<!--<a href="/category/article/laravel/">-->
+<!--لاراول-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<script>
+    $(window).scroll(function(){
+        var sticky = $('.doc-menu'),
+            scroll = $(window).scrollTop();
+        if (scroll >= 101) {sticky.addClass('doc-header-scroll'); }
+        else {sticky.removeClass('doc-header-scroll'); };
+    });
+</script>
+</div>
+<div class="doc-container">
+
+    <div class="doc-menu">
+        
+        <ul>
+            <li>
+                <a  href="/2017/11/01/object-oriented-programming-in-php.html" class="active doc-link" role="link">
+                    مقدمه
+                </a>
+            </li>
+            
+            
+            <li>
+                <a title="ساختار کلاس در PHP" href="/documentation/object-oriented-programming-in-php/class-structure" class="active doc-link" role="link">
+                    ساختار کلاس در PHP
+                </a>
+            </li>
+            
+            
+            
+            <li>
+                <a title="Encapsulation (کپسوله سازی)" href="/documentation/object-oriented-programming-in-php/encapsulation" class="active doc-link" role="link">
+                    Encapsulation (کپسوله سازی)
+                </a>
+            </li>
+            
+            
+            
+            <li>
+                <a title="Inheritance (وراثت)" href="/documentation/object-oriented-programming-in-php/inheritance" class="active doc-link" role="link">
+                    Inheritance (وراثت)
+                </a>
+            </li>
+            
+            
+            
+            <li>
+                <a title="متدهای جادوئی در شی گرایی php" href="/documentation/object-oriented-programming-in-php/magic-methods" class="active doc-link" role="link">
+                    متدهای جادوئی در شی گرایی php
+                </a>
+            </li>
+            
+            
+            
+            <li>
+                <a title="کلاس های Abstract (انتزاعی)" href="/documentation/object-oriented-programming-in-php/abstract-class" class="active doc-link" role="link">
+                    کلاس های Abstract (انتزاعی)
+                </a>
+            </li>
+            
+            
+            
+            <li>
+                <a title="interface در PHP" href="/documentation/object-oriented-programming-in-php/interface" class="active doc-link" role="link">
+                    interface در PHP
+                </a>
+            </li>
+            
+            
+            
+            <li>
+                <a title="چندریختی (Polymorphism)" href="/documentation/object-oriented-programming-in-php/polymorphism" class="active doc-link" role="link">
+                    چندریختی (Polymorphism)
+                </a>
+            </li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </ul>
+        
+    </div>
+
+    <article class="documentation">
+        <header class="doc-header">
+            <div class="time">
+                تاریخ :      چهارشنبه 10 آبان 1396
+            </div>
+            
+        </header>
+        <section class="anchored">
+            <h3>ساختار کلاس ها</h3>
+<p>در php یک کلاس با کلمه کلیدی (<span style="font-size: 16px;"><strong><span class="notespan">class</span></strong></span>) بوجود میاد و با یک اسپیس و تایپ یک اسم، شما اسم اون کلاس رو تعریف میکنید و در نهایت با قرار دادن براکت های باز و بسته ( <span style="font-size: 16px;"><strong><span class="notespan">{ }</span></strong></span>&nbsp;) کار یک class رو شروع میکنید . دقیقا مثل مثال زیر :
+</p>
+
+<pre><code class="language-php  line-numbers">class MyClass
+{
+  // class propertys and methods go here;
+}
+</code></pre>
+
+<p>
+بعد از به وجود آوردن کلاس ما با استفاده از کلمه کلیدی new می تونیم از اون کلاس استفاده کنیم و یک شی (object) با همون کلاس بسازیم . در زیر میتونید این روش رو ببینید:
+</p>
+<pre><code class="language-php  line-numbers">$obj = new MyClass;</code></pre>
+
+<p>
+شما با قرار دادن شی (obj$) در داخل var_dump میتونید محتوای کلاس رو مشاهده کنید:
+</p>
+<pre><code class="language-php  line-numbers">var_dump($obj);</code></pre>
+
+<h3>معرفی property ها</h3>
+<p>برای اضافه کردن اطلاعات در کلاس ها از <span style="font-size: 16px;"><strong><span class="notespan">property </span></strong></span>ها استفاده میشه . کار اونها دقیقا شبیه متغیرها در php معمولیه و تنها تفاوتشون اینکه قبل از تایپ اسم <span class="notespan"><span style="font-size: 16px;"><strong>property </strong></span></span>از کلمات کلیدی <strong><span class="notespan"><span style="font-size: 16px;">private </span></span></strong>,&nbsp;<span style="font-size: 16px;"><span class="notespan"><strong>protected </strong></span></span>و <strong><span class="notespan"><span style="font-size: 16px;">public </span></span></strong>استفاده میشه ، این کلمات کلیدی رو در کپسوله سازی (پنهان سازی) بطور کامل توضیح می دم فقط فعلا در همین حد بدونید که این کلمات باید برای تعریف <span style="font-size: 16px;"><strong><span class="notespan">property </span></strong></span>ها و <span style="font-size: 16px;"><strong><span class="notespan">method </span></strong></span>ها قبل از اسم اونها قرار بگیرند:
+</p>
+
+<pre><code class="language-php  line-numbers">class MyClass
+{
+  public $name = 'john doe';
+}
+
+$obj = new MyClass;
+
+var_dump($obj);
+</code></pre>
+
+<p>
+در بالا با استفاده از کلمه public تعیین کردیم که property مون برای استفاده در یک object قابل مشاهدست و همینطور property به اسم name$ تعریف و بعد اون رو مقدار دهی کردیم و بعد با تعریف یک شی و قرار دادن اون در var_dump اطلاعات کامل رو برگشت دادیم .
+</p>
+
+<p>
+شما به راحتی میتونید بعد از تعریف شی دوباره property رو مقداردهی کنید البته تنها در حالتی که اون property از نوع public باشه و همینطور به راحتی میتونید اون رو با استفاده از echo چاپ کنید . البته برای چاپ یا مقداردهی دوباره ، نیاز به دسترسی به اون property از طریق object دارید برای اینکار بعد از تایپ اسم object با قرار دادن یک فلش ( &lt;- ) و تایپ اسم property میتونید به اون دسترسی داشته باشید . به مثال زیر دقت کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">class MyClass
+{
+  public $name = 'John Doe';
+}
+
+$obj = new MyClass;
+
+echo $obj-&gt;name . '&lt;/br &gt;';
+
+$obj-&gt;name = 'Hesam Mousavi';
+
+echo $obj-&gt;name ;
+</code></pre>
+
+<h3>معرفی method ها</h3>
+<p><strong><span class="notespan"><span style="font-size: 16px;">method</span></span></strong> ها دقیقا کار توابع رو در کلاس ها انجام میدن یعنی تفاوتی چندانی با هم ندارن <span class="notespan"><span style="font-size: 16px;"><strong>method </strong></span></span>ها هم با قرار گرفتن کلمه کلیدی&nbsp;<strong><span class="notespan"><span style="font-size: 16px;">private&nbsp;</span></span></strong>,&nbsp;<span style="font-size: 16px;"><span class="notespan"><strong>protected&nbsp;</strong></span></span>و&nbsp;<strong><span class="notespan"><span style="font-size: 16px;">public</span></span></strong> قبل از <span style="font-size: 16px;"><strong><span class="notespan">function </span></strong></span>تعریف میشن . یک <span style="font-size: 16px;"><span class="notespan"><strong>method</strong></span></span> میتونه به شی ها کمک کنه که در داخل کلاس ها عملیاتی رو انجام بدن البته این عملیات توسط متدها مشخص میشه .&nbsp;
+</p>
+
+<p>
+برای مثال متدهایی برای set و get کردن اطلاعات property داخل کلاس می نویسیم . به کد زیر دقت کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">class MyClass
+{
+  public $name = 'John Doe';
+
+  public function setProperty($newval)
+  {
+     $this-&gt;name = $newval;
+  }
+
+  public function getProperty()
+  {
+     return $this-&gt;name . "&lt;/br &gt;";
+  }
+
+}
+
+$obj = new MyClass;
+
+echo $obj-&gt;name;
+</code></pre>
+
+<p>
+نکته : در کد بالا ما در دو جا از this$ استفاده کردیم و بعد با یک فلش و قرار دادن اسم property بهش دسترسی پیدا کردیم . در اصل این طریقه دسترسی به property ها و  method ها در داخل یک  method است . چون بطور معمولی شما نمی تونید با تایپ فقط اسم property یا method بهش دسترسی داشته باشید تنها زمانی که از this$ و با روش بالا عمل کنید میتونید به یک  property و  method از یک کلاس داخل یک method دسترسی پیدا کنید .
+</p>
+
+<p>
+در کد بالا من فقط با قرار دادن obj-&gt;name$ اومدم مقدار این  property رو چاپ کردم اما در مثال زیر من ابتدا من با استفاده از متد getProperty میام مقدار فعلی name$ رو چاپ میکنم و بعد در مرحله بعدی با استفاده از متد setProperty و ارسال یک مقدار به عنوان آرگومان میام یک مقدار جدید برای name$ تعیین میکنم و بعد دوباره با چاپ کردن متد getProperty میام مقدار فعلیش رو چاپ می کنیم . این یک روش مهم برای set و get کردن  property هاست که به زودی در قسمت بعد دلیلش رو هم میفهمید ولی فعلا از دید امتحان کردن یک متد بهش نگاه کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">class MyClass
+{
+  public $name = "John Doe";
+
+  public function setProperty($newval)
+  {
+      $this-&gt;name = $newval;
+  }
+
+  public function getProperty()
+  {
+      return $this-&gt;name . "<br />";
+  }
+}
+
+$obj = new MyClass;
+
+echo $obj-&gt;getProperty(); // Get the property value
+
+$obj-&gt;setProperty("Hesam Mousavi"); // Set a new one
+
+echo $obj-&gt;getProperty(); // Read it out again to show the change
+</code></pre>
+
+<p>
+نتیجه زیر حاصل از اجرای کد بالاست:
+</p>
+
+<pre><code class="language-php ">John Doe
+Hesam Mousavi
+</code></pre>
+
+<h3>ثابت ها</h3>
+
+<p>
+یک ثابت چیزی شبیه به یک متغیر است، که می تواند یک مقدار را در خود نگاه دارد. یک بار که شما یک ثابت را تعریف کنید آن ثابت دیگر تغییر نخواهد کرد.
+</p>
+
+<pre><code class="language-php ">class MyClass {
+    const requiredMargin = 1.7;
+
+    function __construct($incomingValue) {
+        // Statements here run every time
+        // an instance of the class
+        // is created.
+    }
+}
+</code></pre>
+
+<p>
+در این کلاس، requiredMargin یک ثابت است. این ثابت با استفاده از کلمه کلیدی const اعلان شده است و تحت هیچ شرایطی مقدار آن بع غیر از 1.7 تغییر نخواهد کرد. توجه داشته باشید که نام ثابت پیشوند $ مشابه آنچه در مورد متغیرها به کار می رود ندارد.
+</p>
+
+<h3>
+کلمه کلیدی static
+</h3>
+
+<p>
+اعلان اعضا یا متدهای کلاس به صورت static آنها را بدون نیاز به نمونه سازی از کلاس در دسترس می کند. یک عضو اعلان شده به صورت static نمی تواند با یک شی کلاس نمونه سازی شده در دسترس باشد(البته از طریق یک متد استاتیک می تواند).
+</p>
+
+<pre><code class="language-php ">&lt;?php
+class Foo {
+    public static $my_static = 'foo';
+
+    public function staticValue() {
+        return self::$my_static;
+    }
+}
+
+print Foo::$my_static . "\n";
+$foo = new Foo();
+
+print $foo-&gt;staticValue() . "\n";
+</code></pre>
+
+        </section>
+        
+<hr>
+<p>
+<div>منابع مورد مطالعه جهت جمع آوری این مطلب:</div>
+<div  class="refrencehref">
+        https://roocket.ir/articles/object-oriented-programming-in-php-part-1 <br> https://bshafiei.ir/Article_view/index/1XvocDexH9mhWT/برنامه-نویسی-شی-گرا-در-PHP
+</div>
+</p>
+
+        <hr>
+        <style>
+    #commentsdiv{
+        background-color: #f5f5f5;
+        border: 1px solid #c5c5c5;
+        border-bottom: 0px !important;
+        padding: 12px;
+    }
+    #commentsborder{
+        background-color: #fff;
+        border: 1px solid #c5c5c5;
+        white-space: normal;
+        padding: 20px;
+    }
+</style>
+
+<div id="commentsdiv">نظرات</div>
+<div id="commentsborder">
+<div id="wpac-comment"></div>
+</div>
+<script type="text/javascript">
+wpac_init = window.wpac_init || [];
+wpac_init.push({widget: 'Comment', id: 7878});
+(function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = 'https://embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+})();
+</script>
+
+    </article>
+</div>
+<script src="/assets/js/anchor.min.js"></script>
+<script>
+    anchors.options = {
+        placement: 'left',
+        visible: 'always',
+//        icon: '#',
+    };
+    anchors.add('.anchored h2,.anchored h3,.anchored h4,.anchored h5,.anchored h6');
+
+    (function($){
+        if(window.location.hash) {
+            var hash = decodeURIComponent(window.location.hash);
+            gotohash($(hash).offset().top);
+        }
+        $('a.anchorjs-link').click(function(){
+			gotohash($(this).offset().top);
+        });
+        $('a.anchorjs').click(function(){
+			var id = '#' + $(this).attr('title');
+			gotohash($(id).offset().top);
+        });		
+        function gotohash(top){
+            var headerHeight = 70; // Get fixed header height
+            $('html,body').animate({
+                scrollTop: top - headerHeight
+            }, 20);
+        }
+    })(jQuery);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+   $(document).ready(function (){
+
+     var scrollPosition = getParameterByName('scroll');
+     if(scrollPosition)
+      $(".doc-menu").scrollTop(scrollPosition);
+
+     $('.doc-link').click(function(){
+        var scrollTop = $(".doc-menu").scrollTop();
+        if(scrollTop > 0)
+          $(this).attr("href",this.href + "?scroll=" + $(".doc-menu").scrollTop());
+     });
+
+     function getParameterByName(name, url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+   });
+</script>
+    <div id="back-to-top" role="button" aria-label="Back to top">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+    </div>
+</main>
+<!-- footer -->
+
+<footer class="footer" role="contentinfo" aria-label="Site footer">
+    <div class="navigation" role="navigation" aria-label="Footer links">
+        <a href="http://localhost:4000" class="avatar" role="link" ></a>
+        <ul role="menubar" aria-label="Footer links menubar">
+            <li class="footer-products" role="menuitem" aria-label="Products">
+                تولیدات
+                <ul role="menu" aria-hidden="true" aria-label="Products link">
+                </ul>
+            </li>
+            <li class="footer-blog" role="menuitem" aria-label="Blog">
+                مقالات
+                <ul role="menu" aria-hidden="true" aria-label="Blog link">
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2020/07/03/marriage.html" role="link" aria-label="ازدواج">ازدواج</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2019/10/11/vuejs.html" role="link" aria-label="آموزش vuejs">آموزش vuejs</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/18/laravel.html" role="link" aria-label="آموزش Laravel">آموزش Laravel</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/articles/2017/12/13/laravelcollective.html" role="link" aria-label="معرفی Laravel Collective">معرفی Laravel Collective</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/06/design-patterns.html" role="link" aria-label="معرفی  Design Pattern">معرفی  Design Pattern</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/blog" role="link" aria-label="Read more">Read More</a></li>
+                </ul>
+            </li>
+
+            <li class="footer-connect" role="menuitem" aria-label="Connect">
+                تماس
+                <ul role="menu" aria-hidden="true" aria-label="Connect link">
+                    <li role="listitem" aria-label="Connect link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub">GitHub</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://www.linkedin.com/in/farhad-mirzapour/" target="_blank" role="link" aria-label="Linkedin">Linkedin</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter">Twitter</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="socials"  role="navigation" aria-label="Social links">
+        <ul role="menu" aria-hidden="true" aria-label="Social link">
+            <li role="listitem" aria-label="Social link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://www.linkedin.com/in/farhad-mirzapour-0043b862/" target="_blank" role="link" aria-label="Linkedin"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="/feed.xml" role="link" aria-label="RSS"><i class="fa fa-rss-square" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+    <div class="copyright" role="contentinfo" aria-label="Copyright">
+        <p>&copy; <script type="text/javascript">document.write(new Date().getFullYear());</script> Farhad Mirzapour</p>
+    </div>
+</footer>
+
+<!-- scripts -->
+<script src="/assets/js/hamburger-menu.js"></script>
+
+<script src="/assets/js/elevator.min.js"></script>
+<script src="/assets/js/back-to-top.js"></script>
+<script src="/assets/prisma/prism.js"></script>
+<!-- google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108878564-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-108878564-1');
+</script>
+
+</body>
+</html>

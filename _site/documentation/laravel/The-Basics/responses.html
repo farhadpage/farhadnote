@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html lang="">
+<!-- head -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>پاسخ Response | مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="پاسخ Response" />
+<meta name="author" content="Farhad Mirzapour" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="پاسخ نوع Strings &amp; Arrays تمام مسیرها و کنترلرهای لاراول باید یک پاسخ HTTP ایجاد کنند که در مرحله آخر، این پاسخ به مرورگر کاربر ارسال می‌‌‌شود. لاراول روش‌های مختلفی را برای برگرداندن یک پاسخ فراهم کرده است. ساده‌ترین نوع یک پاسخ HTTP در لاراول، برگرداندن یک رشته از مسیر یا کنترلر موجود در برنامه است. فریم ورک به صورت خودکار رشته را به یک پاسخ HTTP کامل تبدیل می‌کند: Route::get(&#39;/&#39;, function () { return &#39;Hello World&#39;; }); علاوه بر برگرداندن رشته‌ها از مسیرها و کنترلرهای برنامه، آرایه‌ها هم می‌توانند به عنوان یک پاسخ به مرورگر کاربر ارسال شوند. فریم ورک به صورت خودکار آرایه‌ را به یک پاسخ JSON تبدیل می‌کند: Route::get(&#39;/&#39;, function () { return [1, 2, 3]; }); Eloquent collections نیز می‌توانند از مسیرها و كنترلرهای برنامه به عنوان یک پاسخ برگردانده شوند که به صورت خودکار توسط فریم ورک به JSON تبدیل می‌شوند. پاسخ نوع Response Objects در اکثر موارد، این تنها رشته‌ها و آرایه‌های ساده نیستند که از اکشن‌های مسیر در برنامه برگردانده می‌شوند، بلکه نمونه‌ کلاس Illuminate\Http\Response یا viewها نیز می‌توانند به عنوان یک پاسخ برگردانده شوند. برگرداندن یک نمونه کلاس Response به صورت کامل، این امکان را ایجاد می‌کند که هدرها و کد وضعیت HTTP مربوط به پاسخ را به صورت سفارشی ایجاد کنید. نمونه کلاس Response از کلاس Symfony\Component\HttpFoundation\Response ارث می‌برند که متدهای مختلفی را برای ایجاد یک پاسخ HTTP در اختیار ما قرار می‌دهد: Route::get(&#39;home&#39;, function () { return response(&#39;Hello World&#39;, 200) -&gt;header(&#39;Content-Type&#39;, &#39;text/plain&#39;); }); الحاق هدرها به پاسخ‌های HTTP در لاراول توجه کنید که اکثر متدهای پاسخ، به یکدیگر مرتبط هستند که امکان ایجاد ساختار واضحی از پاسخ‌ها را فراهم می‌کند. برای مثال، می‌توان از متد header برای اضافه کردن مجموعه‌ای از هدرها به یک پاسخ قبل از ارسال آن به مرورگر کاربر استفاده کرد: return response($content) -&gt;header(&#39;Content-Type&#39;, $type) -&gt;header(&#39;X-Header-One&#39;, &#39;Header Value&#39;) -&gt;header(&#39;X-Header-Two&#39;, &#39;Header Value&#39;); همچنین، می‌توان از متد withHeaders برای تعیین آرایه‌ای از هدرها، برای اضافه کردن به پاسخ استفاده کرد: return response($content) -&gt;withHeaders([ &#39;Content-Type&#39; =&gt; $type, &#39;X-Header-One&#39; =&gt; &#39;Header Value&#39;, &#39;X-Header-Two&#39; =&gt; &#39;Header Value&#39;, ]); الحاق کوکی‌ها به HTTP response در لاراول متد cookie در نمونه کلاس response، الحاق کوکی‌ها به پاسخ‌ها را به سادگی امکان‌پذیر می‌سازد. برای مثال، می‌توان از متد cookie برای ایجاد یک کوکی استفاده کرد و به سادگی آن را به یک نمونه کلاس response به صورت مثال زیر الحاق کرد: return response($content) -&gt;header(&#39;Content-Type&#39;, $type) -&gt;cookie(&#39;name&#39;, &#39;value&#39;, $minutes); متد cookie چند آرگومان دیگر را نیز می‌پذیرد که به نسبت کمتری استفاده می‌شوند. -&gt;cookie($name, $value, $minutes, $path, $domain, $secure, $httpOnly) همچنین، از facade مربوط به Cookie می‌توان برای صف بندی کوکی‌ها جهت الحاق به یک پاسخ خروجی از برنامه استفاده کرد. متد queue ، یک نمونه Cookie یا آرگومان‌های موردنیاز جهت ایجاد یک نمونه Cookie را می‌پذیرد. این کوکی‌ها به پاسخ خروجی، قبل از ارسال به مرورگر کاربر متصل می‌شوند: Cookie::queue(Cookie::make(&#39;name&#39;, &#39;value&#39;, $minutes)); Cookie::queue(&#39;name&#39;, &#39;value&#39;, $minutes); کوکی‌ها و رمزگذاری در لاراول Cookies &amp; Encryption در حالت پیش‌فرض، تمام کوکی‌هایی که در لاراول ایجاد می‌شوند، رمزگذاری و امضا می‌شوند، بنابراین توسط کلاینت قابل تغییر یا خواندن نیستند. اگر می‌خواهید عملیات رمزگذاری را برای زیرمجموعه‌ای از کوکی‌هایی که توسط برنامه ایجاد شده‌اند غیرفعال کنید، می‌توانید از خصوصیت $except در middleware مربوط به رمزگذاری کوکی‌ها یا App\Http\Middleware\EncryptCookis که در دایرکتوری app/Http/Middleware قرار دارد، استفاده کنید: /** * The names of the cookies that should not be encrypted. * * @var array */ protected $except = [ &#39;cookie_name&#39;, ]; تغییر مسیرها (redirects) در لاراول پاسخ‌های redirect، نمونه‌هایی از کلاس Illuminate\Http\RedirectResponse هستند که هدرهای موردنیاز مناسب جهت هدایت کاربر به یک URL دیگر را ارائه می‌دهند. چند متد برای ایجاد نمونه کلاس RedirectResponse وجود دارد. ساده‌ترین متد استفاده از تابع کمکی redirect عمومی به صورت زیر است: Route::get(&#39;dashboard&#39;, function () { return redirect(&#39;home/dashboard&#39;); }); گاهی اوقات، ممکن است بخواهید کاربر را به موقعیت قبلی‌ هدایت کنید، مثلاً زمانی که فرم ارسال شده به سرور نامعتبر است. این کار را می‌توان با استفاده از تابع کمکی back عمومی انجام داد. از آنجا که این ویژگی از session استفاده می‌کند، اطمینان حاصل کنید که مسیر فراخوانی تابع کمکی back از گروه middleware web استفاده می‌کند یا اینکه تمام middlewareهای مربوط به session اعمال شده باشند: Route::post(&#39;user/profile&#39;, function () { // Validate the request... return back()-&gt;withInput(); }); تغییر مسیر (redirect) به مسیرهای نامگذاری شده در لاراول زمانی که تابع کمکی redirect بدون هیچ پارامتری فراخوانی می‌شود، نمونه ای از Illuminate\Routing\Redirector برگردانده می‌شود که این امکان را می‌دهد که بتوانید، هر متدی را در نمونه کلاس Redirector فراخوانی کنید. برای مثال، برای ایجاد RedirectResponse به یک مسیر نام‌گذاری شده در لاراول، می‌توانید از متد route استفاده کنید: return redirect()-&gt;route(&#39;login&#39;); اگر مسیر موردنظر دارای پارامتر باشد، می‌توانید آن‌ها را به عنوان آرگومان دوم به متد route انتقال دهید: // For a route with the following URI: profile/{id} return redirect()-&gt;route(&#39;profile&#39;, [&#39;id&#39; =&gt; 1]); پرکردن پارامترها از مدل‌های Eloquent در لاراول برای هدایت به مسیری با پارامتر ID که داده‌‌های درون آن از طریق یک مدل Eloquent در آن قرار داده می‌شوند، به سادگی می‌توانید خود مدل را انتقال دهید. داده مربوط به فیلد ID به صورت خودکار از مدل استخراج می‌شود: // For a route with the following URI: profile/{id} return redirect()-&gt;route(&#39;profile&#39;, [$user]); اگر می‌خواهید مقدار را در پارامتر مسیر قرار دهید، باید متد getRouteKey را در مدل Eloquent خود بازنویسی کنید: /** * Get the value of the model&#39;s route key. * * @return mixed */ public function getRouteKey() { return $this-&gt;slug; } تغییر مسیر (redirect) به اکشن‌های کنترلر ل Redirecting To Controller Actions می‌توانید تغییر مسیر به اکشن‌های کنترلر ایجاد کنید. برای انجام این کار، باید نام کنترلر و اکشن را به متد action انتقال دهید. توجه کنید که لازم نیست، فضای نامی کامل را برای کنترلر مشخص کنید؛ زیرا RouteServiceProvider در لاراول به صورت خودکار فضای نامی پایه کنترلر را مشخص می‌کند: return redirect()-&gt;action(&#39;HomeController@index&#39;); اگر مسیر کنترلر نیاز به انتقال پارامتر داشته باشد، می‌توانید آن‌ها را به عنوان آرگومان دوم به متد action انتقال دهید: return redirect()-&gt;action( &#39;UserController@profile&#39;, [&#39;id&#39; =&gt; 1] ); تغییر مسیر (redirect) به دامنه‌های خارجی (Redirecting To External Domains) گاهی ممکن است نیاز به تغییر مسیر به یک دامنه خارج از برنامه خود داشته باشید. این کار را می‌توان با فراخوانی متد away انجام داد که یک RedirectResponse را بدون رمزگذاری، اعتبار سنجی یا تأیید اضافی URL ایجاد می‌کند: return redirect()-&gt;away(&#39;https://www.google.com&#39;); تغییر مسیر (redirect) به داده‌های قرار داده شده در session تغییر مسیر به یک URL جدید و انتقال اطلاعات به session معمولاً به صورت همزمان انجام می‌گیرد. معمولاً این کار بعد از انجام موفقیت‌آمیز یک اکشن انجام می‌شود و یک پیغام موفقیت‌آمیز در session قرار داده می‌شود. برای راحتی کار، می‌توانید یک نمونه RedirectResponse ایجاد کنید و با اتصال متدها به یکدیگر، اطلاعات را در session قرار دهید: Route::post(&#39;user/profile&#39;, function () { // Update the user&#39;s profile... return redirect(&#39;dashboard&#39;)-&gt;with(&#39;status&#39;, &#39;Profile updated!&#39;); }); بعد از اینکه کاربر بهURL جدید هدایت شد، می‌توانید پیغام‌های قرار داده شده در session را نمایش دهید. این کار را می‌توان با استفاده از سینتکس Blade مانند مثال زیر انجام داد: @if (session(&#39;status&#39;)) &lt;div class=&quot;alert alert-success&quot;&gt; {{ session(&#39;status&#39;) }} &lt;/div&gt; @endif انواع پاسخ‌‌های دیگر در لاراول از تابع کمکی response می‌توان برای ایجاد انواع دیگری از نمونه response استفاده کرد. زمانی که تابع کمکی response را بدون آرگومان فراخوانی می‌کنید، پیاده سازی قرارداد Illuminate\Contracts\Routing\ResponseFactory برگردانده می‌شود. این قرارداد چند متد مفید برای ایجاد پاسخ ارائه می‌دهد. پاسخ‌های View Responses اگر نیاز به کنترل وضعیت و هدر یک پاسخ دارید و همچنین باید یک view را به عنوان محتوای پاسخ برگردانید، باید از متد view استفاده کنید: return response() -&gt;view(&#39;hello&#39;, $data, 200) -&gt;header(&#39;Content-Type&#39;, $type); البته، اگر نیازی به انتقال کد وضعیت HTTP یا هدرهای سفارشی ندارید، باید از تابع کمکی view عمومی استفاده کنید. پاسخ‌های JSON Responses متد json به صورت خودکار هدر Content-Type را به application/json تنظیم می‌کند و همچنین، با استفاده از تابع json_encode در PHP آرایه داده شده را به JSON تبدیل می‌کند: return response()-&gt;json([ &#39;name&#39; =&gt; &#39;Abigail&#39;, &#39;state&#39; =&gt; &#39;CA&#39; ]); اگر می‌خواهید یک پاسخ JSONP ایجاد کنید، می‌توانید از متد json با ترکیب متد withCallback استفاده کنید: return response() -&gt;json([&#39;name&#39; =&gt; &#39;Abigail&#39;, &#39;state&#39; =&gt; &#39;CA&#39;]) -&gt;withCallback($request-&gt;input(&#39;callback&#39;)); دانلود فایل File Downloads متد download پاسخی ایجاد می‌کند که مرورگر کاربر را وادار به دانلود فایل در مسیر داده شده می‌کند. متد download نام فایل را به عنوان آرگومان دوم در متد می‌پذیرد که نام فایل مشاهده شده توسط کاربری که فایل را دانلود کرده است را مشخص می‌کند. در آخر، می‌توانید آرایه ای از هدرهای HTTP را به عنوان آرگومان سوم به متد انتقال دهید: return response()-&gt;download($pathToFile); return response()-&gt;download($pathToFile, $name, $headers); return response()-&gt;download($pathToFile)-&gt;deleteFileAfterSend(true); Symfony HttpFoundation، که دانلود فایل‌ها را مدیریت می‌کند، نیاز دارد که فایل دانلود شده دارای یک نام فایل به صورت ASCII باشد. پاسخ‌های Streamed Downloads گاهی اوقات ممکن است بخواهید پاسخ رشته یک عملیات داده شده را به یک پاسخ قابل بارگیری بدون نیاز به نوشتن محتویات عملیات روی دیسک تبدیل کنید. شما می توانید از روش streamDownload در این سناریو استفاده کنید. این روش یک callback، نام فایل و یک آرایه اختیاری از هدر ها را به عنوان استدلال های آن می پذیرد: return response()-&gt;streamDownload(function () { echo GitHub::api(&#39;repo&#39;) -&gt;contents() -&gt;readme(&#39;laravel&#39;, &#39;laravel&#39;)[&#39;contents&#39;] }, &#39;laravel-readme.md&#39;); پاسخ‌های فایل File Responses برای نمایش یک فایل، مانند یک تصویر یا PDF به طور مستقیم در مرورگر کاربر به جای دانلود آن فایل، می‌توانید از متد file استفاده کنید. این متد مسیر فایل را به عنوان آرگومان اول و یک آرایه هدر را به عنوان آرگومان دوم می‌پذیرد: return response()-&gt;file($pathToFile); return response()-&gt;file($pathToFile, $headers); ماکروهای پاسخ یا response در لاراول اگر بخواهید یک پاسخ سفارشی ایجاد کنید که بتوانید استفاده مجدد از آن در بسیاری از مسیرها و کنترلرهای خود داشته باشید، می‌توانید از متد macro در facade مربوط به Response استفاده کنید. مثال زیر، تعریف ماکرو در متد boot از service provider را نشان می‌دهد: &lt;?php namespace App\Providers; use Illuminate\Support\ServiceProvider; use Illuminate\Support\Facades\Response; class ResponseMacroServiceProvider extends ServiceProvider { /** * Register the application&#39;s response macros. * * @return void */ public function boot() { Response::macro(&#39;caps&#39;, function ($value) { return Response::make(strtoupper($value)); }); } } تابع macro یک اسم به عنوان آرگومان اول و یک Closure به عنوان آرگومان دوم می‌پذیرد. در زمان فراخوانی نام ماکرو از پیاده‌سازی ResponseFactory یا تابع کمکی response این Closure مربوط به ماکرو اجرا می‌شود: return response()-&gt;caps(&#39;foo&#39;);" />
+<meta property="og:description" content="پاسخ نوع Strings &amp; Arrays تمام مسیرها و کنترلرهای لاراول باید یک پاسخ HTTP ایجاد کنند که در مرحله آخر، این پاسخ به مرورگر کاربر ارسال می‌‌‌شود. لاراول روش‌های مختلفی را برای برگرداندن یک پاسخ فراهم کرده است. ساده‌ترین نوع یک پاسخ HTTP در لاراول، برگرداندن یک رشته از مسیر یا کنترلر موجود در برنامه است. فریم ورک به صورت خودکار رشته را به یک پاسخ HTTP کامل تبدیل می‌کند: Route::get(&#39;/&#39;, function () { return &#39;Hello World&#39;; }); علاوه بر برگرداندن رشته‌ها از مسیرها و کنترلرهای برنامه، آرایه‌ها هم می‌توانند به عنوان یک پاسخ به مرورگر کاربر ارسال شوند. فریم ورک به صورت خودکار آرایه‌ را به یک پاسخ JSON تبدیل می‌کند: Route::get(&#39;/&#39;, function () { return [1, 2, 3]; }); Eloquent collections نیز می‌توانند از مسیرها و كنترلرهای برنامه به عنوان یک پاسخ برگردانده شوند که به صورت خودکار توسط فریم ورک به JSON تبدیل می‌شوند. پاسخ نوع Response Objects در اکثر موارد، این تنها رشته‌ها و آرایه‌های ساده نیستند که از اکشن‌های مسیر در برنامه برگردانده می‌شوند، بلکه نمونه‌ کلاس Illuminate\Http\Response یا viewها نیز می‌توانند به عنوان یک پاسخ برگردانده شوند. برگرداندن یک نمونه کلاس Response به صورت کامل، این امکان را ایجاد می‌کند که هدرها و کد وضعیت HTTP مربوط به پاسخ را به صورت سفارشی ایجاد کنید. نمونه کلاس Response از کلاس Symfony\Component\HttpFoundation\Response ارث می‌برند که متدهای مختلفی را برای ایجاد یک پاسخ HTTP در اختیار ما قرار می‌دهد: Route::get(&#39;home&#39;, function () { return response(&#39;Hello World&#39;, 200) -&gt;header(&#39;Content-Type&#39;, &#39;text/plain&#39;); }); الحاق هدرها به پاسخ‌های HTTP در لاراول توجه کنید که اکثر متدهای پاسخ، به یکدیگر مرتبط هستند که امکان ایجاد ساختار واضحی از پاسخ‌ها را فراهم می‌کند. برای مثال، می‌توان از متد header برای اضافه کردن مجموعه‌ای از هدرها به یک پاسخ قبل از ارسال آن به مرورگر کاربر استفاده کرد: return response($content) -&gt;header(&#39;Content-Type&#39;, $type) -&gt;header(&#39;X-Header-One&#39;, &#39;Header Value&#39;) -&gt;header(&#39;X-Header-Two&#39;, &#39;Header Value&#39;); همچنین، می‌توان از متد withHeaders برای تعیین آرایه‌ای از هدرها، برای اضافه کردن به پاسخ استفاده کرد: return response($content) -&gt;withHeaders([ &#39;Content-Type&#39; =&gt; $type, &#39;X-Header-One&#39; =&gt; &#39;Header Value&#39;, &#39;X-Header-Two&#39; =&gt; &#39;Header Value&#39;, ]); الحاق کوکی‌ها به HTTP response در لاراول متد cookie در نمونه کلاس response، الحاق کوکی‌ها به پاسخ‌ها را به سادگی امکان‌پذیر می‌سازد. برای مثال، می‌توان از متد cookie برای ایجاد یک کوکی استفاده کرد و به سادگی آن را به یک نمونه کلاس response به صورت مثال زیر الحاق کرد: return response($content) -&gt;header(&#39;Content-Type&#39;, $type) -&gt;cookie(&#39;name&#39;, &#39;value&#39;, $minutes); متد cookie چند آرگومان دیگر را نیز می‌پذیرد که به نسبت کمتری استفاده می‌شوند. -&gt;cookie($name, $value, $minutes, $path, $domain, $secure, $httpOnly) همچنین، از facade مربوط به Cookie می‌توان برای صف بندی کوکی‌ها جهت الحاق به یک پاسخ خروجی از برنامه استفاده کرد. متد queue ، یک نمونه Cookie یا آرگومان‌های موردنیاز جهت ایجاد یک نمونه Cookie را می‌پذیرد. این کوکی‌ها به پاسخ خروجی، قبل از ارسال به مرورگر کاربر متصل می‌شوند: Cookie::queue(Cookie::make(&#39;name&#39;, &#39;value&#39;, $minutes)); Cookie::queue(&#39;name&#39;, &#39;value&#39;, $minutes); کوکی‌ها و رمزگذاری در لاراول Cookies &amp; Encryption در حالت پیش‌فرض، تمام کوکی‌هایی که در لاراول ایجاد می‌شوند، رمزگذاری و امضا می‌شوند، بنابراین توسط کلاینت قابل تغییر یا خواندن نیستند. اگر می‌خواهید عملیات رمزگذاری را برای زیرمجموعه‌ای از کوکی‌هایی که توسط برنامه ایجاد شده‌اند غیرفعال کنید، می‌توانید از خصوصیت $except در middleware مربوط به رمزگذاری کوکی‌ها یا App\Http\Middleware\EncryptCookis که در دایرکتوری app/Http/Middleware قرار دارد، استفاده کنید: /** * The names of the cookies that should not be encrypted. * * @var array */ protected $except = [ &#39;cookie_name&#39;, ]; تغییر مسیرها (redirects) در لاراول پاسخ‌های redirect، نمونه‌هایی از کلاس Illuminate\Http\RedirectResponse هستند که هدرهای موردنیاز مناسب جهت هدایت کاربر به یک URL دیگر را ارائه می‌دهند. چند متد برای ایجاد نمونه کلاس RedirectResponse وجود دارد. ساده‌ترین متد استفاده از تابع کمکی redirect عمومی به صورت زیر است: Route::get(&#39;dashboard&#39;, function () { return redirect(&#39;home/dashboard&#39;); }); گاهی اوقات، ممکن است بخواهید کاربر را به موقعیت قبلی‌ هدایت کنید، مثلاً زمانی که فرم ارسال شده به سرور نامعتبر است. این کار را می‌توان با استفاده از تابع کمکی back عمومی انجام داد. از آنجا که این ویژگی از session استفاده می‌کند، اطمینان حاصل کنید که مسیر فراخوانی تابع کمکی back از گروه middleware web استفاده می‌کند یا اینکه تمام middlewareهای مربوط به session اعمال شده باشند: Route::post(&#39;user/profile&#39;, function () { // Validate the request... return back()-&gt;withInput(); }); تغییر مسیر (redirect) به مسیرهای نامگذاری شده در لاراول زمانی که تابع کمکی redirect بدون هیچ پارامتری فراخوانی می‌شود، نمونه ای از Illuminate\Routing\Redirector برگردانده می‌شود که این امکان را می‌دهد که بتوانید، هر متدی را در نمونه کلاس Redirector فراخوانی کنید. برای مثال، برای ایجاد RedirectResponse به یک مسیر نام‌گذاری شده در لاراول، می‌توانید از متد route استفاده کنید: return redirect()-&gt;route(&#39;login&#39;); اگر مسیر موردنظر دارای پارامتر باشد، می‌توانید آن‌ها را به عنوان آرگومان دوم به متد route انتقال دهید: // For a route with the following URI: profile/{id} return redirect()-&gt;route(&#39;profile&#39;, [&#39;id&#39; =&gt; 1]); پرکردن پارامترها از مدل‌های Eloquent در لاراول برای هدایت به مسیری با پارامتر ID که داده‌‌های درون آن از طریق یک مدل Eloquent در آن قرار داده می‌شوند، به سادگی می‌توانید خود مدل را انتقال دهید. داده مربوط به فیلد ID به صورت خودکار از مدل استخراج می‌شود: // For a route with the following URI: profile/{id} return redirect()-&gt;route(&#39;profile&#39;, [$user]); اگر می‌خواهید مقدار را در پارامتر مسیر قرار دهید، باید متد getRouteKey را در مدل Eloquent خود بازنویسی کنید: /** * Get the value of the model&#39;s route key. * * @return mixed */ public function getRouteKey() { return $this-&gt;slug; } تغییر مسیر (redirect) به اکشن‌های کنترلر ل Redirecting To Controller Actions می‌توانید تغییر مسیر به اکشن‌های کنترلر ایجاد کنید. برای انجام این کار، باید نام کنترلر و اکشن را به متد action انتقال دهید. توجه کنید که لازم نیست، فضای نامی کامل را برای کنترلر مشخص کنید؛ زیرا RouteServiceProvider در لاراول به صورت خودکار فضای نامی پایه کنترلر را مشخص می‌کند: return redirect()-&gt;action(&#39;HomeController@index&#39;); اگر مسیر کنترلر نیاز به انتقال پارامتر داشته باشد، می‌توانید آن‌ها را به عنوان آرگومان دوم به متد action انتقال دهید: return redirect()-&gt;action( &#39;UserController@profile&#39;, [&#39;id&#39; =&gt; 1] ); تغییر مسیر (redirect) به دامنه‌های خارجی (Redirecting To External Domains) گاهی ممکن است نیاز به تغییر مسیر به یک دامنه خارج از برنامه خود داشته باشید. این کار را می‌توان با فراخوانی متد away انجام داد که یک RedirectResponse را بدون رمزگذاری، اعتبار سنجی یا تأیید اضافی URL ایجاد می‌کند: return redirect()-&gt;away(&#39;https://www.google.com&#39;); تغییر مسیر (redirect) به داده‌های قرار داده شده در session تغییر مسیر به یک URL جدید و انتقال اطلاعات به session معمولاً به صورت همزمان انجام می‌گیرد. معمولاً این کار بعد از انجام موفقیت‌آمیز یک اکشن انجام می‌شود و یک پیغام موفقیت‌آمیز در session قرار داده می‌شود. برای راحتی کار، می‌توانید یک نمونه RedirectResponse ایجاد کنید و با اتصال متدها به یکدیگر، اطلاعات را در session قرار دهید: Route::post(&#39;user/profile&#39;, function () { // Update the user&#39;s profile... return redirect(&#39;dashboard&#39;)-&gt;with(&#39;status&#39;, &#39;Profile updated!&#39;); }); بعد از اینکه کاربر بهURL جدید هدایت شد، می‌توانید پیغام‌های قرار داده شده در session را نمایش دهید. این کار را می‌توان با استفاده از سینتکس Blade مانند مثال زیر انجام داد: @if (session(&#39;status&#39;)) &lt;div class=&quot;alert alert-success&quot;&gt; {{ session(&#39;status&#39;) }} &lt;/div&gt; @endif انواع پاسخ‌‌های دیگر در لاراول از تابع کمکی response می‌توان برای ایجاد انواع دیگری از نمونه response استفاده کرد. زمانی که تابع کمکی response را بدون آرگومان فراخوانی می‌کنید، پیاده سازی قرارداد Illuminate\Contracts\Routing\ResponseFactory برگردانده می‌شود. این قرارداد چند متد مفید برای ایجاد پاسخ ارائه می‌دهد. پاسخ‌های View Responses اگر نیاز به کنترل وضعیت و هدر یک پاسخ دارید و همچنین باید یک view را به عنوان محتوای پاسخ برگردانید، باید از متد view استفاده کنید: return response() -&gt;view(&#39;hello&#39;, $data, 200) -&gt;header(&#39;Content-Type&#39;, $type); البته، اگر نیازی به انتقال کد وضعیت HTTP یا هدرهای سفارشی ندارید، باید از تابع کمکی view عمومی استفاده کنید. پاسخ‌های JSON Responses متد json به صورت خودکار هدر Content-Type را به application/json تنظیم می‌کند و همچنین، با استفاده از تابع json_encode در PHP آرایه داده شده را به JSON تبدیل می‌کند: return response()-&gt;json([ &#39;name&#39; =&gt; &#39;Abigail&#39;, &#39;state&#39; =&gt; &#39;CA&#39; ]); اگر می‌خواهید یک پاسخ JSONP ایجاد کنید، می‌توانید از متد json با ترکیب متد withCallback استفاده کنید: return response() -&gt;json([&#39;name&#39; =&gt; &#39;Abigail&#39;, &#39;state&#39; =&gt; &#39;CA&#39;]) -&gt;withCallback($request-&gt;input(&#39;callback&#39;)); دانلود فایل File Downloads متد download پاسخی ایجاد می‌کند که مرورگر کاربر را وادار به دانلود فایل در مسیر داده شده می‌کند. متد download نام فایل را به عنوان آرگومان دوم در متد می‌پذیرد که نام فایل مشاهده شده توسط کاربری که فایل را دانلود کرده است را مشخص می‌کند. در آخر، می‌توانید آرایه ای از هدرهای HTTP را به عنوان آرگومان سوم به متد انتقال دهید: return response()-&gt;download($pathToFile); return response()-&gt;download($pathToFile, $name, $headers); return response()-&gt;download($pathToFile)-&gt;deleteFileAfterSend(true); Symfony HttpFoundation، که دانلود فایل‌ها را مدیریت می‌کند، نیاز دارد که فایل دانلود شده دارای یک نام فایل به صورت ASCII باشد. پاسخ‌های Streamed Downloads گاهی اوقات ممکن است بخواهید پاسخ رشته یک عملیات داده شده را به یک پاسخ قابل بارگیری بدون نیاز به نوشتن محتویات عملیات روی دیسک تبدیل کنید. شما می توانید از روش streamDownload در این سناریو استفاده کنید. این روش یک callback، نام فایل و یک آرایه اختیاری از هدر ها را به عنوان استدلال های آن می پذیرد: return response()-&gt;streamDownload(function () { echo GitHub::api(&#39;repo&#39;) -&gt;contents() -&gt;readme(&#39;laravel&#39;, &#39;laravel&#39;)[&#39;contents&#39;] }, &#39;laravel-readme.md&#39;); پاسخ‌های فایل File Responses برای نمایش یک فایل، مانند یک تصویر یا PDF به طور مستقیم در مرورگر کاربر به جای دانلود آن فایل، می‌توانید از متد file استفاده کنید. این متد مسیر فایل را به عنوان آرگومان اول و یک آرایه هدر را به عنوان آرگومان دوم می‌پذیرد: return response()-&gt;file($pathToFile); return response()-&gt;file($pathToFile, $headers); ماکروهای پاسخ یا response در لاراول اگر بخواهید یک پاسخ سفارشی ایجاد کنید که بتوانید استفاده مجدد از آن در بسیاری از مسیرها و کنترلرهای خود داشته باشید، می‌توانید از متد macro در facade مربوط به Response استفاده کنید. مثال زیر، تعریف ماکرو در متد boot از service provider را نشان می‌دهد: &lt;?php namespace App\Providers; use Illuminate\Support\ServiceProvider; use Illuminate\Support\Facades\Response; class ResponseMacroServiceProvider extends ServiceProvider { /** * Register the application&#39;s response macros. * * @return void */ public function boot() { Response::macro(&#39;caps&#39;, function ($value) { return Response::make(strtoupper($value)); }); } } تابع macro یک اسم به عنوان آرگومان اول و یک Closure به عنوان آرگومان دوم می‌پذیرد. در زمان فراخوانی نام ماکرو از پیاده‌سازی ResponseFactory یا تابع کمکی response این Closure مربوط به ماکرو اجرا می‌شود: return response()-&gt;caps(&#39;foo&#39;);" />
+<link rel="canonical" href="http://localhost:4000/documentation/laravel/The-Basics/responses" />
+<meta property="og:url" content="http://localhost:4000/documentation/laravel/The-Basics/responses" />
+<meta property="og:site_name" content="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-02-10T21:26:42+03:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="پاسخ Response" />
+<meta name="twitter:site" content="@farhadmirzapour" />
+<meta name="twitter:creator" content="@Farhad Mirzapour" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"پاسخ Response","url":"http://localhost:4000/documentation/laravel/The-Basics/responses","datePublished":"2018-02-10T21:26:42+03:30","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"dateModified":"2018-02-10T21:26:42+03:30","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/documentation/laravel/The-Basics/responses"},"author":{"@type":"Person","name":"Farhad Mirzapour"},"description":"پاسخ نوع Strings &amp; Arrays تمام مسیرها و کنترلرهای لاراول باید یک پاسخ HTTP ایجاد کنند که در مرحله آخر، این پاسخ به مرورگر کاربر ارسال می‌‌‌شود. لاراول روش‌های مختلفی را برای برگرداندن یک پاسخ فراهم کرده است. ساده‌ترین نوع یک پاسخ HTTP در لاراول، برگرداندن یک رشته از مسیر یا کنترلر موجود در برنامه است. فریم ورک به صورت خودکار رشته را به یک پاسخ HTTP کامل تبدیل می‌کند: Route::get(&#39;/&#39;, function () { return &#39;Hello World&#39;; }); علاوه بر برگرداندن رشته‌ها از مسیرها و کنترلرهای برنامه، آرایه‌ها هم می‌توانند به عنوان یک پاسخ به مرورگر کاربر ارسال شوند. فریم ورک به صورت خودکار آرایه‌ را به یک پاسخ JSON تبدیل می‌کند: Route::get(&#39;/&#39;, function () { return [1, 2, 3]; }); Eloquent collections نیز می‌توانند از مسیرها و كنترلرهای برنامه به عنوان یک پاسخ برگردانده شوند که به صورت خودکار توسط فریم ورک به JSON تبدیل می‌شوند. پاسخ نوع Response Objects در اکثر موارد، این تنها رشته‌ها و آرایه‌های ساده نیستند که از اکشن‌های مسیر در برنامه برگردانده می‌شوند، بلکه نمونه‌ کلاس Illuminate\\Http\\Response یا viewها نیز می‌توانند به عنوان یک پاسخ برگردانده شوند. برگرداندن یک نمونه کلاس Response به صورت کامل، این امکان را ایجاد می‌کند که هدرها و کد وضعیت HTTP مربوط به پاسخ را به صورت سفارشی ایجاد کنید. نمونه کلاس Response از کلاس Symfony\\Component\\HttpFoundation\\Response ارث می‌برند که متدهای مختلفی را برای ایجاد یک پاسخ HTTP در اختیار ما قرار می‌دهد: Route::get(&#39;home&#39;, function () { return response(&#39;Hello World&#39;, 200) -&gt;header(&#39;Content-Type&#39;, &#39;text/plain&#39;); }); الحاق هدرها به پاسخ‌های HTTP در لاراول توجه کنید که اکثر متدهای پاسخ، به یکدیگر مرتبط هستند که امکان ایجاد ساختار واضحی از پاسخ‌ها را فراهم می‌کند. برای مثال، می‌توان از متد header برای اضافه کردن مجموعه‌ای از هدرها به یک پاسخ قبل از ارسال آن به مرورگر کاربر استفاده کرد: return response($content) -&gt;header(&#39;Content-Type&#39;, $type) -&gt;header(&#39;X-Header-One&#39;, &#39;Header Value&#39;) -&gt;header(&#39;X-Header-Two&#39;, &#39;Header Value&#39;); همچنین، می‌توان از متد withHeaders برای تعیین آرایه‌ای از هدرها، برای اضافه کردن به پاسخ استفاده کرد: return response($content) -&gt;withHeaders([ &#39;Content-Type&#39; =&gt; $type, &#39;X-Header-One&#39; =&gt; &#39;Header Value&#39;, &#39;X-Header-Two&#39; =&gt; &#39;Header Value&#39;, ]); الحاق کوکی‌ها به HTTP response در لاراول متد cookie در نمونه کلاس response، الحاق کوکی‌ها به پاسخ‌ها را به سادگی امکان‌پذیر می‌سازد. برای مثال، می‌توان از متد cookie برای ایجاد یک کوکی استفاده کرد و به سادگی آن را به یک نمونه کلاس response به صورت مثال زیر الحاق کرد: return response($content) -&gt;header(&#39;Content-Type&#39;, $type) -&gt;cookie(&#39;name&#39;, &#39;value&#39;, $minutes); متد cookie چند آرگومان دیگر را نیز می‌پذیرد که به نسبت کمتری استفاده می‌شوند. -&gt;cookie($name, $value, $minutes, $path, $domain, $secure, $httpOnly) همچنین، از facade مربوط به Cookie می‌توان برای صف بندی کوکی‌ها جهت الحاق به یک پاسخ خروجی از برنامه استفاده کرد. متد queue ، یک نمونه Cookie یا آرگومان‌های موردنیاز جهت ایجاد یک نمونه Cookie را می‌پذیرد. این کوکی‌ها به پاسخ خروجی، قبل از ارسال به مرورگر کاربر متصل می‌شوند: Cookie::queue(Cookie::make(&#39;name&#39;, &#39;value&#39;, $minutes)); Cookie::queue(&#39;name&#39;, &#39;value&#39;, $minutes); کوکی‌ها و رمزگذاری در لاراول Cookies &amp; Encryption در حالت پیش‌فرض، تمام کوکی‌هایی که در لاراول ایجاد می‌شوند، رمزگذاری و امضا می‌شوند، بنابراین توسط کلاینت قابل تغییر یا خواندن نیستند. اگر می‌خواهید عملیات رمزگذاری را برای زیرمجموعه‌ای از کوکی‌هایی که توسط برنامه ایجاد شده‌اند غیرفعال کنید، می‌توانید از خصوصیت $except در middleware مربوط به رمزگذاری کوکی‌ها یا App\\Http\\Middleware\\EncryptCookis که در دایرکتوری app/Http/Middleware قرار دارد، استفاده کنید: /** * The names of the cookies that should not be encrypted. * * @var array */ protected $except = [ &#39;cookie_name&#39;, ]; تغییر مسیرها (redirects) در لاراول پاسخ‌های redirect، نمونه‌هایی از کلاس Illuminate\\Http\\RedirectResponse هستند که هدرهای موردنیاز مناسب جهت هدایت کاربر به یک URL دیگر را ارائه می‌دهند. چند متد برای ایجاد نمونه کلاس RedirectResponse وجود دارد. ساده‌ترین متد استفاده از تابع کمکی redirect عمومی به صورت زیر است: Route::get(&#39;dashboard&#39;, function () { return redirect(&#39;home/dashboard&#39;); }); گاهی اوقات، ممکن است بخواهید کاربر را به موقعیت قبلی‌ هدایت کنید، مثلاً زمانی که فرم ارسال شده به سرور نامعتبر است. این کار را می‌توان با استفاده از تابع کمکی back عمومی انجام داد. از آنجا که این ویژگی از session استفاده می‌کند، اطمینان حاصل کنید که مسیر فراخوانی تابع کمکی back از گروه middleware web استفاده می‌کند یا اینکه تمام middlewareهای مربوط به session اعمال شده باشند: Route::post(&#39;user/profile&#39;, function () { // Validate the request... return back()-&gt;withInput(); }); تغییر مسیر (redirect) به مسیرهای نامگذاری شده در لاراول زمانی که تابع کمکی redirect بدون هیچ پارامتری فراخوانی می‌شود، نمونه ای از Illuminate\\Routing\\Redirector برگردانده می‌شود که این امکان را می‌دهد که بتوانید، هر متدی را در نمونه کلاس Redirector فراخوانی کنید. برای مثال، برای ایجاد RedirectResponse به یک مسیر نام‌گذاری شده در لاراول، می‌توانید از متد route استفاده کنید: return redirect()-&gt;route(&#39;login&#39;); اگر مسیر موردنظر دارای پارامتر باشد، می‌توانید آن‌ها را به عنوان آرگومان دوم به متد route انتقال دهید: // For a route with the following URI: profile/{id} return redirect()-&gt;route(&#39;profile&#39;, [&#39;id&#39; =&gt; 1]); پرکردن پارامترها از مدل‌های Eloquent در لاراول برای هدایت به مسیری با پارامتر ID که داده‌‌های درون آن از طریق یک مدل Eloquent در آن قرار داده می‌شوند، به سادگی می‌توانید خود مدل را انتقال دهید. داده مربوط به فیلد ID به صورت خودکار از مدل استخراج می‌شود: // For a route with the following URI: profile/{id} return redirect()-&gt;route(&#39;profile&#39;, [$user]); اگر می‌خواهید مقدار را در پارامتر مسیر قرار دهید، باید متد getRouteKey را در مدل Eloquent خود بازنویسی کنید: /** * Get the value of the model&#39;s route key. * * @return mixed */ public function getRouteKey() { return $this-&gt;slug; } تغییر مسیر (redirect) به اکشن‌های کنترلر ل Redirecting To Controller Actions می‌توانید تغییر مسیر به اکشن‌های کنترلر ایجاد کنید. برای انجام این کار، باید نام کنترلر و اکشن را به متد action انتقال دهید. توجه کنید که لازم نیست، فضای نامی کامل را برای کنترلر مشخص کنید؛ زیرا RouteServiceProvider در لاراول به صورت خودکار فضای نامی پایه کنترلر را مشخص می‌کند: return redirect()-&gt;action(&#39;HomeController@index&#39;); اگر مسیر کنترلر نیاز به انتقال پارامتر داشته باشد، می‌توانید آن‌ها را به عنوان آرگومان دوم به متد action انتقال دهید: return redirect()-&gt;action( &#39;UserController@profile&#39;, [&#39;id&#39; =&gt; 1] ); تغییر مسیر (redirect) به دامنه‌های خارجی (Redirecting To External Domains) گاهی ممکن است نیاز به تغییر مسیر به یک دامنه خارج از برنامه خود داشته باشید. این کار را می‌توان با فراخوانی متد away انجام داد که یک RedirectResponse را بدون رمزگذاری، اعتبار سنجی یا تأیید اضافی URL ایجاد می‌کند: return redirect()-&gt;away(&#39;https://www.google.com&#39;); تغییر مسیر (redirect) به داده‌های قرار داده شده در session تغییر مسیر به یک URL جدید و انتقال اطلاعات به session معمولاً به صورت همزمان انجام می‌گیرد. معمولاً این کار بعد از انجام موفقیت‌آمیز یک اکشن انجام می‌شود و یک پیغام موفقیت‌آمیز در session قرار داده می‌شود. برای راحتی کار، می‌توانید یک نمونه RedirectResponse ایجاد کنید و با اتصال متدها به یکدیگر، اطلاعات را در session قرار دهید: Route::post(&#39;user/profile&#39;, function () { // Update the user&#39;s profile... return redirect(&#39;dashboard&#39;)-&gt;with(&#39;status&#39;, &#39;Profile updated!&#39;); }); بعد از اینکه کاربر بهURL جدید هدایت شد، می‌توانید پیغام‌های قرار داده شده در session را نمایش دهید. این کار را می‌توان با استفاده از سینتکس Blade مانند مثال زیر انجام داد: @if (session(&#39;status&#39;)) &lt;div class=&quot;alert alert-success&quot;&gt; {{ session(&#39;status&#39;) }} &lt;/div&gt; @endif انواع پاسخ‌‌های دیگر در لاراول از تابع کمکی response می‌توان برای ایجاد انواع دیگری از نمونه response استفاده کرد. زمانی که تابع کمکی response را بدون آرگومان فراخوانی می‌کنید، پیاده سازی قرارداد Illuminate\\Contracts\\Routing\\ResponseFactory برگردانده می‌شود. این قرارداد چند متد مفید برای ایجاد پاسخ ارائه می‌دهد. پاسخ‌های View Responses اگر نیاز به کنترل وضعیت و هدر یک پاسخ دارید و همچنین باید یک view را به عنوان محتوای پاسخ برگردانید، باید از متد view استفاده کنید: return response() -&gt;view(&#39;hello&#39;, $data, 200) -&gt;header(&#39;Content-Type&#39;, $type); البته، اگر نیازی به انتقال کد وضعیت HTTP یا هدرهای سفارشی ندارید، باید از تابع کمکی view عمومی استفاده کنید. پاسخ‌های JSON Responses متد json به صورت خودکار هدر Content-Type را به application/json تنظیم می‌کند و همچنین، با استفاده از تابع json_encode در PHP آرایه داده شده را به JSON تبدیل می‌کند: return response()-&gt;json([ &#39;name&#39; =&gt; &#39;Abigail&#39;, &#39;state&#39; =&gt; &#39;CA&#39; ]); اگر می‌خواهید یک پاسخ JSONP ایجاد کنید، می‌توانید از متد json با ترکیب متد withCallback استفاده کنید: return response() -&gt;json([&#39;name&#39; =&gt; &#39;Abigail&#39;, &#39;state&#39; =&gt; &#39;CA&#39;]) -&gt;withCallback($request-&gt;input(&#39;callback&#39;)); دانلود فایل File Downloads متد download پاسخی ایجاد می‌کند که مرورگر کاربر را وادار به دانلود فایل در مسیر داده شده می‌کند. متد download نام فایل را به عنوان آرگومان دوم در متد می‌پذیرد که نام فایل مشاهده شده توسط کاربری که فایل را دانلود کرده است را مشخص می‌کند. در آخر، می‌توانید آرایه ای از هدرهای HTTP را به عنوان آرگومان سوم به متد انتقال دهید: return response()-&gt;download($pathToFile); return response()-&gt;download($pathToFile, $name, $headers); return response()-&gt;download($pathToFile)-&gt;deleteFileAfterSend(true); Symfony HttpFoundation، که دانلود فایل‌ها را مدیریت می‌کند، نیاز دارد که فایل دانلود شده دارای یک نام فایل به صورت ASCII باشد. پاسخ‌های Streamed Downloads گاهی اوقات ممکن است بخواهید پاسخ رشته یک عملیات داده شده را به یک پاسخ قابل بارگیری بدون نیاز به نوشتن محتویات عملیات روی دیسک تبدیل کنید. شما می توانید از روش streamDownload در این سناریو استفاده کنید. این روش یک callback، نام فایل و یک آرایه اختیاری از هدر ها را به عنوان استدلال های آن می پذیرد: return response()-&gt;streamDownload(function () { echo GitHub::api(&#39;repo&#39;) -&gt;contents() -&gt;readme(&#39;laravel&#39;, &#39;laravel&#39;)[&#39;contents&#39;] }, &#39;laravel-readme.md&#39;); پاسخ‌های فایل File Responses برای نمایش یک فایل، مانند یک تصویر یا PDF به طور مستقیم در مرورگر کاربر به جای دانلود آن فایل، می‌توانید از متد file استفاده کنید. این متد مسیر فایل را به عنوان آرگومان اول و یک آرایه هدر را به عنوان آرگومان دوم می‌پذیرد: return response()-&gt;file($pathToFile); return response()-&gt;file($pathToFile, $headers); ماکروهای پاسخ یا response در لاراول اگر بخواهید یک پاسخ سفارشی ایجاد کنید که بتوانید استفاده مجدد از آن در بسیاری از مسیرها و کنترلرهای خود داشته باشید، می‌توانید از متد macro در facade مربوط به Response استفاده کنید. مثال زیر، تعریف ماکرو در متد boot از service provider را نشان می‌دهد: &lt;?php namespace App\\Providers; use Illuminate\\Support\\ServiceProvider; use Illuminate\\Support\\Facades\\Response; class ResponseMacroServiceProvider extends ServiceProvider { /** * Register the application&#39;s response macros. * * @return void */ public function boot() { Response::macro(&#39;caps&#39;, function ($value) { return Response::make(strtoupper($value)); }); } } تابع macro یک اسم به عنوان آرگومان اول و یک Closure به عنوان آرگومان دوم می‌پذیرد. در زمان فراخوانی نام ماکرو از پیاده‌سازی ResponseFactory یا تابع کمکی response این Closure مربوط به ماکرو اجرا می‌شود: return response()-&gt;caps(&#39;foo&#39;);","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="stylesheet" href="/assets/prisma/prism.css">
+    <!-- favicons and rss -->
+    <link rel="alternate" type="application/rss+xml" title="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" href="/feed.xml">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- header -->
+<header class="header" role="banner" aria-label="Header">
+    <button class="hamburger-button" onclick="hamburgerMenu();" role="button" aria-label="Hamburger menu button">
+        <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    </button>
+    <a href="/" class="logo" role="link" aria-label="Home">
+        <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo">
+    </a>
+    <nav class="navigation" role="navigation" aria-label="Navigation">
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item">
+                <a href="/" class="logo" role="menuitem" aria-label="Home">
+                    <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo">
+                </a>
+            </li>
+            
+            <li role="menuitem"><a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a></li>
+            
+            <li role="menuitem"><a href="/contactus" role="menuitem" aria-label="تماس">تماس</a></li>
+            
+        </ul>
+    </nav>
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox">
+        </form>
+    </div>
+</header>
+
+<nav id="hamburger-menu" role="navigation" aria-label="Hamburger menu">
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox">
+        </form>
+    </div>
+    <div class="home-nav" role="navigation" aria-label="Site navigation">
+        <a href="/" role="menuitem" aria-label="Home">صفحه اصلی</a>
+        
+        <a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a>
+        
+        <a href="/contactus" role="menuitem" aria-label="تماس">تماس</a>
+        
+    </div>
+
+    
+    <div class="doc-nav" role="navigation" aria-label="Documentation navigation">
+        <p role="presentation" aria-label="Category name">
+            اصول آموزش Laravel
+        </p>
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/2017/12/18/laravel.html" class="doc-link" role="link" aria-label="پاسخ Response">مقدمه</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Digging-Deeper/collections" class="doc-link" role="link" aria-label="معرفی collections">معرفی collections</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Database/database" class="doc-link" role="link" aria-label="پایگاه داده ها">پایگاه داده ها</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Database/queries" class="doc-link" role="link" aria-label="آشنایی با Query Builder">آشنایی با Query Builder</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent" class="doc-link" role="link" aria-label="آشنایی با eloquent">آشنایی با eloquent</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-relationships" class="doc-link" role="link" aria-label="eloquent relationships  آموزش">eloquent relationships  آموزش</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-mutators" class="doc-link" role="link" aria-label="آشنایی با eloquent mutators">آشنایی با eloquent mutators</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-collections" class="doc-link" role="link" aria-label="آشنایی با eloquent collections">آشنایی با eloquent collections</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-serialization" class="doc-link" role="link" aria-label="آشنایی با eloquent serialization">آشنایی با eloquent serialization</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Architecture-Concepts/lifecycle" class="doc-link" role="link" aria-label="چرخه ی حیات درخواست (Request Lifecycle)">چرخه ی حیات درخواست (Request Lifecycle)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/routing" class="doc-link" role="link" aria-label="Routing یا مسیریابی در لاراول">Routing یا مسیریابی در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/middleware" class="doc-link" role="link" aria-label="آموزش Middleware">آموزش Middleware</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/csrf" class="doc-link" role="link" aria-label="حفاظت CSRF">حفاظت CSRF</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/controllers" class="doc-link" role="link" aria-label="استفاده از Controller">استفاده از Controller</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/requests" class="doc-link" role="link" aria-label="اصول requests">اصول requests</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/views" class="doc-link" role="link" aria-label="ایجاد view">ایجاد view</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/session" class="doc-link" role="link" aria-label="استفاده از  Session">استفاده از  Session</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/responses" class="doc-link" role="link" aria-label="پاسخ Response">پاسخ Response</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/urls" class="doc-link" role="link" aria-label="تولید URL در لاراول">تولید URL در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/validation" class="doc-link" role="link" aria-label="validation یا اعتبارسنجی در لاراول">validation یا اعتبارسنجی در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/errors" class="doc-link" role="link" aria-label="مدیریت Errors &amp; Logging">مدیریت Errors &amp; Logging</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/blade" class="doc-link" role="link" aria-label="Blade Templates">Blade Templates</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/localization" class="doc-link" role="link" aria-label="اصول localization">اصول localization</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/frontend" class="doc-link" role="link" aria-label="JavaScript &amp; CSS Scaffolding">JavaScript &amp; CSS Scaffolding</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </ul>
+    </div>
+    
+</nav>
+<!-- main content -->
+<main class="container" role="main">
+    <div class="rcdoccontainerimg">
+<div class="rc-DRTVBanner-new rc-DRTVBanner-bigsize">
+    <div style="background: url('/images/original/laravel.png'); " class="blurred_img"></div>
+    <div class="mask"></div>
+    <div class="bot"></div>
+    <div class="over">
+        <div class="container-rc">
+            <img class="image" src="/images/original/laravel.png" alt="پاسخ Response" height="190">
+            <div class="desktop-banner-container">
+                <h1 class="display-5-text headline">
+                    
+                    
+                    اصول آموزش Laravel
+                    </h1>
+                <!--<div class="tagslist"><ul class='lyda-tag-list'><li class='lyda-tag-list-title'>برچسب ها</li><li><a class="tags" href="/tag/لاراول">#لاراول</a></li><li><a class="tags" href="/tag/لاراول-5-5">#لاراول 5.5</a></li></ul></div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="bread-crumb">-->
+<!--<div class="container   ">-->
+<!--<div class="pull-right ">-->
+<!--<div class="bread-button text-custom b-left">-->
+<!--انتشار : 2 ماه پیش-->
+<!--</div>-->
+<!--<a href="/category/article/" class="bread-button back-to-all b-left hidden-xs">همه مقالات</a>-->
+<!--<div class="cat-lable">-->
+<!--<a href="/category/article/laravel/">-->
+<!--لاراول-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<script>
+    $(window).scroll(function(){
+        var sticky = $('.doc-menu'),
+            scroll = $(window).scrollTop();
+        if (scroll >= 101) {sticky.addClass('doc-header-scroll'); }
+        else {sticky.removeClass('doc-header-scroll'); };
+    });
+</script>
+</div>
+<div class="doc-container">
+
+    <div class="doc-menu">
+    
+    <ul>
+        <li>
+            <a href="/2017/12/18/laravel.html" class="active doc-link" role="link">
+                مقدمه
+            </a>
+        </li>
+        
+        <li>
+            <span class="caret">معماری Laravel</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="چرخه ی حیات درخواست (Request Lifecycle)" href="/documentation/laravel/Architecture-Concepts/lifecycle" class="active doc-link" role="link">
+                چرخه ی حیات درخواست (Request Lifecycle)
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم اساسی</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="Routing یا مسیریابی در لاراول" href="/documentation/laravel/The-Basics/routing" class="active doc-link" role="link">
+                Routing یا مسیریابی در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آموزش Middleware" href="/documentation/laravel/The-Basics/middleware" class="active doc-link" role="link">
+                آموزش Middleware
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="حفاظت CSRF" href="/documentation/laravel/The-Basics/csrf" class="active doc-link" role="link">
+                حفاظت CSRF
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="استفاده از Controller" href="/documentation/laravel/The-Basics/controllers" class="active doc-link" role="link">
+                استفاده از Controller
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول requests" href="/documentation/laravel/The-Basics/requests" class="active doc-link" role="link">
+                اصول requests
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="ایجاد view" href="/documentation/laravel/The-Basics/views" class="active doc-link" role="link">
+                ایجاد view
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="استفاده از  Session" href="/documentation/laravel/The-Basics/session" class="active doc-link" role="link">
+                استفاده از  Session
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="پاسخ Response" href="/documentation/laravel/The-Basics/responses" class="active doc-link" role="link">
+                پاسخ Response
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="تولید URL در لاراول" href="/documentation/laravel/The-Basics/urls" class="active doc-link" role="link">
+                تولید URL در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="validation یا اعتبارسنجی در لاراول" href="/documentation/laravel/The-Basics/validation" class="active doc-link" role="link">
+                validation یا اعتبارسنجی در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="مدیریت Errors &amp; Logging" href="/documentation/laravel/The-Basics/errors" class="active doc-link" role="link">
+                مدیریت Errors &amp; Logging
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">Front End</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="Blade Templates" href="/documentation/laravel/Frontend/blade" class="active doc-link" role="link">
+                Blade Templates
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول localization" href="/documentation/laravel/Frontend/localization" class="active doc-link" role="link">
+                اصول localization
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="JavaScript &amp; CSS Scaffolding" href="/documentation/laravel/Frontend/frontend" class="active doc-link" role="link">
+                JavaScript &amp; CSS Scaffolding
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم پیشرفته تر</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="معرفی collections" href="/documentation/laravel/Digging-Deeper/collections" class="active doc-link" role="link">
+                معرفی collections
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">پایگاه داده ها</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="پایگاه داده ها" href="/documentation/laravel/Database/database" class="active doc-link" role="link">
+                پایگاه داده ها
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با Query Builder" href="/documentation/laravel/Database/queries" class="active doc-link" role="link">
+                آشنایی با Query Builder
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">Eloquent ORM</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent" href="/documentation/laravel/Eloquent-ORM/eloquent" class="active doc-link" role="link">
+                آشنایی با eloquent
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="eloquent relationships  آموزش" href="/documentation/laravel/Eloquent-ORM/eloquent-relationships" class="active doc-link" role="link">
+                eloquent relationships  آموزش
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent mutators" href="/documentation/laravel/Eloquent-ORM/eloquent-mutators" class="active doc-link" role="link">
+                آشنایی با eloquent mutators
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent collections" href="/documentation/laravel/Eloquent-ORM/eloquent-collections" class="active doc-link" role="link">
+                آشنایی با eloquent collections
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent serialization" href="/documentation/laravel/Eloquent-ORM/eloquent-serialization" class="active doc-link" role="link">
+                آشنایی با eloquent serialization
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+    </ul>
+    
+</div>
+
+    <article class="documentation">
+        <header class="doc-header">
+            <div class="time">
+                    تاریخ :      شنبه 20 بهمن 1396
+            </div>
+                
+        </header>
+        <section class="anchored">
+            <h3>پاسخ نوع Strings &amp; Arrays</h3>
+
+<p>
+تمام مسیرها و کنترلرهای لاراول باید یک پاسخ HTTP ایجاد کنند که در مرحله آخر، این پاسخ به مرورگر کاربر ارسال می‌‌‌شود. لاراول روش‌های مختلفی را برای برگرداندن یک پاسخ فراهم کرده است. ساده‌ترین نوع یک پاسخ HTTP در لاراول، برگرداندن یک رشته از مسیر یا کنترلر موجود در برنامه است. فریم ورک به صورت خودکار رشته را به یک پاسخ HTTP کامل تبدیل می‌کند:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('/', function () {
+    return 'Hello World';
+});
+</code></pre>
+
+<p>
+علاوه بر برگرداندن رشته‌ها از مسیرها و کنترلرهای برنامه، آرایه‌ها هم می‌توانند به عنوان یک پاسخ به مرورگر کاربر ارسال شوند. فریم ورک به صورت خودکار آرایه‌ را به یک پاسخ JSON تبدیل می‌کند:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('/', function () {
+    return [1, 2, 3];
+});
+</code></pre>
+
+<blockquote class="has-icon tip">
+Eloquent collections نیز می‌توانند از مسیرها و كنترلرهای برنامه به عنوان یک پاسخ برگردانده شوند که به صورت خودکار توسط فریم ورک به JSON تبدیل می‌شوند.
+</blockquote>
+
+<p><br></p>
+<h3>پاسخ نوع  Response Objects</h3>
+
+<p>
+در اکثر موارد، این تنها رشته‌ها و آرایه‌های ساده نیستند که از اکشن‌های مسیر در برنامه برگردانده می‌شوند، بلکه نمونه‌ کلاس Illuminate\Http\Response یا viewها نیز می‌توانند به عنوان یک پاسخ برگردانده شوند.
+</p>
+
+<p>
+برگرداندن یک نمونه کلاس Response به صورت کامل، این امکان را ایجاد می‌کند که هدرها و کد وضعیت HTTP مربوط به پاسخ را به صورت سفارشی ایجاد کنید. نمونه کلاس Response از کلاس Symfony\Component\HttpFoundation\Response ارث می‌برند که متدهای مختلفی را برای ایجاد یک پاسخ HTTP در اختیار ما قرار می‌دهد:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('home', function () {
+    return response('Hello World', 200)
+                  -&gt;header('Content-Type', 'text/plain');
+});
+</code></pre>
+
+<p>
+<a name="attaching-headers-to-responses"></a>
+</p>
+
+<p><br></p>
+<h3>الحاق هدرها به پاسخ‌های HTTP در لاراول</h3>
+
+<p>
+توجه کنید که اکثر متدهای پاسخ، به یکدیگر مرتبط هستند که امکان ایجاد ساختار واضحی از پاسخ‌ها را فراهم می‌کند. برای مثال، می‌توان از متد header برای اضافه کردن مجموعه‌ای از هدرها به یک پاسخ قبل از ارسال آن به مرورگر کاربر استفاده کرد:
+</p>
+
+<pre><code class="language-php  line-numbers">return response($content)
+            -&gt;header('Content-Type', $type)
+            -&gt;header('X-Header-One', 'Header Value')
+            -&gt;header('X-Header-Two', 'Header Value');
+</code></pre>
+
+<p>
+همچنین، می‌توان از متد withHeaders برای تعیین آرایه‌ای از هدرها، برای اضافه کردن به پاسخ استفاده کرد:
+</p>
+
+<pre><code class="language-php  line-numbers">return response($content)
+            -&gt;withHeaders([
+                'Content-Type' =&gt; $type,
+                'X-Header-One' =&gt; 'Header Value',
+                'X-Header-Two' =&gt; 'Header Value',
+            ]);
+</code></pre>
+
+<p>
+<a name="attaching-cookies-to-responses"></a>
+</p>
+
+<p><br></p>
+<h3>الحاق کوکی‌ها به HTTP response در لاراول</h3>
+
+<p>
+متد cookie در نمونه کلاس response، الحاق کوکی‌ها به پاسخ‌ها را به سادگی امکان‌پذیر می‌سازد. برای مثال، می‌توان از متد cookie برای ایجاد یک کوکی استفاده کرد و به سادگی آن را به یک نمونه کلاس response به صورت مثال زیر الحاق کرد:
+</p>
+
+<pre><code class="language-php  line-numbers">return response($content)
+                -&gt;header('Content-Type', $type)
+                -&gt;cookie('name', 'value', $minutes);
+</code></pre>
+
+<p>
+متد cookie چند آرگومان دیگر را نیز می‌پذیرد که به نسبت کمتری استفاده می‌شوند.
+</p>
+
+<pre><code class="language-php  line-numbers">-&gt;cookie($name, $value, $minutes, $path, $domain, $secure, $httpOnly)
+</code></pre>
+
+<p>
+همچنین، از facade مربوط به Cookie می‌توان برای صف بندی کوکی‌ها جهت الحاق به یک پاسخ خروجی از برنامه استفاده کرد. متد queue ، یک نمونه Cookie یا آرگومان‌های موردنیاز جهت ایجاد یک نمونه Cookie را می‌پذیرد. این کوکی‌ها به پاسخ خروجی، قبل از ارسال به مرورگر کاربر متصل می‌شوند:
+</p>
+
+<pre><code class="language-php  line-numbers">Cookie::queue(Cookie::make('name', 'value', $minutes));
+
+Cookie::queue('name', 'value', $minutes);
+</code></pre>
+
+<p>
+<a name="cookies-and-encryption"></a>
+</p>
+
+<p><br></p>
+<h3>کوکی‌ها و رمزگذاری در لاراول Cookies &amp; Encryption</h3>
+
+<p>
+در حالت پیش‌فرض، تمام کوکی‌هایی که در لاراول ایجاد می‌شوند، رمزگذاری و امضا می‌شوند، بنابراین توسط کلاینت قابل تغییر یا خواندن نیستند. اگر می‌خواهید عملیات رمزگذاری را برای زیرمجموعه‌ای از کوکی‌هایی که توسط برنامه ایجاد شده‌اند غیرفعال کنید، می‌توانید از خصوصیت $except در middleware مربوط به رمزگذاری کوکی‌ها یا App\Http\Middleware\EncryptCookis که در دایرکتوری app/Http/Middleware قرار دارد، استفاده کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">/**
+ * The names of the cookies that should not be encrypted.
+ *
+ * @var array
+ */
+protected $except = [
+    'cookie_name',
+];
+</code></pre>
+
+<p>
+<a name="redirects"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#redirects">تغییر مسیرها (redirects) در لاراول</a></h3>
+
+<p>
+پاسخ‌های redirect، نمونه‌هایی از کلاس Illuminate\Http\RedirectResponse هستند که هدرهای موردنیاز مناسب جهت هدایت کاربر به یک URL دیگر را ارائه می‌دهند. چند متد برای ایجاد نمونه کلاس RedirectResponse وجود دارد. ساده‌ترین متد استفاده از تابع کمکی redirect عمومی به صورت زیر است:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('dashboard', function () {
+    return redirect('home/dashboard');
+});
+</code></pre>
+
+<p>
+گاهی اوقات، ممکن است بخواهید کاربر را به موقعیت قبلی‌ هدایت کنید، مثلاً زمانی که فرم ارسال شده به سرور نامعتبر است. این کار را می‌توان با استفاده از تابع کمکی back عمومی انجام داد. از آنجا که این ویژگی از session استفاده می‌کند، اطمینان حاصل کنید که مسیر فراخوانی تابع کمکی back از گروه middleware web  استفاده می‌کند یا اینکه تمام middlewareهای مربوط به session اعمال شده باشند:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::post('user/profile', function () {
+    // Validate the request...
+
+    return back()-&gt;withInput();
+});
+</code></pre>
+
+<p>
+<a name="redirecting-named-routes"></a>
+</p>
+
+<p><br></p>
+<h3>تغییر مسیر (redirect) به مسیرهای نامگذاری شده در لاراول</h3>
+
+<p>
+زمانی که تابع کمکی redirect بدون هیچ پارامتری فراخوانی می‌شود، نمونه ای از Illuminate\Routing\Redirector برگردانده می‌شود که این امکان را می‌دهد که بتوانید، هر متدی را در نمونه کلاس Redirector فراخوانی کنید. برای مثال، برای ایجاد RedirectResponse به یک مسیر نام‌گذاری شده در لاراول، می‌توانید از متد route استفاده کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">return redirect()-&gt;route('login');
+</code></pre>
+
+<p>
+اگر مسیر موردنظر دارای پارامتر باشد، می‌توانید آن‌ها را به عنوان آرگومان دوم به متد route انتقال دهید:
+</p>
+
+<pre><code class="language-php  line-numbers">// For a route with the following URI: profile/{id}
+
+return redirect()-&gt;route('profile', ['id' =&gt; 1]);
+</code></pre>
+
+<p><br></p>
+<h3>پرکردن پارامترها از مدل‌های Eloquent در لاراول</h3>
+
+<p>
+برای هدایت به مسیری با پارامتر ID که داده‌‌های درون آن از طریق یک مدل Eloquent در آن قرار داده می‌شوند، به سادگی می‌توانید خود مدل را انتقال دهید. داده مربوط به فیلد ID به صورت خودکار از مدل استخراج می‌شود:
+</p>
+
+<pre><code class="language-php  line-numbers">// For a route with the following URI: profile/{id}
+
+return redirect()-&gt;route('profile', [$user]);
+</code></pre>
+
+<p>
+اگر می‌خواهید مقدار را در پارامتر مسیر قرار دهید، باید متد getRouteKey را در مدل Eloquent خود بازنویسی کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">/**
+ * Get the value of the model's route key.
+ *
+ * @return mixed
+ */
+public function getRouteKey()
+{
+    return $this-&gt;slug;
+}
+</code></pre>
+
+<p>
+<a name="redirecting-controller-actions"></a>
+</p>
+
+<p><br></p>
+<h3>تغییر مسیر (redirect) به اکشن‌های کنترلر ل Redirecting To Controller Actions</h3>
+
+<p>
+می‌توانید تغییر مسیر به اکشن‌های کنترلر ایجاد کنید. برای انجام این کار، باید نام کنترلر و اکشن را به متد action انتقال دهید. توجه کنید که لازم نیست، فضای نامی کامل را برای کنترلر مشخص کنید؛ زیرا RouteServiceProvider در لاراول به صورت خودکار فضای نامی پایه کنترلر را مشخص می‌کند:
+</p>
+
+<pre><code class="language-php  line-numbers">return redirect()-&gt;action('HomeController@index');
+</code></pre>
+
+<p>
+اگر مسیر کنترلر نیاز به انتقال پارامتر داشته باشد، می‌توانید آن‌ها را به عنوان آرگومان دوم به متد action انتقال دهید:
+</p>
+
+<pre><code class="language-php  line-numbers">return redirect()-&gt;action(
+    'UserController@profile', ['id' =&gt; 1]
+);
+</code></pre>
+
+<p>
+<a name="redirecting-external-domains"></a>
+</p>
+
+<p><br></p>
+<h3>تغییر مسیر (redirect) به دامنه‌های خارجی (Redirecting To External Domains)</h3>
+
+<p>
+گاهی ممکن است نیاز به تغییر مسیر به یک دامنه خارج از برنامه خود داشته باشید. این کار را می‌توان با فراخوانی متد away انجام داد که یک RedirectResponse را بدون رمزگذاری، اعتبار سنجی یا تأیید اضافی URL ایجاد می‌کند:
+</p>
+
+<pre><code class="language-php  line-numbers">return redirect()-&gt;away('https://www.google.com');
+</code></pre>
+
+<p>
+<a name="redirecting-with-flashed-session-data"></a>
+</p>
+
+<p><br></p>
+<h3>تغییر مسیر (redirect) به داده‌های قرار داده شده در session</h3>
+
+<p>
+تغییر مسیر به یک URL جدید و انتقال اطلاعات به session معمولاً به صورت همزمان انجام می‌گیرد. معمولاً این کار بعد از انجام موفقیت‌آمیز یک اکشن انجام می‌شود و یک پیغام موفقیت‌آمیز در session قرار داده می‌شود. برای راحتی کار، می‌توانید یک نمونه RedirectResponse ایجاد کنید و با اتصال متدها به یکدیگر، اطلاعات را در session قرار دهید:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::post('user/profile', function () {
+    // Update the user's profile...
+
+    return redirect('dashboard')-&gt;with('status', 'Profile updated!');
+});
+</code></pre>
+
+<p>
+بعد از اینکه کاربر بهURL جدید هدایت شد، می‌توانید پیغام‌های قرار داده شده در session را نمایش دهید. این کار را می‌توان با استفاده از سینتکس Blade مانند مثال زیر انجام داد:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@if (session('status'))
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"alert alert-success"</span><span class="nt">&gt;</span>
+        {{ session('status') }}
+    <span class="nt">&lt;/div&gt;</span>
+@endif
+</code></pre></div></div>
+
+<p>
+<a name="other-response-types"></a>
+</p>
+
+<p><br></p>
+<h3>
+<a href="#other-response-types">انواع پاسخ‌‌های دیگر در لاراول</a>
+</h3>
+
+<p>
+از تابع کمکی response می‌توان برای ایجاد انواع دیگری از نمونه response استفاده کرد. زمانی که تابع کمکی response را بدون آرگومان فراخوانی می‌کنید، پیاده سازی قرارداد Illuminate\Contracts\Routing\ResponseFactory برگردانده می‌شود. این قرارداد چند متد مفید برای ایجاد پاسخ ارائه می‌دهد.
+</p>
+
+<p>
+<a name="view-responses"></a>
+</p>
+
+<p><br></p>
+<h3>پاسخ‌های View Responses</h3>
+
+<p>
+اگر نیاز به کنترل وضعیت و هدر یک پاسخ دارید و همچنین باید یک view را به عنوان محتوای پاسخ برگردانید، باید از متد view استفاده کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">return response()
+            -&gt;view('hello', $data, 200)
+            -&gt;header('Content-Type', $type);
+</code></pre>
+
+<p>
+البته، اگر نیازی به انتقال کد وضعیت HTTP یا هدرهای سفارشی ندارید، باید از تابع کمکی view عمومی استفاده کنید.
+</p>
+
+<p>
+<a name="json-responses"></a>
+</p>
+
+<p><br></p>
+<h3>پاسخ‌های JSON Responses</h3>
+
+<p>
+متد json به صورت خودکار هدر Content-Type را به application/json تنظیم می‌کند و همچنین، با استفاده از تابع json_encode در PHP آرایه داده شده را به JSON تبدیل می‌کند:
+</p>
+
+<pre><code class="language-php  line-numbers">return response()-&gt;json([
+    'name' =&gt; 'Abigail',
+    'state' =&gt; 'CA'
+]);
+</code></pre>
+
+<p>
+اگر می‌خواهید یک پاسخ JSONP ایجاد کنید، می‌توانید از متد json با ترکیب متد withCallback استفاده کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">return response()
+            -&gt;json(['name' =&gt; 'Abigail', 'state' =&gt; 'CA'])
+            -&gt;withCallback($request-&gt;input('callback'));
+</code></pre>
+
+<p>
+<a name="file-downloads"></a>
+</p>
+
+<p><br></p>
+<h3>دانلود فایل File Downloads</h3>
+
+<p>
+متد download پاسخی ایجاد می‌کند که مرورگر کاربر را وادار به دانلود فایل در مسیر داده شده می‌کند. متد download نام فایل را به عنوان آرگومان دوم در متد می‌پذیرد که نام فایل مشاهده شده توسط کاربری که فایل را دانلود کرده است را مشخص می‌کند. در آخر، می‌توانید آرایه ای از هدرهای HTTP را به عنوان آرگومان سوم به متد انتقال دهید:
+</p>
+
+<pre><code class="language-php  line-numbers">return response()-&gt;download($pathToFile);
+
+return response()-&gt;download($pathToFile, $name, $headers);
+
+return response()-&gt;download($pathToFile)-&gt;deleteFileAfterSend(true);
+</code></pre>
+
+<blockquote class="has-icon note">
+Symfony HttpFoundation، که دانلود فایل‌ها را مدیریت می‌کند، نیاز دارد که فایل دانلود شده دارای یک نام فایل به صورت ASCII باشد.
+</blockquote>
+
+<p><br></p>
+<h3>پاسخ‌های Streamed Downloads</h3>
+
+<p>
+گاهی اوقات  ممکن است بخواهید پاسخ رشته یک عملیات داده شده را به یک پاسخ قابل بارگیری بدون نیاز به نوشتن محتویات عملیات روی دیسک تبدیل کنید. شما می توانید از روش streamDownload در این سناریو استفاده کنید. این روش یک callback، نام فایل و یک آرایه اختیاری از هدر ها را به عنوان استدلال های آن می پذیرد:
+</p>
+
+<pre><code class="language-php  line-numbers">return response()-&gt;streamDownload(function () {
+    echo GitHub::api('repo')
+                -&gt;contents()
+                -&gt;readme('laravel', 'laravel')['contents']
+}, 'laravel-readme.md');
+</code></pre>
+
+<p>
+<a name="file-responses"></a>
+</p>
+
+<p><br></p>
+<h3>پاسخ‌های فایل File Responses</h3>
+
+<p>
+برای نمایش یک فایل، مانند یک تصویر یا PDF به طور مستقیم در مرورگر کاربر به جای دانلود آن فایل، می‌توانید از متد file استفاده کنید. این متد مسیر فایل را به عنوان آرگومان اول و یک آرایه هدر را به عنوان آرگومان دوم می‌پذیرد:
+</p>
+
+<pre><code class="language-php  line-numbers">return response()-&gt;file($pathToFile);
+
+return response()-&gt;file($pathToFile, $headers);
+</code></pre>
+
+<p>
+<a name="response-macros"></a>
+</p>
+
+<p><br></p>
+<h3>
+<a href="#response-macros">ماکروهای پاسخ یا response در لاراول</a>
+</h3>
+
+<p>
+اگر بخواهید یک پاسخ سفارشی ایجاد کنید که بتوانید استفاده مجدد از آن در بسیاری از مسیرها و کنترلرهای خود داشته باشید، می‌توانید از متد macro در facade مربوط به Response استفاده کنید. مثال زیر، تعریف ماکرو در متد boot از service provider را نشان می‌دهد:
+</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Response;
+
+class ResponseMacroServiceProvider extends ServiceProvider
+{
+    /**
+     * Register the application's response macros.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        Response::macro('caps', function ($value) {
+            return Response::make(strtoupper($value));
+        });
+    }
+}
+</code></pre>
+
+<p>
+تابع macro یک اسم به عنوان آرگومان اول و یک Closure به عنوان آرگومان دوم می‌پذیرد. در زمان فراخوانی نام ماکرو از پیاده‌سازی ResponseFactory یا تابع کمکی response این Closure مربوط به ماکرو اجرا می‌شود:
+</p>
+
+<pre><code class="language-php  line-numbers">return response()-&gt;caps('foo');
+</code></pre>
+
+        </section>
+        
+<hr>
+<p>
+</p>
+<div>منابع مورد مطالعه جهت جمع آوری این مطلب:</div>
+<div class="refrencehref">
+        https://laravel.com/docs/5.6/responses <br> https://www.lydaweb.com/article/courses/laravel-5-5-tutorial/244/ایجاد-پاسخ-http-در-لاراول
+</div>
+
+
+        <hr>
+        <style>
+    #commentsdiv{
+        background-color: #f5f5f5;
+        border: 1px solid #c5c5c5;
+        border-bottom: 0px !important;
+        padding: 12px;
+    }
+    #commentsborder{
+        background-color: #fff;
+        border: 1px solid #c5c5c5;
+        white-space: normal;
+        padding: 20px;
+    }
+</style>
+
+<div id="commentsdiv">نظرات</div>
+<div id="commentsborder">
+<div id="wpac-comment"></div>
+</div>
+<script type="text/javascript">
+wpac_init = window.wpac_init || [];
+wpac_init.push({widget: 'Comment', id: 7878});
+(function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = 'https://embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+})();
+</script>
+
+    </article>
+</div>
+<script src="/assets/js/anchor.min.js"></script>
+<script>
+    anchors.options = {
+        placement: 'left',
+        visible: 'always',
+//        icon: '#',
+    };
+    anchors.add('.anchored h2,.anchored h3,.anchored h4,.anchored h5,.anchored h6');
+
+    (function($){
+        if(window.location.hash) {
+            var hash = decodeURIComponent(window.location.hash);
+            gotohash($(hash).offset().top);
+        }
+        $('a.anchorjs-link').click(function(){
+			gotohash($(this).offset().top);
+        });
+        $('a.anchorjs').click(function(){
+			var id = '#' + $(this).attr('title');
+			gotohash($(id).offset().top);
+        });		
+        function gotohash(top){
+            var headerHeight = 70; // Get fixed header height
+            $('html,body').animate({
+                scrollTop: top - headerHeight
+            }, 20);
+        }
+    })(jQuery);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+   $(document).ready(function (){
+
+     var scrollPosition = getParameterByName('scroll');
+     if(scrollPosition)
+      $(".doc-menu").scrollTop(scrollPosition);
+
+     $('.doc-link').click(function(){
+        var scrollTop = $(".doc-menu").scrollTop();
+        if(scrollTop > 0)
+          $(this).attr("href",this.href + "?scroll=" + $(".doc-menu").scrollTop());
+     });
+
+     function getParameterByName(name, url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+   });
+</script>
+    <div id="back-to-top" role="button" aria-label="Back to top">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+    </div>
+</main>
+<!-- footer -->
+
+<footer class="footer" role="contentinfo" aria-label="Site footer">
+    <div class="navigation" role="navigation" aria-label="Footer links">
+        <a href="http://localhost:4000" class="avatar" role="link"></a>
+        <ul role="menubar" aria-label="Footer links menubar">
+            <li class="footer-products" role="menuitem" aria-label="Products">
+                تولیدات
+                <ul role="menu" aria-hidden="true" aria-label="Products link">
+                </ul>
+            </li>
+            <li class="footer-blog" role="menuitem" aria-label="Blog">
+                مقالات
+                <ul role="menu" aria-hidden="true" aria-label="Blog link">
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2020/07/03/marriage.html" role="link" aria-label="ازدواج">ازدواج</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2019/10/11/vuejs.html" role="link" aria-label="آموزش vuejs">آموزش vuejs</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/18/laravel.html" role="link" aria-label="آموزش Laravel">آموزش Laravel</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/articles/2017/12/13/laravelcollective.html" role="link" aria-label="معرفی Laravel Collective">معرفی Laravel Collective</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/06/design-patterns.html" role="link" aria-label="معرفی  Design Pattern">معرفی  Design Pattern</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/blog" role="link" aria-label="Read more">Read More</a></li>
+                </ul>
+            </li>
+
+            <li class="footer-connect" role="menuitem" aria-label="Connect">
+                تماس
+                <ul role="menu" aria-hidden="true" aria-label="Connect link">
+                    <li role="listitem" aria-label="Connect link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub">GitHub</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://www.linkedin.com/in/farhad-mirzapour/" target="_blank" role="link" aria-label="Linkedin">Linkedin</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter">Twitter</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="socials" role="navigation" aria-label="Social links">
+        <ul role="menu" aria-hidden="true" aria-label="Social link">
+            <li role="listitem" aria-label="Social link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://www.linkedin.com/in/farhad-mirzapour-0043b862/" target="_blank" role="link" aria-label="Linkedin"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="/feed.xml" role="link" aria-label="RSS"><i class="fa fa-rss-square" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+    <div class="copyright" role="contentinfo" aria-label="Copyright">
+        <p>© <script type="text/javascript">document.write(new Date().getFullYear());</script> Farhad Mirzapour</p>
+    </div>
+</footer>
+
+<!-- scripts -->
+<script src="/assets/js/hamburger-menu.js"></script>
+
+<script src="/assets/js/elevator.min.js"></script>
+<script src="/assets/js/back-to-top.js"></script>
+<script src="/assets/prisma/prism.js"></script>
+<!-- google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108878564-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-108878564-1');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2043 @@
+<!DOCTYPE html>
+<html lang="">
+<!-- head -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>استفاده از Controller | مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="استفاده از Controller" />
+<meta name="author" content="Farhad Mirzapour" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="به جای تعریف منطق مدیریت درخواست‌های برنامه به عنوان تابع Closure در فایل‌های مسیر لاراول، می‌توانید این کارها را با استفاده از کلاس‌های کنترلر انجام دهید. کنترلرها منطق پردازش درخواست‌های مرتبط به هم را در یک کلاس واحد دسته بندی می‌کنند. کنترلرها در دایرکتوری app/Http/Controllers قرار می‌گیرند. در ادامه چگونگی کار با کنترلرها و مسیردهی به آن‌ها را با هم بررسی می‌کنیم. پایه در لاراول تعریف Controllers در مثال زیر نمونه‌ای از کلاس کنترلر پایه را مشاهده می‌کنید. توجه کنید که کنترلرهای برنامه از کلاس کنترلر پایه که به صورت پیش‌فرض در لاراول قرار دارد، ارث بری می‌کنند. کلاس پایه چندین متد ارائه می‌دهد، برای مثال متد middleware برای اتصال middleware به اکشن‌های کنترلر مورد استفاده قرار می‌گیرد: &lt;?php namespace App\Http\Controllers; use App\User; use App\Http\Controllers\Controller; class UserController extends Controller { /** * Show the profile for the given user. * * @param int $id * @return Response */ public function show($id) { return view(&#39;user.profile&#39;, [&#39;user&#39; =&gt; User::findOrFail($id)]); } } می‌توان یک مسیر مانند مثال زیر برای این کنترلر تعریف کرد: Route::get(&#39;user/{id}&#39;, &#39;UserController@show&#39;); زمانی که یک درخواست ورودی با URI مربوط به مسیر مطابقت داشته باشد، متد show در کلاس UserController اجرا خواهد شد. همچنین پارامترهای موجود در مسیر نیز به متد ارسال می‌شوند. کنترلرها را می‌توان بدون نیاز به ارث بری از یک کلاس پایه تعریف کرد. اما در این صورت به امکاناتی مانند استفاده از متدهای middleware ، validate و dispatch دسترسی نخواهید داشت. استفاده از controller و namespace در لاراول نکته مهمی که باید به آن توجه داشته باشیم این است که در هنگام تعیین مسیر کنترلر، نیازی نیست که فضای نامی کنترلر را به صورت کامل تعریف کنیم. از آنجا که RouteServiceProvider فایل‌های مسیر را در یک گروه مسیر که فضای نامی ریشه را شامل می‌شود، بارگزاری می‌کند؛ فقط آن بخش از نام کلاس که بعد از بخش App\Http\Controllers در فضای نامی قرار دارد را مشخص می‌کنیم. اگر بخواهید کنترلرها توسط فضای نامی در دایرکتوری App\Http\Controllers به صورت تودرتو گروه بندی کنید، می‌توانید به سادگی از نام کلاس خاصی نسبت به فضای نامی ریشه App\Http\Controllers استفاده کنید. بنابراین، اگر کلاس کامل کنترلر شما App\Http\Controllers\Photos\AdminController است، باید مانند مثال زیر مسیر را برای کنترلر ثبت کنید: Route::get(&#39;foo&#39;, &#39;Photos\AdminController@method&#39;); کنترلرهای تک اکشن (Single Action Controllers) در لاراول اگر بخواهید کنترلری تعریف کنید که فقط یک اکشن داشته باشد، باید یک متد __invoke را در کنترلر قرار دهید: &lt;?php namespace App\Http\Controllers; use App\User; use App\Http\Controllers\Controller; class ShowProfile extends Controller { /** * Show the profile for the given user. * * @param int $id * @return Response */ public function __invoke($id) { return view(&#39;user.profile&#39;, [&#39;user&#39; =&gt; User::findOrFail($id)]); } } در هنگام ثبت مسیر، مشخص کردن متد تعریف شده برای کنترلرهای single action نیاز نیست. به مثال زیر توجه کنید: Route::get(&#39;user/{id}&#39;, &#39;ShowProfile&#39;); Controller Middleware در لاراول می‌توان یک middleware را به مسیرهای کنترلر در فایل‌های مسیر به صورت زیر اختصاص داد: Route::get(&#39;profile&#39;, &#39;UserController@show&#39;)-&gt;middleware(&#39;auth&#39;); با این حال، برای راحتی کار می‌توان middleware را در سازنده کنترلر تعریف کرد. با استفاده از متد middleware در سازنده کنترلر، می‌توان به راحتی middleware را به اکشن کنترلر اختصاص داد. حتی می‌توان middleware را به متدهای خاصی در کلاس کنترلر محدود کرد: class UserController extends Controller { /** * Instantiate a new controller instance. * * @return void */ public function __construct() { $this-&gt;middleware(&#39;auth&#39;); $this-&gt;middleware(&#39;log&#39;)-&gt;only(&#39;index&#39;); $this-&gt;middleware(&#39;subscribed&#39;)-&gt;except(&#39;store&#39;); } } همچنین کنترلر امکان ثبت middleware با استفاده از Closure را فراهم می‌کند. این موضوع روش مناسبی جهت تعریف middleware برای یک کنترلر بدون نیاز به تعریف کلاس کلی middleware است. $this-&gt;middleware(function ($request, $next) { // ... return $next($request); }); می‌توان middleware را به زیرمجموعه‌ای از اکشن‌های یک کنترلر اختصاص داد؛ با این حال، این موضوع نشان دهنده رشد بیش از حد کنترلر است. می‌توان به جای این کار، کنترلر را به کنترلرهای کوچکتر تقسیم کرد. کنترلر منابع یا resource controllers در لاراول در مسیریابی منابع لاراول، مسیرهای معمول عملیات CRUD را می‌توان با یک خط کد به یک کنترلر اختصاص داد. برای مثال، اگر بخواهید کنترلری ایجاد کنید که تمام درخواست‌های HTTP برای عکس‌های ذخیره شده توسط برنامه را مدیریت کند، می‌توان به سرعت و با استفاده از دستور make:controller این کنترلر را ایجاد کرد: php artisan make:controller PhotoController --resource این دستور کنترلر را در app/Http/Controllers/PhotoController.php ایجاد می‌کند. این کنترلر برای هر یک از عملیات مربوط به منابع موجود، یک متد را شامل می‌شود. سپس، می‌توان یک مسیر خوب برای کنترلر مانند مثال زیر ثبت کرد: Route::resource(&#39;photos&#39;, &#39;PhotoController&#39;); این اعلان ساده مسیر، مسیرهای متعددی را برای مدیریت انواع عملیات بر روی منابع (عکس‌ها) ایجاد می‌کند. اکنون کنترلر ایجاد شده متدهایی را برای هر کدام از این عملیات، ارائه کرده است. این متدها شامل یادداشت‌هایی هستند که مشخص می‌کند کدام درخواست‌های HTTP و URIها توسط آن‌ها مدیریت می‌شوند. می‌توان چند کنترلر منابع را در یک زمان بوسیله انتقال یک آرایه به متد resources ثبت کرد: Route::resources([ &#39;photos&#39; =&gt; &#39;PhotoController&#39;, &#39;posts&#39; =&gt; &#39;PostController&#39; ]); عملیاتی که توسط کنترلر منابع مدیریت می‌شود: Verb URI Action Route Name GET /photos index photos.index GET /photos/create create photos.create POST /photos store photos.store GET /photos/{photo} show photos.show GET /photos/{photo}/edit edit photos.edit PUT/PATCH /photos/{photo} update photos.update DELETE /photos/{photo} destroy photos.destroy تعیین مدل منابع (Resource Model) در لاراول اگر از binding مدل مسیر استفاده می‌کنید و مایلید متدهای کنترلر منابع را به یک نمونه مدل type-hint کنید، می‌توانید از گزینه --model هنگام ایجاد کنترلر استفاده کنید: php artisan make:controller PhotoController --resource --model=Photo متدهای فرم جعلی در لاراول از آنجا که فرم‌های HTML نمی‌توانند درخواست‌های PUT ، PATCH یا DELETE را ایجاد کنند، باید یک فیلد پنهان _method برای ایجاد جعلی این درخواست‌های HTTP اضافه کنید. تابع کمکی method_field این فیلد را برای شما ایجاد می‌کند: {{ method_field(&#39;PUT&#39;) }} اعلان مسیر‌های منابع به صورت سفارشی در لاراول هنگام اعلان یک مسیر منابع، می‌توان زیرمجموعه‌ای از عملیاتی که کنترلر باید مدیریت کند را به جای مجموعه کامل عملیات پیش‌فرض تعریف کرد: Route::resource(&#39;photo&#39;, &#39;PhotoController&#39;, [&#39;only&#39; =&gt; [ &#39;index&#39;, &#39;show&#39; ]]); Route::resource(&#39;photo&#39;, &#39;PhotoController&#39;, [&#39;except&#39; =&gt; [ &#39;create&#39;, &#39;store&#39;, &#39;update&#39;, &#39;destroy&#39; ]]); اعلان مسیرهای منابع API در لاراول هنگام اعلان مسیرهای منابعی که توسط APIها استفاده می‌شوند، معمولا مسیرهای مربوط به عملیات create و edit را در قالب های HTML حذف می‌کنید. برای راحتی کار، می‌توانید متد apiResource را استفاده کنید که به صورت خودکار این دو مسیر را حذف می‌کند: Route::apiResource(&#39;photo&#39;, &#39;PhotoController&#39;); می‌توان چندین کنترلر API را در یک زمان با انتقال یک آرایه به متد apiResource ثبت کرد: Route::apiResources([ &#39;photos&#39; =&gt; &#39;PhotoController&#39;, &#39;posts&#39; =&gt; &#39;PostController&#39; ]); نام‌گذاری مسیرهای منابع در لاراول در حالت پیش‌فرض تمام اکشن‌های کنترلر منابع دارای یک نام مسیر یا route name هستند؛ با این حال، می‌توانید این نام‌ها را با انتقال یک آرایه names با گزینه‌های موردنظر خود بازنویسی کنید: Route::resource(&#39;photo&#39;, &#39;PhotoController&#39;, [&#39;names&#39; =&gt; [ &#39;create&#39; =&gt; &#39;photo.build&#39; ]]); پارامترهای مربوط به نام‌گذاری مسیرهای منابع در لاراول در حالت پیش‌فرض، Route::resource پارامترهای مسیر را برای مسیرهای منابع بر اساس نام‌های یکتا سازی شده منابع ایجاد می‌کند. می‌توان این نام‌ها را براساس هر منبع، توسط انتقال آرایه گزینه‌های parameters بازنویسی کرد. آرایه parameters باید یک آرایه ترکیبی از نام‌های منابع و نام‌های پارامترها باشد: Route::resource(&#39;user&#39;, &#39;AdminUserController&#39;, [&#39;parameters&#39; =&gt; [ &#39;user&#39; =&gt; &#39;admin_user&#39; ]]); مثال فوق URIهای زیر را برای مسیر show منابع ایجاد می‌کند: /user/{admin_user} ایجاد URLهای منابع به صورت محلی در لاراول در حالت پیش‌فرض، URLهای منابع توسط Route::resource با استفاده از کلمات انگلیسی ایجاد می‌کند. برای مثال، اگر نیاز به محلی سازی کلمات اکشن‌های create و edit دارید، می‌توانید از متد Route::resourceVerbs استفاده کنید و در متد boot مربوط به AppServiceProvider این عمل را انجام دهید: use Illuminate\Support\Facades\Route; /** * Bootstrap any application services. * * @return void */ public function boot() { Route::resourceVerbs([ &#39;create&#39; =&gt; &#39;crear&#39;, &#39;edit&#39; =&gt; &#39;editar&#39;, ]); } زمانی که کلمات محلی سازی شدند، URIهای زیر توسط ثبت منابع مسیر Route::resource(&#39;fotos&#39;, &#39;PhotoController&#39;) ، تولید می‌‌شود: /fotos/crear /fotos/{foto}/editar اضافه کردن مسیرهای اضافی به کنترلر منابع در لاراول اگر نیاز به اضافه کردن مسیرهای اضافی، علاوه بر مجموعه پیش‌فرض مسیرهای منابع به یک کنترلر منابع دارید، قبل از فراخوانی Route::resource شما باید این مسیرها را تعریف کنید، در غیر این صورت، مسیرهای تعریف شده توسط متد resource بر روی مسیرهای اضافی که قصد اضافه کردن آن‌ها را داریم، اولویت خواهند داشت: Route::get(&#39;photos/popular&#39;, &#39;PhotoController@method&#39;); Route::resource(&#39;photos&#39;, &#39;PhotoController&#39;); Remember to keep your controllers focused. If you find yourself routinely needing methods outside of the typical set of resource actions, consider splitting your controller into two, smaller controllers. تزریق وابستگی و Controller در لاراول از service container لاراول برای resolve کردن تمام کنترلرهای لاراول استفاده می‌شود. در نتیجه، قادر خواهیم بود، هر وابستگی که ممکن است کنترلر در سازنده به آن نیاز داشته باشد را اعلان نوع یا type-hint کنیم. وابستگی‌های اعلان شده به صورت خودکار resolve می‌شوند و تزریق وابستگی به نمونه‌ی کنترلر انجام می‌شود: &lt;?php namespace App\Http\Controllers; use App\Repositories\UserRepository; class UserController extends Controller { /** * The user repository instance. */ protected $users; /** * Create a new controller instance. * * @param UserRepository $users * @return void */ public function __construct(UserRepository $users) { $this-&gt;users = $users; } } همچنین می‌توانید هر قرارداد لاراول را نیز اعلان نوع یا type-hint کنید. اگر container می‌تواند آن را resolve کند، می‌توانید آن را اعلان نوع کنید. بسته به برنامه، تزریق وابستگی‌ها به کنترلر، ممکن است تست پذیری بهتری را فراهم کند. تزریق وابستگی به متد در لاراول علاوه بر تزریق وابستگی در سازنده، می‌توانید وابستگی‌ها را در متدهای کنترلر نیز type-hint کنید. یک مورد استفاده معمول برای روش تزریق در متد، تزریق نمونه Illuminate\Http\Request به متد کنترلر مانند مثال زیر است: &lt;?php namespace App\Http\Controllers; use Illuminate\Http\Request; class UserController extends Controller { /** * Store a new user. * * @param Request $request * @return Response */ public function store(Request $request) { $name = $request-&gt;name; // } } اگر متد کنترلر انتظار دریافت ورودی از یک پارامتر مسیر را دارد، می‌توانید به سادگی آرگومان‌های مسیر را پس از وابستگی‌ها لیست کنید. برای مثال، اگر مسیر شما به صورت مثال زیر تعریف شده باشد: Route::put(&#39;user/{id}&#39;, &#39;UserController@update&#39;); می‌توانید Illuminate\Http\Request را اعلان نوع کنید و با تعریف متد کنترلر خود به صورت زیر به پارامتر id دسترسی داشته باشید: &lt;?php namespace App\Http\Controllers; use Illuminate\Http\Request; class UserController extends Controller { /** * Update the given user. * * @param Request $request * @param string $id * @return Response */ public function update(Request $request, $id) { // } } ذخیره سازی مسیر در حافظه نهان (route caching) در لاراول مسیرهای مبتنی بر Closure با مسیرهای ذخیره شده در کش سازگاری ندارند. برای استفاده از route caching، بایستی هر مسیر مبتنی بر Closure را به کلاس‌های کنترلر تبدیل کنید. اگر برنامه شما به صورت انحصاری از مسیرهای مبتنی بر کنترلر استفاده می‌کند، می‌توانید به راحتی از route caching در لاراول استفاده کنید. استفاده از route cache به میزان قابل توجهی زمان لازم برای ثبت تمام مسیرهای برنامه در لاراول را کاهش می‌دهد. در برخی موارد، با استفاده از این روش ثبت مسیر می‌تواند حتی تا 100 برابر سریع‌تر انجام شود. برای ساخت یک route cache، باید دستور آرتیسان route:cache را اجرا کنید: php artisan route:cache پس از اجرای این دستور، فایل مسیرهای کش شده بر روی هر درخواست بارگزاری می‌شود. توجه کنید، اگر بخواهید هر مسیر جدیدی را اضافه کنید، باید یک route cache جدید ایجاد کنید. به همین دلیل، توصیه می‌شود، دستور route:cache را در هنگام استقرار و نصب پروژه اجرا نمایید. می‌توانید از دستور route:clear مانند مثال زیر برای پاک کردن route cache استفاده کنید: php artisan route:clear در این مقاله از سری مقالات آموزشی لاراول در لیداوب قصد ما آشنا کردن شما با مبحث مهم و کلیدی کنترلرهای لاراول و چگونگی کار با آن‌ها و همچنین مسیردهی آن‌ها بود. امیدواریم این مقاله به شما کرده باشد، تا هر چه سریعتر بتوانید با اصول اولیه و مفاهیم لاراول آشنا شده و راه یادگیری خود را هموار کنید." />
+<meta property="og:description" content="به جای تعریف منطق مدیریت درخواست‌های برنامه به عنوان تابع Closure در فایل‌های مسیر لاراول، می‌توانید این کارها را با استفاده از کلاس‌های کنترلر انجام دهید. کنترلرها منطق پردازش درخواست‌های مرتبط به هم را در یک کلاس واحد دسته بندی می‌کنند. کنترلرها در دایرکتوری app/Http/Controllers قرار می‌گیرند. در ادامه چگونگی کار با کنترلرها و مسیردهی به آن‌ها را با هم بررسی می‌کنیم. پایه در لاراول تعریف Controllers در مثال زیر نمونه‌ای از کلاس کنترلر پایه را مشاهده می‌کنید. توجه کنید که کنترلرهای برنامه از کلاس کنترلر پایه که به صورت پیش‌فرض در لاراول قرار دارد، ارث بری می‌کنند. کلاس پایه چندین متد ارائه می‌دهد، برای مثال متد middleware برای اتصال middleware به اکشن‌های کنترلر مورد استفاده قرار می‌گیرد: &lt;?php namespace App\Http\Controllers; use App\User; use App\Http\Controllers\Controller; class UserController extends Controller { /** * Show the profile for the given user. * * @param int $id * @return Response */ public function show($id) { return view(&#39;user.profile&#39;, [&#39;user&#39; =&gt; User::findOrFail($id)]); } } می‌توان یک مسیر مانند مثال زیر برای این کنترلر تعریف کرد: Route::get(&#39;user/{id}&#39;, &#39;UserController@show&#39;); زمانی که یک درخواست ورودی با URI مربوط به مسیر مطابقت داشته باشد، متد show در کلاس UserController اجرا خواهد شد. همچنین پارامترهای موجود در مسیر نیز به متد ارسال می‌شوند. کنترلرها را می‌توان بدون نیاز به ارث بری از یک کلاس پایه تعریف کرد. اما در این صورت به امکاناتی مانند استفاده از متدهای middleware ، validate و dispatch دسترسی نخواهید داشت. استفاده از controller و namespace در لاراول نکته مهمی که باید به آن توجه داشته باشیم این است که در هنگام تعیین مسیر کنترلر، نیازی نیست که فضای نامی کنترلر را به صورت کامل تعریف کنیم. از آنجا که RouteServiceProvider فایل‌های مسیر را در یک گروه مسیر که فضای نامی ریشه را شامل می‌شود، بارگزاری می‌کند؛ فقط آن بخش از نام کلاس که بعد از بخش App\Http\Controllers در فضای نامی قرار دارد را مشخص می‌کنیم. اگر بخواهید کنترلرها توسط فضای نامی در دایرکتوری App\Http\Controllers به صورت تودرتو گروه بندی کنید، می‌توانید به سادگی از نام کلاس خاصی نسبت به فضای نامی ریشه App\Http\Controllers استفاده کنید. بنابراین، اگر کلاس کامل کنترلر شما App\Http\Controllers\Photos\AdminController است، باید مانند مثال زیر مسیر را برای کنترلر ثبت کنید: Route::get(&#39;foo&#39;, &#39;Photos\AdminController@method&#39;); کنترلرهای تک اکشن (Single Action Controllers) در لاراول اگر بخواهید کنترلری تعریف کنید که فقط یک اکشن داشته باشد، باید یک متد __invoke را در کنترلر قرار دهید: &lt;?php namespace App\Http\Controllers; use App\User; use App\Http\Controllers\Controller; class ShowProfile extends Controller { /** * Show the profile for the given user. * * @param int $id * @return Response */ public function __invoke($id) { return view(&#39;user.profile&#39;, [&#39;user&#39; =&gt; User::findOrFail($id)]); } } در هنگام ثبت مسیر، مشخص کردن متد تعریف شده برای کنترلرهای single action نیاز نیست. به مثال زیر توجه کنید: Route::get(&#39;user/{id}&#39;, &#39;ShowProfile&#39;); Controller Middleware در لاراول می‌توان یک middleware را به مسیرهای کنترلر در فایل‌های مسیر به صورت زیر اختصاص داد: Route::get(&#39;profile&#39;, &#39;UserController@show&#39;)-&gt;middleware(&#39;auth&#39;); با این حال، برای راحتی کار می‌توان middleware را در سازنده کنترلر تعریف کرد. با استفاده از متد middleware در سازنده کنترلر، می‌توان به راحتی middleware را به اکشن کنترلر اختصاص داد. حتی می‌توان middleware را به متدهای خاصی در کلاس کنترلر محدود کرد: class UserController extends Controller { /** * Instantiate a new controller instance. * * @return void */ public function __construct() { $this-&gt;middleware(&#39;auth&#39;); $this-&gt;middleware(&#39;log&#39;)-&gt;only(&#39;index&#39;); $this-&gt;middleware(&#39;subscribed&#39;)-&gt;except(&#39;store&#39;); } } همچنین کنترلر امکان ثبت middleware با استفاده از Closure را فراهم می‌کند. این موضوع روش مناسبی جهت تعریف middleware برای یک کنترلر بدون نیاز به تعریف کلاس کلی middleware است. $this-&gt;middleware(function ($request, $next) { // ... return $next($request); }); می‌توان middleware را به زیرمجموعه‌ای از اکشن‌های یک کنترلر اختصاص داد؛ با این حال، این موضوع نشان دهنده رشد بیش از حد کنترلر است. می‌توان به جای این کار، کنترلر را به کنترلرهای کوچکتر تقسیم کرد. کنترلر منابع یا resource controllers در لاراول در مسیریابی منابع لاراول، مسیرهای معمول عملیات CRUD را می‌توان با یک خط کد به یک کنترلر اختصاص داد. برای مثال، اگر بخواهید کنترلری ایجاد کنید که تمام درخواست‌های HTTP برای عکس‌های ذخیره شده توسط برنامه را مدیریت کند، می‌توان به سرعت و با استفاده از دستور make:controller این کنترلر را ایجاد کرد: php artisan make:controller PhotoController --resource این دستور کنترلر را در app/Http/Controllers/PhotoController.php ایجاد می‌کند. این کنترلر برای هر یک از عملیات مربوط به منابع موجود، یک متد را شامل می‌شود. سپس، می‌توان یک مسیر خوب برای کنترلر مانند مثال زیر ثبت کرد: Route::resource(&#39;photos&#39;, &#39;PhotoController&#39;); این اعلان ساده مسیر، مسیرهای متعددی را برای مدیریت انواع عملیات بر روی منابع (عکس‌ها) ایجاد می‌کند. اکنون کنترلر ایجاد شده متدهایی را برای هر کدام از این عملیات، ارائه کرده است. این متدها شامل یادداشت‌هایی هستند که مشخص می‌کند کدام درخواست‌های HTTP و URIها توسط آن‌ها مدیریت می‌شوند. می‌توان چند کنترلر منابع را در یک زمان بوسیله انتقال یک آرایه به متد resources ثبت کرد: Route::resources([ &#39;photos&#39; =&gt; &#39;PhotoController&#39;, &#39;posts&#39; =&gt; &#39;PostController&#39; ]); عملیاتی که توسط کنترلر منابع مدیریت می‌شود: Verb URI Action Route Name GET /photos index photos.index GET /photos/create create photos.create POST /photos store photos.store GET /photos/{photo} show photos.show GET /photos/{photo}/edit edit photos.edit PUT/PATCH /photos/{photo} update photos.update DELETE /photos/{photo} destroy photos.destroy تعیین مدل منابع (Resource Model) در لاراول اگر از binding مدل مسیر استفاده می‌کنید و مایلید متدهای کنترلر منابع را به یک نمونه مدل type-hint کنید، می‌توانید از گزینه --model هنگام ایجاد کنترلر استفاده کنید: php artisan make:controller PhotoController --resource --model=Photo متدهای فرم جعلی در لاراول از آنجا که فرم‌های HTML نمی‌توانند درخواست‌های PUT ، PATCH یا DELETE را ایجاد کنند، باید یک فیلد پنهان _method برای ایجاد جعلی این درخواست‌های HTTP اضافه کنید. تابع کمکی method_field این فیلد را برای شما ایجاد می‌کند: {{ method_field(&#39;PUT&#39;) }} اعلان مسیر‌های منابع به صورت سفارشی در لاراول هنگام اعلان یک مسیر منابع، می‌توان زیرمجموعه‌ای از عملیاتی که کنترلر باید مدیریت کند را به جای مجموعه کامل عملیات پیش‌فرض تعریف کرد: Route::resource(&#39;photo&#39;, &#39;PhotoController&#39;, [&#39;only&#39; =&gt; [ &#39;index&#39;, &#39;show&#39; ]]); Route::resource(&#39;photo&#39;, &#39;PhotoController&#39;, [&#39;except&#39; =&gt; [ &#39;create&#39;, &#39;store&#39;, &#39;update&#39;, &#39;destroy&#39; ]]); اعلان مسیرهای منابع API در لاراول هنگام اعلان مسیرهای منابعی که توسط APIها استفاده می‌شوند، معمولا مسیرهای مربوط به عملیات create و edit را در قالب های HTML حذف می‌کنید. برای راحتی کار، می‌توانید متد apiResource را استفاده کنید که به صورت خودکار این دو مسیر را حذف می‌کند: Route::apiResource(&#39;photo&#39;, &#39;PhotoController&#39;); می‌توان چندین کنترلر API را در یک زمان با انتقال یک آرایه به متد apiResource ثبت کرد: Route::apiResources([ &#39;photos&#39; =&gt; &#39;PhotoController&#39;, &#39;posts&#39; =&gt; &#39;PostController&#39; ]); نام‌گذاری مسیرهای منابع در لاراول در حالت پیش‌فرض تمام اکشن‌های کنترلر منابع دارای یک نام مسیر یا route name هستند؛ با این حال، می‌توانید این نام‌ها را با انتقال یک آرایه names با گزینه‌های موردنظر خود بازنویسی کنید: Route::resource(&#39;photo&#39;, &#39;PhotoController&#39;, [&#39;names&#39; =&gt; [ &#39;create&#39; =&gt; &#39;photo.build&#39; ]]); پارامترهای مربوط به نام‌گذاری مسیرهای منابع در لاراول در حالت پیش‌فرض، Route::resource پارامترهای مسیر را برای مسیرهای منابع بر اساس نام‌های یکتا سازی شده منابع ایجاد می‌کند. می‌توان این نام‌ها را براساس هر منبع، توسط انتقال آرایه گزینه‌های parameters بازنویسی کرد. آرایه parameters باید یک آرایه ترکیبی از نام‌های منابع و نام‌های پارامترها باشد: Route::resource(&#39;user&#39;, &#39;AdminUserController&#39;, [&#39;parameters&#39; =&gt; [ &#39;user&#39; =&gt; &#39;admin_user&#39; ]]); مثال فوق URIهای زیر را برای مسیر show منابع ایجاد می‌کند: /user/{admin_user} ایجاد URLهای منابع به صورت محلی در لاراول در حالت پیش‌فرض، URLهای منابع توسط Route::resource با استفاده از کلمات انگلیسی ایجاد می‌کند. برای مثال، اگر نیاز به محلی سازی کلمات اکشن‌های create و edit دارید، می‌توانید از متد Route::resourceVerbs استفاده کنید و در متد boot مربوط به AppServiceProvider این عمل را انجام دهید: use Illuminate\Support\Facades\Route; /** * Bootstrap any application services. * * @return void */ public function boot() { Route::resourceVerbs([ &#39;create&#39; =&gt; &#39;crear&#39;, &#39;edit&#39; =&gt; &#39;editar&#39;, ]); } زمانی که کلمات محلی سازی شدند، URIهای زیر توسط ثبت منابع مسیر Route::resource(&#39;fotos&#39;, &#39;PhotoController&#39;) ، تولید می‌‌شود: /fotos/crear /fotos/{foto}/editar اضافه کردن مسیرهای اضافی به کنترلر منابع در لاراول اگر نیاز به اضافه کردن مسیرهای اضافی، علاوه بر مجموعه پیش‌فرض مسیرهای منابع به یک کنترلر منابع دارید، قبل از فراخوانی Route::resource شما باید این مسیرها را تعریف کنید، در غیر این صورت، مسیرهای تعریف شده توسط متد resource بر روی مسیرهای اضافی که قصد اضافه کردن آن‌ها را داریم، اولویت خواهند داشت: Route::get(&#39;photos/popular&#39;, &#39;PhotoController@method&#39;); Route::resource(&#39;photos&#39;, &#39;PhotoController&#39;); Remember to keep your controllers focused. If you find yourself routinely needing methods outside of the typical set of resource actions, consider splitting your controller into two, smaller controllers. تزریق وابستگی و Controller در لاراول از service container لاراول برای resolve کردن تمام کنترلرهای لاراول استفاده می‌شود. در نتیجه، قادر خواهیم بود، هر وابستگی که ممکن است کنترلر در سازنده به آن نیاز داشته باشد را اعلان نوع یا type-hint کنیم. وابستگی‌های اعلان شده به صورت خودکار resolve می‌شوند و تزریق وابستگی به نمونه‌ی کنترلر انجام می‌شود: &lt;?php namespace App\Http\Controllers; use App\Repositories\UserRepository; class UserController extends Controller { /** * The user repository instance. */ protected $users; /** * Create a new controller instance. * * @param UserRepository $users * @return void */ public function __construct(UserRepository $users) { $this-&gt;users = $users; } } همچنین می‌توانید هر قرارداد لاراول را نیز اعلان نوع یا type-hint کنید. اگر container می‌تواند آن را resolve کند، می‌توانید آن را اعلان نوع کنید. بسته به برنامه، تزریق وابستگی‌ها به کنترلر، ممکن است تست پذیری بهتری را فراهم کند. تزریق وابستگی به متد در لاراول علاوه بر تزریق وابستگی در سازنده، می‌توانید وابستگی‌ها را در متدهای کنترلر نیز type-hint کنید. یک مورد استفاده معمول برای روش تزریق در متد، تزریق نمونه Illuminate\Http\Request به متد کنترلر مانند مثال زیر است: &lt;?php namespace App\Http\Controllers; use Illuminate\Http\Request; class UserController extends Controller { /** * Store a new user. * * @param Request $request * @return Response */ public function store(Request $request) { $name = $request-&gt;name; // } } اگر متد کنترلر انتظار دریافت ورودی از یک پارامتر مسیر را دارد، می‌توانید به سادگی آرگومان‌های مسیر را پس از وابستگی‌ها لیست کنید. برای مثال، اگر مسیر شما به صورت مثال زیر تعریف شده باشد: Route::put(&#39;user/{id}&#39;, &#39;UserController@update&#39;); می‌توانید Illuminate\Http\Request را اعلان نوع کنید و با تعریف متد کنترلر خود به صورت زیر به پارامتر id دسترسی داشته باشید: &lt;?php namespace App\Http\Controllers; use Illuminate\Http\Request; class UserController extends Controller { /** * Update the given user. * * @param Request $request * @param string $id * @return Response */ public function update(Request $request, $id) { // } } ذخیره سازی مسیر در حافظه نهان (route caching) در لاراول مسیرهای مبتنی بر Closure با مسیرهای ذخیره شده در کش سازگاری ندارند. برای استفاده از route caching، بایستی هر مسیر مبتنی بر Closure را به کلاس‌های کنترلر تبدیل کنید. اگر برنامه شما به صورت انحصاری از مسیرهای مبتنی بر کنترلر استفاده می‌کند، می‌توانید به راحتی از route caching در لاراول استفاده کنید. استفاده از route cache به میزان قابل توجهی زمان لازم برای ثبت تمام مسیرهای برنامه در لاراول را کاهش می‌دهد. در برخی موارد، با استفاده از این روش ثبت مسیر می‌تواند حتی تا 100 برابر سریع‌تر انجام شود. برای ساخت یک route cache، باید دستور آرتیسان route:cache را اجرا کنید: php artisan route:cache پس از اجرای این دستور، فایل مسیرهای کش شده بر روی هر درخواست بارگزاری می‌شود. توجه کنید، اگر بخواهید هر مسیر جدیدی را اضافه کنید، باید یک route cache جدید ایجاد کنید. به همین دلیل، توصیه می‌شود، دستور route:cache را در هنگام استقرار و نصب پروژه اجرا نمایید. می‌توانید از دستور route:clear مانند مثال زیر برای پاک کردن route cache استفاده کنید: php artisan route:clear در این مقاله از سری مقالات آموزشی لاراول در لیداوب قصد ما آشنا کردن شما با مبحث مهم و کلیدی کنترلرهای لاراول و چگونگی کار با آن‌ها و همچنین مسیردهی آن‌ها بود. امیدواریم این مقاله به شما کرده باشد، تا هر چه سریعتر بتوانید با اصول اولیه و مفاهیم لاراول آشنا شده و راه یادگیری خود را هموار کنید." />
+<link rel="canonical" href="http://localhost:4000/documentation/laravel/The-Basics/controllers" />
+<meta property="og:url" content="http://localhost:4000/documentation/laravel/The-Basics/controllers" />
+<meta property="og:site_name" content="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-02-02T10:52:42+03:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="استفاده از Controller" />
+<meta name="twitter:site" content="@farhadmirzapour" />
+<meta name="twitter:creator" content="@Farhad Mirzapour" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"استفاده از Controller","url":"http://localhost:4000/documentation/laravel/The-Basics/controllers","datePublished":"2018-02-02T10:52:42+03:30","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"dateModified":"2018-02-02T10:52:42+03:30","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/documentation/laravel/The-Basics/controllers"},"author":{"@type":"Person","name":"Farhad Mirzapour"},"description":"به جای تعریف منطق مدیریت درخواست‌های برنامه به عنوان تابع Closure در فایل‌های مسیر لاراول، می‌توانید این کارها را با استفاده از کلاس‌های کنترلر انجام دهید. کنترلرها منطق پردازش درخواست‌های مرتبط به هم را در یک کلاس واحد دسته بندی می‌کنند. کنترلرها در دایرکتوری app/Http/Controllers قرار می‌گیرند. در ادامه چگونگی کار با کنترلرها و مسیردهی به آن‌ها را با هم بررسی می‌کنیم. پایه در لاراول تعریف Controllers در مثال زیر نمونه‌ای از کلاس کنترلر پایه را مشاهده می‌کنید. توجه کنید که کنترلرهای برنامه از کلاس کنترلر پایه که به صورت پیش‌فرض در لاراول قرار دارد، ارث بری می‌کنند. کلاس پایه چندین متد ارائه می‌دهد، برای مثال متد middleware برای اتصال middleware به اکشن‌های کنترلر مورد استفاده قرار می‌گیرد: &lt;?php namespace App\\Http\\Controllers; use App\\User; use App\\Http\\Controllers\\Controller; class UserController extends Controller { /** * Show the profile for the given user. * * @param int $id * @return Response */ public function show($id) { return view(&#39;user.profile&#39;, [&#39;user&#39; =&gt; User::findOrFail($id)]); } } می‌توان یک مسیر مانند مثال زیر برای این کنترلر تعریف کرد: Route::get(&#39;user/{id}&#39;, &#39;UserController@show&#39;); زمانی که یک درخواست ورودی با URI مربوط به مسیر مطابقت داشته باشد، متد show در کلاس UserController اجرا خواهد شد. همچنین پارامترهای موجود در مسیر نیز به متد ارسال می‌شوند. کنترلرها را می‌توان بدون نیاز به ارث بری از یک کلاس پایه تعریف کرد. اما در این صورت به امکاناتی مانند استفاده از متدهای middleware ، validate و dispatch دسترسی نخواهید داشت. استفاده از controller و namespace در لاراول نکته مهمی که باید به آن توجه داشته باشیم این است که در هنگام تعیین مسیر کنترلر، نیازی نیست که فضای نامی کنترلر را به صورت کامل تعریف کنیم. از آنجا که RouteServiceProvider فایل‌های مسیر را در یک گروه مسیر که فضای نامی ریشه را شامل می‌شود، بارگزاری می‌کند؛ فقط آن بخش از نام کلاس که بعد از بخش App\\Http\\Controllers در فضای نامی قرار دارد را مشخص می‌کنیم. اگر بخواهید کنترلرها توسط فضای نامی در دایرکتوری App\\Http\\Controllers به صورت تودرتو گروه بندی کنید، می‌توانید به سادگی از نام کلاس خاصی نسبت به فضای نامی ریشه App\\Http\\Controllers استفاده کنید. بنابراین، اگر کلاس کامل کنترلر شما App\\Http\\Controllers\\Photos\\AdminController است، باید مانند مثال زیر مسیر را برای کنترلر ثبت کنید: Route::get(&#39;foo&#39;, &#39;Photos\\AdminController@method&#39;); کنترلرهای تک اکشن (Single Action Controllers) در لاراول اگر بخواهید کنترلری تعریف کنید که فقط یک اکشن داشته باشد، باید یک متد __invoke را در کنترلر قرار دهید: &lt;?php namespace App\\Http\\Controllers; use App\\User; use App\\Http\\Controllers\\Controller; class ShowProfile extends Controller { /** * Show the profile for the given user. * * @param int $id * @return Response */ public function __invoke($id) { return view(&#39;user.profile&#39;, [&#39;user&#39; =&gt; User::findOrFail($id)]); } } در هنگام ثبت مسیر، مشخص کردن متد تعریف شده برای کنترلرهای single action نیاز نیست. به مثال زیر توجه کنید: Route::get(&#39;user/{id}&#39;, &#39;ShowProfile&#39;); Controller Middleware در لاراول می‌توان یک middleware را به مسیرهای کنترلر در فایل‌های مسیر به صورت زیر اختصاص داد: Route::get(&#39;profile&#39;, &#39;UserController@show&#39;)-&gt;middleware(&#39;auth&#39;); با این حال، برای راحتی کار می‌توان middleware را در سازنده کنترلر تعریف کرد. با استفاده از متد middleware در سازنده کنترلر، می‌توان به راحتی middleware را به اکشن کنترلر اختصاص داد. حتی می‌توان middleware را به متدهای خاصی در کلاس کنترلر محدود کرد: class UserController extends Controller { /** * Instantiate a new controller instance. * * @return void */ public function __construct() { $this-&gt;middleware(&#39;auth&#39;); $this-&gt;middleware(&#39;log&#39;)-&gt;only(&#39;index&#39;); $this-&gt;middleware(&#39;subscribed&#39;)-&gt;except(&#39;store&#39;); } } همچنین کنترلر امکان ثبت middleware با استفاده از Closure را فراهم می‌کند. این موضوع روش مناسبی جهت تعریف middleware برای یک کنترلر بدون نیاز به تعریف کلاس کلی middleware است. $this-&gt;middleware(function ($request, $next) { // ... return $next($request); }); می‌توان middleware را به زیرمجموعه‌ای از اکشن‌های یک کنترلر اختصاص داد؛ با این حال، این موضوع نشان دهنده رشد بیش از حد کنترلر است. می‌توان به جای این کار، کنترلر را به کنترلرهای کوچکتر تقسیم کرد. کنترلر منابع یا resource controllers در لاراول در مسیریابی منابع لاراول، مسیرهای معمول عملیات CRUD را می‌توان با یک خط کد به یک کنترلر اختصاص داد. برای مثال، اگر بخواهید کنترلری ایجاد کنید که تمام درخواست‌های HTTP برای عکس‌های ذخیره شده توسط برنامه را مدیریت کند، می‌توان به سرعت و با استفاده از دستور make:controller این کنترلر را ایجاد کرد: php artisan make:controller PhotoController --resource این دستور کنترلر را در app/Http/Controllers/PhotoController.php ایجاد می‌کند. این کنترلر برای هر یک از عملیات مربوط به منابع موجود، یک متد را شامل می‌شود. سپس، می‌توان یک مسیر خوب برای کنترلر مانند مثال زیر ثبت کرد: Route::resource(&#39;photos&#39;, &#39;PhotoController&#39;); این اعلان ساده مسیر، مسیرهای متعددی را برای مدیریت انواع عملیات بر روی منابع (عکس‌ها) ایجاد می‌کند. اکنون کنترلر ایجاد شده متدهایی را برای هر کدام از این عملیات، ارائه کرده است. این متدها شامل یادداشت‌هایی هستند که مشخص می‌کند کدام درخواست‌های HTTP و URIها توسط آن‌ها مدیریت می‌شوند. می‌توان چند کنترلر منابع را در یک زمان بوسیله انتقال یک آرایه به متد resources ثبت کرد: Route::resources([ &#39;photos&#39; =&gt; &#39;PhotoController&#39;, &#39;posts&#39; =&gt; &#39;PostController&#39; ]); عملیاتی که توسط کنترلر منابع مدیریت می‌شود: Verb URI Action Route Name GET /photos index photos.index GET /photos/create create photos.create POST /photos store photos.store GET /photos/{photo} show photos.show GET /photos/{photo}/edit edit photos.edit PUT/PATCH /photos/{photo} update photos.update DELETE /photos/{photo} destroy photos.destroy تعیین مدل منابع (Resource Model) در لاراول اگر از binding مدل مسیر استفاده می‌کنید و مایلید متدهای کنترلر منابع را به یک نمونه مدل type-hint کنید، می‌توانید از گزینه --model هنگام ایجاد کنترلر استفاده کنید: php artisan make:controller PhotoController --resource --model=Photo متدهای فرم جعلی در لاراول از آنجا که فرم‌های HTML نمی‌توانند درخواست‌های PUT ، PATCH یا DELETE را ایجاد کنند، باید یک فیلد پنهان _method برای ایجاد جعلی این درخواست‌های HTTP اضافه کنید. تابع کمکی method_field این فیلد را برای شما ایجاد می‌کند: {{ method_field(&#39;PUT&#39;) }} اعلان مسیر‌های منابع به صورت سفارشی در لاراول هنگام اعلان یک مسیر منابع، می‌توان زیرمجموعه‌ای از عملیاتی که کنترلر باید مدیریت کند را به جای مجموعه کامل عملیات پیش‌فرض تعریف کرد: Route::resource(&#39;photo&#39;, &#39;PhotoController&#39;, [&#39;only&#39; =&gt; [ &#39;index&#39;, &#39;show&#39; ]]); Route::resource(&#39;photo&#39;, &#39;PhotoController&#39;, [&#39;except&#39; =&gt; [ &#39;create&#39;, &#39;store&#39;, &#39;update&#39;, &#39;destroy&#39; ]]); اعلان مسیرهای منابع API در لاراول هنگام اعلان مسیرهای منابعی که توسط APIها استفاده می‌شوند، معمولا مسیرهای مربوط به عملیات create و edit را در قالب های HTML حذف می‌کنید. برای راحتی کار، می‌توانید متد apiResource را استفاده کنید که به صورت خودکار این دو مسیر را حذف می‌کند: Route::apiResource(&#39;photo&#39;, &#39;PhotoController&#39;); می‌توان چندین کنترلر API را در یک زمان با انتقال یک آرایه به متد apiResource ثبت کرد: Route::apiResources([ &#39;photos&#39; =&gt; &#39;PhotoController&#39;, &#39;posts&#39; =&gt; &#39;PostController&#39; ]); نام‌گذاری مسیرهای منابع در لاراول در حالت پیش‌فرض تمام اکشن‌های کنترلر منابع دارای یک نام مسیر یا route name هستند؛ با این حال، می‌توانید این نام‌ها را با انتقال یک آرایه names با گزینه‌های موردنظر خود بازنویسی کنید: Route::resource(&#39;photo&#39;, &#39;PhotoController&#39;, [&#39;names&#39; =&gt; [ &#39;create&#39; =&gt; &#39;photo.build&#39; ]]); پارامترهای مربوط به نام‌گذاری مسیرهای منابع در لاراول در حالت پیش‌فرض، Route::resource پارامترهای مسیر را برای مسیرهای منابع بر اساس نام‌های یکتا سازی شده منابع ایجاد می‌کند. می‌توان این نام‌ها را براساس هر منبع، توسط انتقال آرایه گزینه‌های parameters بازنویسی کرد. آرایه parameters باید یک آرایه ترکیبی از نام‌های منابع و نام‌های پارامترها باشد: Route::resource(&#39;user&#39;, &#39;AdminUserController&#39;, [&#39;parameters&#39; =&gt; [ &#39;user&#39; =&gt; &#39;admin_user&#39; ]]); مثال فوق URIهای زیر را برای مسیر show منابع ایجاد می‌کند: /user/{admin_user} ایجاد URLهای منابع به صورت محلی در لاراول در حالت پیش‌فرض، URLهای منابع توسط Route::resource با استفاده از کلمات انگلیسی ایجاد می‌کند. برای مثال، اگر نیاز به محلی سازی کلمات اکشن‌های create و edit دارید، می‌توانید از متد Route::resourceVerbs استفاده کنید و در متد boot مربوط به AppServiceProvider این عمل را انجام دهید: use Illuminate\\Support\\Facades\\Route; /** * Bootstrap any application services. * * @return void */ public function boot() { Route::resourceVerbs([ &#39;create&#39; =&gt; &#39;crear&#39;, &#39;edit&#39; =&gt; &#39;editar&#39;, ]); } زمانی که کلمات محلی سازی شدند، URIهای زیر توسط ثبت منابع مسیر Route::resource(&#39;fotos&#39;, &#39;PhotoController&#39;) ، تولید می‌‌شود: /fotos/crear /fotos/{foto}/editar اضافه کردن مسیرهای اضافی به کنترلر منابع در لاراول اگر نیاز به اضافه کردن مسیرهای اضافی، علاوه بر مجموعه پیش‌فرض مسیرهای منابع به یک کنترلر منابع دارید، قبل از فراخوانی Route::resource شما باید این مسیرها را تعریف کنید، در غیر این صورت، مسیرهای تعریف شده توسط متد resource بر روی مسیرهای اضافی که قصد اضافه کردن آن‌ها را داریم، اولویت خواهند داشت: Route::get(&#39;photos/popular&#39;, &#39;PhotoController@method&#39;); Route::resource(&#39;photos&#39;, &#39;PhotoController&#39;); Remember to keep your controllers focused. If you find yourself routinely needing methods outside of the typical set of resource actions, consider splitting your controller into two, smaller controllers. تزریق وابستگی و Controller در لاراول از service container لاراول برای resolve کردن تمام کنترلرهای لاراول استفاده می‌شود. در نتیجه، قادر خواهیم بود، هر وابستگی که ممکن است کنترلر در سازنده به آن نیاز داشته باشد را اعلان نوع یا type-hint کنیم. وابستگی‌های اعلان شده به صورت خودکار resolve می‌شوند و تزریق وابستگی به نمونه‌ی کنترلر انجام می‌شود: &lt;?php namespace App\\Http\\Controllers; use App\\Repositories\\UserRepository; class UserController extends Controller { /** * The user repository instance. */ protected $users; /** * Create a new controller instance. * * @param UserRepository $users * @return void */ public function __construct(UserRepository $users) { $this-&gt;users = $users; } } همچنین می‌توانید هر قرارداد لاراول را نیز اعلان نوع یا type-hint کنید. اگر container می‌تواند آن را resolve کند، می‌توانید آن را اعلان نوع کنید. بسته به برنامه، تزریق وابستگی‌ها به کنترلر، ممکن است تست پذیری بهتری را فراهم کند. تزریق وابستگی به متد در لاراول علاوه بر تزریق وابستگی در سازنده، می‌توانید وابستگی‌ها را در متدهای کنترلر نیز type-hint کنید. یک مورد استفاده معمول برای روش تزریق در متد، تزریق نمونه Illuminate\\Http\\Request به متد کنترلر مانند مثال زیر است: &lt;?php namespace App\\Http\\Controllers; use Illuminate\\Http\\Request; class UserController extends Controller { /** * Store a new user. * * @param Request $request * @return Response */ public function store(Request $request) { $name = $request-&gt;name; // } } اگر متد کنترلر انتظار دریافت ورودی از یک پارامتر مسیر را دارد، می‌توانید به سادگی آرگومان‌های مسیر را پس از وابستگی‌ها لیست کنید. برای مثال، اگر مسیر شما به صورت مثال زیر تعریف شده باشد: Route::put(&#39;user/{id}&#39;, &#39;UserController@update&#39;); می‌توانید Illuminate\\Http\\Request را اعلان نوع کنید و با تعریف متد کنترلر خود به صورت زیر به پارامتر id دسترسی داشته باشید: &lt;?php namespace App\\Http\\Controllers; use Illuminate\\Http\\Request; class UserController extends Controller { /** * Update the given user. * * @param Request $request * @param string $id * @return Response */ public function update(Request $request, $id) { // } } ذخیره سازی مسیر در حافظه نهان (route caching) در لاراول مسیرهای مبتنی بر Closure با مسیرهای ذخیره شده در کش سازگاری ندارند. برای استفاده از route caching، بایستی هر مسیر مبتنی بر Closure را به کلاس‌های کنترلر تبدیل کنید. اگر برنامه شما به صورت انحصاری از مسیرهای مبتنی بر کنترلر استفاده می‌کند، می‌توانید به راحتی از route caching در لاراول استفاده کنید. استفاده از route cache به میزان قابل توجهی زمان لازم برای ثبت تمام مسیرهای برنامه در لاراول را کاهش می‌دهد. در برخی موارد، با استفاده از این روش ثبت مسیر می‌تواند حتی تا 100 برابر سریع‌تر انجام شود. برای ساخت یک route cache، باید دستور آرتیسان route:cache را اجرا کنید: php artisan route:cache پس از اجرای این دستور، فایل مسیرهای کش شده بر روی هر درخواست بارگزاری می‌شود. توجه کنید، اگر بخواهید هر مسیر جدیدی را اضافه کنید، باید یک route cache جدید ایجاد کنید. به همین دلیل، توصیه می‌شود، دستور route:cache را در هنگام استقرار و نصب پروژه اجرا نمایید. می‌توانید از دستور route:clear مانند مثال زیر برای پاک کردن route cache استفاده کنید: php artisan route:clear در این مقاله از سری مقالات آموزشی لاراول در لیداوب قصد ما آشنا کردن شما با مبحث مهم و کلیدی کنترلرهای لاراول و چگونگی کار با آن‌ها و همچنین مسیردهی آن‌ها بود. امیدواریم این مقاله به شما کرده باشد، تا هر چه سریعتر بتوانید با اصول اولیه و مفاهیم لاراول آشنا شده و راه یادگیری خود را هموار کنید.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="stylesheet" href="/assets/prisma/prism.css">
+    <!-- favicons and rss -->
+    <link rel="alternate" type="application/rss+xml" title="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" href="/feed.xml">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- header -->
+<header class="header" role="banner" aria-label="Header">
+    <button class="hamburger-button" onclick="hamburgerMenu();" role="button" aria-label="Hamburger menu button">
+        <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    </button>
+    <a href="/" class="logo" role="link" aria-label="Home">
+        <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo">
+    </a>
+    <nav class="navigation" role="navigation" aria-label="Navigation">
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item">
+                <a href="/" class="logo" role="menuitem" aria-label="Home">
+                    <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo">
+                </a>
+            </li>
+            
+            <li role="menuitem"><a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a></li>
+            
+            <li role="menuitem"><a href="/contactus" role="menuitem" aria-label="تماس">تماس</a></li>
+            
+        </ul>
+    </nav>
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox">
+        </form>
+    </div>
+</header>
+
+<nav id="hamburger-menu" role="navigation" aria-label="Hamburger menu">
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox">
+        </form>
+    </div>
+    <div class="home-nav" role="navigation" aria-label="Site navigation">
+        <a href="/" role="menuitem" aria-label="Home">صفحه اصلی</a>
+        
+        <a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a>
+        
+        <a href="/contactus" role="menuitem" aria-label="تماس">تماس</a>
+        
+    </div>
+
+    
+    <div class="doc-nav" role="navigation" aria-label="Documentation navigation">
+        <p role="presentation" aria-label="Category name">
+            اصول آموزش Laravel
+        </p>
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/2017/12/18/laravel.html" class="doc-link" role="link" aria-label="استفاده از Controller">مقدمه</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Digging-Deeper/collections" class="doc-link" role="link" aria-label="معرفی collections">معرفی collections</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Database/database" class="doc-link" role="link" aria-label="پایگاه داده ها">پایگاه داده ها</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Database/queries" class="doc-link" role="link" aria-label="آشنایی با Query Builder">آشنایی با Query Builder</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent" class="doc-link" role="link" aria-label="آشنایی با eloquent">آشنایی با eloquent</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-relationships" class="doc-link" role="link" aria-label="eloquent relationships  آموزش">eloquent relationships  آموزش</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-mutators" class="doc-link" role="link" aria-label="آشنایی با eloquent mutators">آشنایی با eloquent mutators</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-collections" class="doc-link" role="link" aria-label="آشنایی با eloquent collections">آشنایی با eloquent collections</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-serialization" class="doc-link" role="link" aria-label="آشنایی با eloquent serialization">آشنایی با eloquent serialization</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Architecture-Concepts/lifecycle" class="doc-link" role="link" aria-label="چرخه ی حیات درخواست (Request Lifecycle)">چرخه ی حیات درخواست (Request Lifecycle)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/routing" class="doc-link" role="link" aria-label="Routing یا مسیریابی در لاراول">Routing یا مسیریابی در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/middleware" class="doc-link" role="link" aria-label="آموزش Middleware">آموزش Middleware</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/csrf" class="doc-link" role="link" aria-label="حفاظت CSRF">حفاظت CSRF</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/controllers" class="doc-link" role="link" aria-label="استفاده از Controller">استفاده از Controller</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/requests" class="doc-link" role="link" aria-label="اصول requests">اصول requests</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/views" class="doc-link" role="link" aria-label="ایجاد view">ایجاد view</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/session" class="doc-link" role="link" aria-label="استفاده از  Session">استفاده از  Session</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/responses" class="doc-link" role="link" aria-label="پاسخ Response">پاسخ Response</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/urls" class="doc-link" role="link" aria-label="تولید URL در لاراول">تولید URL در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/validation" class="doc-link" role="link" aria-label="validation یا اعتبارسنجی در لاراول">validation یا اعتبارسنجی در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/errors" class="doc-link" role="link" aria-label="مدیریت Errors &amp; Logging">مدیریت Errors &amp; Logging</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/blade" class="doc-link" role="link" aria-label="Blade Templates">Blade Templates</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/localization" class="doc-link" role="link" aria-label="اصول localization">اصول localization</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/frontend" class="doc-link" role="link" aria-label="JavaScript &amp; CSS Scaffolding">JavaScript &amp; CSS Scaffolding</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </ul>
+    </div>
+    
+</nav>
+<!-- main content -->
+<main class="container" role="main">
+    <div class="rcdoccontainerimg">
+<div class="rc-DRTVBanner-new rc-DRTVBanner-bigsize">
+    <div style="background: url('/images/original/laravel.png'); " class="blurred_img"></div>
+    <div class="mask"></div>
+    <div class="bot"></div>
+    <div class="over">
+        <div class="container-rc">
+            <img class="image" src="/images/original/laravel.png" alt="استفاده از Controller" height="190">
+            <div class="desktop-banner-container">
+                <h1 class="display-5-text headline">
+                    
+                    
+                    اصول آموزش Laravel
+                    </h1>
+                <!--<div class="tagslist"><ul class='lyda-tag-list'><li class='lyda-tag-list-title'>برچسب ها</li><li><a class="tags" href="/tag/لاراول">#لاراول</a></li><li><a class="tags" href="/tag/لاراول-5-5">#لاراول 5.5</a></li></ul></div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="bread-crumb">-->
+<!--<div class="container   ">-->
+<!--<div class="pull-right ">-->
+<!--<div class="bread-button text-custom b-left">-->
+<!--انتشار : 2 ماه پیش-->
+<!--</div>-->
+<!--<a href="/category/article/" class="bread-button back-to-all b-left hidden-xs">همه مقالات</a>-->
+<!--<div class="cat-lable">-->
+<!--<a href="/category/article/laravel/">-->
+<!--لاراول-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<script>
+    $(window).scroll(function(){
+        var sticky = $('.doc-menu'),
+            scroll = $(window).scrollTop();
+        if (scroll >= 101) {sticky.addClass('doc-header-scroll'); }
+        else {sticky.removeClass('doc-header-scroll'); };
+    });
+</script>
+</div>
+<div class="doc-container">
+
+    <div class="doc-menu">
+    
+    <ul>
+        <li>
+            <a href="/2017/12/18/laravel.html" class="active doc-link" role="link">
+                مقدمه
+            </a>
+        </li>
+        
+        <li>
+            <span class="caret">معماری Laravel</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="چرخه ی حیات درخواست (Request Lifecycle)" href="/documentation/laravel/Architecture-Concepts/lifecycle" class="active doc-link" role="link">
+                چرخه ی حیات درخواست (Request Lifecycle)
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم اساسی</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="Routing یا مسیریابی در لاراول" href="/documentation/laravel/The-Basics/routing" class="active doc-link" role="link">
+                Routing یا مسیریابی در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آموزش Middleware" href="/documentation/laravel/The-Basics/middleware" class="active doc-link" role="link">
+                آموزش Middleware
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="حفاظت CSRF" href="/documentation/laravel/The-Basics/csrf" class="active doc-link" role="link">
+                حفاظت CSRF
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="استفاده از Controller" href="/documentation/laravel/The-Basics/controllers" class="active doc-link" role="link">
+                استفاده از Controller
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول requests" href="/documentation/laravel/The-Basics/requests" class="active doc-link" role="link">
+                اصول requests
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="ایجاد view" href="/documentation/laravel/The-Basics/views" class="active doc-link" role="link">
+                ایجاد view
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="استفاده از  Session" href="/documentation/laravel/The-Basics/session" class="active doc-link" role="link">
+                استفاده از  Session
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="پاسخ Response" href="/documentation/laravel/The-Basics/responses" class="active doc-link" role="link">
+                پاسخ Response
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="تولید URL در لاراول" href="/documentation/laravel/The-Basics/urls" class="active doc-link" role="link">
+                تولید URL در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="validation یا اعتبارسنجی در لاراول" href="/documentation/laravel/The-Basics/validation" class="active doc-link" role="link">
+                validation یا اعتبارسنجی در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="مدیریت Errors &amp; Logging" href="/documentation/laravel/The-Basics/errors" class="active doc-link" role="link">
+                مدیریت Errors &amp; Logging
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">Front End</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="Blade Templates" href="/documentation/laravel/Frontend/blade" class="active doc-link" role="link">
+                Blade Templates
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول localization" href="/documentation/laravel/Frontend/localization" class="active doc-link" role="link">
+                اصول localization
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="JavaScript &amp; CSS Scaffolding" href="/documentation/laravel/Frontend/frontend" class="active doc-link" role="link">
+                JavaScript &amp; CSS Scaffolding
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم پیشرفته تر</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="معرفی collections" href="/documentation/laravel/Digging-Deeper/collections" class="active doc-link" role="link">
+                معرفی collections
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">پایگاه داده ها</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="پایگاه داده ها" href="/documentation/laravel/Database/database" class="active doc-link" role="link">
+                پایگاه داده ها
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با Query Builder" href="/documentation/laravel/Database/queries" class="active doc-link" role="link">
+                آشنایی با Query Builder
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">Eloquent ORM</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent" href="/documentation/laravel/Eloquent-ORM/eloquent" class="active doc-link" role="link">
+                آشنایی با eloquent
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="eloquent relationships  آموزش" href="/documentation/laravel/Eloquent-ORM/eloquent-relationships" class="active doc-link" role="link">
+                eloquent relationships  آموزش
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent mutators" href="/documentation/laravel/Eloquent-ORM/eloquent-mutators" class="active doc-link" role="link">
+                آشنایی با eloquent mutators
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent collections" href="/documentation/laravel/Eloquent-ORM/eloquent-collections" class="active doc-link" role="link">
+                آشنایی با eloquent collections
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent serialization" href="/documentation/laravel/Eloquent-ORM/eloquent-serialization" class="active doc-link" role="link">
+                آشنایی با eloquent serialization
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+    </ul>
+    
+</div>
+
+    <article class="documentation">
+        <header class="doc-header">
+            <div class="time">
+                    تاریخ :      جمعه 13 بهمن 1396
+            </div>
+                
+        </header>
+        <section class="anchored">
+            <p>
+به جای تعریف منطق مدیریت درخواست‌های برنامه به عنوان تابع Closure در فایل‌های مسیر لاراول، می‌توانید این کارها را با استفاده از کلاس‌های کنترلر انجام دهید. کنترلرها منطق پردازش درخواست‌های مرتبط به هم را در یک کلاس واحد دسته بندی می‌کنند. کنترلرها در دایرکتوری app/Http/Controllers قرار می‌گیرند. در ادامه چگونگی کار با کنترلرها و مسیردهی به آن‌ها را با هم بررسی می‌کنیم.
+</p>
+
+<p>
+<a name="basic-controllers"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#basic-controllers"> پایه در لاراول</a></h3>
+
+<p>
+<a name="defining-controllers"></a>
+</p>
+
+<p><br></p>
+<h3>تعریف Controllers</h3>
+
+<p>
+در مثال زیر نمونه‌ای از کلاس کنترلر پایه را مشاهده می‌کنید. توجه کنید که کنترلرهای برنامه از کلاس کنترلر پایه که به صورت پیش‌فرض در لاراول قرار دارد، ارث بری می‌کنند. کلاس پایه چندین متد ارائه می‌دهد، برای مثال متد middleware برای اتصال middleware به اکشن‌های کنترلر مورد استفاده قرار می‌گیرد:
+</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+
+namespace App\Http\Controllers;
+
+use App\User;
+use App\Http\Controllers\Controller;
+
+class UserController extends Controller
+{
+    /**
+     * Show the profile for the given user.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function show($id)
+    {
+        return view('user.profile', ['user' =&gt; User::findOrFail($id)]);
+    }
+}
+</code></pre>
+
+<p>
+می‌توان یک مسیر مانند مثال زیر برای این کنترلر تعریف کرد:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('user/{id}', 'UserController@show');
+</code></pre>
+
+<p>
+زمانی که یک درخواست ورودی با URI مربوط به مسیر مطابقت داشته باشد، متد show در کلاس UserController اجرا خواهد شد. همچنین پارامترهای موجود در مسیر نیز به متد ارسال می‌شوند.
+</p>
+
+<blockquote class="has-icon tip">
+کنترلرها را می‌توان بدون نیاز به ارث بری از یک کلاس پایه تعریف کرد. اما در این صورت به امکاناتی مانند استفاده از متدهای middleware ، validate و dispatch دسترسی نخواهید داشت.
+</blockquote>
+
+<p>
+<a name="controllers-and-namespaces"></a>
+</p>
+
+<p><br></p>
+<h3>استفاده از controller و namespace در لاراول</h3>
+
+<p>
+نکته مهمی که باید به آن توجه داشته باشیم این است که در هنگام تعیین مسیر کنترلر، نیازی نیست که فضای نامی کنترلر را به صورت کامل تعریف کنیم. از آنجا که RouteServiceProvider فایل‌های مسیر را در یک گروه مسیر که فضای نامی ریشه را شامل می‌شود، بارگزاری می‌کند؛ فقط آن بخش از نام کلاس که بعد از بخش App\Http\Controllers در فضای نامی قرار دارد را مشخص می‌کنیم.
+</p>
+
+<p>
+اگر بخواهید کنترلرها توسط فضای نامی در دایرکتوری App\Http\Controllers به صورت تودرتو گروه بندی کنید، می‌توانید به سادگی از نام کلاس خاصی نسبت به فضای نامی ریشه App\Http\Controllers استفاده کنید. بنابراین، اگر کلاس کامل کنترلر شما App\Http\Controllers\Photos\AdminController است، باید مانند مثال زیر مسیر را برای کنترلر ثبت کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('foo', 'Photos\AdminController@method');
+</code></pre>
+
+<p>
+<a name="single-action-controllers"></a>
+</p>
+
+<p><br></p>
+<h3>کنترلرهای تک اکشن (Single Action Controllers) در لاراول</h3>
+
+<p>
+اگر بخواهید کنترلری تعریف کنید که فقط یک اکشن داشته باشد، باید یک متد __invoke را در کنترلر قرار دهید:
+</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+
+namespace App\Http\Controllers;
+
+use App\User;
+use App\Http\Controllers\Controller;
+
+class ShowProfile extends Controller
+{
+    /**
+     * Show the profile for the given user.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function __invoke($id)
+    {
+        return view('user.profile', ['user' =&gt; User::findOrFail($id)]);
+    }
+}
+</code></pre>
+
+<p>
+در هنگام ثبت مسیر، مشخص کردن متد تعریف شده برای کنترلرهای single action نیاز نیست. به مثال زیر توجه کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('user/{id}', 'ShowProfile');
+</code></pre>
+
+<p>
+<a name="controller-middleware"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#controller-middleware">Controller Middleware در لاراول</a></h3>
+
+<p>
+می‌توان یک middleware را به مسیرهای کنترلر در فایل‌های مسیر به صورت زیر اختصاص داد:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('profile', 'UserController@show')-&gt;middleware('auth');
+</code></pre>
+
+<p>
+با این حال، برای راحتی کار می‌توان middleware را در سازنده کنترلر تعریف کرد. با استفاده از متد middleware در سازنده کنترلر، می‌توان به راحتی middleware را به اکشن کنترلر اختصاص داد. حتی می‌توان middleware را به متدهای خاصی در کلاس کنترلر محدود کرد:
+</p>
+
+<pre><code class="language-php  line-numbers">class UserController extends Controller
+{
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this-&gt;middleware('auth');
+
+        $this-&gt;middleware('log')-&gt;only('index');
+
+        $this-&gt;middleware('subscribed')-&gt;except('store');
+    }
+}
+</code></pre>
+
+<p>
+همچنین کنترلر امکان ثبت middleware با استفاده از Closure را فراهم می‌کند. این موضوع روش مناسبی جهت تعریف middleware برای یک کنترلر بدون نیاز به تعریف کلاس کلی middleware است.
+</p>
+
+<pre><code class="language-php  line-numbers">$this-&gt;middleware(function ($request, $next) {
+    // ...
+
+    return $next($request);
+});
+</code></pre>
+
+<blockquote class="has-icon tip">
+ می‌توان middleware را به زیرمجموعه‌ای از اکشن‌های یک کنترلر اختصاص داد؛ با این حال، این موضوع نشان دهنده رشد بیش از حد کنترلر است. می‌توان به جای این کار، کنترلر را به کنترلرهای کوچکتر تقسیم کرد.
+</blockquote>
+
+<p>
+<a name="resource-controllers"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#resource-controllers">کنترلر منابع یا resource controllers در لاراول</a></h3>
+
+<p>
+در مسیریابی منابع لاراول، مسیرهای معمول عملیات CRUD را می‌توان با یک خط کد به یک کنترلر اختصاص داد. برای مثال، اگر بخواهید کنترلری ایجاد کنید که تمام درخواست‌های HTTP برای عکس‌های ذخیره شده توسط برنامه را مدیریت کند، می‌توان به سرعت و با استفاده از دستور make:controller این کنترلر را ایجاد کرد:
+</p>
+
+<pre><code class="language-php  line-numbers">php artisan make:controller PhotoController --resource
+</code></pre>
+
+<p>
+این دستور کنترلر را در app/Http/Controllers/PhotoController.php ایجاد می‌کند. این کنترلر برای هر یک از عملیات مربوط به منابع موجود، یک متد را شامل می‌شود.
+</p>
+
+<p>
+سپس، می‌توان یک مسیر خوب برای کنترلر مانند مثال زیر ثبت کرد:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::resource('photos', 'PhotoController');
+</code></pre>
+
+<p>
+این اعلان ساده مسیر، مسیرهای متعددی را برای مدیریت انواع عملیات بر روی منابع (عکس‌ها) ایجاد می‌کند. اکنون کنترلر ایجاد شده متدهایی را برای هر کدام از این عملیات، ارائه کرده است. این متدها شامل یادداشت‌هایی هستند که مشخص می‌کند کدام درخواست‌های HTTP و URIها توسط آن‌ها مدیریت می‌شوند.
+</p>
+
+<p>
+می‌توان چند کنترلر منابع را در یک زمان بوسیله انتقال یک آرایه به متد resources ثبت کرد:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::resources([
+    'photos' =&gt; 'PhotoController',
+    'posts' =&gt; 'PostController'
+]);
+</code></pre>
+
+<p><br></p>
+<h3>عملیاتی که توسط کنترلر منابع مدیریت می‌شود:
+</h3>
+<table>
+<thead>
+<tr>
+<th>Verb</th>
+<th>URI</th>
+<th>Action</th>
+<th>Route Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code class=" language-php"><span class="token operator">/</span>photos</code></td>
+<td>index</td>
+<td>photos.index</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code class=" language-php"><span class="token operator">/</span>photos<span class="token operator">/</span>create</code></td>
+<td>create</td>
+<td>photos.create</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code class=" language-php"><span class="token operator">/</span>photos</code></td>
+<td>store</td>
+<td>photos.store</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code class=" language-php"><span class="token operator">/</span>photos<span class="token operator">/</span><span class="token punctuation">{</span>photo<span class="token punctuation">}</span></code></td>
+<td>show</td>
+<td>photos.show</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code class=" language-php"><span class="token operator">/</span>photos<span class="token operator">/</span><span class="token punctuation">{</span>photo<span class="token punctuation">}</span><span class="token operator">/</span>edit</code></td>
+<td>edit</td>
+<td>photos.edit</td>
+</tr>
+<tr>
+<td>PUT/PATCH</td>
+<td><code class=" language-php"><span class="token operator">/</span>photos<span class="token operator">/</span><span class="token punctuation">{</span>photo<span class="token punctuation">}</span></code></td>
+<td>update</td>
+<td>photos.update</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td><code class=" language-php"><span class="token operator">/</span>photos<span class="token operator">/</span><span class="token punctuation">{</span>photo<span class="token punctuation">}</span></code></td>
+<td>destroy</td>
+<td>photos.destroy</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<h3>تعیین مدل منابع (Resource Model) در لاراول</h3>
+
+<p>
+اگر از binding مدل مسیر استفاده می‌کنید و مایلید متدهای کنترلر منابع را به یک نمونه مدل type-hint کنید، می‌توانید از گزینه --model هنگام ایجاد کنترلر استفاده کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">php artisan make:controller PhotoController --resource --model=Photo
+</code></pre>
+
+<p><br></p>
+<h3>متدهای فرم جعلی در لاراول</h3>
+
+<p>
+از آنجا که فرم‌های HTML نمی‌توانند درخواست‌های PUT ، PATCH یا DELETE را ایجاد کنند، باید یک فیلد پنهان _method برای ایجاد جعلی این درخواست‌های HTTP اضافه کنید. تابع کمکی method_field این فیلد را برای شما ایجاد می‌کند:
+</p>
+
+<pre><code class="language-php  line-numbers">{{ method_field('PUT') }}
+</code></pre>
+
+<p>
+<a name="restful-partial-resource-routes"></a>
+</p>
+
+<p><br></p>
+<h3>اعلان مسیر‌های منابع به صورت سفارشی در لاراول</h3>
+
+<p>
+هنگام اعلان یک مسیر منابع، می‌توان زیرمجموعه‌ای از عملیاتی که کنترلر باید مدیریت کند را به جای مجموعه کامل عملیات پیش‌فرض تعریف کرد:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::resource('photo', 'PhotoController', ['only' =&gt; [
+    'index', 'show'
+]]);
+
+Route::resource('photo', 'PhotoController', ['except' =&gt; [
+    'create', 'store', 'update', 'destroy'
+]]);
+</code></pre>
+
+<p><br></p>
+<h3>اعلان مسیرهای منابع API در لاراول</h3>
+
+<p>
+هنگام اعلان مسیرهای منابعی که توسط APIها استفاده می‌شوند، معمولا مسیرهای مربوط به عملیات create و edit را در قالب های HTML حذف می‌کنید. برای راحتی کار، می‌توانید متد apiResource را استفاده کنید که به صورت خودکار این دو مسیر را حذف می‌کند:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::apiResource('photo', 'PhotoController');
+</code></pre>
+
+<p>
+می‌توان چندین کنترلر API را در یک زمان با انتقال یک آرایه به متد apiResource ثبت کرد:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::apiResources([
+    'photos' =&gt; 'PhotoController',
+    'posts' =&gt; 'PostController'
+]);
+</code></pre>
+
+<p>
+<a name="restful-naming-resource-routes"></a>
+</p>
+
+<p><br></p>
+<h3>نام‌گذاری مسیرهای منابع در لاراول</h3>
+
+<p>
+در حالت پیش‌فرض تمام اکشن‌های کنترلر منابع دارای یک نام مسیر یا route name هستند؛ با این حال، می‌توانید این نام‌ها را با انتقال یک آرایه names با گزینه‌های موردنظر خود بازنویسی کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::resource('photo', 'PhotoController', ['names' =&gt; [
+    'create' =&gt; 'photo.build'
+]]);
+</code></pre>
+
+<p>
+<a name="restful-naming-resource-route-parameters"></a>
+</p>
+
+<p><br></p>
+<h3>پارامترهای مربوط به نام‌گذاری مسیرهای منابع در لاراول</h3>
+
+<p>
+در حالت پیش‌فرض، Route::resource پارامترهای مسیر را برای مسیرهای منابع بر اساس نام‌های یکتا سازی شده منابع ایجاد می‌کند. می‌توان این نام‌ها را براساس هر منبع، توسط انتقال آرایه گزینه‌های parameters بازنویسی کرد. آرایه parameters باید یک آرایه ترکیبی از نام‌های منابع و نام‌های پارامترها باشد:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::resource('user', 'AdminUserController', ['parameters' =&gt; [
+    'user' =&gt; 'admin_user'
+]]);
+</code></pre>
+
+<p>
+مثال فوق URIهای زیر را برای مسیر show منابع ایجاد می‌کند:
+</p>
+
+<pre><code class="language-php  line-numbers">/user/{admin_user}
+</code></pre>
+
+<p>
+<a name="restful-localizing-resource-uris"></a>
+</p>
+
+<p><br></p>
+<h3>ایجاد URLهای منابع به صورت محلی در لاراول</h3>
+
+<p>
+در حالت پیش‌فرض، URLهای منابع توسط Route::resource با استفاده از کلمات انگلیسی ایجاد می‌کند. برای مثال، اگر نیاز به محلی سازی کلمات اکشن‌های create و edit دارید، می‌توانید از متد Route::resourceVerbs استفاده کنید و در متد boot مربوط به AppServiceProvider این عمل را انجام دهید:
+</p>
+
+<pre><code class="language-php  line-numbers">use Illuminate\Support\Facades\Route;
+
+/**
+ * Bootstrap any application services.
+ *
+ * @return void
+ */
+public function boot()
+{
+    Route::resourceVerbs([
+        'create' =&gt; 'crear',
+        'edit' =&gt; 'editar',
+    ]);
+}
+</code></pre>
+
+<p>
+زمانی که کلمات محلی سازی شدند، URIهای زیر توسط ثبت منابع مسیر Route::resource('fotos', 'PhotoController') ،   تولید می‌‌شود:
+</p>
+
+<pre><code class="language-php  line-numbers">/fotos/crear
+
+/fotos/{foto}/editar
+</code></pre>
+
+<p>
+<a name="restful-supplementing-resource-controllers"></a>
+</p>
+
+<p><br></p>
+<h3>اضافه کردن مسیرهای اضافی به کنترلر منابع در لاراول</h3>
+
+<p>
+اگر نیاز به اضافه کردن مسیرهای اضافی، علاوه بر مجموعه پیش‌فرض مسیرهای منابع به یک کنترلر منابع دارید، قبل از فراخوانی Route::resource شما باید این مسیرها را تعریف کنید، در غیر این صورت، مسیرهای تعریف شده توسط متد resource بر روی مسیرهای اضافی که قصد اضافه کردن آن‌ها را داریم، اولویت خواهند داشت:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('photos/popular', 'PhotoController@method');
+
+Route::resource('photos', 'PhotoController');
+</code></pre>
+
+<blockquote class="has-icon tip">
+
+<p>
+</p>
+<div class="flag"><span class="svg"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" version="1.1" x="0px" y="0px" width="56.6px" height="87.5px" viewbox="0 0 56.6 87.5" enable-background="new 0 0 56.6 87.5" xml:space="preserve"><path fill="#FFFFFF" d="M28.7 64.5c-1.4 0-2.5-1.1-2.5-2.5v-5.7 -5V41c0-1.4 1.1-2.5 2.5-2.5s2.5 1.1 2.5 2.5v10.1 5 5.8C31.2 63.4 30.1 64.5 28.7 64.5zM26.4 0.1C11.9 1 0.3 13.1 0 27.7c-0.1 7.9 3 15.2 8.2 20.4 0.5 0.5 0.8 1 1 1.7l3.1 13.1c0.3 1.1 1.3 1.9 2.4 1.9 0.3 0 0.7-0.1 1.1-0.2 1.1-0.5 1.6-1.8 1.4-3l-2-8.4 -0.4-1.8c-0.7-2.9-2-5.7-4-8 -1-1.2-2-2.5-2.7-3.9C5.8 35.3 4.7 30.3 5.4 25 6.7 14.5 15.2 6.3 25.6 5.1c13.9-1.5 25.8 9.4 25.8 23 0 4.1-1.1 7.9-2.9 11.2 -0.8 1.4-1.7 2.7-2.7 3.9 -2 2.3-3.3 5-4 8L41.4 53l-2 8.4c-0.3 1.2 0.3 2.5 1.4 3 0.3 0.2 0.7 0.2 1.1 0.2 1.1 0 2.2-0.8 2.4-1.9l3.1-13.1c0.2-0.6 0.5-1.2 1-1.7 5-5.1 8.2-12.1 8.2-19.8C56.4 12 42.8-1 26.4 0.1zM43.7 69.6c0 0.5-0.1 0.9-0.3 1.3 -0.4 0.8-0.7 1.6-0.9 2.5 -0.7 3-2 8.6-2 8.6 -1.3 3.2-4.4 5.5-7.9 5.5h-4.1h38h-0.5 -3.6c-3.5 0-6.7-2.4-7.9-5.7l-0.1-0.4 -1.8-7.8c-0.4-1.1-0.8-2.1-1.2-3.1 -0.1-0.3-0.2-0.5-0.2-0.9 0.1-1.3 1.3-2.1 2.6-2.1h31C42.4 67.5 43.6 68.2 43.7 69.6zM37.7 72.5h36.9c-4.2 0-7.2 3.9-6.3 7.9 0.6 1.3 1.8 2.1 3.2 2.1h3.1 0.5 0.5 3.6c1.4 0 2.7-0.8 3.2-2.1L37.7 72.5z"></path></svg></span></div> Remember to keep your controllers focused. If you find yourself routinely needing methods outside of the typical set of resource actions, consider splitting your controller into two, smaller controllers.
+
+
+</blockquote>
+
+<p>
+<a name="dependency-injection-and-controllers"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#dependency-injection-and-controllers">تزریق وابستگی و Controller در لاراول</a></h3>
+<p>
+از  service container لاراول برای resolve کردن تمام کنترلرهای لاراول استفاده می‌شود. در نتیجه، قادر خواهیم بود، هر وابستگی که ممکن است کنترلر در سازنده به آن نیاز داشته باشد را اعلان نوع یا type-hint کنیم. وابستگی‌های اعلان شده به صورت خودکار resolve می‌شوند و تزریق وابستگی به نمونه‌ی کنترلر انجام می‌شود:
+</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+
+namespace App\Http\Controllers;
+
+use App\Repositories\UserRepository;
+
+class UserController extends Controller
+{
+    /**
+     * The user repository instance.
+     */
+    protected $users;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @param  UserRepository  $users
+     * @return void
+     */
+    public function __construct(UserRepository $users)
+    {
+        $this-&gt;users = $users;
+    }
+}
+</code></pre>
+
+<p>
+همچنین می‌توانید هر قرارداد لاراول را نیز اعلان نوع یا type-hint کنید. اگر container می‌تواند آن را resolve کند، می‌توانید آن را اعلان نوع کنید. بسته به برنامه، تزریق وابستگی‌ها به کنترلر، ممکن است تست پذیری بهتری را فراهم کند.
+</p>
+
+<p><br></p>
+<h3>تزریق وابستگی به متد در لاراول</h3>
+
+<p>
+علاوه بر تزریق وابستگی در سازنده، می‌توانید وابستگی‌ها را در متدهای کنترلر نیز type-hint کنید. یک مورد استفاده معمول برای روش تزریق در متد، تزریق نمونه Illuminate\Http\Request به متد کنترلر مانند مثال زیر است:
+</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class UserController extends Controller
+{
+    /**
+     * Store a new user.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    public function store(Request $request)
+    {
+        $name = $request-&gt;name;
+
+        //
+    }
+}
+</code></pre>
+
+<p>
+اگر متد کنترلر انتظار دریافت ورودی از یک پارامتر مسیر را دارد، می‌توانید به سادگی آرگومان‌های مسیر را پس از وابستگی‌ها لیست کنید. برای مثال، اگر مسیر شما به صورت مثال زیر تعریف شده باشد:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::put('user/{id}', 'UserController@update');
+</code></pre>
+
+<p>
+می‌توانید Illuminate\Http\Request را اعلان نوع کنید و با تعریف متد کنترلر خود به صورت زیر به پارامتر id دسترسی داشته باشید:
+</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class UserController extends Controller
+{
+    /**
+     * Update the given user.
+     *
+     * @param  Request  $request
+     * @param  string  $id
+     * @return Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+}
+</code></pre>
+
+<p>
+<a name="route-caching"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#route-caching">ذخیره سازی مسیر در حافظه نهان (route caching) در لاراول</a></h3>
+<blockquote class="has-icon note">
+ مسیرهای مبتنی بر Closure با مسیرهای ذخیره شده در کش سازگاری ندارند. برای استفاده از route caching، بایستی هر مسیر مبتنی بر Closure را به کلاس‌های کنترلر تبدیل کنید.
+</blockquote>
+
+<p>
+اگر برنامه شما به صورت انحصاری از مسیرهای مبتنی بر کنترلر استفاده می‌کند، می‌توانید به راحتی از route caching در لاراول استفاده کنید. استفاده از route cache به میزان قابل توجهی زمان لازم برای ثبت تمام مسیرهای برنامه در لاراول را کاهش می‌دهد. در برخی موارد، با استفاده از این روش ثبت مسیر می‌تواند حتی تا 100 برابر سریع‌تر انجام شود. برای ساخت یک route cache، باید دستور آرتیسان route:cache را اجرا کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">php artisan route:cache
+</code></pre>
+
+<p>
+پس از اجرای این دستور، فایل مسیرهای کش شده بر روی هر درخواست بارگزاری می‌شود. توجه کنید، اگر بخواهید هر مسیر جدیدی را اضافه کنید، باید یک route cache جدید ایجاد کنید. به همین دلیل، توصیه می‌شود، دستور route:cache را در هنگام استقرار و نصب پروژه اجرا نمایید.
+</p>
+
+<p>
+می‌توانید از دستور route:clear مانند مثال زیر برای پاک کردن route cache استفاده کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">php artisan route:clear
+</code></pre>
+
+<p>
+در این مقاله از سری مقالات آموزشی لاراول در لیداوب قصد ما آشنا کردن شما با مبحث مهم و کلیدی کنترلرهای لاراول و چگونگی کار با آن‌ها و همچنین مسیردهی آن‌ها بود. امیدواریم این مقاله به شما کرده باشد، تا هر چه سریعتر بتوانید با اصول اولیه و مفاهیم لاراول آشنا شده و راه یادگیری خود را هموار کنید.
+</p>
+
+        </section>
+        
+<hr>
+<p>
+</p>
+<div>منابع مورد مطالعه جهت جمع آوری این مطلب:</div>
+<div class="refrencehref">
+        https://laravel.com/docs/5.5/controllers <br> https://www.lydaweb.com/article/courses/laravel-5-5-tutorial/230/controller-لاراول
+</div>
+
+
+        <hr>
+        <style>
+    #commentsdiv{
+        background-color: #f5f5f5;
+        border: 1px solid #c5c5c5;
+        border-bottom: 0px !important;
+        padding: 12px;
+    }
+    #commentsborder{
+        background-color: #fff;
+        border: 1px solid #c5c5c5;
+        white-space: normal;
+        padding: 20px;
+    }
+</style>
+
+<div id="commentsdiv">نظرات</div>
+<div id="commentsborder">
+<div id="wpac-comment"></div>
+</div>
+<script type="text/javascript">
+wpac_init = window.wpac_init || [];
+wpac_init.push({widget: 'Comment', id: 7878});
+(function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = 'https://embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+})();
+</script>
+
+    </article>
+</div>
+<script src="/assets/js/anchor.min.js"></script>
+<script>
+    anchors.options = {
+        placement: 'left',
+        visible: 'always',
+//        icon: '#',
+    };
+    anchors.add('.anchored h2,.anchored h3,.anchored h4,.anchored h5,.anchored h6');
+
+    (function($){
+        if(window.location.hash) {
+            var hash = decodeURIComponent(window.location.hash);
+            gotohash($(hash).offset().top);
+        }
+        $('a.anchorjs-link').click(function(){
+			gotohash($(this).offset().top);
+        });
+        $('a.anchorjs').click(function(){
+			var id = '#' + $(this).attr('title');
+			gotohash($(id).offset().top);
+        });		
+        function gotohash(top){
+            var headerHeight = 70; // Get fixed header height
+            $('html,body').animate({
+                scrollTop: top - headerHeight
+            }, 20);
+        }
+    })(jQuery);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+   $(document).ready(function (){
+
+     var scrollPosition = getParameterByName('scroll');
+     if(scrollPosition)
+      $(".doc-menu").scrollTop(scrollPosition);
+
+     $('.doc-link').click(function(){
+        var scrollTop = $(".doc-menu").scrollTop();
+        if(scrollTop > 0)
+          $(this).attr("href",this.href + "?scroll=" + $(".doc-menu").scrollTop());
+     });
+
+     function getParameterByName(name, url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+   });
+</script>
+    <div id="back-to-top" role="button" aria-label="Back to top">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+    </div>
+</main>
+<!-- footer -->
+
+<footer class="footer" role="contentinfo" aria-label="Site footer">
+    <div class="navigation" role="navigation" aria-label="Footer links">
+        <a href="http://localhost:4000" class="avatar" role="link"></a>
+        <ul role="menubar" aria-label="Footer links menubar">
+            <li class="footer-products" role="menuitem" aria-label="Products">
+                تولیدات
+                <ul role="menu" aria-hidden="true" aria-label="Products link">
+                </ul>
+            </li>
+            <li class="footer-blog" role="menuitem" aria-label="Blog">
+                مقالات
+                <ul role="menu" aria-hidden="true" aria-label="Blog link">
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2020/07/03/marriage.html" role="link" aria-label="ازدواج">ازدواج</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2019/10/11/vuejs.html" role="link" aria-label="آموزش vuejs">آموزش vuejs</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/18/laravel.html" role="link" aria-label="آموزش Laravel">آموزش Laravel</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/articles/2017/12/13/laravelcollective.html" role="link" aria-label="معرفی Laravel Collective">معرفی Laravel Collective</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/06/design-patterns.html" role="link" aria-label="معرفی  Design Pattern">معرفی  Design Pattern</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/blog" role="link" aria-label="Read more">Read More</a></li>
+                </ul>
+            </li>
+
+            <li class="footer-connect" role="menuitem" aria-label="Connect">
+                تماس
+                <ul role="menu" aria-hidden="true" aria-label="Connect link">
+                    <li role="listitem" aria-label="Connect link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub">GitHub</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://www.linkedin.com/in/farhad-mirzapour/" target="_blank" role="link" aria-label="Linkedin">Linkedin</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter">Twitter</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="socials" role="navigation" aria-label="Social links">
+        <ul role="menu" aria-hidden="true" aria-label="Social link">
+            <li role="listitem" aria-label="Social link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://www.linkedin.com/in/farhad-mirzapour-0043b862/" target="_blank" role="link" aria-label="Linkedin"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="/feed.xml" role="link" aria-label="RSS"><i class="fa fa-rss-square" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+    <div class="copyright" role="contentinfo" aria-label="Copyright">
+        <p>© <script type="text/javascript">document.write(new Date().getFullYear());</script> Farhad Mirzapour</p>
+    </div>
+</footer>
+
+<!-- scripts -->
+<script src="/assets/js/hamburger-menu.js"></script>
+
+<script src="/assets/js/elevator.min.js"></script>
+<script src="/assets/js/back-to-top.js"></script>
+<script src="/assets/prisma/prism.js"></script>
+<!-- google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108878564-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-108878564-1');
+</script>
+
+</body>
+</html>

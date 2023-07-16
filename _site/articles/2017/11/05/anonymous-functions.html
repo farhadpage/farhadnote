@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="">
+<!-- head -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>مفهوم توابع بی‌نام (anonymous function) | مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="مفهوم توابع بی‌نام (anonymous function)" />
+<meta name="author" content="Farhad Mirzapour" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="نیمه دوم سال 2009 بود که PHP با ورژن 5.3 با ویژگی‌های زیاد جدیدی که برای برنامه نویسان جذاب بود، انتشار یافت. یکی از ویژگی‌هایی که به PHP در این نسخه اضافه شد، تابع بی‌نام بود. تابع بی‌نام (anonymous function) توابع ناشناخته که اصطلاحا به آن‌ها تابع روی هوا (on the fly) گفته می شود، به طور ساده تابعی است بدون‌نام. مانند مثال زیر: &lt;?php // Anonymous function function () { return &quot;Hello world&quot;; } این مفهوم در PHP تحت قالب Lambda وClosures پیاده سازی شده است. در ادامه مطلب بیشتر به این مورد خواهیم پرداخت. توابع Lambada یک Lambada تابع ناشناخته‌ای است که به یک متغیر انتساب داده می شود و یا به عنوان پارامتر به تابع دیگر انتساب داده می‌شود. استفاده از Lambada از آن جا که این مدل از تابع‌ها نام ندارند، پس شما نمی‌توانید مثل تابع‌های معمولی آن‌ها را صدا بزنید. بلکه باید همینطور که قبلا به آن اشاره شد، تابع را به یک متغیر انتساب بدهید و یا به عنوان پارامتر به تابع دیگری ارسال کنید. &lt;?php // Anonymous function // assigned to variable $greeting = function ($world = &#39;&#39;) { return &quot;Hello&quot;. $world; }; // Call function echo $greeting(&#39;world&#39;); // Returns &quot;Hello world&quot; نکته: همینطور که در کد بالا هم مشاهده می کنید، سمی کالن (;) را بعد از اتمام تابع قرار می‌دهیم. نکته: همینطور که در کد بالا هم مشاهده می کنید، می‌توانیم پارامتر به صورت دلخواه به تابع بدهیم (world$). به منظور استفاده از تابع ناشناخته، ما این تابع را به یک متغیر انتساب میدهیم و سپس متغیر را به عنوان یک تابع، Call یا صدا میزنیم. شما همچنین می‌توانید Lambadaایی که تعریف کرده‌اید را به عنوان پارامتر به تابع دیگر بفرستید: &lt;?php // Pass Lambda to function function shout ($message) { echo $message(); } // Call function shout(function() { return &quot;Hello world&quot;; }); برای چی من باید از Lambada استفاده کنم؟ شاید الان با خودتان گفتید که این تابع بدون اسم چه زمانی کارایی دارد؟ Lambada از تعریف تابع هایی که معمولا کد کوچک و مختصری دارند و ممکن است شما در طول اجرای برنامه، مثلا، فقط یکبار صدا بزنید، خودداری می کند. اغلب شما، به تابعی نیاز دارید که کاری را برای شما انجام دهد، اما این نیاز را پیدا نمی کنید که آن را داخل global scope برنامه یا حتی به عنوان بخشی از بقیه کدها اضافه کنید. به جای اینکه تابعی داشته باشید که یک بار استفاده و بعد هم رها شود، میتوانید از Lambada استفاده کنید. یک مورد پر استفاده دیگر توابع ناشناخته درfunction callbackها است. اگر مفهوم توابع callback در PHP را نمی‌دانید، یک جستجو راجع به آن انجام دهید، چرا که شرح کامل آن در این بحث نمی گنجد. اما یک نگاه سطحی با یک مثال به آن می‌اندازیم تا بحث بیشتر برایتان روشن شود. Callback هر تابعی که صدا زده شده است توسط تابع دیگری که البته آن تابع دیگر، تابع اول را به عنوان پارامتر میگیرد و Call می‌کند. معمولا callback تابعی است که زمانی صدا زده می‌شود که اتفاقی رخ داده باشد، که در دنیای برنامه نویسی به آن اتفاق، رویداد یا event گفته میشود. مثال زیر یک مثال پایه‌ایی از تابع‌های callback است: شما می‌توانید تابعی که نامش در یک متغیر ذخیره شده است را call کنید. فقط کافیست به انتهای نام متغیر، پرانتز باز و بسته () اضافه کنید. مثل ()variable$ &lt;?php function thisFuncTakesACallback($callbackFunc) { echo &quot;I&#39;m going to call $callbackFunc!&quot;; $callbackFunc(); } function thisFuncGetsCalled() { echo &quot;I&#39;m a callback function!&quot;; } thisFuncTakesACallback( &#39;thisFuncGetsCalled&#39; ); خب در مثال بالا، ما نام تابع thisFuncGetsCalled را به تابع ()thisFuncTakesACallback ارسال کردیم که سپس این تابع، تابعی که به آن فرستاده شده بود رو صدا زد. از توابع ناشناخته در توابع بومی PHP استفاده شده، که مثال‌های فوق العاده‌ای در این زمینه هستند، از جمله array_walk, array_map, array_reduce و array_filter usort. در مثال زیر نمونه‌ایی از callback function را مشاهده می‌کنید که با Lambada و در تابع array_filter پیاده سازی شده است. نکته: کار array_filter به این صورت است که پارامتر اول یک آرایه مثلا input$ را می‌گیرد و در یک Loop قرار می‌دهد و هر دفعه مقدار فعلی آرایه را به function callback ارسال یا pass میکند. اگرfunction callback مقدار true برگرداند، value جاری خانه مورد نظر از آرایه برگردانده می‌شود. در ضمن keyهای آرایه هم تغییری نمی‌کنند. &lt;?php $input = array(1, 2, 3, 4, 5); $output = array_filter($input, function ($v) { return $v &gt; 2; }); // $output == array(2 =&gt; 3, 3 =&gt; 4, 4 =&gt; 5) در مثال بالا، آرایه ورودی فیلتر می‌شود؛ به طوریکه تمام اعداد بزرگتر از 2 استخراج می‌شوند. در مثال بالا، عبارت { ;function ($v) { return $v &gt; 2 یک Lambada است، که اگر میخواهید قابل استفاده مجدد باشد باید آن را داخل یک متغیر ذخیره کنید. اطلاعات بیشتر: پیشتر می‌توانستید از create_function در PHP استفاده کنید که اساسا همین کار را انجام میدهد. &lt;?php // Use create_function $greeting = create_function(&#39;&#39;, &#39;echo &quot;Hello World!&quot;;&#39;); // Call function $greeting(); توابع Closure یک Closure (کلوژر) اساسا همان Lambada است، علاوه بر اینکه، می‌توانید به متغیرهای خارج از محدوده‌ایی که تعریف شده هم، دسترسی داشته باشد. &lt;?php // Create a user $user = &quot;Philip&quot;; // Create a Closure $greeting = function() use ($user) { echo &quot;Hello $user&quot;; }; // Greet the user $greeting(); // Returns &quot;Hello Philip&quot; همان طور که در بالا می بینید Closure می‌تواند به متغیر user$ دسترسی داشته باشد، به این دلیل که در عبارت use، تعریف تابع Closure آورده شده است. همچنین اگر می‌خواهید مقدار متغیر user$ را داخل Closure تغییر بدهید و بیرون آن هم این تغییر از بین نرود، باید حتما قبل از متغیر داخل عبارت use یک &amp; (امپرسند) قرار بدهید تا متغیر به صورت ارسال با مرجع فرستاده شود. بیایید مثال array_filter را نیز با Closure انجام بدهیم. &lt;?php $max_comparator = function ($max) { return function ($v) use ($max) { return $v &gt; $max; }; }; $input = array(1, 2, 3, 4, 5); $output = array_filter($input, $max_comparator(3)); // Array ( [3] =&gt; 4 [4] =&gt; 5 ) در مثال بالا دو نکته را دیدید که یکی استفاده از توابع ناشناخته بصورت تودرتو و دیگری اینکه max$ به عنوان یک متغیر خارج از محدوده closure داخلی، مورد استفاده قرار گرفت. مثالی از Closure در array_walk: &lt;?php // Set a multiplier $multiplier = 3; // Create a list of numbers $numbers = array(1,2,3,4); // Use array_walk to iterate // through the list and multiply array_walk($numbers, function($number) use($multiplier) { echo $number * $multiplier; }); در مثال بالا تقریبا این نیاز احساس نمی‌شود که یک تابع بسازید که 2 عدد را در هم ضرب کند در حالی که فقط در یک جا مورد استفاده قرار میگیرد. با استفاده از یک Closure به عنوان callback، ما می‌توانیم تابع را یکبار استفاده کنیم و دیگر آن را فراموش کنیم. استفاده از this$ در توابع ناشناخته در نیمه اول سال 2012، یعنی زمانی که PHP به نسخه 5.4 خودش رسید، قابلیت جدیدی به توابع ناشناخته اضافه شد. بوسیله این قابلیت قادر هستید به راحتی با استفاده از this$ داخل تابع ناشناخته، به یک نمونه Object دسترسی داشته باشید. &lt;?php class Foo { function hello() { echo &#39;Hello Nettuts!&#39;; } function anonymous() { return function() { $this-&gt;hello(); // $this wasn&#39;t possible before }; } } class Bar { function __construct(Foo $Foo) // object of class Foo typehint { $x = $Foo-&gt;anonymous(); // get Foo::hello() $x(); // execute Foo::hello() } } new Bar(new Foo); // Hello Nettuts! استفاده در دنیای واقعی یک مثال معروف از استفاده از این نوع توابع در routing درخواست ها در فریم ورک های مدرن است. به عنوان مثال Laravel، به شما اجازه میده که مثل زیر عمل کنید: &lt;?php Route::get(&#39;user/(:any)&#39;, function($name) { return &quot;Hello &quot; . $name; }); کد بالا به سادگی با URLایی مثل user/Philip/، تطبیق داده می‌شود. این یک مثال خیلی ساده بود، اما روشن میکند که چطور یک Closure در شرایطی که به آن نیاز هست می‌تواند مورد استفاده واقع شود. در دیگر زبان ها چطور؟ توابع ناشناخته در خیلی از زبانهای برنامه نویسی وجود دارند (از جمله پایتون، دلفی، جاوا، C و …) و اگر Ruby و Javascript کار کرده باشید حتما به آن‌ها برخوردید، چون در این زبان‌ها بسیار متداول هستند. البته این نکته نیز ناگفته نماند که کاربرد آن در PHP، دقیقا همان کاربردی نیست که بقیه زبان ها از آن دارند. نمونه‌ایی از تابع ناشناخته در jQuery:" />
+<meta property="og:description" content="نیمه دوم سال 2009 بود که PHP با ورژن 5.3 با ویژگی‌های زیاد جدیدی که برای برنامه نویسان جذاب بود، انتشار یافت. یکی از ویژگی‌هایی که به PHP در این نسخه اضافه شد، تابع بی‌نام بود. تابع بی‌نام (anonymous function) توابع ناشناخته که اصطلاحا به آن‌ها تابع روی هوا (on the fly) گفته می شود، به طور ساده تابعی است بدون‌نام. مانند مثال زیر: &lt;?php // Anonymous function function () { return &quot;Hello world&quot;; } این مفهوم در PHP تحت قالب Lambda وClosures پیاده سازی شده است. در ادامه مطلب بیشتر به این مورد خواهیم پرداخت. توابع Lambada یک Lambada تابع ناشناخته‌ای است که به یک متغیر انتساب داده می شود و یا به عنوان پارامتر به تابع دیگر انتساب داده می‌شود. استفاده از Lambada از آن جا که این مدل از تابع‌ها نام ندارند، پس شما نمی‌توانید مثل تابع‌های معمولی آن‌ها را صدا بزنید. بلکه باید همینطور که قبلا به آن اشاره شد، تابع را به یک متغیر انتساب بدهید و یا به عنوان پارامتر به تابع دیگری ارسال کنید. &lt;?php // Anonymous function // assigned to variable $greeting = function ($world = &#39;&#39;) { return &quot;Hello&quot;. $world; }; // Call function echo $greeting(&#39;world&#39;); // Returns &quot;Hello world&quot; نکته: همینطور که در کد بالا هم مشاهده می کنید، سمی کالن (;) را بعد از اتمام تابع قرار می‌دهیم. نکته: همینطور که در کد بالا هم مشاهده می کنید، می‌توانیم پارامتر به صورت دلخواه به تابع بدهیم (world$). به منظور استفاده از تابع ناشناخته، ما این تابع را به یک متغیر انتساب میدهیم و سپس متغیر را به عنوان یک تابع، Call یا صدا میزنیم. شما همچنین می‌توانید Lambadaایی که تعریف کرده‌اید را به عنوان پارامتر به تابع دیگر بفرستید: &lt;?php // Pass Lambda to function function shout ($message) { echo $message(); } // Call function shout(function() { return &quot;Hello world&quot;; }); برای چی من باید از Lambada استفاده کنم؟ شاید الان با خودتان گفتید که این تابع بدون اسم چه زمانی کارایی دارد؟ Lambada از تعریف تابع هایی که معمولا کد کوچک و مختصری دارند و ممکن است شما در طول اجرای برنامه، مثلا، فقط یکبار صدا بزنید، خودداری می کند. اغلب شما، به تابعی نیاز دارید که کاری را برای شما انجام دهد، اما این نیاز را پیدا نمی کنید که آن را داخل global scope برنامه یا حتی به عنوان بخشی از بقیه کدها اضافه کنید. به جای اینکه تابعی داشته باشید که یک بار استفاده و بعد هم رها شود، میتوانید از Lambada استفاده کنید. یک مورد پر استفاده دیگر توابع ناشناخته درfunction callbackها است. اگر مفهوم توابع callback در PHP را نمی‌دانید، یک جستجو راجع به آن انجام دهید، چرا که شرح کامل آن در این بحث نمی گنجد. اما یک نگاه سطحی با یک مثال به آن می‌اندازیم تا بحث بیشتر برایتان روشن شود. Callback هر تابعی که صدا زده شده است توسط تابع دیگری که البته آن تابع دیگر، تابع اول را به عنوان پارامتر میگیرد و Call می‌کند. معمولا callback تابعی است که زمانی صدا زده می‌شود که اتفاقی رخ داده باشد، که در دنیای برنامه نویسی به آن اتفاق، رویداد یا event گفته میشود. مثال زیر یک مثال پایه‌ایی از تابع‌های callback است: شما می‌توانید تابعی که نامش در یک متغیر ذخیره شده است را call کنید. فقط کافیست به انتهای نام متغیر، پرانتز باز و بسته () اضافه کنید. مثل ()variable$ &lt;?php function thisFuncTakesACallback($callbackFunc) { echo &quot;I&#39;m going to call $callbackFunc!&quot;; $callbackFunc(); } function thisFuncGetsCalled() { echo &quot;I&#39;m a callback function!&quot;; } thisFuncTakesACallback( &#39;thisFuncGetsCalled&#39; ); خب در مثال بالا، ما نام تابع thisFuncGetsCalled را به تابع ()thisFuncTakesACallback ارسال کردیم که سپس این تابع، تابعی که به آن فرستاده شده بود رو صدا زد. از توابع ناشناخته در توابع بومی PHP استفاده شده، که مثال‌های فوق العاده‌ای در این زمینه هستند، از جمله array_walk, array_map, array_reduce و array_filter usort. در مثال زیر نمونه‌ایی از callback function را مشاهده می‌کنید که با Lambada و در تابع array_filter پیاده سازی شده است. نکته: کار array_filter به این صورت است که پارامتر اول یک آرایه مثلا input$ را می‌گیرد و در یک Loop قرار می‌دهد و هر دفعه مقدار فعلی آرایه را به function callback ارسال یا pass میکند. اگرfunction callback مقدار true برگرداند، value جاری خانه مورد نظر از آرایه برگردانده می‌شود. در ضمن keyهای آرایه هم تغییری نمی‌کنند. &lt;?php $input = array(1, 2, 3, 4, 5); $output = array_filter($input, function ($v) { return $v &gt; 2; }); // $output == array(2 =&gt; 3, 3 =&gt; 4, 4 =&gt; 5) در مثال بالا، آرایه ورودی فیلتر می‌شود؛ به طوریکه تمام اعداد بزرگتر از 2 استخراج می‌شوند. در مثال بالا، عبارت { ;function ($v) { return $v &gt; 2 یک Lambada است، که اگر میخواهید قابل استفاده مجدد باشد باید آن را داخل یک متغیر ذخیره کنید. اطلاعات بیشتر: پیشتر می‌توانستید از create_function در PHP استفاده کنید که اساسا همین کار را انجام میدهد. &lt;?php // Use create_function $greeting = create_function(&#39;&#39;, &#39;echo &quot;Hello World!&quot;;&#39;); // Call function $greeting(); توابع Closure یک Closure (کلوژر) اساسا همان Lambada است، علاوه بر اینکه، می‌توانید به متغیرهای خارج از محدوده‌ایی که تعریف شده هم، دسترسی داشته باشد. &lt;?php // Create a user $user = &quot;Philip&quot;; // Create a Closure $greeting = function() use ($user) { echo &quot;Hello $user&quot;; }; // Greet the user $greeting(); // Returns &quot;Hello Philip&quot; همان طور که در بالا می بینید Closure می‌تواند به متغیر user$ دسترسی داشته باشد، به این دلیل که در عبارت use، تعریف تابع Closure آورده شده است. همچنین اگر می‌خواهید مقدار متغیر user$ را داخل Closure تغییر بدهید و بیرون آن هم این تغییر از بین نرود، باید حتما قبل از متغیر داخل عبارت use یک &amp; (امپرسند) قرار بدهید تا متغیر به صورت ارسال با مرجع فرستاده شود. بیایید مثال array_filter را نیز با Closure انجام بدهیم. &lt;?php $max_comparator = function ($max) { return function ($v) use ($max) { return $v &gt; $max; }; }; $input = array(1, 2, 3, 4, 5); $output = array_filter($input, $max_comparator(3)); // Array ( [3] =&gt; 4 [4] =&gt; 5 ) در مثال بالا دو نکته را دیدید که یکی استفاده از توابع ناشناخته بصورت تودرتو و دیگری اینکه max$ به عنوان یک متغیر خارج از محدوده closure داخلی، مورد استفاده قرار گرفت. مثالی از Closure در array_walk: &lt;?php // Set a multiplier $multiplier = 3; // Create a list of numbers $numbers = array(1,2,3,4); // Use array_walk to iterate // through the list and multiply array_walk($numbers, function($number) use($multiplier) { echo $number * $multiplier; }); در مثال بالا تقریبا این نیاز احساس نمی‌شود که یک تابع بسازید که 2 عدد را در هم ضرب کند در حالی که فقط در یک جا مورد استفاده قرار میگیرد. با استفاده از یک Closure به عنوان callback، ما می‌توانیم تابع را یکبار استفاده کنیم و دیگر آن را فراموش کنیم. استفاده از this$ در توابع ناشناخته در نیمه اول سال 2012، یعنی زمانی که PHP به نسخه 5.4 خودش رسید، قابلیت جدیدی به توابع ناشناخته اضافه شد. بوسیله این قابلیت قادر هستید به راحتی با استفاده از this$ داخل تابع ناشناخته، به یک نمونه Object دسترسی داشته باشید. &lt;?php class Foo { function hello() { echo &#39;Hello Nettuts!&#39;; } function anonymous() { return function() { $this-&gt;hello(); // $this wasn&#39;t possible before }; } } class Bar { function __construct(Foo $Foo) // object of class Foo typehint { $x = $Foo-&gt;anonymous(); // get Foo::hello() $x(); // execute Foo::hello() } } new Bar(new Foo); // Hello Nettuts! استفاده در دنیای واقعی یک مثال معروف از استفاده از این نوع توابع در routing درخواست ها در فریم ورک های مدرن است. به عنوان مثال Laravel، به شما اجازه میده که مثل زیر عمل کنید: &lt;?php Route::get(&#39;user/(:any)&#39;, function($name) { return &quot;Hello &quot; . $name; }); کد بالا به سادگی با URLایی مثل user/Philip/، تطبیق داده می‌شود. این یک مثال خیلی ساده بود، اما روشن میکند که چطور یک Closure در شرایطی که به آن نیاز هست می‌تواند مورد استفاده واقع شود. در دیگر زبان ها چطور؟ توابع ناشناخته در خیلی از زبانهای برنامه نویسی وجود دارند (از جمله پایتون، دلفی، جاوا، C و …) و اگر Ruby و Javascript کار کرده باشید حتما به آن‌ها برخوردید، چون در این زبان‌ها بسیار متداول هستند. البته این نکته نیز ناگفته نماند که کاربرد آن در PHP، دقیقا همان کاربردی نیست که بقیه زبان ها از آن دارند. نمونه‌ایی از تابع ناشناخته در jQuery:" />
+<link rel="canonical" href="http://localhost:4000/articles/2017/11/05/anonymous-functions.html" />
+<meta property="og:url" content="http://localhost:4000/articles/2017/11/05/anonymous-functions.html" />
+<meta property="og:site_name" content="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-11-05T19:35:42+03:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="مفهوم توابع بی‌نام (anonymous function)" />
+<meta name="twitter:site" content="@farhadmirzapour" />
+<meta name="twitter:creator" content="@Farhad Mirzapour" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"مفهوم توابع بی‌نام (anonymous function)","url":"http://localhost:4000/articles/2017/11/05/anonymous-functions.html","datePublished":"2017-11-05T19:35:42+03:30","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"dateModified":"2017-11-05T19:35:42+03:30","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/articles/2017/11/05/anonymous-functions.html"},"author":{"@type":"Person","name":"Farhad Mirzapour"},"description":"نیمه دوم سال 2009 بود که PHP با ورژن 5.3 با ویژگی‌های زیاد جدیدی که برای برنامه نویسان جذاب بود، انتشار یافت. یکی از ویژگی‌هایی که به PHP در این نسخه اضافه شد، تابع بی‌نام بود. تابع بی‌نام (anonymous function) توابع ناشناخته که اصطلاحا به آن‌ها تابع روی هوا (on the fly) گفته می شود، به طور ساده تابعی است بدون‌نام. مانند مثال زیر: &lt;?php // Anonymous function function () { return &quot;Hello world&quot;; } این مفهوم در PHP تحت قالب Lambda وClosures پیاده سازی شده است. در ادامه مطلب بیشتر به این مورد خواهیم پرداخت. توابع Lambada یک Lambada تابع ناشناخته‌ای است که به یک متغیر انتساب داده می شود و یا به عنوان پارامتر به تابع دیگر انتساب داده می‌شود. استفاده از Lambada از آن جا که این مدل از تابع‌ها نام ندارند، پس شما نمی‌توانید مثل تابع‌های معمولی آن‌ها را صدا بزنید. بلکه باید همینطور که قبلا به آن اشاره شد، تابع را به یک متغیر انتساب بدهید و یا به عنوان پارامتر به تابع دیگری ارسال کنید. &lt;?php // Anonymous function // assigned to variable $greeting = function ($world = &#39;&#39;) { return &quot;Hello&quot;. $world; }; // Call function echo $greeting(&#39;world&#39;); // Returns &quot;Hello world&quot; نکته: همینطور که در کد بالا هم مشاهده می کنید، سمی کالن (;) را بعد از اتمام تابع قرار می‌دهیم. نکته: همینطور که در کد بالا هم مشاهده می کنید، می‌توانیم پارامتر به صورت دلخواه به تابع بدهیم (world$). به منظور استفاده از تابع ناشناخته، ما این تابع را به یک متغیر انتساب میدهیم و سپس متغیر را به عنوان یک تابع، Call یا صدا میزنیم. شما همچنین می‌توانید Lambadaایی که تعریف کرده‌اید را به عنوان پارامتر به تابع دیگر بفرستید: &lt;?php // Pass Lambda to function function shout ($message) { echo $message(); } // Call function shout(function() { return &quot;Hello world&quot;; }); برای چی من باید از Lambada استفاده کنم؟ شاید الان با خودتان گفتید که این تابع بدون اسم چه زمانی کارایی دارد؟ Lambada از تعریف تابع هایی که معمولا کد کوچک و مختصری دارند و ممکن است شما در طول اجرای برنامه، مثلا، فقط یکبار صدا بزنید، خودداری می کند. اغلب شما، به تابعی نیاز دارید که کاری را برای شما انجام دهد، اما این نیاز را پیدا نمی کنید که آن را داخل global scope برنامه یا حتی به عنوان بخشی از بقیه کدها اضافه کنید. به جای اینکه تابعی داشته باشید که یک بار استفاده و بعد هم رها شود، میتوانید از Lambada استفاده کنید. یک مورد پر استفاده دیگر توابع ناشناخته درfunction callbackها است. اگر مفهوم توابع callback در PHP را نمی‌دانید، یک جستجو راجع به آن انجام دهید، چرا که شرح کامل آن در این بحث نمی گنجد. اما یک نگاه سطحی با یک مثال به آن می‌اندازیم تا بحث بیشتر برایتان روشن شود. Callback هر تابعی که صدا زده شده است توسط تابع دیگری که البته آن تابع دیگر، تابع اول را به عنوان پارامتر میگیرد و Call می‌کند. معمولا callback تابعی است که زمانی صدا زده می‌شود که اتفاقی رخ داده باشد، که در دنیای برنامه نویسی به آن اتفاق، رویداد یا event گفته میشود. مثال زیر یک مثال پایه‌ایی از تابع‌های callback است: شما می‌توانید تابعی که نامش در یک متغیر ذخیره شده است را call کنید. فقط کافیست به انتهای نام متغیر، پرانتز باز و بسته () اضافه کنید. مثل ()variable$ &lt;?php function thisFuncTakesACallback($callbackFunc) { echo &quot;I&#39;m going to call $callbackFunc!&quot;; $callbackFunc(); } function thisFuncGetsCalled() { echo &quot;I&#39;m a callback function!&quot;; } thisFuncTakesACallback( &#39;thisFuncGetsCalled&#39; ); خب در مثال بالا، ما نام تابع thisFuncGetsCalled را به تابع ()thisFuncTakesACallback ارسال کردیم که سپس این تابع، تابعی که به آن فرستاده شده بود رو صدا زد. از توابع ناشناخته در توابع بومی PHP استفاده شده، که مثال‌های فوق العاده‌ای در این زمینه هستند، از جمله array_walk, array_map, array_reduce و array_filter usort. در مثال زیر نمونه‌ایی از callback function را مشاهده می‌کنید که با Lambada و در تابع array_filter پیاده سازی شده است. نکته: کار array_filter به این صورت است که پارامتر اول یک آرایه مثلا input$ را می‌گیرد و در یک Loop قرار می‌دهد و هر دفعه مقدار فعلی آرایه را به function callback ارسال یا pass میکند. اگرfunction callback مقدار true برگرداند، value جاری خانه مورد نظر از آرایه برگردانده می‌شود. در ضمن keyهای آرایه هم تغییری نمی‌کنند. &lt;?php $input = array(1, 2, 3, 4, 5); $output = array_filter($input, function ($v) { return $v &gt; 2; }); // $output == array(2 =&gt; 3, 3 =&gt; 4, 4 =&gt; 5) در مثال بالا، آرایه ورودی فیلتر می‌شود؛ به طوریکه تمام اعداد بزرگتر از 2 استخراج می‌شوند. در مثال بالا، عبارت { ;function ($v) { return $v &gt; 2 یک Lambada است، که اگر میخواهید قابل استفاده مجدد باشد باید آن را داخل یک متغیر ذخیره کنید. اطلاعات بیشتر: پیشتر می‌توانستید از create_function در PHP استفاده کنید که اساسا همین کار را انجام میدهد. &lt;?php // Use create_function $greeting = create_function(&#39;&#39;, &#39;echo &quot;Hello World!&quot;;&#39;); // Call function $greeting(); توابع Closure یک Closure (کلوژر) اساسا همان Lambada است، علاوه بر اینکه، می‌توانید به متغیرهای خارج از محدوده‌ایی که تعریف شده هم، دسترسی داشته باشد. &lt;?php // Create a user $user = &quot;Philip&quot;; // Create a Closure $greeting = function() use ($user) { echo &quot;Hello $user&quot;; }; // Greet the user $greeting(); // Returns &quot;Hello Philip&quot; همان طور که در بالا می بینید Closure می‌تواند به متغیر user$ دسترسی داشته باشد، به این دلیل که در عبارت use، تعریف تابع Closure آورده شده است. همچنین اگر می‌خواهید مقدار متغیر user$ را داخل Closure تغییر بدهید و بیرون آن هم این تغییر از بین نرود، باید حتما قبل از متغیر داخل عبارت use یک &amp; (امپرسند) قرار بدهید تا متغیر به صورت ارسال با مرجع فرستاده شود. بیایید مثال array_filter را نیز با Closure انجام بدهیم. &lt;?php $max_comparator = function ($max) { return function ($v) use ($max) { return $v &gt; $max; }; }; $input = array(1, 2, 3, 4, 5); $output = array_filter($input, $max_comparator(3)); // Array ( [3] =&gt; 4 [4] =&gt; 5 ) در مثال بالا دو نکته را دیدید که یکی استفاده از توابع ناشناخته بصورت تودرتو و دیگری اینکه max$ به عنوان یک متغیر خارج از محدوده closure داخلی، مورد استفاده قرار گرفت. مثالی از Closure در array_walk: &lt;?php // Set a multiplier $multiplier = 3; // Create a list of numbers $numbers = array(1,2,3,4); // Use array_walk to iterate // through the list and multiply array_walk($numbers, function($number) use($multiplier) { echo $number * $multiplier; }); در مثال بالا تقریبا این نیاز احساس نمی‌شود که یک تابع بسازید که 2 عدد را در هم ضرب کند در حالی که فقط در یک جا مورد استفاده قرار میگیرد. با استفاده از یک Closure به عنوان callback، ما می‌توانیم تابع را یکبار استفاده کنیم و دیگر آن را فراموش کنیم. استفاده از this$ در توابع ناشناخته در نیمه اول سال 2012، یعنی زمانی که PHP به نسخه 5.4 خودش رسید، قابلیت جدیدی به توابع ناشناخته اضافه شد. بوسیله این قابلیت قادر هستید به راحتی با استفاده از this$ داخل تابع ناشناخته، به یک نمونه Object دسترسی داشته باشید. &lt;?php class Foo { function hello() { echo &#39;Hello Nettuts!&#39;; } function anonymous() { return function() { $this-&gt;hello(); // $this wasn&#39;t possible before }; } } class Bar { function __construct(Foo $Foo) // object of class Foo typehint { $x = $Foo-&gt;anonymous(); // get Foo::hello() $x(); // execute Foo::hello() } } new Bar(new Foo); // Hello Nettuts! استفاده در دنیای واقعی یک مثال معروف از استفاده از این نوع توابع در routing درخواست ها در فریم ورک های مدرن است. به عنوان مثال Laravel، به شما اجازه میده که مثل زیر عمل کنید: &lt;?php Route::get(&#39;user/(:any)&#39;, function($name) { return &quot;Hello &quot; . $name; }); کد بالا به سادگی با URLایی مثل user/Philip/، تطبیق داده می‌شود. این یک مثال خیلی ساده بود، اما روشن میکند که چطور یک Closure در شرایطی که به آن نیاز هست می‌تواند مورد استفاده واقع شود. در دیگر زبان ها چطور؟ توابع ناشناخته در خیلی از زبانهای برنامه نویسی وجود دارند (از جمله پایتون، دلفی، جاوا، C و …) و اگر Ruby و Javascript کار کرده باشید حتما به آن‌ها برخوردید، چون در این زبان‌ها بسیار متداول هستند. البته این نکته نیز ناگفته نماند که کاربرد آن در PHP، دقیقا همان کاربردی نیست که بقیه زبان ها از آن دارند. نمونه‌ایی از تابع ناشناخته در jQuery:","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="stylesheet" href="/assets/prisma/prism.css">
+    <!-- favicons and rss -->
+    <link rel="alternate" type="application/rss+xml" title="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" href="/feed.xml">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- header -->
+<header class="header" role="banner" aria-label="Header">
+    <button class="hamburger-button" onclick="hamburgerMenu();" role="button" aria-label="Hamburger menu button">
+        <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    </button>
+    <a href="/" class="logo" role="link" aria-label="Home">
+        <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo"/>
+    </a>
+    <nav class="navigation" role="navigation" aria-label="Navigation">
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item">
+                <a href="/" class="logo" role="menuitem" aria-label="Home">
+                    <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo"/>
+                </a>
+            </li>
+            
+            <li role="menuitem"><a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a></li>
+            
+            <li role="menuitem"><a href="/contactus" role="menuitem" aria-label="تماس">تماس</a></li>
+            
+        </ul>
+    </nav>
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox"/>
+        </form>
+    </div>
+</header>
+
+<nav id="hamburger-menu" role="navigation" aria-label="Hamburger menu">
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox"/>
+        </form>
+    </div>
+    <div class="home-nav" role="navigation" aria-label="Site navigation">
+        <a href="/" role="menuitem" aria-label="Home">صفحه اصلی</a>
+        
+        <a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a>
+        
+        <a href="/contactus" role="menuitem" aria-label="تماس">تماس</a>
+        
+    </div>
+
+    
+</nav>
+<!-- main content -->
+<main class="container" role="main">
+    <div class="rcpostcontainerimg">
+<div class="rc-DRTVBanner-new rc-DRTVBanner-bigsize">
+    <div style="background: url('/images/original/anonymous-php.png'); " class="blurred_img"></div>
+    <div class="mask"></div>
+    <div class="bot"></div>
+    <div class="over">
+        <div class="container-rc">
+            <img class="image" src="/images/original/anonymous-php.png" alt="مفهوم توابع بی‌نام (anonymous function)" height="190">
+            <div class="desktop-banner-container">
+                <h1 class="display-5-text headline">
+                    
+                    مفهوم توابع بی‌نام (anonymous function)
+                    
+                    </h1>
+                <!--<div class="tagslist"><ul class='lyda-tag-list'><li class='lyda-tag-list-title'>برچسب ها</li><li><a class="tags" href="/tag/لاراول">#لاراول</a></li><li><a class="tags" href="/tag/لاراول-5-5">#لاراول 5.5</a></li></ul></div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="bread-crumb">-->
+<!--<div class="container   ">-->
+<!--<div class="pull-right ">-->
+<!--<div class="bread-button text-custom b-left">-->
+<!--انتشار : 2 ماه پیش-->
+<!--</div>-->
+<!--<a href="/category/article/" class="bread-button back-to-all b-left hidden-xs">همه مقالات</a>-->
+<!--<div class="cat-lable">-->
+<!--<a href="/category/article/laravel/">-->
+<!--لاراول-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<script>
+    $(window).scroll(function(){
+        var sticky = $('.doc-menu'),
+            scroll = $(window).scrollTop();
+        if (scroll >= 101) {sticky.addClass('doc-header-scroll'); }
+        else {sticky.removeClass('doc-header-scroll'); };
+    });
+</script>
+</div>
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="time">
+    یکشنبه 14 آبان 1396
+  </div>
+  <div class="post-content anchored" itemprop="articleBody">
+    <p>
+نیمه دوم سال 2009 بود که PHP با ورژن 5.3 با ویژگی‌های زیاد جدیدی که برای برنامه نویسان جذاب بود، انتشار یافت. یکی از ویژگی‌هایی که به PHP در این نسخه اضافه شد، تابع بی‌نام بود.
+</p>
+
+<h3>تابع بی‌نام (anonymous function)</h3>
+
+<p>
+توابع ناشناخته که اصطلاحا به آن‌ها تابع روی هوا (on the fly) گفته می شود، به طور ساده تابعی است بدون‌نام. مانند مثال زیر:
+</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+// Anonymous function
+
+function () {
+  return "Hello world";
+}
+</code></pre>
+
+<p>
+این مفهوم در PHP تحت قالب Lambda  وClosures پیاده سازی شده است. در ادامه مطلب بیشتر به این مورد خواهیم پرداخت.
+</p>
+
+<h3>توابع Lambada</h3>
+
+<p>
+یک Lambada تابع ناشناخته‌ای است که به یک متغیر انتساب داده می شود و یا به عنوان پارامتر به تابع دیگر انتساب داده می‌شود.
+</p>
+
+<h3>استفاده از Lambada</h3>
+
+<p>
+از آن جا که این مدل از تابع‌ها نام ندارند، پس شما نمی‌توانید مثل تابع‌های معمولی آن‌ها را صدا بزنید.
+بلکه باید همینطور که قبلا به آن اشاره شد، تابع را به یک متغیر انتساب بدهید و یا به عنوان پارامتر به تابع دیگری ارسال کنید.
+</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+// Anonymous function
+
+// assigned to variable
+$greeting = function ($world = '') {
+  return "Hello". $world;
+};
+
+// Call function
+echo $greeting('world');
+
+// Returns "Hello world"
+</code></pre>
+
+<p>
+نکته: همینطور که در کد بالا هم مشاهده می کنید، سمی کالن (;) را بعد از اتمام تابع قرار می‌دهیم.
+</p>
+
+<p>
+نکته: همینطور که در کد بالا هم مشاهده می کنید، می‌توانیم پارامتر به صورت دلخواه به تابع بدهیم (world$).
+</p>
+
+<p>
+به منظور استفاده از تابع ناشناخته، ما این تابع را به یک متغیر انتساب میدهیم و سپس متغیر را به عنوان یک تابع، Call یا صدا میزنیم.
+</p>
+
+<p>
+شما همچنین می‌توانید Lambadaایی که تعریف کرده‌اید را به عنوان پارامتر به تابع دیگر بفرستید:
+</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+// Pass Lambda to function
+
+function shout ($message) {
+  echo $message();
+}
+
+
+// Call function
+shout(function() {
+  return "Hello world";
+});
+</code></pre>
+
+<h3>برای چی من باید از Lambada استفاده کنم؟</h3>
+<p>شاید الان با خودتان گفتید که این تابع بدون اسم چه زمانی کارایی دارد؟</p>
+<p>Lambada از تعریف تابع هایی که معمولا کد کوچک و مختصری دارند و ممکن است شما در طول اجرای برنامه، مثلا، فقط یکبار صدا بزنید، خودداری می کند. اغلب شما، به تابعی نیاز دارید که کاری را برای شما انجام دهد، اما این نیاز را پیدا نمی کنید که آن را داخل global scope برنامه یا حتی به عنوان بخشی از بقیه کدها اضافه کنید.</p>
+<p>به جای اینکه تابعی داشته باشید که یک بار استفاده و بعد هم رها شود، میتوانید از Lambada استفاده کنید.</p>
+<p>یک مورد پر استفاده دیگر توابع ناشناخته درfunction callbackها است.</p>
+<p>اگر مفهوم توابع  callback در PHP را نمی‌دانید، یک جستجو راجع به آن انجام دهید، چرا که شرح کامل آن در این بحث نمی گنجد. اما یک نگاه سطحی با یک مثال به آن می‌اندازیم تا بحث بیشتر برایتان روشن شود.</p>
+<p>Callback هر تابعی که صدا زده شده است توسط تابع دیگری که البته آن تابع دیگر، تابع اول را به عنوان پارامتر میگیرد و Call می‌کند. معمولا callback تابعی است که زمانی صدا زده می‌شود که اتفاقی رخ داده باشد، که در دنیای برنامه نویسی به آن اتفاق، رویداد یا event گفته میشود.</p>
+<p>مثال زیر یک مثال پایه‌ایی از تابع‌های callback است:</p>
+<p>شما می‌توانید تابعی که نامش در یک متغیر ذخیره شده است را call کنید. فقط کافیست به انتهای نام متغیر، پرانتز باز و بسته () اضافه کنید. مثل <span class="en-words">()variable$</span></p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+function thisFuncTakesACallback($callbackFunc)
+{
+
+  echo "I'm going to call $callbackFunc!<br />";
+
+  $callbackFunc();
+
+}
+
+function thisFuncGetsCalled()
+{
+  echo "I'm a callback function!<br />";
+}
+
+thisFuncTakesACallback( 'thisFuncGetsCalled' );
+</code></pre>
+
+<p>خب در مثال بالا، ما نام تابع <span class="en-words">thisFuncGetsCalled</span> را به تابع <span class="en-words">()thisFuncTakesACallback</span> ارسال کردیم که سپس این تابع، تابعی که به آن فرستاده شده بود رو صدا زد.</p>
+<p>از توابع ناشناخته در توابع بومی PHP استفاده شده، که مثال‌های فوق العاده‌ای در این زمینه هستند، از جمله <span class="en-words">array_walk</span>, <span class="en-words">array_map</span>, <span class="en-words">array_reduce</span> و <span class="en-words">array_filter usort</span>.</p>
+<p>در مثال زیر نمونه‌ایی از callback function را مشاهده می‌کنید که با Lambada و در تابع <span class="en-words">array_filter</span> پیاده سازی شده است.</p>
+<p>نکته: کار <span class="en-words">array_filter</span> به این صورت است که پارامتر اول یک آرایه مثلا <span class="en-words">input$</span> را می‌گیرد و در یک Loop قرار می‌دهد و هر دفعه مقدار فعلی آرایه را به function callback ارسال یا pass میکند. اگرfunction callback مقدار <span class="en-words">true</span> برگرداند، value جاری خانه مورد نظر از آرایه برگردانده می‌شود. در ضمن keyهای آرایه هم تغییری نمی‌کنند.</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+$input = array(1, 2, 3, 4, 5);
+
+$output = array_filter($input, function ($v) { return $v &gt; 2; });
+
+// $output == array(2 =&gt; 3, 3 =&gt; 4, 4 =&gt; 5)
+</code></pre>
+<p>در مثال بالا، آرایه ورودی فیلتر می‌شود؛ به طوریکه تمام اعداد بزرگتر از 2 استخراج می‌شوند.</p>
+<p>در مثال بالا، عبارت <span class="en-words">{ ;function ($v) { return $v &gt; 2</span> یک Lambada است، که اگر میخواهید قابل استفاده مجدد باشد باید آن را داخل یک متغیر ذخیره کنید.</p>
+<p>اطلاعات بیشتر:  پیشتر می‌توانستید از <span class="en-words">create_function</span> در PHP استفاده کنید که اساسا همین کار را انجام میدهد.</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+// Use create_function
+
+$greeting = create_function('', 'echo "Hello World!";');
+
+
+
+// Call function
+$greeting();
+</code></pre>
+
+<p></p>
+<h3>توابع Closure</h3>
+<p>یک Closure (کلوژر) اساسا همان Lambada است، علاوه بر اینکه، می‌توانید به متغیرهای خارج از محدوده‌ایی که تعریف شده هم، دسترسی داشته باشد.</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+// Create a user
+
+$user = "Philip";
+
+// Create a Closure
+
+$greeting = function() use ($user) {
+
+  echo "Hello $user";
+
+};
+
+// Greet the user
+$greeting(); // Returns "Hello Philip"
+</code></pre>
+<p>همان طور که در بالا می بینید Closure می‌تواند به متغیر <span class="en-words">user$</span> دسترسی داشته باشد، به این دلیل که در عبارت <span class="en-words">use</span>، تعریف تابع Closure آورده شده است.</p>
+<p>همچنین اگر می‌خواهید مقدار متغیر <span class="en-words">user$</span> را داخل Closure تغییر بدهید و بیرون آن هم این تغییر از بین نرود، باید حتما قبل از متغیر داخل عبارت <span class="en-words">use</span> یک <span class="en-words">&amp;</span> (امپرسند) قرار بدهید تا متغیر به صورت ارسال با مرجع فرستاده شود.</p>
+<p>بیایید مثال array_filter را نیز با Closure انجام بدهیم.</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+$max_comparator = function ($max)
+{
+  return function ($v) use ($max) { return $v &gt; $max; };
+};
+
+$input = array(1, 2, 3, 4, 5);
+
+$output = array_filter($input, $max_comparator(3)); // Array ( [3] =&gt; 4 [4] =&gt; 5 )
+</code></pre>
+<p>در مثال بالا دو نکته را دیدید که یکی استفاده از توابع ناشناخته بصورت تودرتو و دیگری اینکه max$ به عنوان یک متغیر خارج از محدوده closure داخلی، مورد استفاده قرار گرفت.</p>
+<p>مثالی از Closure در array_walk:</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+// Set a multiplier
+
+$multiplier = 3;
+
+// Create a list of numbers
+$numbers = array(1,2,3,4);
+
+// Use array_walk to iterate
+
+// through the list and multiply
+
+array_walk($numbers, function($number) use($multiplier) {
+
+  echo $number * $multiplier;
+
+});
+</code></pre>
+<p>در مثال بالا تقریبا این نیاز احساس نمی‌شود که یک تابع بسازید که 2 عدد را در هم ضرب کند در حالی که فقط در یک جا مورد استفاده قرار میگیرد. با استفاده از یک Closure به عنوان callback، ما می‌توانیم تابع را یکبار استفاده کنیم و دیگر آن را فراموش کنیم.</p>
+<h3>استفاده از this$ در توابع ناشناخته</h3>
+<p>در نیمه اول سال 2012، یعنی زمانی که PHP به نسخه 5.4 خودش رسید، قابلیت جدیدی به توابع ناشناخته اضافه شد. بوسیله این قابلیت قادر هستید به راحتی با استفاده از this$ داخل تابع ناشناخته، به یک نمونه Object دسترسی داشته باشید.</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+class Foo
+{
+
+  function hello() {
+    echo 'Hello Nettuts!';
+  }
+
+  function anonymous()
+  {
+    return function() {
+      $this-&gt;hello(); // $this wasn't possible before
+    };
+  }
+
+}
+
+class Bar
+{
+
+  function __construct(Foo $Foo) // object of class Foo typehint
+  {
+    $x = $Foo-&gt;anonymous(); // get Foo::hello()
+
+    $x(); // execute Foo::hello()
+  }
+
+}
+
+new Bar(new Foo); // Hello Nettuts!
+</code></pre>
+<p></p>
+<h3>استفاده در دنیای واقعی</h3>
+<p>یک مثال معروف از استفاده از این نوع توابع در routing درخواست ها در فریم ورک های مدرن است.</p>
+<p>به عنوان مثال Laravel، به شما اجازه میده که مثل زیر عمل کنید:</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+Route::get('user/(:any)', function($name) {
+  return "Hello " . $name;
+});
+</code></pre>
+<p>کد بالا به سادگی با URLایی مثل <span class="en-words">user/Philip/</span>، تطبیق داده می‌شود.</p>
+<p>این یک مثال خیلی ساده بود، اما روشن میکند که چطور یک Closure در شرایطی که به آن نیاز هست می‌تواند مورد استفاده واقع شود.</p>
+<h3>در دیگر زبان ها چطور؟</h3>
+<p>توابع ناشناخته در خیلی از زبانهای برنامه نویسی وجود دارند (از جمله پایتون، دلفی، جاوا، C و …) و اگر Ruby و Javascript کار کرده باشید حتما به آن‌ها برخوردید، چون در این زبان‌ها بسیار متداول هستند.</p>
+<p>البته این نکته نیز ناگفته نماند که کاربرد آن در PHP، دقیقا همان کاربردی نیست که بقیه زبان ها از آن دارند.</p>
+<h3>نمونه‌ایی از تابع ناشناخته در jQuery:</h3>
+
+<div align="center">
+<img src="/images/post/jquery-callback.jpg" alt="مفهوم توابع بی‌نام (anonymous function)" />
+</div>
+
+  </div>
+    
+<hr>
+<p>
+<div>منابع مورد مطالعه جهت جمع آوری این مطلب:</div>
+<div  class="refrencehref">
+        http://aparnet.ir/2917-anonymous-functions
+</div>
+</p>
+
+  <hr>
+  <style>
+    #commentsdiv{
+        background-color: #f5f5f5;
+        border: 1px solid #c5c5c5;
+        border-bottom: 0px !important;
+        padding: 12px;
+    }
+    #commentsborder{
+        background-color: #fff;
+        border: 1px solid #c5c5c5;
+        white-space: normal;
+        padding: 20px;
+    }
+</style>
+
+<div id="commentsdiv">نظرات</div>
+<div id="commentsborder">
+<div id="wpac-comment"></div>
+</div>
+<script type="text/javascript">
+wpac_init = window.wpac_init || [];
+wpac_init.push({widget: 'Comment', id: 7878});
+(function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = 'https://embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+})();
+</script>
+
+</article>
+<script src="/assets/js/anchor.min.js"></script>
+<script>
+    anchors.options = {
+        placement: 'left',
+        visible: 'always',
+//        icon: '#',
+    };
+    anchors.add('.anchored h2,.anchored h3,.anchored h4,.anchored h5,.anchored h6');
+
+    (function($){
+        if(window.location.hash) {
+            var hash = decodeURIComponent(window.location.hash);
+            gotohash($(hash).offset().top);
+        }
+        $('a.anchorjs-link').click(function(){
+			gotohash($(this).offset().top);
+        });
+        $('a.anchorjs').click(function(){
+			var id = '#' + $(this).attr('title');
+			gotohash($(id).offset().top);
+        });		
+        function gotohash(top){
+            var headerHeight = 70; // Get fixed header height
+            $('html,body').animate({
+                scrollTop: top - headerHeight
+            }, 20);
+        }
+    })(jQuery);
+</script>
+
+
+
+
+
+    <div id="back-to-top" role="button" aria-label="Back to top">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+    </div>
+</main>
+<!-- footer -->
+
+<footer class="footer" role="contentinfo" aria-label="Site footer">
+    <div class="navigation" role="navigation" aria-label="Footer links">
+        <a href="http://localhost:4000" class="avatar" role="link" ></a>
+        <ul role="menubar" aria-label="Footer links menubar">
+            <li class="footer-products" role="menuitem" aria-label="Products">
+                تولیدات
+                <ul role="menu" aria-hidden="true" aria-label="Products link">
+                </ul>
+            </li>
+            <li class="footer-blog" role="menuitem" aria-label="Blog">
+                مقالات
+                <ul role="menu" aria-hidden="true" aria-label="Blog link">
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2020/07/03/marriage.html" role="link" aria-label="ازدواج">ازدواج</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2019/10/11/vuejs.html" role="link" aria-label="آموزش vuejs">آموزش vuejs</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/18/laravel.html" role="link" aria-label="آموزش Laravel">آموزش Laravel</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/articles/2017/12/13/laravelcollective.html" role="link" aria-label="معرفی Laravel Collective">معرفی Laravel Collective</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/06/design-patterns.html" role="link" aria-label="معرفی  Design Pattern">معرفی  Design Pattern</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/blog" role="link" aria-label="Read more">Read More</a></li>
+                </ul>
+            </li>
+
+            <li class="footer-connect" role="menuitem" aria-label="Connect">
+                تماس
+                <ul role="menu" aria-hidden="true" aria-label="Connect link">
+                    <li role="listitem" aria-label="Connect link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub">GitHub</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://www.linkedin.com/in/farhad-mirzapour/" target="_blank" role="link" aria-label="Linkedin">Linkedin</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter">Twitter</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="socials"  role="navigation" aria-label="Social links">
+        <ul role="menu" aria-hidden="true" aria-label="Social link">
+            <li role="listitem" aria-label="Social link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://www.linkedin.com/in/farhad-mirzapour-0043b862/" target="_blank" role="link" aria-label="Linkedin"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="/feed.xml" role="link" aria-label="RSS"><i class="fa fa-rss-square" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+    <div class="copyright" role="contentinfo" aria-label="Copyright">
+        <p>&copy; <script type="text/javascript">document.write(new Date().getFullYear());</script> Farhad Mirzapour</p>
+    </div>
+</footer>
+
+<!-- scripts -->
+<script src="/assets/js/hamburger-menu.js"></script>
+
+<script src="/assets/js/elevator.min.js"></script>
+<script src="/assets/js/back-to-top.js"></script>
+<script src="/assets/prisma/prism.js"></script>
+<!-- google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108878564-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-108878564-1');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,122 @@
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely edit after that. If you find
+# yourself editing this file very often, consider using Jekyll's data files
+# feature for the data you need to update frequently.
+#
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
+
+# Site settings
+# These are used to personalize your new site. If you look in the HTML files,
+# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
+# You can create any custom variable you would like, and they will be accessible
+# in the templates via {{ site.myvariable }}.
+title: مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور
+email: farhad.mirzapour@gamil.com
+description: >- # this means to ignore newlines until "baseurl:"
+ مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site, e.g. http://example.com
+twitter_username: farhadmirzapour
+github_username:  farhadmirzapour
+author: Farhad Mirzapour
+# Build settings
+encoding: UTF-8
+markdown: kramdown
+
+highlighter: rouge
+theme: minima
+logo: /assets/img/logo/farhadmirzapour-logo.png
+kramdown:
+  input: GFM
+  hard_wrap: false
+  math_engine: mathjax
+  syntax_highlighter: rouge
+future: true
+jailed: false
+ 
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-avatar
+  - mini_magick
+  - jekyll-minimagick
+  - jekyll-paginate
+  - jekyll-titles-from-headings
+  - jekyll-relative-links
+  - jekyll-mentions
+  - jekyll-include-cache
+  - jemoji
+  - jekyll-redirect-from
+# - jekyll-feed
+
+sass:
+  style: compressed
+  load_paths:
+    - _sass
+    - node_modules
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - SITECHANGELOG.md
+
+# jekyll-seo-tag settings
+social:
+  name: farhadmirzapour
+  links:
+    - https://twitter.com/farhadmirzapour
+    - https://github.com/farhadmirzapour
+    - https://www.facebook.com/f.mirzapour
+    - https://www.instagram.com/farhad.mirzapour/
+    - https://www.linkedin.com/in/farhad-mirzapour/
+
+logo: /assets/img/logo/blankspace-avatar.png
+paginate: 8
+paginate_path: "/blog/page:num/"
+twitter:
+  username: farhadmirzapour
+#End
+# Exclude from processing.
+# The following items will not be processed, by default. Create a custom list
+# to override the default setting.
+# exclude:
+#   - Gemfile
+#   - Gemfile.lock
+#   - node_modules
+#   - vendor/bundle/
+#   - vendor/cache/
+#   - vendor/gems/
+#   - vendor/ruby/
+
+# mini_magick for thumbnail
+#mini_magick:
+#    thumbnail:
+#        source: images/original
+#        destination: images/thumbnail
+#        resize: "200x200"
+#    medium:
+#        source: images/original
+#        destination: images/medium
+#        resize: "600x400"
+# Site menu settings		
+menu:
+  - title: "مقالات"
+    url: "/blog"
+  - title: "تماس"
+    url: "/contactus"
+# End
+# jekyll-titles-from-headings
+titles_from_headings:
+  enabled:     true
+  strip_title: false
+  collections: false
+# Collections settings
+collections:
+  documentation:
+    output: true
+    permalink: /:collection/:path
+# End

@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="">
+<!-- head -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>اصول S.O.L.I.D در طراحی شی گرا (OOD) | مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="اصول S.O.L.I.D در طراحی شی گرا (OOD)" />
+<meta name="author" content="Farhad Mirzapour" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="SOLID مخفف پنج اصل زیر بنایی طراحی شی گرا (Object-Oriented Design) است که اوایل سال ۲۰۰۰ میلادی توسط Robert C. Martin یا همان Uncle Bob معرفی شد. یکی از مشکلاتی که طراحی نامناسب برنامه های شی گرا برای برنامه نویسان ایجاد می کند موضوع مدیریت وابستگی در اجزای برنامه می باشد. اگر این وابستگی به درستی مدیریت نشود مشکلاتی شبیه موارد زیر در برنامه ایجاد می شوند: مشکل Rigidity : برنامه ی نوشته شده را نمی توان تغییر داد و یا قابلیت جدید اضافه کرد. دلیل آن هم این است که با ایجاد تغییر در قسمتی از برنامه، این تغییر به صورت آبشاری در بقیه ی قسمت ها منتشر می شود و مجبور خواهیم بود که قسمت های زیادی از برنامه را تغییر دهیم. مشکل Fragility : تغییر دادن برنامه مشکل است و آن هم به این دلیل که با ایجاد تغییر در یک قسمت از برنامه، قسمت های دیگر برنامه از کار می افتند و دچار مشکل می شوند. مشکل Immobility : قابلیت استفاده مجدد از اجزای برنامه وجود ندارد. در واقع، قسمت های مجدد برنامه ی شی گرای شما آنچنان به هم وابستگی تو در تو دارند که به هیچ وجه نمی توانید یک قسمت را جدا کرده و در برنامه ی دیگری استفاده کنید. اگر هنگام طراحی و برنامه نویسی از این اصول پیروی کنیم و رعایت این اصول و قوانین را مد نظر داشته باشیم، نرم افزار توسعه یافته شده را میتوان راحتتر در طول زمان توسعه (Extensibility) داد و نگهداری (Maintainable) کرد. اگر با Unit Testing یا همان تست واحد! آشنا باشید و در یک پروژه نسبتا قدیمی کار کنید و بخواهید برای این سیستم Unit Test بنویسید به زودی متوجه میشود که به راحتی نمیتوان برای آن تست درست حسابی نوشت. امکان دست زدن به کلاسها، جدا کردن کلاسها، جایگزین کردن آنها توسط Mock ها و Stub ها وجود ندارد و عملا امکان نوشتن Unit Test استاندارد و مفید وجود ندارد. دلیل این مشکل این است که هنگام توسعه اولیه نرم افزار، نوشتن کدی که قابل تست باشد مد نظر نبوده است (یا اولویت نداشته) و یا اصول و قوانین پایه ای طراحی شی گرا رعایت نشده است. خب در این مرحله اکثر برنامه نویسان و توسعه دهندگان شروع به Refactoring یا بهینه سازی کدها میکنند. ولی باید از کجا شروع کرد؟ دقیقا در این نقطه این ۵ اصل به کمک ما می آیند و با استفاده از آنها میتوانیم کدهای فعلی را تا حد زیادی بهبود داده و مرحله به مرحله قابلیت تست را به آنها اضافه کنیم. اگر هم از متدهای جدید برنامه نویسی مانند توسعه آزمایش محور (Test Driven Development) استفاده کنیم و واقعا TDD کار کنیم! ناخودآگاه بسیاری از این اصول در کدهای و کلاس های نوشته شده وجود دارند. Solid پنج اصل پایه ای است که به ما کمک می کند معماری نرم افزار خوبی داشته باشیم. Solid مخفف: S مخفف SRP) Single responsibility principle) یک کلاس باید یک و تنها یک دلیل برای تغییر داشته باشد، به این معنی که یک کلاس فقط باید یک مسئولیت داشته باشد O مخفف OCP) Open closed principle) شما باید بتوانید رفتار یک کلاس را توسعه دهید بدون اینکه آنرا تغییر دهید. (کد آنرا دستکاری کنید) L مخفف LSP) Liskov substitution principle) کلاسهای به ارث رفته (مشتق شده) باید بتوانند جایگزین کلاسهای اصلی شوند. I مخفف ISP) Interface segregation principle) تعداد بیشتری اینترفیس کوچک و خاص، بهتر از یک اینترفیس بزرگ (چاق) با متدهای بیشتر است. D مخفف DIP) Dependency inversion principle) وابستگی به Abstraction و نه Concrete Implementation" />
+<meta property="og:description" content="SOLID مخفف پنج اصل زیر بنایی طراحی شی گرا (Object-Oriented Design) است که اوایل سال ۲۰۰۰ میلادی توسط Robert C. Martin یا همان Uncle Bob معرفی شد. یکی از مشکلاتی که طراحی نامناسب برنامه های شی گرا برای برنامه نویسان ایجاد می کند موضوع مدیریت وابستگی در اجزای برنامه می باشد. اگر این وابستگی به درستی مدیریت نشود مشکلاتی شبیه موارد زیر در برنامه ایجاد می شوند: مشکل Rigidity : برنامه ی نوشته شده را نمی توان تغییر داد و یا قابلیت جدید اضافه کرد. دلیل آن هم این است که با ایجاد تغییر در قسمتی از برنامه، این تغییر به صورت آبشاری در بقیه ی قسمت ها منتشر می شود و مجبور خواهیم بود که قسمت های زیادی از برنامه را تغییر دهیم. مشکل Fragility : تغییر دادن برنامه مشکل است و آن هم به این دلیل که با ایجاد تغییر در یک قسمت از برنامه، قسمت های دیگر برنامه از کار می افتند و دچار مشکل می شوند. مشکل Immobility : قابلیت استفاده مجدد از اجزای برنامه وجود ندارد. در واقع، قسمت های مجدد برنامه ی شی گرای شما آنچنان به هم وابستگی تو در تو دارند که به هیچ وجه نمی توانید یک قسمت را جدا کرده و در برنامه ی دیگری استفاده کنید. اگر هنگام طراحی و برنامه نویسی از این اصول پیروی کنیم و رعایت این اصول و قوانین را مد نظر داشته باشیم، نرم افزار توسعه یافته شده را میتوان راحتتر در طول زمان توسعه (Extensibility) داد و نگهداری (Maintainable) کرد. اگر با Unit Testing یا همان تست واحد! آشنا باشید و در یک پروژه نسبتا قدیمی کار کنید و بخواهید برای این سیستم Unit Test بنویسید به زودی متوجه میشود که به راحتی نمیتوان برای آن تست درست حسابی نوشت. امکان دست زدن به کلاسها، جدا کردن کلاسها، جایگزین کردن آنها توسط Mock ها و Stub ها وجود ندارد و عملا امکان نوشتن Unit Test استاندارد و مفید وجود ندارد. دلیل این مشکل این است که هنگام توسعه اولیه نرم افزار، نوشتن کدی که قابل تست باشد مد نظر نبوده است (یا اولویت نداشته) و یا اصول و قوانین پایه ای طراحی شی گرا رعایت نشده است. خب در این مرحله اکثر برنامه نویسان و توسعه دهندگان شروع به Refactoring یا بهینه سازی کدها میکنند. ولی باید از کجا شروع کرد؟ دقیقا در این نقطه این ۵ اصل به کمک ما می آیند و با استفاده از آنها میتوانیم کدهای فعلی را تا حد زیادی بهبود داده و مرحله به مرحله قابلیت تست را به آنها اضافه کنیم. اگر هم از متدهای جدید برنامه نویسی مانند توسعه آزمایش محور (Test Driven Development) استفاده کنیم و واقعا TDD کار کنیم! ناخودآگاه بسیاری از این اصول در کدهای و کلاس های نوشته شده وجود دارند. Solid پنج اصل پایه ای است که به ما کمک می کند معماری نرم افزار خوبی داشته باشیم. Solid مخفف: S مخفف SRP) Single responsibility principle) یک کلاس باید یک و تنها یک دلیل برای تغییر داشته باشد، به این معنی که یک کلاس فقط باید یک مسئولیت داشته باشد O مخفف OCP) Open closed principle) شما باید بتوانید رفتار یک کلاس را توسعه دهید بدون اینکه آنرا تغییر دهید. (کد آنرا دستکاری کنید) L مخفف LSP) Liskov substitution principle) کلاسهای به ارث رفته (مشتق شده) باید بتوانند جایگزین کلاسهای اصلی شوند. I مخفف ISP) Interface segregation principle) تعداد بیشتری اینترفیس کوچک و خاص، بهتر از یک اینترفیس بزرگ (چاق) با متدهای بیشتر است. D مخفف DIP) Dependency inversion principle) وابستگی به Abstraction و نه Concrete Implementation" />
+<link rel="canonical" href="http://localhost:4000/2017/11/10/solid-object-oriented-design.html" />
+<meta property="og:url" content="http://localhost:4000/2017/11/10/solid-object-oriented-design.html" />
+<meta property="og:site_name" content="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-11-10T10:00:42+03:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="اصول S.O.L.I.D در طراحی شی گرا (OOD)" />
+<meta name="twitter:site" content="@farhadmirzapour" />
+<meta name="twitter:creator" content="@Farhad Mirzapour" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"اصول S.O.L.I.D در طراحی شی گرا (OOD)","url":"http://localhost:4000/2017/11/10/solid-object-oriented-design.html","datePublished":"2017-11-10T10:00:42+03:30","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"dateModified":"2017-11-10T10:00:42+03:30","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2017/11/10/solid-object-oriented-design.html"},"author":{"@type":"Person","name":"Farhad Mirzapour"},"description":"SOLID مخفف پنج اصل زیر بنایی طراحی شی گرا (Object-Oriented Design) است که اوایل سال ۲۰۰۰ میلادی توسط Robert C. Martin یا همان Uncle Bob معرفی شد. یکی از مشکلاتی که طراحی نامناسب برنامه های شی گرا برای برنامه نویسان ایجاد می کند موضوع مدیریت وابستگی در اجزای برنامه می باشد. اگر این وابستگی به درستی مدیریت نشود مشکلاتی شبیه موارد زیر در برنامه ایجاد می شوند: مشکل Rigidity : برنامه ی نوشته شده را نمی توان تغییر داد و یا قابلیت جدید اضافه کرد. دلیل آن هم این است که با ایجاد تغییر در قسمتی از برنامه، این تغییر به صورت آبشاری در بقیه ی قسمت ها منتشر می شود و مجبور خواهیم بود که قسمت های زیادی از برنامه را تغییر دهیم. مشکل Fragility : تغییر دادن برنامه مشکل است و آن هم به این دلیل که با ایجاد تغییر در یک قسمت از برنامه، قسمت های دیگر برنامه از کار می افتند و دچار مشکل می شوند. مشکل Immobility : قابلیت استفاده مجدد از اجزای برنامه وجود ندارد. در واقع، قسمت های مجدد برنامه ی شی گرای شما آنچنان به هم وابستگی تو در تو دارند که به هیچ وجه نمی توانید یک قسمت را جدا کرده و در برنامه ی دیگری استفاده کنید. اگر هنگام طراحی و برنامه نویسی از این اصول پیروی کنیم و رعایت این اصول و قوانین را مد نظر داشته باشیم، نرم افزار توسعه یافته شده را میتوان راحتتر در طول زمان توسعه (Extensibility) داد و نگهداری (Maintainable) کرد. اگر با Unit Testing یا همان تست واحد! آشنا باشید و در یک پروژه نسبتا قدیمی کار کنید و بخواهید برای این سیستم Unit Test بنویسید به زودی متوجه میشود که به راحتی نمیتوان برای آن تست درست حسابی نوشت. امکان دست زدن به کلاسها، جدا کردن کلاسها، جایگزین کردن آنها توسط Mock ها و Stub ها وجود ندارد و عملا امکان نوشتن Unit Test استاندارد و مفید وجود ندارد. دلیل این مشکل این است که هنگام توسعه اولیه نرم افزار، نوشتن کدی که قابل تست باشد مد نظر نبوده است (یا اولویت نداشته) و یا اصول و قوانین پایه ای طراحی شی گرا رعایت نشده است. خب در این مرحله اکثر برنامه نویسان و توسعه دهندگان شروع به Refactoring یا بهینه سازی کدها میکنند. ولی باید از کجا شروع کرد؟ دقیقا در این نقطه این ۵ اصل به کمک ما می آیند و با استفاده از آنها میتوانیم کدهای فعلی را تا حد زیادی بهبود داده و مرحله به مرحله قابلیت تست را به آنها اضافه کنیم. اگر هم از متدهای جدید برنامه نویسی مانند توسعه آزمایش محور (Test Driven Development) استفاده کنیم و واقعا TDD کار کنیم! ناخودآگاه بسیاری از این اصول در کدهای و کلاس های نوشته شده وجود دارند. Solid پنج اصل پایه ای است که به ما کمک می کند معماری نرم افزار خوبی داشته باشیم. Solid مخفف: S مخفف SRP) Single responsibility principle) یک کلاس باید یک و تنها یک دلیل برای تغییر داشته باشد، به این معنی که یک کلاس فقط باید یک مسئولیت داشته باشد O مخفف OCP) Open closed principle) شما باید بتوانید رفتار یک کلاس را توسعه دهید بدون اینکه آنرا تغییر دهید. (کد آنرا دستکاری کنید) L مخفف LSP) Liskov substitution principle) کلاسهای به ارث رفته (مشتق شده) باید بتوانند جایگزین کلاسهای اصلی شوند. I مخفف ISP) Interface segregation principle) تعداد بیشتری اینترفیس کوچک و خاص، بهتر از یک اینترفیس بزرگ (چاق) با متدهای بیشتر است. D مخفف DIP) Dependency inversion principle) وابستگی به Abstraction و نه Concrete Implementation","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="stylesheet" href="/assets/prisma/prism.css">
+    <!-- favicons and rss -->
+    <link rel="alternate" type="application/rss+xml" title="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" href="/feed.xml">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- header -->
+<header class="header" role="banner" aria-label="Header">
+    <button class="hamburger-button" onclick="hamburgerMenu();" role="button" aria-label="Hamburger menu button">
+        <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    </button>
+    <a href="/" class="logo" role="link" aria-label="Home">
+        <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo"/>
+    </a>
+    <nav class="navigation" role="navigation" aria-label="Navigation">
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item">
+                <a href="/" class="logo" role="menuitem" aria-label="Home">
+                    <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo"/>
+                </a>
+            </li>
+            
+            <li role="menuitem"><a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a></li>
+            
+            <li role="menuitem"><a href="/contactus" role="menuitem" aria-label="تماس">تماس</a></li>
+            
+        </ul>
+    </nav>
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox"/>
+        </form>
+    </div>
+</header>
+
+<nav id="hamburger-menu" role="navigation" aria-label="Hamburger menu">
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox"/>
+        </form>
+    </div>
+    <div class="home-nav" role="navigation" aria-label="Site navigation">
+        <a href="/" role="menuitem" aria-label="Home">صفحه اصلی</a>
+        
+        <a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a>
+        
+        <a href="/contactus" role="menuitem" aria-label="تماس">تماس</a>
+        
+    </div>
+
+    
+    <div class="doc-nav" role="navigation" aria-label="Documentation navigation">
+        <p role="presentation" aria-label="Category name">
+            اصول S.O.L.I.D  در طراحی شی گرا  (OOD)
+        </p>
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/2017/11/10/solid-object-oriented-design.html" class="doc-link" role="link" aria-label="اصول S.O.L.I.D  در طراحی شی گرا  (OOD)">مقدمه</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/solid-object-oriented-design/single-responsibility-principle" class="doc-link" role="link" aria-label="Single Responsibility Principle">Single Responsibility Principle</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/solid-object-oriented-design/open-closed-principle" class="doc-link" role="link" aria-label="Open Closed Principle">Open Closed Principle</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/solid-object-oriented-design/liskov-substitution-principle" class="doc-link" role="link" aria-label="Liskov Substitution Principle">Liskov Substitution Principle</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/solid-object-oriented-design/interface-segregation-principle" class="doc-link" role="link" aria-label="Interface Segregation Principle">Interface Segregation Principle</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/solid-object-oriented-design/dependency-inversion-principle" class="doc-link" role="link" aria-label="Dependency Inversion Principle">Dependency Inversion Principle</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </ul>
+    </div>
+    
+</nav>
+<!-- main content -->
+<main class="container" role="main">
+    <div class="rcdoccontainerimg">
+    <div class="rc-DRTVBanner-new rc-DRTVBanner-bigsize">
+    <div style="background: url('/images/original/Solid.jpg'); " class="blurred_img"></div>
+    <div class="mask"></div>
+    <div class="bot"></div>
+    <div class="over">
+        <div class="container-rc">
+            <img class="image" src="/images/original/Solid.jpg" alt="اصول S.O.L.I.D  در طراحی شی گرا  (OOD)" height="190">
+            <div class="desktop-banner-container">
+                <h1 class="display-5-text headline">
+                    
+                    
+                    اصول S.O.L.I.D  در طراحی شی گرا  (OOD)
+                    </h1>
+                <!--<div class="tagslist"><ul class='lyda-tag-list'><li class='lyda-tag-list-title'>برچسب ها</li><li><a class="tags" href="/tag/لاراول">#لاراول</a></li><li><a class="tags" href="/tag/لاراول-5-5">#لاراول 5.5</a></li></ul></div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="bread-crumb">-->
+<!--<div class="container   ">-->
+<!--<div class="pull-right ">-->
+<!--<div class="bread-button text-custom b-left">-->
+<!--انتشار : 2 ماه پیش-->
+<!--</div>-->
+<!--<a href="/category/article/" class="bread-button back-to-all b-left hidden-xs">همه مقالات</a>-->
+<!--<div class="cat-lable">-->
+<!--<a href="/category/article/laravel/">-->
+<!--لاراول-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<script>
+    $(window).scroll(function(){
+        var sticky = $('.doc-menu'),
+            scroll = $(window).scrollTop();
+        if (scroll >= 101) {sticky.addClass('doc-header-scroll'); }
+        else {sticky.removeClass('doc-header-scroll'); };
+    });
+</script>
+</div>
+<div class="doc-container">
+
+    <div class="doc-menu">
+        
+        <ul>
+            <li>
+                <a  href="/2017/11/10/solid-object-oriented-design.html" class="active doc-link" role="link">
+                    مقدمه
+                </a>
+            </li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li>
+                <a title="Single Responsibility Principle" href="/documentation/solid-object-oriented-design/single-responsibility-principle" class="active doc-link" role="link">
+                    Single Responsibility Principle
+                </a>
+            </li>
+            
+            
+            
+            <li>
+                <a title="Open Closed Principle" href="/documentation/solid-object-oriented-design/open-closed-principle" class="active doc-link" role="link">
+                    Open Closed Principle
+                </a>
+            </li>
+            
+            
+            
+            <li>
+                <a title="Liskov Substitution Principle" href="/documentation/solid-object-oriented-design/liskov-substitution-principle" class="active doc-link" role="link">
+                    Liskov Substitution Principle
+                </a>
+            </li>
+            
+            
+            
+            <li>
+                <a title="Interface Segregation Principle" href="/documentation/solid-object-oriented-design/interface-segregation-principle" class="active doc-link" role="link">
+                    Interface Segregation Principle
+                </a>
+            </li>
+            
+            
+            
+            <li>
+                <a title="Dependency Inversion Principle" href="/documentation/solid-object-oriented-design/dependency-inversion-principle" class="active doc-link" role="link">
+                    Dependency Inversion Principle
+                </a>
+            </li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </ul>
+        
+    </div>
+
+    <article class="documentation">
+        <header class="doc-header">
+            <div class="time">
+                تاریخ :      جمعه 19 آبان 1396
+            </div>
+            
+        </header>
+        <section class="anchored">
+            <p>
+SOLID مخفف پنج اصل زیر بنایی طراحی شی گرا (Object-Oriented Design) است که اوایل سال ۲۰۰۰ میلادی توسط Robert C. Martin یا همان Uncle Bob معرفی شد.
+</p>
+
+<p>
+یکی از مشکلاتی که طراحی نامناسب برنامه های شی گرا برای برنامه نویسان ایجاد می کند موضوع مدیریت وابستگی در اجزای برنامه می باشد. اگر این وابستگی به درستی مدیریت نشود مشکلاتی شبیه موارد زیر در برنامه ایجاد می شوند:
+</p>
+
+<ul>
+<li>
+<p>
+<strong>مشکل  Rigidity : </strong>
+برنامه ی نوشته شده را نمی توان تغییر داد و یا قابلیت جدید اضافه کرد. دلیل آن هم این است که با ایجاد تغییر در قسمتی از برنامه، این تغییر به صورت آبشاری در بقیه ی قسمت ها منتشر می شود و مجبور خواهیم بود که قسمت های زیادی از برنامه را تغییر دهیم.
+</p>
+</li>
+<li>
+<p>
+<strong>مشکل  Fragility : </strong>
+تغییر دادن برنامه مشکل است و آن هم به این دلیل که با ایجاد تغییر در یک قسمت از برنامه، قسمت های دیگر برنامه از کار می افتند و دچار مشکل می شوند.
+</p>
+</li>
+<li>
+<p>
+<strong>مشکل  Immobility : </strong>
+قابلیت استفاده مجدد از اجزای برنامه وجود ندارد. در واقع، قسمت های مجدد برنامه ی شی گرای شما آنچنان به هم وابستگی تو در تو دارند که به هیچ وجه نمی توانید یک قسمت را جدا کرده و در برنامه ی دیگری استفاده کنید.
+</p>
+</li>
+</ul>
+
+<p>
+اگر هنگام طراحی و برنامه نویسی از این اصول پیروی کنیم و رعایت این اصول و قوانین را مد نظر داشته باشیم، نرم افزار توسعه یافته شده را میتوان راحتتر در طول زمان توسعه (Extensibility) داد و نگهداری (Maintainable) کرد.
+</p>
+
+<p>
+اگر با Unit Testing یا همان تست واحد! آشنا باشید و در یک پروژه نسبتا قدیمی کار کنید و بخواهید برای این سیستم Unit Test بنویسید به زودی متوجه میشود که به راحتی نمیتوان برای آن تست درست حسابی نوشت. امکان دست زدن به کلاسها، جدا کردن کلاسها، جایگزین کردن آنها توسط Mock ها و Stub ها وجود ندارد و عملا امکان نوشتن Unit Test استاندارد و مفید وجود ندارد.
+</p>
+
+<p>
+دلیل این مشکل این است که هنگام توسعه اولیه نرم افزار، نوشتن کدی که قابل تست باشد مد نظر نبوده است (یا اولویت نداشته) و یا اصول و قوانین پایه ای طراحی شی گرا رعایت نشده است. خب در این مرحله اکثر برنامه نویسان و توسعه دهندگان شروع به Refactoring یا بهینه سازی کدها میکنند. ولی باید از کجا شروع کرد؟
+</p>
+
+<p>
+دقیقا در این نقطه این ۵ اصل به کمک ما می آیند و با استفاده از آنها میتوانیم کدهای فعلی را تا حد زیادی بهبود داده و مرحله به مرحله قابلیت تست را به آنها اضافه کنیم.
+</p>
+
+<p>
+اگر هم از متدهای جدید برنامه نویسی مانند توسعه آزمایش محور (Test Driven Development) استفاده کنیم و واقعا TDD کار کنیم! ناخودآگاه بسیاری از این اصول در کدهای و کلاس های نوشته شده وجود دارند.
+</p>
+
+<p>Solid پنج اصل پایه ای است که به ما کمک می کند معماری نرم افزار خوبی داشته باشیم. Solid مخفف:</p>
+<ul>
+<li>
+<a href="/documentation/solid-object-oriented-design/single-responsibility-principle" target="_blank">S مخفف SRP) Single responsibility principle)</a>
+<p>
+یک کلاس باید یک و تنها یک دلیل برای تغییر داشته باشد، به این معنی که یک کلاس فقط باید یک مسئولیت داشته باشد
+</p>
+</li>
+<li><a href="/documentation/solid-object-oriented-design/open-closed-principle" target="_blank">O مخفف OCP) Open closed principle)</a>
+<p>
+شما باید بتوانید رفتار یک کلاس را توسعه دهید بدون اینکه آنرا تغییر دهید. (کد آنرا دستکاری کنید)
+</p>
+</li>
+<li><a href="/documentation/solid-object-oriented-design/liskov-substitution-principle" target="_blank">L مخفف LSP) Liskov substitution principle)</a>
+<p>
+کلاسهای به ارث رفته (مشتق شده) باید بتوانند جایگزین کلاسهای اصلی شوند.
+</p>
+</li>
+<li><a href="/documentation/solid-object-oriented-design/interface-segregation-principle" target="_blank">I مخفف ISP) Interface segregation principle)</a>
+<p>
+تعداد بیشتری اینترفیس کوچک و خاص، بهتر از یک اینترفیس بزرگ (چاق) با متدهای بیشتر است.
+</p>
+</li>
+<li><a href="/documentation/solid-object-oriented-design/dependency-inversion-principle" target="_blank">D مخفف DIP) Dependency inversion principle)</a>
+<p>
+وابستگی به Abstraction و نه Concrete Implementation
+</p>
+</li>
+</ul>
+
+        </section>
+        
+<hr>
+<p>
+<div>منابع مورد مطالعه جهت جمع آوری این مطلب:</div>
+<div  class="refrencehref">
+        http://peyvasteh.net/5-اصل-پایه-ای-طراحی-شی-گرا-solid-به-زبان-ساده/ <br> http://alihossein.ir/tutorials/اصول-طراحی-شی-گرا-solid-چیست  <br> https://code.tutsplus.com/tutorials/solid-part-1-the-single-responsibility-principle--net-36074
+</div>
+</p>
+
+        <hr>
+        <style>
+    #commentsdiv{
+        background-color: #f5f5f5;
+        border: 1px solid #c5c5c5;
+        border-bottom: 0px !important;
+        padding: 12px;
+    }
+    #commentsborder{
+        background-color: #fff;
+        border: 1px solid #c5c5c5;
+        white-space: normal;
+        padding: 20px;
+    }
+</style>
+
+<div id="commentsdiv">نظرات</div>
+<div id="commentsborder">
+<div id="wpac-comment"></div>
+</div>
+<script type="text/javascript">
+wpac_init = window.wpac_init || [];
+wpac_init.push({widget: 'Comment', id: 7878});
+(function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = 'https://embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+})();
+</script>
+
+    </article>
+</div>
+<script src="/assets/js/anchor.min.js"></script>
+<script>
+    anchors.options = {
+        placement: 'left',
+        visible: 'always',
+//        icon: '#',
+    };
+    anchors.add('.anchored h2,.anchored h3,.anchored h4,.anchored h5,.anchored h6');
+
+    (function($){
+        if(window.location.hash) {
+            var hash = decodeURIComponent(window.location.hash);
+            gotohash($(hash).offset().top);
+        }
+        $('a.anchorjs-link').click(function(){
+			gotohash($(this).offset().top);
+        });
+        $('a.anchorjs').click(function(){
+			var id = '#' + $(this).attr('title');
+			gotohash($(id).offset().top);
+        });		
+        function gotohash(top){
+            var headerHeight = 70; // Get fixed header height
+            $('html,body').animate({
+                scrollTop: top - headerHeight
+            }, 20);
+        }
+    })(jQuery);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+   $(document).ready(function (){
+
+     var scrollPosition = getParameterByName('scroll');
+     if(scrollPosition)
+      $(".doc-menu").scrollTop(scrollPosition);
+
+     $('.doc-link').click(function(){
+        var scrollTop = $(".doc-menu").scrollTop();
+        if(scrollTop > 0)
+          $(this).attr("href",this.href + "?scroll=" + $(".doc-menu").scrollTop());
+     });
+
+     function getParameterByName(name, url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+   });
+</script>
+    <div id="back-to-top" role="button" aria-label="Back to top">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+    </div>
+</main>
+<!-- footer -->
+
+<footer class="footer" role="contentinfo" aria-label="Site footer">
+    <div class="navigation" role="navigation" aria-label="Footer links">
+        <a href="http://localhost:4000" class="avatar" role="link" ></a>
+        <ul role="menubar" aria-label="Footer links menubar">
+            <li class="footer-products" role="menuitem" aria-label="Products">
+                تولیدات
+                <ul role="menu" aria-hidden="true" aria-label="Products link">
+                </ul>
+            </li>
+            <li class="footer-blog" role="menuitem" aria-label="Blog">
+                مقالات
+                <ul role="menu" aria-hidden="true" aria-label="Blog link">
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2020/07/03/marriage.html" role="link" aria-label="ازدواج">ازدواج</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2019/10/11/vuejs.html" role="link" aria-label="آموزش vuejs">آموزش vuejs</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/18/laravel.html" role="link" aria-label="آموزش Laravel">آموزش Laravel</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/articles/2017/12/13/laravelcollective.html" role="link" aria-label="معرفی Laravel Collective">معرفی Laravel Collective</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/06/design-patterns.html" role="link" aria-label="معرفی  Design Pattern">معرفی  Design Pattern</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/blog" role="link" aria-label="Read more">Read More</a></li>
+                </ul>
+            </li>
+
+            <li class="footer-connect" role="menuitem" aria-label="Connect">
+                تماس
+                <ul role="menu" aria-hidden="true" aria-label="Connect link">
+                    <li role="listitem" aria-label="Connect link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub">GitHub</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://www.linkedin.com/in/farhad-mirzapour/" target="_blank" role="link" aria-label="Linkedin">Linkedin</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter">Twitter</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="socials"  role="navigation" aria-label="Social links">
+        <ul role="menu" aria-hidden="true" aria-label="Social link">
+            <li role="listitem" aria-label="Social link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://www.linkedin.com/in/farhad-mirzapour-0043b862/" target="_blank" role="link" aria-label="Linkedin"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="/feed.xml" role="link" aria-label="RSS"><i class="fa fa-rss-square" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+    <div class="copyright" role="contentinfo" aria-label="Copyright">
+        <p>&copy; <script type="text/javascript">document.write(new Date().getFullYear());</script> Farhad Mirzapour</p>
+    </div>
+</footer>
+
+<!-- scripts -->
+<script src="/assets/js/hamburger-menu.js"></script>
+
+<script src="/assets/js/elevator.min.js"></script>
+<script src="/assets/js/back-to-top.js"></script>
+<script src="/assets/prisma/prism.js"></script>
+<!-- google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108878564-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-108878564-1');
+</script>
+
+</body>
+</html>

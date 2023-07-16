@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="">
+<!-- head -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>آموزش Laravel | مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="آموزش Laravel" />
+<meta name="author" content="Farhad Mirzapour" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="لاراول (به انگلیسی Laravel) یک چارچوب متن باز پی اچ پی (PHP) است که توسط تیلور اوتول، برای توسعه نرم‌افزارهای وب بر پایه معماری MVC طراحی شده‌است. بعضی از ویژگی‌های لاراول به صورت ماژولار و بسته‌بندی شده ارائه شده‌است. در مارس ۲۰۱۵، لاراول به عنوان معروف‌ترین فریم ورک php شناخته شد، سایر فریم ورک‌های محبوب از قبیل symfony2,Nette,CodeIgniter,Yii2 و سایر فریم ورک‌ها بودند. کدهای باز لاراول برروی github میزبانی می‌شود؛ و تحت لیسانس MIT License ارائه شده‌است. پیدایش لاراول به این صورت بود که تیلور اوتول قصد داشت فریم ورکی ایجاد کند که بر پایه CodeIgniter باشد، در حالی که قابلیت‌های پیشرفته‌تری نسبت به آن ارائه دهد. زیرا با رشد CodeIgniter مشکلاتی برای برنامه نویسان و طراحان وب به وجود آمده بود. اگر دوست دارید بدانید لاراول تا الان که به نسخه لاراول 5.5 رسیده است، چه مسیری را طی کرده، با ادامه مقاله همراه لیداوب باشید تا نسخه‌های مختلف لاراول را با هم بررسی کنیم. پیدایش لاراول به این صورت بود که تیلور اوتول قصد داشت فریم ورکی ایجاد کند که بر پایه CodeIgniter باشد، در حالی که قابلیت‌های پیشرفته‌تری نسبت به آن ارائه دهد. زیرا با رشد CodeIgniter مشکلاتی برای برنامه نویسان و طراحان وب به وجود آمده بود. اگر دوست دارید بدانید لاراول تا الان که به نسخه لاراول 5.5 رسیده است، چه مسیری را طی کرده، با ادامه مقاله همراه لیداوب باشید تا نسخه‌های مختلف لاراول را با هم بررسی کنیم. لاراول 1 تیلور اوتول در سال ۲۰۱۱ اولین نسخه از لاراول را منتشر کرد که مکانیزم‌های model، session، view و مسیریابی را ارائه می‌داد، ولی این نسخه در نبود کنترلر حالت mvc واقعی را از دست داده بود. لاراول 2 در سپتامبر ۲۰۱۱ اوتول با انجام بهینه سازی‌های متعدد لاراول&nbsp;2 را منتشر کرد. از مهم‌ترین تغییرات نسخه ۲ وجود کنترلرها بود که باعث می‌شد لاراول رسماً به عنوان یک فریم ورک MVC شناخته شود. همچنین سیستم قالب بندی blade نیز در نسخه&nbsp;دوم&nbsp;به این فریم ورک اضافه شد. لاراول 3 در فوریه سال ۲۰۱۲ لاراول&nbsp;3 با تغییرات جدیدی وارد عرصه شد. انتشار لاراول&nbsp;3 با معرفی سایت این فریم ورک با آدرس&nbsp;http://laravel.com&nbsp;که امکان استفاده از یک داکیومنت قوی را برای کاربرانش فراهم می‌کرد، همراه بود. از مهم‌ترین قابلیت‌های لاراول&nbsp;3 استفاده از خط فرمان CLI به نام artisan بود. پشتیبانی داخلی از مدیریت سیستم بانک اطلاعاتی، migrationها، لایه‌های بانک اطلاعاتی، پشتیبانی از رویدادها، همگام سازی لاراول با unit testing و همچنین سیستم پکیجینگ یا bundle از دیگر قابلیت‌های مهم لاراول در نسخه&nbsp;سوم لاراول بود که محبوبیت آن را فزونی بخشید. لاراول 4 اکنون دیگر لاراول به جایگاه خوبی در بین کاربران دست یافته بود. پس از آن در می سال ۲۰۱۳ نسخه&nbsp;چهارم لاراول&nbsp;بر پایه کدهای Illuminate منتشر شد. در نسخه&nbsp;4 با بهره بردن از مدیر بسته‌ها یا composer تحول بزرگی در چارچوب لاراول ایجاد شد. زیرا این امکان فراهم شده بود که توسط composer کاربران بتوانند از بسته‌ها و کامپوننت‌های متعددی که توسط برنامه نویسان PHP در سراسر جهان نوشته شده بود، استفاده کنند. از قابلیت‌های دیگر ارائه شده توسط نسخه ۴ لاراول پشتیبانی از database seeding، پشتیبانی از صف‌های پیام، ارسال انواع مختلفی از ایمیل و پشتیبانی از soft deletion یا تاخیر در حذف رکوردهای پایگاه داده بود. لاراول 5 سیر تکامل لاراول ادامه داشت تا اینکه در فوریه سال ۲۰۱۵ نسخه&nbsp;پنجم لاراول&nbsp;با تغییر در نسخه&nbsp;4.3 منتشر شد. قابلیت‌های مهم و ویژه‌ای به این نسخه اضافه شده بود. برنامه‌ ریزی برای اجرای وظایف از طریق بسته‌ای به نام scheduler، بهینه سازی بسته‌های assets از طریق Elixir، ساده شدن عملیات احراز هویت از طریق بسته Socialite، همچنین ارائه ساختار درختی برای توسعه برنامه از قابلیت‌های لاراول در نسخه&nbsp;5 بود. پس از آن، نسخه‌های لاراول&nbsp;5 به ترتیب منتشر شدند و در هر کدام از آن‌ها ویژگی‌های جدید و منحصربه فردی ارائه شد. نتیجه این تلاش‌ها این است که هم اکنون یک فریم ورک PHP با امکانات کامل و جامع در اختیار برنامه نویسان قرار دارد که تمام نیازهای یک برنامه نویس تحت وب را برطرف می‌کند. در عین حال راحتی و سهولت استفاده از آن مهم‌ترین ویژگی آن به شمار می‌رود. در ادامه نسخه‌های مختلف ورژن 5 لاراول را جهت درک بهتر تفاوت آن‌ها بررسی می‌کنیم. لاراول 5.1 لاراول&nbsp;5.1 در ژوئن سال ۲۰۱۵ منتشر شد. باگ‌های زیادی در نسخه&nbsp;5.1&nbsp;لاراول برطرف شده بود. در عین حال مهم‌ترین ویژگی نسخه 5.1 انتشار آن به صورت یک نسخه با پشتیبانی طولانی مدت یا LTS بود. امکان پشتیبانی رفع مشکلات تا ۲ سال و پشتیبانی امنیتی تا سه سال در این نسخه فراهم شده بود. لاراول&nbsp;5.2 در ۲۱ دسامبر ۲۰۱۵ لاراول&nbsp;5.2 منتشر شد که تغییرات کوچکی در آن اعمال شده بود. لاراول&nbsp;5.3 لاراول&nbsp;5.3 با پشتیبانی ۶ ماهه برای رفع مشکلات و پشتیبانی یک ساله برای مشکلات امنیتی در ۲۳ اوت ۲۰۱۶ منتشر شد. ویژگی‌های جدید زیادی به این نسخه اضافه شده بود که مهم‌ترین آن تمرکز بر بهبود سرعت توسعه برای برنامه نویسان با ایجاد بهبود‌های خلاقانه جهت انجام کارهای رایج بود. لاراول&nbsp;5.4 لاراول&nbsp;۵/۴ در ۲۴ ژانویه ۲۰۱۷ منتشر شد. این نسخه بسیاری از ویژگی‌های جدید لاراول از جمله Laravel Dusk، Laravel Mix، Blade Components and Slots، Markdown Emails، Automatic Facades، بهبود مسیر یا route و ویژگی‌های دیگر را شامل می‌شد. لاراول&nbsp;5.5 تیم توسعه لاراول همواره درصدد توسعه و افزودن قابلیت‌های جدید به آن هستند و در همین راستا لاراول&nbsp;5.5 را در ۳۰ اگوست ۲۰۱۷ با پشتیبانی طولانی مدت و به صورت LTS منتشر کردند. این نسخه کامل امکان پشتیبانی برای رفع مشکلات تا دو سال و پشتیبانی برای رفع مسائل امنیتی تا سه سال را ایجاد کرده است. این نسخه ویژگی‌های مهم و جدید بسیاری دارد که ما در لیداوب به شرح کامل تمام ویژگی‌های جدید نسخه&nbsp;5.5 پرداخته ایم. &lt;h3مزایای استفاده از فریم ورک لاراول&lt;/h3&gt; در ادامه دلیل رشد بسیار سریع لاراول و اینکه چرا در مدت زمان کوتاهی توانسته در رقابت با فریم ورک‌های دیگر PHP، نظر جامعه برنامه ‌نویسان را به خود جلب کند را بررسی می‌کنیم. مهم‌ترین ویژگی‌ لاراول سرعت بالا و همچنین سادگی و سهولت کار با‌ آن است. لاراول قابلیت‌های مهم فراوانی دارد که آن را به انتخاب اول برنامه نویسان PHP تبدیل کرده است. از جمله مهم‌ترین قابلیت‌های لاراول می‌توان به موارد زیر اشاره کرد: استفاده از معماری MVC در لاراول:&nbsp;در تعریف معماری MVC و فریم ورک‌های مبتنی بر آن می‌توان گفت که این معماری تلفیقی از سه لایه model-view-controller است. کار با پایگاه داده از وظایف بخش model است. وظیفه ارتباط با کاربر نهایی بر عهده بخش view است. و وظیفه کنترل و ایجاد ارتباط بین دو لایه view و model برعهده بخش controller است. تقسیم بندی برنامه به این سه قسمت مزایای فراوانی دارد که از جمله مهم‌ترین مزیت‌های آن جداسازی منطق برنامه از بخش view سایت است که این امر باعث می‌شود؛ هنگام ایجاد تغییر در view، این تغییرات منطق برنامه را تحت تاثیر قرار ندهند. فریم ورک لاراول بر پایه معماری MVC است.&nbsp; انتشار به صورت متن باز:&nbsp;انتشار به صورت متن باز امکان تغییر این فریم ورک طبق چیزی که می‌خواهید را فراهم می‌کند. امکان تعریف RESTFUL controllers:&nbsp;منطقی برای سهولت استفاده از کنترلرها و کاهش کدها در آن بر پایه درخواست‌های GET و POST است. استفاده از خصوصیت auto-loading:&nbsp;خصوصیت auto-loading در لاراول امکان لود اتوماتیک کلاس‌ها و کامپوننت‌ها را در صورت نیاز به‌ آن‌ها فراهم کرده است.راحتی استفاده از پایگاه داده:&nbsp;با استفاده از سیستم ORM یا همان ابزار Elequent در لاراول می‌توانید با انواع پایگاه داده‌ها ارتباط برقرار کرده و انواع کوئری‌ها را در آن به کار بگیرید. استفاده از ابزار unit testing:&nbsp;با استفاده از ابزار تست لاراول به راحتی می‌توانید برنامه‌های خود را تست کنید. استفاده از قالب blade:&nbsp;می‌توان از داده‌های برنامه در view توسط قالب blade استفاده کرد. ایجاد پکیج‌ها:&nbsp;در لاراول به راحتی می‌توانید پکیج‌های موردنظر خود را ایجاد کنید و از آن در برنامه‌های خود بهره ببرید، یا آن را با دیگران به اشتراک بگذارید. استفاده از خط فرمان artisan:&nbsp;استفاده از خط فرمان artisan این امکان را می‌دهد تا کارهای پیچیده‌ای را توسط چند خط کد ساده انجام دهیم. استفاده از migration:&nbsp;استفاده از این قابلیت این امکان را فراهم کرده است که تغییرات بانک اطلاعاتی به همراه سورس کد پروژه قابل انتقال باشد. نصب آسان:&nbsp;از مزیت‌های لاراول این است که نصب این فریم ورک و کار با آن بسیار راحت است. استفاده از کامپوننت‌ها:&nbsp;لاراول از پکیج‌ها و کامپوننت‌های زیادی بهره می‌برد که به راحتی بر روی پروژه نصب و استفاده می‌شوند. امنیت:&nbsp;یکی از مهم‌ترین مسائلی که برای یک برنامه نویس اهمیت دارد، امنیت برنامه‌ی در حال ساخت است. لاراول از سطح بالایی از امنیت برخوردار است. مسیریابی:&nbsp;راحتی کار و قدرت مسیریابی لاراول از مهم‌ترین ‌ویژگی‌های لاراول است." />
+<meta property="og:description" content="لاراول (به انگلیسی Laravel) یک چارچوب متن باز پی اچ پی (PHP) است که توسط تیلور اوتول، برای توسعه نرم‌افزارهای وب بر پایه معماری MVC طراحی شده‌است. بعضی از ویژگی‌های لاراول به صورت ماژولار و بسته‌بندی شده ارائه شده‌است. در مارس ۲۰۱۵، لاراول به عنوان معروف‌ترین فریم ورک php شناخته شد، سایر فریم ورک‌های محبوب از قبیل symfony2,Nette,CodeIgniter,Yii2 و سایر فریم ورک‌ها بودند. کدهای باز لاراول برروی github میزبانی می‌شود؛ و تحت لیسانس MIT License ارائه شده‌است. پیدایش لاراول به این صورت بود که تیلور اوتول قصد داشت فریم ورکی ایجاد کند که بر پایه CodeIgniter باشد، در حالی که قابلیت‌های پیشرفته‌تری نسبت به آن ارائه دهد. زیرا با رشد CodeIgniter مشکلاتی برای برنامه نویسان و طراحان وب به وجود آمده بود. اگر دوست دارید بدانید لاراول تا الان که به نسخه لاراول 5.5 رسیده است، چه مسیری را طی کرده، با ادامه مقاله همراه لیداوب باشید تا نسخه‌های مختلف لاراول را با هم بررسی کنیم. پیدایش لاراول به این صورت بود که تیلور اوتول قصد داشت فریم ورکی ایجاد کند که بر پایه CodeIgniter باشد، در حالی که قابلیت‌های پیشرفته‌تری نسبت به آن ارائه دهد. زیرا با رشد CodeIgniter مشکلاتی برای برنامه نویسان و طراحان وب به وجود آمده بود. اگر دوست دارید بدانید لاراول تا الان که به نسخه لاراول 5.5 رسیده است، چه مسیری را طی کرده، با ادامه مقاله همراه لیداوب باشید تا نسخه‌های مختلف لاراول را با هم بررسی کنیم. لاراول 1 تیلور اوتول در سال ۲۰۱۱ اولین نسخه از لاراول را منتشر کرد که مکانیزم‌های model، session، view و مسیریابی را ارائه می‌داد، ولی این نسخه در نبود کنترلر حالت mvc واقعی را از دست داده بود. لاراول 2 در سپتامبر ۲۰۱۱ اوتول با انجام بهینه سازی‌های متعدد لاراول&nbsp;2 را منتشر کرد. از مهم‌ترین تغییرات نسخه ۲ وجود کنترلرها بود که باعث می‌شد لاراول رسماً به عنوان یک فریم ورک MVC شناخته شود. همچنین سیستم قالب بندی blade نیز در نسخه&nbsp;دوم&nbsp;به این فریم ورک اضافه شد. لاراول 3 در فوریه سال ۲۰۱۲ لاراول&nbsp;3 با تغییرات جدیدی وارد عرصه شد. انتشار لاراول&nbsp;3 با معرفی سایت این فریم ورک با آدرس&nbsp;http://laravel.com&nbsp;که امکان استفاده از یک داکیومنت قوی را برای کاربرانش فراهم می‌کرد، همراه بود. از مهم‌ترین قابلیت‌های لاراول&nbsp;3 استفاده از خط فرمان CLI به نام artisan بود. پشتیبانی داخلی از مدیریت سیستم بانک اطلاعاتی، migrationها، لایه‌های بانک اطلاعاتی، پشتیبانی از رویدادها، همگام سازی لاراول با unit testing و همچنین سیستم پکیجینگ یا bundle از دیگر قابلیت‌های مهم لاراول در نسخه&nbsp;سوم لاراول بود که محبوبیت آن را فزونی بخشید. لاراول 4 اکنون دیگر لاراول به جایگاه خوبی در بین کاربران دست یافته بود. پس از آن در می سال ۲۰۱۳ نسخه&nbsp;چهارم لاراول&nbsp;بر پایه کدهای Illuminate منتشر شد. در نسخه&nbsp;4 با بهره بردن از مدیر بسته‌ها یا composer تحول بزرگی در چارچوب لاراول ایجاد شد. زیرا این امکان فراهم شده بود که توسط composer کاربران بتوانند از بسته‌ها و کامپوننت‌های متعددی که توسط برنامه نویسان PHP در سراسر جهان نوشته شده بود، استفاده کنند. از قابلیت‌های دیگر ارائه شده توسط نسخه ۴ لاراول پشتیبانی از database seeding، پشتیبانی از صف‌های پیام، ارسال انواع مختلفی از ایمیل و پشتیبانی از soft deletion یا تاخیر در حذف رکوردهای پایگاه داده بود. لاراول 5 سیر تکامل لاراول ادامه داشت تا اینکه در فوریه سال ۲۰۱۵ نسخه&nbsp;پنجم لاراول&nbsp;با تغییر در نسخه&nbsp;4.3 منتشر شد. قابلیت‌های مهم و ویژه‌ای به این نسخه اضافه شده بود. برنامه‌ ریزی برای اجرای وظایف از طریق بسته‌ای به نام scheduler، بهینه سازی بسته‌های assets از طریق Elixir، ساده شدن عملیات احراز هویت از طریق بسته Socialite، همچنین ارائه ساختار درختی برای توسعه برنامه از قابلیت‌های لاراول در نسخه&nbsp;5 بود. پس از آن، نسخه‌های لاراول&nbsp;5 به ترتیب منتشر شدند و در هر کدام از آن‌ها ویژگی‌های جدید و منحصربه فردی ارائه شد. نتیجه این تلاش‌ها این است که هم اکنون یک فریم ورک PHP با امکانات کامل و جامع در اختیار برنامه نویسان قرار دارد که تمام نیازهای یک برنامه نویس تحت وب را برطرف می‌کند. در عین حال راحتی و سهولت استفاده از آن مهم‌ترین ویژگی آن به شمار می‌رود. در ادامه نسخه‌های مختلف ورژن 5 لاراول را جهت درک بهتر تفاوت آن‌ها بررسی می‌کنیم. لاراول 5.1 لاراول&nbsp;5.1 در ژوئن سال ۲۰۱۵ منتشر شد. باگ‌های زیادی در نسخه&nbsp;5.1&nbsp;لاراول برطرف شده بود. در عین حال مهم‌ترین ویژگی نسخه 5.1 انتشار آن به صورت یک نسخه با پشتیبانی طولانی مدت یا LTS بود. امکان پشتیبانی رفع مشکلات تا ۲ سال و پشتیبانی امنیتی تا سه سال در این نسخه فراهم شده بود. لاراول&nbsp;5.2 در ۲۱ دسامبر ۲۰۱۵ لاراول&nbsp;5.2 منتشر شد که تغییرات کوچکی در آن اعمال شده بود. لاراول&nbsp;5.3 لاراول&nbsp;5.3 با پشتیبانی ۶ ماهه برای رفع مشکلات و پشتیبانی یک ساله برای مشکلات امنیتی در ۲۳ اوت ۲۰۱۶ منتشر شد. ویژگی‌های جدید زیادی به این نسخه اضافه شده بود که مهم‌ترین آن تمرکز بر بهبود سرعت توسعه برای برنامه نویسان با ایجاد بهبود‌های خلاقانه جهت انجام کارهای رایج بود. لاراول&nbsp;5.4 لاراول&nbsp;۵/۴ در ۲۴ ژانویه ۲۰۱۷ منتشر شد. این نسخه بسیاری از ویژگی‌های جدید لاراول از جمله Laravel Dusk، Laravel Mix، Blade Components and Slots، Markdown Emails، Automatic Facades، بهبود مسیر یا route و ویژگی‌های دیگر را شامل می‌شد. لاراول&nbsp;5.5 تیم توسعه لاراول همواره درصدد توسعه و افزودن قابلیت‌های جدید به آن هستند و در همین راستا لاراول&nbsp;5.5 را در ۳۰ اگوست ۲۰۱۷ با پشتیبانی طولانی مدت و به صورت LTS منتشر کردند. این نسخه کامل امکان پشتیبانی برای رفع مشکلات تا دو سال و پشتیبانی برای رفع مسائل امنیتی تا سه سال را ایجاد کرده است. این نسخه ویژگی‌های مهم و جدید بسیاری دارد که ما در لیداوب به شرح کامل تمام ویژگی‌های جدید نسخه&nbsp;5.5 پرداخته ایم. &lt;h3مزایای استفاده از فریم ورک لاراول&lt;/h3&gt; در ادامه دلیل رشد بسیار سریع لاراول و اینکه چرا در مدت زمان کوتاهی توانسته در رقابت با فریم ورک‌های دیگر PHP، نظر جامعه برنامه ‌نویسان را به خود جلب کند را بررسی می‌کنیم. مهم‌ترین ویژگی‌ لاراول سرعت بالا و همچنین سادگی و سهولت کار با‌ آن است. لاراول قابلیت‌های مهم فراوانی دارد که آن را به انتخاب اول برنامه نویسان PHP تبدیل کرده است. از جمله مهم‌ترین قابلیت‌های لاراول می‌توان به موارد زیر اشاره کرد: استفاده از معماری MVC در لاراول:&nbsp;در تعریف معماری MVC و فریم ورک‌های مبتنی بر آن می‌توان گفت که این معماری تلفیقی از سه لایه model-view-controller است. کار با پایگاه داده از وظایف بخش model است. وظیفه ارتباط با کاربر نهایی بر عهده بخش view است. و وظیفه کنترل و ایجاد ارتباط بین دو لایه view و model برعهده بخش controller است. تقسیم بندی برنامه به این سه قسمت مزایای فراوانی دارد که از جمله مهم‌ترین مزیت‌های آن جداسازی منطق برنامه از بخش view سایت است که این امر باعث می‌شود؛ هنگام ایجاد تغییر در view، این تغییرات منطق برنامه را تحت تاثیر قرار ندهند. فریم ورک لاراول بر پایه معماری MVC است.&nbsp; انتشار به صورت متن باز:&nbsp;انتشار به صورت متن باز امکان تغییر این فریم ورک طبق چیزی که می‌خواهید را فراهم می‌کند. امکان تعریف RESTFUL controllers:&nbsp;منطقی برای سهولت استفاده از کنترلرها و کاهش کدها در آن بر پایه درخواست‌های GET و POST است. استفاده از خصوصیت auto-loading:&nbsp;خصوصیت auto-loading در لاراول امکان لود اتوماتیک کلاس‌ها و کامپوننت‌ها را در صورت نیاز به‌ آن‌ها فراهم کرده است.راحتی استفاده از پایگاه داده:&nbsp;با استفاده از سیستم ORM یا همان ابزار Elequent در لاراول می‌توانید با انواع پایگاه داده‌ها ارتباط برقرار کرده و انواع کوئری‌ها را در آن به کار بگیرید. استفاده از ابزار unit testing:&nbsp;با استفاده از ابزار تست لاراول به راحتی می‌توانید برنامه‌های خود را تست کنید. استفاده از قالب blade:&nbsp;می‌توان از داده‌های برنامه در view توسط قالب blade استفاده کرد. ایجاد پکیج‌ها:&nbsp;در لاراول به راحتی می‌توانید پکیج‌های موردنظر خود را ایجاد کنید و از آن در برنامه‌های خود بهره ببرید، یا آن را با دیگران به اشتراک بگذارید. استفاده از خط فرمان artisan:&nbsp;استفاده از خط فرمان artisan این امکان را می‌دهد تا کارهای پیچیده‌ای را توسط چند خط کد ساده انجام دهیم. استفاده از migration:&nbsp;استفاده از این قابلیت این امکان را فراهم کرده است که تغییرات بانک اطلاعاتی به همراه سورس کد پروژه قابل انتقال باشد. نصب آسان:&nbsp;از مزیت‌های لاراول این است که نصب این فریم ورک و کار با آن بسیار راحت است. استفاده از کامپوننت‌ها:&nbsp;لاراول از پکیج‌ها و کامپوننت‌های زیادی بهره می‌برد که به راحتی بر روی پروژه نصب و استفاده می‌شوند. امنیت:&nbsp;یکی از مهم‌ترین مسائلی که برای یک برنامه نویس اهمیت دارد، امنیت برنامه‌ی در حال ساخت است. لاراول از سطح بالایی از امنیت برخوردار است. مسیریابی:&nbsp;راحتی کار و قدرت مسیریابی لاراول از مهم‌ترین ‌ویژگی‌های لاراول است." />
+<link rel="canonical" href="http://localhost:4000/2017/12/18/laravel.html" />
+<meta property="og:url" content="http://localhost:4000/2017/12/18/laravel.html" />
+<meta property="og:site_name" content="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-12-18T11:18:42+03:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="آموزش Laravel" />
+<meta name="twitter:site" content="@farhadmirzapour" />
+<meta name="twitter:creator" content="@Farhad Mirzapour" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"آموزش Laravel","url":"http://localhost:4000/2017/12/18/laravel.html","datePublished":"2017-12-18T11:18:42+03:30","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"dateModified":"2017-12-18T11:18:42+03:30","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2017/12/18/laravel.html"},"author":{"@type":"Person","name":"Farhad Mirzapour"},"description":"لاراول (به انگلیسی Laravel) یک چارچوب متن باز پی اچ پی (PHP) است که توسط تیلور اوتول، برای توسعه نرم‌افزارهای وب بر پایه معماری MVC طراحی شده‌است. بعضی از ویژگی‌های لاراول به صورت ماژولار و بسته‌بندی شده ارائه شده‌است. در مارس ۲۰۱۵، لاراول به عنوان معروف‌ترین فریم ورک php شناخته شد، سایر فریم ورک‌های محبوب از قبیل symfony2,Nette,CodeIgniter,Yii2 و سایر فریم ورک‌ها بودند. کدهای باز لاراول برروی github میزبانی می‌شود؛ و تحت لیسانس MIT License ارائه شده‌است. پیدایش لاراول به این صورت بود که تیلور اوتول قصد داشت فریم ورکی ایجاد کند که بر پایه CodeIgniter باشد، در حالی که قابلیت‌های پیشرفته‌تری نسبت به آن ارائه دهد. زیرا با رشد CodeIgniter مشکلاتی برای برنامه نویسان و طراحان وب به وجود آمده بود. اگر دوست دارید بدانید لاراول تا الان که به نسخه لاراول 5.5 رسیده است، چه مسیری را طی کرده، با ادامه مقاله همراه لیداوب باشید تا نسخه‌های مختلف لاراول را با هم بررسی کنیم. پیدایش لاراول به این صورت بود که تیلور اوتول قصد داشت فریم ورکی ایجاد کند که بر پایه CodeIgniter باشد، در حالی که قابلیت‌های پیشرفته‌تری نسبت به آن ارائه دهد. زیرا با رشد CodeIgniter مشکلاتی برای برنامه نویسان و طراحان وب به وجود آمده بود. اگر دوست دارید بدانید لاراول تا الان که به نسخه لاراول 5.5 رسیده است، چه مسیری را طی کرده، با ادامه مقاله همراه لیداوب باشید تا نسخه‌های مختلف لاراول را با هم بررسی کنیم. لاراول 1 تیلور اوتول در سال ۲۰۱۱ اولین نسخه از لاراول را منتشر کرد که مکانیزم‌های model، session، view و مسیریابی را ارائه می‌داد، ولی این نسخه در نبود کنترلر حالت mvc واقعی را از دست داده بود. لاراول 2 در سپتامبر ۲۰۱۱ اوتول با انجام بهینه سازی‌های متعدد لاراول&nbsp;2 را منتشر کرد. از مهم‌ترین تغییرات نسخه ۲ وجود کنترلرها بود که باعث می‌شد لاراول رسماً به عنوان یک فریم ورک MVC شناخته شود. همچنین سیستم قالب بندی blade نیز در نسخه&nbsp;دوم&nbsp;به این فریم ورک اضافه شد. لاراول 3 در فوریه سال ۲۰۱۲ لاراول&nbsp;3 با تغییرات جدیدی وارد عرصه شد. انتشار لاراول&nbsp;3 با معرفی سایت این فریم ورک با آدرس&nbsp;http://laravel.com&nbsp;که امکان استفاده از یک داکیومنت قوی را برای کاربرانش فراهم می‌کرد، همراه بود. از مهم‌ترین قابلیت‌های لاراول&nbsp;3 استفاده از خط فرمان CLI به نام artisan بود. پشتیبانی داخلی از مدیریت سیستم بانک اطلاعاتی، migrationها، لایه‌های بانک اطلاعاتی، پشتیبانی از رویدادها، همگام سازی لاراول با unit testing و همچنین سیستم پکیجینگ یا bundle از دیگر قابلیت‌های مهم لاراول در نسخه&nbsp;سوم لاراول بود که محبوبیت آن را فزونی بخشید. لاراول 4 اکنون دیگر لاراول به جایگاه خوبی در بین کاربران دست یافته بود. پس از آن در می سال ۲۰۱۳ نسخه&nbsp;چهارم لاراول&nbsp;بر پایه کدهای Illuminate منتشر شد. در نسخه&nbsp;4 با بهره بردن از مدیر بسته‌ها یا composer تحول بزرگی در چارچوب لاراول ایجاد شد. زیرا این امکان فراهم شده بود که توسط composer کاربران بتوانند از بسته‌ها و کامپوننت‌های متعددی که توسط برنامه نویسان PHP در سراسر جهان نوشته شده بود، استفاده کنند. از قابلیت‌های دیگر ارائه شده توسط نسخه ۴ لاراول پشتیبانی از database seeding، پشتیبانی از صف‌های پیام، ارسال انواع مختلفی از ایمیل و پشتیبانی از soft deletion یا تاخیر در حذف رکوردهای پایگاه داده بود. لاراول 5 سیر تکامل لاراول ادامه داشت تا اینکه در فوریه سال ۲۰۱۵ نسخه&nbsp;پنجم لاراول&nbsp;با تغییر در نسخه&nbsp;4.3 منتشر شد. قابلیت‌های مهم و ویژه‌ای به این نسخه اضافه شده بود. برنامه‌ ریزی برای اجرای وظایف از طریق بسته‌ای به نام scheduler، بهینه سازی بسته‌های assets از طریق Elixir، ساده شدن عملیات احراز هویت از طریق بسته Socialite، همچنین ارائه ساختار درختی برای توسعه برنامه از قابلیت‌های لاراول در نسخه&nbsp;5 بود. پس از آن، نسخه‌های لاراول&nbsp;5 به ترتیب منتشر شدند و در هر کدام از آن‌ها ویژگی‌های جدید و منحصربه فردی ارائه شد. نتیجه این تلاش‌ها این است که هم اکنون یک فریم ورک PHP با امکانات کامل و جامع در اختیار برنامه نویسان قرار دارد که تمام نیازهای یک برنامه نویس تحت وب را برطرف می‌کند. در عین حال راحتی و سهولت استفاده از آن مهم‌ترین ویژگی آن به شمار می‌رود. در ادامه نسخه‌های مختلف ورژن 5 لاراول را جهت درک بهتر تفاوت آن‌ها بررسی می‌کنیم. لاراول 5.1 لاراول&nbsp;5.1 در ژوئن سال ۲۰۱۵ منتشر شد. باگ‌های زیادی در نسخه&nbsp;5.1&nbsp;لاراول برطرف شده بود. در عین حال مهم‌ترین ویژگی نسخه 5.1 انتشار آن به صورت یک نسخه با پشتیبانی طولانی مدت یا LTS بود. امکان پشتیبانی رفع مشکلات تا ۲ سال و پشتیبانی امنیتی تا سه سال در این نسخه فراهم شده بود. لاراول&nbsp;5.2 در ۲۱ دسامبر ۲۰۱۵ لاراول&nbsp;5.2 منتشر شد که تغییرات کوچکی در آن اعمال شده بود. لاراول&nbsp;5.3 لاراول&nbsp;5.3 با پشتیبانی ۶ ماهه برای رفع مشکلات و پشتیبانی یک ساله برای مشکلات امنیتی در ۲۳ اوت ۲۰۱۶ منتشر شد. ویژگی‌های جدید زیادی به این نسخه اضافه شده بود که مهم‌ترین آن تمرکز بر بهبود سرعت توسعه برای برنامه نویسان با ایجاد بهبود‌های خلاقانه جهت انجام کارهای رایج بود. لاراول&nbsp;5.4 لاراول&nbsp;۵/۴ در ۲۴ ژانویه ۲۰۱۷ منتشر شد. این نسخه بسیاری از ویژگی‌های جدید لاراول از جمله Laravel Dusk، Laravel Mix، Blade Components and Slots، Markdown Emails، Automatic Facades، بهبود مسیر یا route و ویژگی‌های دیگر را شامل می‌شد. لاراول&nbsp;5.5 تیم توسعه لاراول همواره درصدد توسعه و افزودن قابلیت‌های جدید به آن هستند و در همین راستا لاراول&nbsp;5.5 را در ۳۰ اگوست ۲۰۱۷ با پشتیبانی طولانی مدت و به صورت LTS منتشر کردند. این نسخه کامل امکان پشتیبانی برای رفع مشکلات تا دو سال و پشتیبانی برای رفع مسائل امنیتی تا سه سال را ایجاد کرده است. این نسخه ویژگی‌های مهم و جدید بسیاری دارد که ما در لیداوب به شرح کامل تمام ویژگی‌های جدید نسخه&nbsp;5.5 پرداخته ایم. &lt;h3مزایای استفاده از فریم ورک لاراول&lt;/h3&gt; در ادامه دلیل رشد بسیار سریع لاراول و اینکه چرا در مدت زمان کوتاهی توانسته در رقابت با فریم ورک‌های دیگر PHP، نظر جامعه برنامه ‌نویسان را به خود جلب کند را بررسی می‌کنیم. مهم‌ترین ویژگی‌ لاراول سرعت بالا و همچنین سادگی و سهولت کار با‌ آن است. لاراول قابلیت‌های مهم فراوانی دارد که آن را به انتخاب اول برنامه نویسان PHP تبدیل کرده است. از جمله مهم‌ترین قابلیت‌های لاراول می‌توان به موارد زیر اشاره کرد: استفاده از معماری MVC در لاراول:&nbsp;در تعریف معماری MVC و فریم ورک‌های مبتنی بر آن می‌توان گفت که این معماری تلفیقی از سه لایه model-view-controller است. کار با پایگاه داده از وظایف بخش model است. وظیفه ارتباط با کاربر نهایی بر عهده بخش view است. و وظیفه کنترل و ایجاد ارتباط بین دو لایه view و model برعهده بخش controller است. تقسیم بندی برنامه به این سه قسمت مزایای فراوانی دارد که از جمله مهم‌ترین مزیت‌های آن جداسازی منطق برنامه از بخش view سایت است که این امر باعث می‌شود؛ هنگام ایجاد تغییر در view، این تغییرات منطق برنامه را تحت تاثیر قرار ندهند. فریم ورک لاراول بر پایه معماری MVC است.&nbsp; انتشار به صورت متن باز:&nbsp;انتشار به صورت متن باز امکان تغییر این فریم ورک طبق چیزی که می‌خواهید را فراهم می‌کند. امکان تعریف RESTFUL controllers:&nbsp;منطقی برای سهولت استفاده از کنترلرها و کاهش کدها در آن بر پایه درخواست‌های GET و POST است. استفاده از خصوصیت auto-loading:&nbsp;خصوصیت auto-loading در لاراول امکان لود اتوماتیک کلاس‌ها و کامپوننت‌ها را در صورت نیاز به‌ آن‌ها فراهم کرده است.راحتی استفاده از پایگاه داده:&nbsp;با استفاده از سیستم ORM یا همان ابزار Elequent در لاراول می‌توانید با انواع پایگاه داده‌ها ارتباط برقرار کرده و انواع کوئری‌ها را در آن به کار بگیرید. استفاده از ابزار unit testing:&nbsp;با استفاده از ابزار تست لاراول به راحتی می‌توانید برنامه‌های خود را تست کنید. استفاده از قالب blade:&nbsp;می‌توان از داده‌های برنامه در view توسط قالب blade استفاده کرد. ایجاد پکیج‌ها:&nbsp;در لاراول به راحتی می‌توانید پکیج‌های موردنظر خود را ایجاد کنید و از آن در برنامه‌های خود بهره ببرید، یا آن را با دیگران به اشتراک بگذارید. استفاده از خط فرمان artisan:&nbsp;استفاده از خط فرمان artisan این امکان را می‌دهد تا کارهای پیچیده‌ای را توسط چند خط کد ساده انجام دهیم. استفاده از migration:&nbsp;استفاده از این قابلیت این امکان را فراهم کرده است که تغییرات بانک اطلاعاتی به همراه سورس کد پروژه قابل انتقال باشد. نصب آسان:&nbsp;از مزیت‌های لاراول این است که نصب این فریم ورک و کار با آن بسیار راحت است. استفاده از کامپوننت‌ها:&nbsp;لاراول از پکیج‌ها و کامپوننت‌های زیادی بهره می‌برد که به راحتی بر روی پروژه نصب و استفاده می‌شوند. امنیت:&nbsp;یکی از مهم‌ترین مسائلی که برای یک برنامه نویس اهمیت دارد، امنیت برنامه‌ی در حال ساخت است. لاراول از سطح بالایی از امنیت برخوردار است. مسیریابی:&nbsp;راحتی کار و قدرت مسیریابی لاراول از مهم‌ترین ‌ویژگی‌های لاراول است.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="stylesheet" href="/assets/prisma/prism.css">
+    <!-- favicons and rss -->
+    <link rel="alternate" type="application/rss+xml" title="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" href="/feed.xml">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- header -->
+<header class="header" role="banner" aria-label="Header">
+    <button class="hamburger-button" onclick="hamburgerMenu();" role="button" aria-label="Hamburger menu button">
+        <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    </button>
+    <a href="/" class="logo" role="link" aria-label="Home">
+        <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo"/>
+    </a>
+    <nav class="navigation" role="navigation" aria-label="Navigation">
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item">
+                <a href="/" class="logo" role="menuitem" aria-label="Home">
+                    <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo"/>
+                </a>
+            </li>
+            
+            <li role="menuitem"><a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a></li>
+            
+            <li role="menuitem"><a href="/contactus" role="menuitem" aria-label="تماس">تماس</a></li>
+            
+        </ul>
+    </nav>
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox"/>
+        </form>
+    </div>
+</header>
+
+<nav id="hamburger-menu" role="navigation" aria-label="Hamburger menu">
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox"/>
+        </form>
+    </div>
+    <div class="home-nav" role="navigation" aria-label="Site navigation">
+        <a href="/" role="menuitem" aria-label="Home">صفحه اصلی</a>
+        
+        <a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a>
+        
+        <a href="/contactus" role="menuitem" aria-label="تماس">تماس</a>
+        
+    </div>
+
+    
+    <div class="doc-nav" role="navigation" aria-label="Documentation navigation">
+        <p role="presentation" aria-label="Category name">
+            اصول آموزش Laravel
+        </p>
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/2017/12/18/laravel.html" class="doc-link" role="link" aria-label="آموزش Laravel">مقدمه</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Digging-Deeper/collections" class="doc-link" role="link" aria-label="معرفی collections">معرفی collections</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Database/database" class="doc-link" role="link" aria-label="پایگاه داده ها">پایگاه داده ها</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Database/queries" class="doc-link" role="link" aria-label="آشنایی با Query Builder">آشنایی با Query Builder</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent" class="doc-link" role="link" aria-label="آشنایی با eloquent">آشنایی با eloquent</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-relationships" class="doc-link" role="link" aria-label="eloquent relationships  آموزش">eloquent relationships  آموزش</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-mutators" class="doc-link" role="link" aria-label="آشنایی با eloquent mutators">آشنایی با eloquent mutators</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-collections" class="doc-link" role="link" aria-label="آشنایی با eloquent collections">آشنایی با eloquent collections</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-serialization" class="doc-link" role="link" aria-label="آشنایی با eloquent serialization">آشنایی با eloquent serialization</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Architecture-Concepts/lifecycle" class="doc-link" role="link" aria-label="چرخه ی حیات درخواست (Request Lifecycle)">چرخه ی حیات درخواست (Request Lifecycle)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/routing" class="doc-link" role="link" aria-label="Routing یا مسیریابی در لاراول">Routing یا مسیریابی در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/middleware" class="doc-link" role="link" aria-label="آموزش Middleware">آموزش Middleware</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/csrf" class="doc-link" role="link" aria-label="حفاظت CSRF">حفاظت CSRF</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/controllers" class="doc-link" role="link" aria-label="استفاده از Controller">استفاده از Controller</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/requests" class="doc-link" role="link" aria-label="اصول requests">اصول requests</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/views" class="doc-link" role="link" aria-label="ایجاد view">ایجاد view</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/session" class="doc-link" role="link" aria-label="استفاده از  Session">استفاده از  Session</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/responses" class="doc-link" role="link" aria-label="پاسخ Response">پاسخ Response</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/urls" class="doc-link" role="link" aria-label="تولید URL در لاراول">تولید URL در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/validation" class="doc-link" role="link" aria-label="validation یا اعتبارسنجی در لاراول">validation یا اعتبارسنجی در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/errors" class="doc-link" role="link" aria-label="مدیریت Errors & Logging">مدیریت Errors & Logging</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/blade" class="doc-link" role="link" aria-label="Blade Templates">Blade Templates</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/localization" class="doc-link" role="link" aria-label="اصول localization">اصول localization</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/frontend" class="doc-link" role="link" aria-label="JavaScript & CSS Scaffolding">JavaScript & CSS Scaffolding</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </ul>
+    </div>
+    
+</nav>
+<!-- main content -->
+<main class="container" role="main">
+    <div class="rcdoccontainerimg">
+<div class="rc-DRTVBanner-new rc-DRTVBanner-bigsize">
+    <div style="background: url('/images/original/laravel.png'); " class="blurred_img"></div>
+    <div class="mask"></div>
+    <div class="bot"></div>
+    <div class="over">
+        <div class="container-rc">
+            <img class="image" src="/images/original/laravel.png" alt="آموزش Laravel" height="190">
+            <div class="desktop-banner-container">
+                <h1 class="display-5-text headline">
+                    
+                    
+                    اصول آموزش Laravel
+                    </h1>
+                <!--<div class="tagslist"><ul class='lyda-tag-list'><li class='lyda-tag-list-title'>برچسب ها</li><li><a class="tags" href="/tag/لاراول">#لاراول</a></li><li><a class="tags" href="/tag/لاراول-5-5">#لاراول 5.5</a></li></ul></div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="bread-crumb">-->
+<!--<div class="container   ">-->
+<!--<div class="pull-right ">-->
+<!--<div class="bread-button text-custom b-left">-->
+<!--انتشار : 2 ماه پیش-->
+<!--</div>-->
+<!--<a href="/category/article/" class="bread-button back-to-all b-left hidden-xs">همه مقالات</a>-->
+<!--<div class="cat-lable">-->
+<!--<a href="/category/article/laravel/">-->
+<!--لاراول-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<script>
+    $(window).scroll(function(){
+        var sticky = $('.doc-menu'),
+            scroll = $(window).scrollTop();
+        if (scroll >= 101) {sticky.addClass('doc-header-scroll'); }
+        else {sticky.removeClass('doc-header-scroll'); };
+    });
+</script>
+</div>
+<div class="doc-container">
+
+    <div class="doc-menu">
+    
+    <ul>
+        <li>
+            <a  href="/2017/12/18/laravel.html" class="active doc-link" role="link">
+                مقدمه
+            </a>
+        </li>
+        
+        <li>
+            <span class="caret">معماری Laravel</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="چرخه ی حیات درخواست (Request Lifecycle)" href="/documentation/laravel/Architecture-Concepts/lifecycle" class="active doc-link" role="link">
+                چرخه ی حیات درخواست (Request Lifecycle)
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم اساسی</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="Routing یا مسیریابی در لاراول" href="/documentation/laravel/The-Basics/routing" class="active doc-link" role="link">
+                Routing یا مسیریابی در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آموزش Middleware" href="/documentation/laravel/The-Basics/middleware" class="active doc-link" role="link">
+                آموزش Middleware
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="حفاظت CSRF" href="/documentation/laravel/The-Basics/csrf" class="active doc-link" role="link">
+                حفاظت CSRF
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="استفاده از Controller" href="/documentation/laravel/The-Basics/controllers" class="active doc-link" role="link">
+                استفاده از Controller
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول requests" href="/documentation/laravel/The-Basics/requests" class="active doc-link" role="link">
+                اصول requests
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="ایجاد view" href="/documentation/laravel/The-Basics/views" class="active doc-link" role="link">
+                ایجاد view
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="استفاده از  Session" href="/documentation/laravel/The-Basics/session" class="active doc-link" role="link">
+                استفاده از  Session
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="پاسخ Response" href="/documentation/laravel/The-Basics/responses" class="active doc-link" role="link">
+                پاسخ Response
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="تولید URL در لاراول" href="/documentation/laravel/The-Basics/urls" class="active doc-link" role="link">
+                تولید URL در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="validation یا اعتبارسنجی در لاراول" href="/documentation/laravel/The-Basics/validation" class="active doc-link" role="link">
+                validation یا اعتبارسنجی در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="مدیریت Errors & Logging" href="/documentation/laravel/The-Basics/errors" class="active doc-link" role="link">
+                مدیریت Errors & Logging
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">Front End</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="Blade Templates" href="/documentation/laravel/Frontend/blade" class="active doc-link" role="link">
+                Blade Templates
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول localization" href="/documentation/laravel/Frontend/localization" class="active doc-link" role="link">
+                اصول localization
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="JavaScript & CSS Scaffolding" href="/documentation/laravel/Frontend/frontend" class="active doc-link" role="link">
+                JavaScript & CSS Scaffolding
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم پیشرفته تر</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="معرفی collections" href="/documentation/laravel/Digging-Deeper/collections" class="active doc-link" role="link">
+                معرفی collections
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">پایگاه داده ها</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="پایگاه داده ها" href="/documentation/laravel/Database/database" class="active doc-link" role="link">
+                پایگاه داده ها
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با Query Builder" href="/documentation/laravel/Database/queries" class="active doc-link" role="link">
+                آشنایی با Query Builder
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">Eloquent ORM</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent" href="/documentation/laravel/Eloquent-ORM/eloquent" class="active doc-link" role="link">
+                آشنایی با eloquent
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="eloquent relationships  آموزش" href="/documentation/laravel/Eloquent-ORM/eloquent-relationships" class="active doc-link" role="link">
+                eloquent relationships  آموزش
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent mutators" href="/documentation/laravel/Eloquent-ORM/eloquent-mutators" class="active doc-link" role="link">
+                آشنایی با eloquent mutators
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent collections" href="/documentation/laravel/Eloquent-ORM/eloquent-collections" class="active doc-link" role="link">
+                آشنایی با eloquent collections
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent serialization" href="/documentation/laravel/Eloquent-ORM/eloquent-serialization" class="active doc-link" role="link">
+                آشنایی با eloquent serialization
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+    </ul>
+    
+</div>
+
+    <article class="documentation">
+        <header class="doc-header">
+            <div class="time">
+                    تاریخ :      دوشنبه 27 آذر 1396
+            </div>
+                
+        </header>
+        <section class="anchored">
+            <p>
+لاراول (به انگلیسی Laravel) یک چارچوب متن باز پی اچ پی (PHP) است که توسط تیلور اوتول، برای توسعه نرم‌افزارهای وب بر پایه معماری MVC طراحی شده‌است. بعضی از ویژگی‌های لاراول به صورت ماژولار و بسته‌بندی شده ارائه شده‌است. در مارس ۲۰۱۵، لاراول به عنوان معروف‌ترین فریم ورک php شناخته شد، سایر فریم ورک‌های محبوب از قبیل symfony2,Nette,CodeIgniter,Yii2 و سایر فریم ورک‌ها بودند. کدهای باز لاراول برروی github میزبانی می‌شود؛ و تحت لیسانس MIT License ارائه شده‌است.
+</p>
+
+<div align="center">
+<img src="/images/post/laravel.jpg" alt="آموزش Laravel" />
+</div>
+
+<p>
+پیدایش لاراول به این صورت بود که تیلور اوتول قصد داشت فریم ورکی ایجاد کند که بر پایه CodeIgniter باشد، در حالی که قابلیت‌های پیشرفته‌تری نسبت به آن ارائه دهد. زیرا با رشد CodeIgniter مشکلاتی برای برنامه نویسان و طراحان وب به وجود آمده بود. اگر دوست دارید بدانید لاراول تا الان که به نسخه لاراول 5.5 رسیده است، چه مسیری را طی کرده، با ادامه مقاله همراه لیداوب باشید تا نسخه‌های مختلف لاراول را با هم بررسی کنیم.
+</p>
+
+<p>پیدایش لاراول به این صورت بود که تیلور اوتول قصد داشت فریم ورکی ایجاد کند که بر پایه CodeIgniter باشد، در حالی که قابلیت‌های پیشرفته‌تری نسبت به آن ارائه دهد. زیرا با رشد CodeIgniter مشکلاتی برای برنامه نویسان و طراحان وب به وجود آمده بود. اگر دوست دارید بدانید لاراول تا الان که به نسخه لاراول 5.5 رسیده است، چه مسیری را طی کرده، با ادامه مقاله همراه لیداوب باشید تا نسخه‌های مختلف لاراول را با هم بررسی کنیم.</p>
+<h3>لاراول 1</h3>
+<p>تیلور اوتول در سال ۲۰۱۱ اولین نسخه از لاراول را منتشر کرد که مکانیزم‌های model، session، view و مسیریابی را ارائه می‌داد، ولی این نسخه در نبود کنترلر حالت mvc واقعی را از دست داده بود.</p>
+<h3>لاراول 2</h3>
+<p>در سپتامبر ۲۰۱۱ اوتول با انجام بهینه سازی‌های متعدد لاراول&nbsp;2 را منتشر کرد. از مهم‌ترین تغییرات نسخه ۲ وجود کنترلرها بود که باعث می‌شد لاراول رسماً به عنوان یک فریم ورک MVC شناخته شود. همچنین سیستم قالب بندی blade نیز در نسخه&nbsp;دوم&nbsp;به این فریم ورک اضافه شد.</p>
+<h3>لاراول 3</h3>
+<p>در فوریه سال ۲۰۱۲ لاراول&nbsp;3 با تغییرات جدیدی وارد عرصه شد. انتشار لاراول&nbsp;3 با معرفی سایت این فریم ورک با آدرس&nbsp;<a href="https://laravel.com/" target="_blank" rel="nofollow">http://laravel.com</a>&nbsp;که امکان استفاده از یک داکیومنت قوی را برای کاربرانش فراهم می‌کرد، همراه بود. از مهم‌ترین قابلیت‌های لاراول&nbsp;3 استفاده از خط فرمان CLI به نام artisan بود. پشتیبانی داخلی از مدیریت سیستم بانک اطلاعاتی، migrationها، لایه‌های بانک اطلاعاتی، پشتیبانی از رویدادها، همگام سازی لاراول با unit testing و همچنین سیستم پکیجینگ یا bundle از دیگر قابلیت‌های مهم لاراول در نسخه&nbsp;سوم لاراول بود که محبوبیت آن را فزونی بخشید.</p>
+
+<p style="clear: both;">
+<img class="img-responsive" style="display: block; margin-right: auto; margin-left: auto;" src="/images/post/laravel-development.jpg" alt="فریم ورک لاراول " />
+</p>
+
+<h3>لاراول 4</h3>
+<p>اکنون دیگر لاراول به جایگاه خوبی در بین کاربران دست یافته بود. پس از آن در می سال ۲۰۱۳ نسخه&nbsp;چهارم لاراول&nbsp;بر پایه کدهای Illuminate منتشر شد. در نسخه&nbsp;4 با بهره بردن از مدیر بسته‌ها یا composer تحول بزرگی در چارچوب لاراول ایجاد شد. زیرا این امکان فراهم شده بود که توسط composer کاربران بتوانند از بسته‌ها و کامپوننت‌های متعددی که توسط برنامه نویسان PHP در سراسر جهان نوشته شده بود، استفاده کنند. از قابلیت‌های دیگر ارائه شده توسط نسخه ۴ لاراول پشتیبانی از database seeding، پشتیبانی از صف‌های پیام، ارسال انواع مختلفی از ایمیل و پشتیبانی از soft deletion یا تاخیر در حذف رکوردهای پایگاه داده بود.</p>
+<h3>لاراول 5</h3>
+<p>سیر تکامل لاراول ادامه داشت تا اینکه در فوریه سال ۲۰۱۵ نسخه&nbsp;پنجم لاراول&nbsp;با تغییر در نسخه&nbsp;4.3 منتشر شد. قابلیت‌های مهم و ویژه‌ای به این نسخه اضافه شده بود. برنامه‌ ریزی برای اجرای وظایف از طریق بسته‌ای به نام scheduler، بهینه سازی بسته‌های assets از طریق Elixir، ساده شدن عملیات احراز هویت از طریق بسته Socialite، همچنین ارائه ساختار درختی برای توسعه برنامه از قابلیت‌های لاراول در نسخه&nbsp;5 بود.</p>
+<p>پس از آن، نسخه‌های لاراول&nbsp;5 به ترتیب منتشر شدند و در هر کدام از آن‌ها ویژگی‌های جدید و منحصربه فردی ارائه شد. نتیجه این تلاش‌ها این است که هم اکنون یک فریم ورک PHP با امکانات کامل و جامع در اختیار برنامه نویسان قرار دارد که تمام نیازهای یک برنامه نویس تحت وب را برطرف می‌کند. در عین حال راحتی و سهولت استفاده از آن مهم‌ترین ویژگی آن به شمار می‌رود. در ادامه نسخه‌های مختلف ورژن 5 لاراول را جهت درک بهتر تفاوت آن‌ها بررسی می‌کنیم.</p>
+
+<h4>لاراول 5.1</h4>
+<p>لاراول&nbsp;5.1 در ژوئن سال ۲۰۱۵ منتشر شد. باگ‌های زیادی در نسخه&nbsp;5.1&nbsp;لاراول برطرف شده بود. در عین حال مهم‌ترین ویژگی نسخه 5.1 انتشار آن به صورت یک نسخه با پشتیبانی طولانی مدت یا LTS بود. امکان پشتیبانی رفع مشکلات تا ۲ سال و پشتیبانی امنیتی تا سه سال در این نسخه فراهم شده بود.</p>
+<h4>لاراول&nbsp;5.2</h4>
+<p>در ۲۱ دسامبر ۲۰۱۵ لاراول&nbsp;5.2 منتشر شد که تغییرات کوچکی در آن اعمال شده بود.</p>
+<h4>لاراول&nbsp;5.3</h4>
+<p>لاراول&nbsp;5.3 با پشتیبانی ۶ ماهه برای رفع مشکلات و پشتیبانی یک ساله برای مشکلات امنیتی در ۲۳ اوت ۲۰۱۶ منتشر شد. ویژگی‌های جدید زیادی به این نسخه اضافه شده بود که مهم‌ترین آن تمرکز بر بهبود سرعت توسعه برای برنامه نویسان با ایجاد بهبود‌های خلاقانه جهت انجام کارهای رایج بود.</p>
+<p style="clear: both;"><img class="img-responsive" style="display: block; margin-right: auto; margin-left: auto;" src="/images/post/laravel-framework.jpg" alt="لاراول چیست" /></p>
+<h4>لاراول&nbsp;5.4</h4>
+<p>لاراول&nbsp;۵/۴ در ۲۴ ژانویه ۲۰۱۷ منتشر شد. این نسخه بسیاری از ویژگی‌های جدید لاراول از جمله Laravel Dusk، Laravel Mix، Blade Components and Slots، Markdown Emails، Automatic Facades، بهبود مسیر یا route و ویژگی‌های دیگر را شامل می‌شد.</p>
+
+<h4>لاراول&nbsp;5.5</h4>
+<p>تیم توسعه لاراول همواره درصدد توسعه و افزودن قابلیت‌های جدید به آن هستند و در همین راستا لاراول&nbsp;5.5 را در ۳۰ اگوست ۲۰۱۷ با پشتیبانی طولانی مدت و به صورت LTS منتشر کردند. این نسخه کامل امکان پشتیبانی برای رفع مشکلات تا دو سال و پشتیبانی برای رفع مسائل امنیتی تا سه سال را ایجاد کرده است. این نسخه ویژگی‌های مهم و جدید بسیاری دارد که ما در لیداوب به شرح کامل تمام ویژگی‌های جدید نسخه&nbsp;5.5 پرداخته ایم.</p>
+
+<p>&lt;h3مزایای استفاده از فریم ورک لاراول&lt;/h3&gt;</p>
+<p>در ادامه دلیل رشد بسیار سریع لاراول و اینکه چرا در مدت زمان کوتاهی توانسته در رقابت با فریم ورک‌های دیگر PHP، نظر جامعه برنامه ‌نویسان را به خود جلب کند را بررسی می‌کنیم. مهم‌ترین ویژگی‌ لاراول سرعت بالا و همچنین سادگی و سهولت کار با‌ آن است. لاراول قابلیت‌های مهم فراوانی دارد که آن را به انتخاب اول برنامه نویسان PHP تبدیل کرده است. از جمله مهم‌ترین قابلیت‌های لاراول می‌توان به موارد زیر اشاره کرد:</p>
+<p style="clear: both;"><strong>استفاده از معماری MVC در لاراول:</strong>&nbsp;در تعریف معماری MVC و فریم ورک‌های مبتنی بر آن می‌توان گفت که این معماری تلفیقی از سه لایه model-view-controller است. کار با پایگاه داده از وظایف بخش model است. وظیفه ارتباط با کاربر نهایی بر عهده بخش view است. و وظیفه کنترل و ایجاد ارتباط بین دو لایه view و model برعهده بخش controller است. تقسیم بندی برنامه به این سه قسمت مزایای فراوانی دارد که از جمله مهم‌ترین مزیت‌های آن جداسازی منطق برنامه از بخش view سایت است که این امر باعث می‌شود؛ هنگام ایجاد تغییر در view، این تغییرات منطق برنامه را تحت تاثیر قرار ندهند. فریم ورک لاراول بر پایه معماری MVC است.&nbsp;</p>
+<p><strong>انتشار به صورت متن باز:</strong>&nbsp;انتشار به صورت متن باز امکان تغییر این فریم ورک طبق چیزی که می‌خواهید را فراهم می‌کند.</p>
+<p><strong>امکان تعریف RESTFUL controllers:</strong>&nbsp;منطقی برای سهولت استفاده از کنترلرها و کاهش کدها در آن بر پایه درخواست‌های GET و POST است.</p>
+<p><strong>استفاده از خصوصیت auto-loading:</strong>&nbsp;خصوصیت auto-loading در لاراول امکان لود اتوماتیک کلاس‌ها و کامپوننت‌ها را در صورت نیاز به‌ آن‌ها فراهم کرده است.<br /><strong>راحتی استفاده از پایگاه داده:</strong>&nbsp;با استفاده از سیستم ORM یا همان ابزار Elequent در لاراول می‌توانید با انواع پایگاه داده‌ها ارتباط برقرار کرده و انواع کوئری‌ها را در آن به کار بگیرید.</p>
+<p><strong>استفاده از ابزار unit testing:</strong>&nbsp;با استفاده از ابزار تست لاراول به راحتی می‌توانید برنامه‌های خود را تست کنید.</p>
+<p><strong>استفاده از قالب blade:</strong>&nbsp;می‌توان از داده‌های برنامه در view توسط قالب blade استفاده کرد.</p>
+<p><strong>ایجاد پکیج‌ها:</strong>&nbsp;در لاراول به راحتی می‌توانید پکیج‌های موردنظر خود را ایجاد کنید و از آن در برنامه‌های خود بهره ببرید، یا آن را با دیگران به اشتراک بگذارید.</p>
+<p><strong>استفاده از خط فرمان artisan:</strong>&nbsp;استفاده از خط فرمان artisan این امکان را می‌دهد تا کارهای پیچیده‌ای را توسط چند خط کد ساده انجام دهیم.</p>
+<p><strong>استفاده از migration:</strong>&nbsp;استفاده از این قابلیت این امکان را فراهم کرده است که تغییرات بانک اطلاعاتی به همراه سورس کد پروژه قابل انتقال باشد.</p>
+<p><strong>نصب آسان:</strong>&nbsp;از مزیت‌های لاراول این است که نصب این فریم ورک و کار با آن بسیار راحت است.</p>
+<p><strong>استفاده از کامپوننت‌ها:</strong>&nbsp;لاراول از پکیج‌ها و کامپوننت‌های زیادی بهره می‌برد که به راحتی بر روی پروژه نصب و استفاده می‌شوند.</p>
+<p><strong>امنیت:</strong>&nbsp;یکی از مهم‌ترین مسائلی که برای یک برنامه نویس اهمیت دارد، امنیت برنامه‌ی در حال ساخت است. لاراول از سطح بالایی از امنیت برخوردار است.</p>
+<p><strong>مسیریابی:</strong>&nbsp;راحتی کار و قدرت مسیریابی لاراول از مهم‌ترین ‌ویژگی‌های لاراول است.</p>
+
+        </section>
+        
+<hr>
+<p>
+<div>منابع مورد مطالعه جهت جمع آوری این مطلب:</div>
+<div  class="refrencehref">
+        https://fa.wikipedia.org/wiki/لاراول <br> https://www.lydaweb.com/category/article/laravel/48/فریم-ورک-لاراول-چیست
+</div>
+</p>
+
+        <hr>
+        <style>
+    #commentsdiv{
+        background-color: #f5f5f5;
+        border: 1px solid #c5c5c5;
+        border-bottom: 0px !important;
+        padding: 12px;
+    }
+    #commentsborder{
+        background-color: #fff;
+        border: 1px solid #c5c5c5;
+        white-space: normal;
+        padding: 20px;
+    }
+</style>
+
+<div id="commentsdiv">نظرات</div>
+<div id="commentsborder">
+<div id="wpac-comment"></div>
+</div>
+<script type="text/javascript">
+wpac_init = window.wpac_init || [];
+wpac_init.push({widget: 'Comment', id: 7878});
+(function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = 'https://embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+})();
+</script>
+
+    </article>
+</div>
+<script src="/assets/js/anchor.min.js"></script>
+<script>
+    anchors.options = {
+        placement: 'left',
+        visible: 'always',
+//        icon: '#',
+    };
+    anchors.add('.anchored h2,.anchored h3,.anchored h4,.anchored h5,.anchored h6');
+
+    (function($){
+        if(window.location.hash) {
+            var hash = decodeURIComponent(window.location.hash);
+            gotohash($(hash).offset().top);
+        }
+        $('a.anchorjs-link').click(function(){
+			gotohash($(this).offset().top);
+        });
+        $('a.anchorjs').click(function(){
+			var id = '#' + $(this).attr('title');
+			gotohash($(id).offset().top);
+        });		
+        function gotohash(top){
+            var headerHeight = 70; // Get fixed header height
+            $('html,body').animate({
+                scrollTop: top - headerHeight
+            }, 20);
+        }
+    })(jQuery);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+   $(document).ready(function (){
+
+     var scrollPosition = getParameterByName('scroll');
+     if(scrollPosition)
+      $(".doc-menu").scrollTop(scrollPosition);
+
+     $('.doc-link').click(function(){
+        var scrollTop = $(".doc-menu").scrollTop();
+        if(scrollTop > 0)
+          $(this).attr("href",this.href + "?scroll=" + $(".doc-menu").scrollTop());
+     });
+
+     function getParameterByName(name, url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+   });
+</script>
+    <div id="back-to-top" role="button" aria-label="Back to top">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+    </div>
+</main>
+<!-- footer -->
+
+<footer class="footer" role="contentinfo" aria-label="Site footer">
+    <div class="navigation" role="navigation" aria-label="Footer links">
+        <a href="http://localhost:4000" class="avatar" role="link" ></a>
+        <ul role="menubar" aria-label="Footer links menubar">
+            <li class="footer-products" role="menuitem" aria-label="Products">
+                تولیدات
+                <ul role="menu" aria-hidden="true" aria-label="Products link">
+                </ul>
+            </li>
+            <li class="footer-blog" role="menuitem" aria-label="Blog">
+                مقالات
+                <ul role="menu" aria-hidden="true" aria-label="Blog link">
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2020/07/03/marriage.html" role="link" aria-label="ازدواج">ازدواج</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2019/10/11/vuejs.html" role="link" aria-label="آموزش vuejs">آموزش vuejs</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/18/laravel.html" role="link" aria-label="آموزش Laravel">آموزش Laravel</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/articles/2017/12/13/laravelcollective.html" role="link" aria-label="معرفی Laravel Collective">معرفی Laravel Collective</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/06/design-patterns.html" role="link" aria-label="معرفی  Design Pattern">معرفی  Design Pattern</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/blog" role="link" aria-label="Read more">Read More</a></li>
+                </ul>
+            </li>
+
+            <li class="footer-connect" role="menuitem" aria-label="Connect">
+                تماس
+                <ul role="menu" aria-hidden="true" aria-label="Connect link">
+                    <li role="listitem" aria-label="Connect link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub">GitHub</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://www.linkedin.com/in/farhad-mirzapour/" target="_blank" role="link" aria-label="Linkedin">Linkedin</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter">Twitter</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="socials"  role="navigation" aria-label="Social links">
+        <ul role="menu" aria-hidden="true" aria-label="Social link">
+            <li role="listitem" aria-label="Social link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://www.linkedin.com/in/farhad-mirzapour-0043b862/" target="_blank" role="link" aria-label="Linkedin"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="/feed.xml" role="link" aria-label="RSS"><i class="fa fa-rss-square" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+    <div class="copyright" role="contentinfo" aria-label="Copyright">
+        <p>&copy; <script type="text/javascript">document.write(new Date().getFullYear());</script> Farhad Mirzapour</p>
+    </div>
+</footer>
+
+<!-- scripts -->
+<script src="/assets/js/hamburger-menu.js"></script>
+
+<script src="/assets/js/elevator.min.js"></script>
+<script src="/assets/js/back-to-top.js"></script>
+<script src="/assets/prisma/prism.js"></script>
+<!-- google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108878564-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-108878564-1');
+</script>
+
+</body>
+</html>

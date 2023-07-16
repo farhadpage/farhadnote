@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="">
+<!-- head -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>نوشتن اولین آزمون | مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="نوشتن اولین آزمون" />
+<meta name="author" content="Farhad Mirzapour" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="در این قسمت می خواهیم روند توسعه نرم افزار براساس TDD را در قالب یک مثال بیان کنیم. می خواهیم قطعه کدی نوشته شود که با دریافت یک جمله تعداد کاراکتر مشخص شده ای را شمارش نماید. مفهوم Arrange, Act Assert الگوها در توسعه نرم افزار بسیار مفید هستند. آنها یک راه برای برداشتن یک مشکل پیچیده دارند و آن را به چند مرحله (کوچکتر و ساده تر) تبدیل می کنند. بهترین الگوها، الگوهایی هستند که به آنها عادت و احساس راحتی کنید، به طوری که «شما به دنبال الگوی دیگری نیستید». در مورد نوشتن آزمونهای واحد ،الگوی Arrange, Act, Assert الگویی استاندارد و منطقی می باشد. AAA بیانگر سه مرحله برای ایجاد تست واحد می باشد: کلمه Arrange اشاره دارد به تنظیم تست شما با تعریف ورودی ها و خروجی های مورد انتظار . برای مثال مفهوم Arrange را می توان در این تست با تعریف یک جمله انتخابی، کاراکتری که به دنبال آن هستیم و نتیجه مورد انتظار بصورت زیر پیاده سازی کرد : &lt;?php namespace Test; class StringUtils extends \PHPUnit_Framework_TestCase { public function testShouldBeAbleToCountNumberOfLettersInSimpleSentence() { $sentenceToScan = &quot;TDD is awesome!&quot;; $characterToScanFor = &#39;e&#39;; $expectedResult = 2; } } گام بعد در الگوی AAA عملیلت Act می باشد. در این مرحله کلاس و متدی که قرار است بر روی آن تست شود را فراخوانی و نتیجه آن را دریافت می کنیم. برای مثال بالا نام کلاس را StringUtils انتخاب می کنیم همچنین به نظر نام findNumberOfOccurences نام توصیفی خوبی برای متدی که قرار است مورد آزمون قرار گیرد باشد. بنابراین در کد زیر در خط 12 نمونه ای از کلاس ایجاد و در خط 13 متد مورد نظر را فراخوانی و نتیجه آن را دریافت می کنیم (توجه کنید در عمل هنوز کلاس و متدهای مربوطه را ایجاد نکرده ایم): &lt;?php namespace Test; class StringUtils extends \PHPUnit_Framework_TestCase { public function testShouldBeAbleToCountNumberOfLettersInSimpleSentence() { $sentenceToScan = &quot;TDD is awesome!&quot;; $characterToScanFor = &#39;e&#39;; $expectedResult = 2; $stringUtils = new StringUtils(); $result = $stringUtils-&gt;findNumberOfOccurences($sentenceToScan, $characterToScanFor); } } سرانجام به مرحله Assert می رسیم. در این مرحله ما تائید می کنیم که نتیجه دریافتی از متد مربوطه (result$) منطبق با مقدار مورد انتظار (expectedResult$) می باشد یا خیر. ما این کار را با استفاده از متدهای Assert انجام می دهیم. کلاس Assert یک کلاس استاتیک است که بخشی از چارچوب برنامه PHPUnit می باشد و مجموعه ای از روش های ارزیابی داده ها را فراهم می کند و سیگنال هایی را نشان می دهد که یک آزمون شکست خورده است و یا نتیجه غیرقابل حل بوده است. برای این مثال از متد assertEquals استفاده می کنیم که تساوی دو مقدار را بررسی می کند. چنانچه دو مقدار برابر نباشند برنامه PHPUnit به ما می گوید که تست شکست خورده است واجرای آزمون با علت شکست گزارش داده شده و متوقف می گردد، در غیر اینصورت اجرای آزمون ادامه پیدا می کند. این به شما این امکان را می دهد تا چند آزمون را در یک آزمون انجام دهید : &lt;?php namespace Test; class StringUtils extends \PHPUnit_Framework_TestCase { public function testShouldBeAbleToCountNumberOfLettersInSimpleSentence() { $sentenceToScan = &quot;TDD is awesome!&quot;; $characterToScanFor = &#39;e&#39;; $expectedResult = 2; $stringUtils = new StringUtils(); $result = $stringUtils-&gt;findNumberOfOccurences($sentenceToScan, $characterToScanFor); $this-&gt;assertEquals($expectedResult, $result); } } مرحله اجرای تست تست آماده است، بنابراین اولین چیزی که می خواهیم انجام شود این است که سعی کنیم تستم را اجرا کنیم. این یک بخش کلیدی از گردش کار TDD است؛ یک تست را بنویسید و بلافاصله آن تست را اجرا کنید تا مشاهده کنیم تست شکست خورده است (و باید شکست بخورد). حقیقت یک تست شکست است، به خصوص شکستی که برای عملکردی نوشته شده است که هنوز کد نویسی نوشته نشده ،می تواند به ما اطلاعات فراوانی دهد. اگر من یک تست را برای یک عملکردی که هنوز وجود ندارد (کدنویسی نشده است) بنویسم و آن تست شکست بخورد، به من چند چیز را نشان می دهد : اول از همه می تواند به من این تائید (نه به معنای تضمین) را برساند که من آزمون را درست نوشته ام. زیرا اگر تست بلافاصله pass شود، به من این نتیجه را می رساند که قطعه عملکرد صحیح مورد نظر را تست نکرده ام (قطعه کد دیگری به اشتباه تست شده)، به دلیل اینکه عملکردی هنوز وجود ندارد و آزمون نباید pass شود. با مشاهده شکست بعد از اولین آزمون می توانم این اطمینان را حاصل کنم که کار من تکرار کار دیگری نیست. در بعضی موارد، به ویژه در پروژه های بزرگتر، ممکن است برای ایجاد قطعه ای از برنامه به اشتباه دوبار برنامه ریزی صورت گرفته باشد. در این مورد زمانیکه تست pass شود می تواند نشاندهنده این باشد که من دارم کاری که دیگری انجام داده را دوباره انجام می دهم. بسیار خب، تست مثال بالا را با اجرای دستور phpunit در ترمینال اجرا می کنیم: همانطور که مشاهده می کنید دلیل شکست خوردن تست ما این است که کلاس StringUtils و متد findNumberOfOccurences یافت نشده است. بنابراین در این مرحله اقدام به ایجاد کلاس StringUtils و متد findNumberOfOccurences در پروژه خود می کنیم: با فرض اینکه بخواهیم کلاس هایمان درون دایرکتوری به نام classes قرار گیرند این دایرکتوری را ایجاد و جهت شناسایی آن توسط composer با استفاده از روش PSR-4 فایل composer.json را همانند زیر تغییر داده سپس در ترمینال دستور composer dumpautoload را وارد می کنیم : { &quot;autoload&quot; : { &quot;psr-4&quot;: { &quot;Classes\\&quot; : &quot;classes/&quot; } } } به دلیل اینکه کلاس StringUtils را در فضای نام Classes قرار داده ایم بنابراین جهت استفاده در تست خود خط 11 را مانند زیر تغییر دهید : &lt;?php namespace Test; class StringUtils extends \PHPUnit_Framework_TestCase { public function testShouldBeAbleToCountNumberOfLettersInSimpleSentence() { $sentenceToScan = &quot;TDD is awesome!&quot;; $characterToScanFor = &#39;e&#39;; $expectedResult = 2; $stringUtils = new \Classes\StringUtils(); $result = $stringUtils-&gt;findNumberOfOccurences($sentenceToScan, $characterToScanFor); $this-&gt;assertEquals($expectedResult, $result); } } جهت پیاده سازی کلاس StringUtils فایلی به نام stringUtils.php ایجاد و کدهای زیر را درون آن قرار دهید : &lt;?php namespace Classes; class StringUtils { public function __construct() { } public function findNumberOfOccurences($sentenceToScan, $characterToScanFor) { return 2; } } دستور phpunit را در ترمینال وارد کرده و نتیجه زیر را مشاهده می کنیم : همانطور که در کد بالا مشاهده می کنید ما ساده ترین پیاده سازی را جهت pass شدن آزمون انجام دادیم. بگذارید دوباره موضوع تست را بررسی کنیم: می خواهیم جمله &quot;!TDD is awesome&quot; بررسی و نتیجه شمارش تعداد کاراکتر &quot;e&quot; که برابر دو می باشد را برگرداند. بنابراین ساده ترین راه برای pass شدن آزمون این بوده که عدد 2 برگشت داده شود برای مثال بالا می توانیم بگوئیم مورد آزمون ما جهت صحت درستی برنامه ناکافی باشد. برای بهبود کیفیت کد، تست دیگری اضافه خواهیم کرد. می خواهیم صحت درستی شمارش تعداد کاراکتر n در جمله &quot;Once is unique, twice is a coincidence, three times is a pattern.&quot; که برابر 5 می باشد را بررسی کنیم. بنابراین تست دیگری اضافه می کنیم و خواهیم داشت : &lt;?php namespace Test; class StringUtils extends \PHPUnit_Framework_TestCase { public function testShouldBeAbleToCountNumberOfLettersInSimpleSentence() { $sentenceToScan = &quot;TDD is awesome!&quot;; $characterToScanFor = &#39;e&#39;; $expectedResult = 2; $stringUtils = new \Classes\StringUtils(); $result = $stringUtils-&gt;findNumberOfOccurences($sentenceToScan, $characterToScanFor); $this-&gt;assertEquals($expectedResult, $result); } public function testShouldBeAbleToCountNumberOfLettersInAComplexSentence() { $sentenceToScan = &quot;Once is unique, twice is a coincidence, three times is a pattern.&quot;; $characterToScanFor = &#39;n&#39;; $expectedResult = 5; $stringUtils = new \Classes\StringUtils(); $result = $stringUtils-&gt;findNumberOfOccurences($sentenceToScan, $characterToScanFor); $this-&gt;assertEquals($expectedResult, $result); } } بعد از اجرای تست نتیجه زیر مشاهده می گردد : همانطور که در توضیحات دلیل شکست مشاهده می کنید، نتیجه مورد انتظار عدد 5 بوده درحالیکه عدد 2 برگردانده شده است. بنابراین ساده ترین کار برای pass شدن آزمون این است که الگوریتمی برای شمارش تعداد کاراکتر یک جمله نوشته شود. بنابراین متد findNumberOfOccurences بصورت زیر تغییر می دهیم : &lt;?php namespace Classes; class StringUtils { public function __construct() { } public function findNumberOfOccurences($sentenceToScan, $characterToScanFor) { $numberOfOccurenes = 0; for ($charIdx= 0; $charIdx &lt; strlen($sentenceToScan); $charIdx++) { if ($sentenceToScan[$charIdx] == $characterToScanFor) { $numberOfOccurenes++; } } return $numberOfOccurenes; } } این کد ممکن است بهینه ترین یا حتی بهترین راه برای حل این مشکل نباشد. اما در حال حاضر مهم نیست؛ این ساده ترین روش ممکنه است و ما به دنبال ساده ترین الگوریتم هایی هستیم که آزمون ها را انجام دهد. اگر دوباره تست های خود را اجرا کنیم می بینیم که این الگوریتم این نیاز را برآورده می کند: در ادامه مباحث پیشرفته تر TDD، با عملیات Refactoring این مثال را بازبینی خواهیم کرد." />
+<meta property="og:description" content="در این قسمت می خواهیم روند توسعه نرم افزار براساس TDD را در قالب یک مثال بیان کنیم. می خواهیم قطعه کدی نوشته شود که با دریافت یک جمله تعداد کاراکتر مشخص شده ای را شمارش نماید. مفهوم Arrange, Act Assert الگوها در توسعه نرم افزار بسیار مفید هستند. آنها یک راه برای برداشتن یک مشکل پیچیده دارند و آن را به چند مرحله (کوچکتر و ساده تر) تبدیل می کنند. بهترین الگوها، الگوهایی هستند که به آنها عادت و احساس راحتی کنید، به طوری که «شما به دنبال الگوی دیگری نیستید». در مورد نوشتن آزمونهای واحد ،الگوی Arrange, Act, Assert الگویی استاندارد و منطقی می باشد. AAA بیانگر سه مرحله برای ایجاد تست واحد می باشد: کلمه Arrange اشاره دارد به تنظیم تست شما با تعریف ورودی ها و خروجی های مورد انتظار . برای مثال مفهوم Arrange را می توان در این تست با تعریف یک جمله انتخابی، کاراکتری که به دنبال آن هستیم و نتیجه مورد انتظار بصورت زیر پیاده سازی کرد : &lt;?php namespace Test; class StringUtils extends \PHPUnit_Framework_TestCase { public function testShouldBeAbleToCountNumberOfLettersInSimpleSentence() { $sentenceToScan = &quot;TDD is awesome!&quot;; $characterToScanFor = &#39;e&#39;; $expectedResult = 2; } } گام بعد در الگوی AAA عملیلت Act می باشد. در این مرحله کلاس و متدی که قرار است بر روی آن تست شود را فراخوانی و نتیجه آن را دریافت می کنیم. برای مثال بالا نام کلاس را StringUtils انتخاب می کنیم همچنین به نظر نام findNumberOfOccurences نام توصیفی خوبی برای متدی که قرار است مورد آزمون قرار گیرد باشد. بنابراین در کد زیر در خط 12 نمونه ای از کلاس ایجاد و در خط 13 متد مورد نظر را فراخوانی و نتیجه آن را دریافت می کنیم (توجه کنید در عمل هنوز کلاس و متدهای مربوطه را ایجاد نکرده ایم): &lt;?php namespace Test; class StringUtils extends \PHPUnit_Framework_TestCase { public function testShouldBeAbleToCountNumberOfLettersInSimpleSentence() { $sentenceToScan = &quot;TDD is awesome!&quot;; $characterToScanFor = &#39;e&#39;; $expectedResult = 2; $stringUtils = new StringUtils(); $result = $stringUtils-&gt;findNumberOfOccurences($sentenceToScan, $characterToScanFor); } } سرانجام به مرحله Assert می رسیم. در این مرحله ما تائید می کنیم که نتیجه دریافتی از متد مربوطه (result$) منطبق با مقدار مورد انتظار (expectedResult$) می باشد یا خیر. ما این کار را با استفاده از متدهای Assert انجام می دهیم. کلاس Assert یک کلاس استاتیک است که بخشی از چارچوب برنامه PHPUnit می باشد و مجموعه ای از روش های ارزیابی داده ها را فراهم می کند و سیگنال هایی را نشان می دهد که یک آزمون شکست خورده است و یا نتیجه غیرقابل حل بوده است. برای این مثال از متد assertEquals استفاده می کنیم که تساوی دو مقدار را بررسی می کند. چنانچه دو مقدار برابر نباشند برنامه PHPUnit به ما می گوید که تست شکست خورده است واجرای آزمون با علت شکست گزارش داده شده و متوقف می گردد، در غیر اینصورت اجرای آزمون ادامه پیدا می کند. این به شما این امکان را می دهد تا چند آزمون را در یک آزمون انجام دهید : &lt;?php namespace Test; class StringUtils extends \PHPUnit_Framework_TestCase { public function testShouldBeAbleToCountNumberOfLettersInSimpleSentence() { $sentenceToScan = &quot;TDD is awesome!&quot;; $characterToScanFor = &#39;e&#39;; $expectedResult = 2; $stringUtils = new StringUtils(); $result = $stringUtils-&gt;findNumberOfOccurences($sentenceToScan, $characterToScanFor); $this-&gt;assertEquals($expectedResult, $result); } } مرحله اجرای تست تست آماده است، بنابراین اولین چیزی که می خواهیم انجام شود این است که سعی کنیم تستم را اجرا کنیم. این یک بخش کلیدی از گردش کار TDD است؛ یک تست را بنویسید و بلافاصله آن تست را اجرا کنید تا مشاهده کنیم تست شکست خورده است (و باید شکست بخورد). حقیقت یک تست شکست است، به خصوص شکستی که برای عملکردی نوشته شده است که هنوز کد نویسی نوشته نشده ،می تواند به ما اطلاعات فراوانی دهد. اگر من یک تست را برای یک عملکردی که هنوز وجود ندارد (کدنویسی نشده است) بنویسم و آن تست شکست بخورد، به من چند چیز را نشان می دهد : اول از همه می تواند به من این تائید (نه به معنای تضمین) را برساند که من آزمون را درست نوشته ام. زیرا اگر تست بلافاصله pass شود، به من این نتیجه را می رساند که قطعه عملکرد صحیح مورد نظر را تست نکرده ام (قطعه کد دیگری به اشتباه تست شده)، به دلیل اینکه عملکردی هنوز وجود ندارد و آزمون نباید pass شود. با مشاهده شکست بعد از اولین آزمون می توانم این اطمینان را حاصل کنم که کار من تکرار کار دیگری نیست. در بعضی موارد، به ویژه در پروژه های بزرگتر، ممکن است برای ایجاد قطعه ای از برنامه به اشتباه دوبار برنامه ریزی صورت گرفته باشد. در این مورد زمانیکه تست pass شود می تواند نشاندهنده این باشد که من دارم کاری که دیگری انجام داده را دوباره انجام می دهم. بسیار خب، تست مثال بالا را با اجرای دستور phpunit در ترمینال اجرا می کنیم: همانطور که مشاهده می کنید دلیل شکست خوردن تست ما این است که کلاس StringUtils و متد findNumberOfOccurences یافت نشده است. بنابراین در این مرحله اقدام به ایجاد کلاس StringUtils و متد findNumberOfOccurences در پروژه خود می کنیم: با فرض اینکه بخواهیم کلاس هایمان درون دایرکتوری به نام classes قرار گیرند این دایرکتوری را ایجاد و جهت شناسایی آن توسط composer با استفاده از روش PSR-4 فایل composer.json را همانند زیر تغییر داده سپس در ترمینال دستور composer dumpautoload را وارد می کنیم : { &quot;autoload&quot; : { &quot;psr-4&quot;: { &quot;Classes\\&quot; : &quot;classes/&quot; } } } به دلیل اینکه کلاس StringUtils را در فضای نام Classes قرار داده ایم بنابراین جهت استفاده در تست خود خط 11 را مانند زیر تغییر دهید : &lt;?php namespace Test; class StringUtils extends \PHPUnit_Framework_TestCase { public function testShouldBeAbleToCountNumberOfLettersInSimpleSentence() { $sentenceToScan = &quot;TDD is awesome!&quot;; $characterToScanFor = &#39;e&#39;; $expectedResult = 2; $stringUtils = new \Classes\StringUtils(); $result = $stringUtils-&gt;findNumberOfOccurences($sentenceToScan, $characterToScanFor); $this-&gt;assertEquals($expectedResult, $result); } } جهت پیاده سازی کلاس StringUtils فایلی به نام stringUtils.php ایجاد و کدهای زیر را درون آن قرار دهید : &lt;?php namespace Classes; class StringUtils { public function __construct() { } public function findNumberOfOccurences($sentenceToScan, $characterToScanFor) { return 2; } } دستور phpunit را در ترمینال وارد کرده و نتیجه زیر را مشاهده می کنیم : همانطور که در کد بالا مشاهده می کنید ما ساده ترین پیاده سازی را جهت pass شدن آزمون انجام دادیم. بگذارید دوباره موضوع تست را بررسی کنیم: می خواهیم جمله &quot;!TDD is awesome&quot; بررسی و نتیجه شمارش تعداد کاراکتر &quot;e&quot; که برابر دو می باشد را برگرداند. بنابراین ساده ترین راه برای pass شدن آزمون این بوده که عدد 2 برگشت داده شود برای مثال بالا می توانیم بگوئیم مورد آزمون ما جهت صحت درستی برنامه ناکافی باشد. برای بهبود کیفیت کد، تست دیگری اضافه خواهیم کرد. می خواهیم صحت درستی شمارش تعداد کاراکتر n در جمله &quot;Once is unique, twice is a coincidence, three times is a pattern.&quot; که برابر 5 می باشد را بررسی کنیم. بنابراین تست دیگری اضافه می کنیم و خواهیم داشت : &lt;?php namespace Test; class StringUtils extends \PHPUnit_Framework_TestCase { public function testShouldBeAbleToCountNumberOfLettersInSimpleSentence() { $sentenceToScan = &quot;TDD is awesome!&quot;; $characterToScanFor = &#39;e&#39;; $expectedResult = 2; $stringUtils = new \Classes\StringUtils(); $result = $stringUtils-&gt;findNumberOfOccurences($sentenceToScan, $characterToScanFor); $this-&gt;assertEquals($expectedResult, $result); } public function testShouldBeAbleToCountNumberOfLettersInAComplexSentence() { $sentenceToScan = &quot;Once is unique, twice is a coincidence, three times is a pattern.&quot;; $characterToScanFor = &#39;n&#39;; $expectedResult = 5; $stringUtils = new \Classes\StringUtils(); $result = $stringUtils-&gt;findNumberOfOccurences($sentenceToScan, $characterToScanFor); $this-&gt;assertEquals($expectedResult, $result); } } بعد از اجرای تست نتیجه زیر مشاهده می گردد : همانطور که در توضیحات دلیل شکست مشاهده می کنید، نتیجه مورد انتظار عدد 5 بوده درحالیکه عدد 2 برگردانده شده است. بنابراین ساده ترین کار برای pass شدن آزمون این است که الگوریتمی برای شمارش تعداد کاراکتر یک جمله نوشته شود. بنابراین متد findNumberOfOccurences بصورت زیر تغییر می دهیم : &lt;?php namespace Classes; class StringUtils { public function __construct() { } public function findNumberOfOccurences($sentenceToScan, $characterToScanFor) { $numberOfOccurenes = 0; for ($charIdx= 0; $charIdx &lt; strlen($sentenceToScan); $charIdx++) { if ($sentenceToScan[$charIdx] == $characterToScanFor) { $numberOfOccurenes++; } } return $numberOfOccurenes; } } این کد ممکن است بهینه ترین یا حتی بهترین راه برای حل این مشکل نباشد. اما در حال حاضر مهم نیست؛ این ساده ترین روش ممکنه است و ما به دنبال ساده ترین الگوریتم هایی هستیم که آزمون ها را انجام دهد. اگر دوباره تست های خود را اجرا کنیم می بینیم که این الگوریتم این نیاز را برآورده می کند: در ادامه مباحث پیشرفته تر TDD، با عملیات Refactoring این مثال را بازبینی خواهیم کرد." />
+<link rel="canonical" href="http://localhost:4000/documentation/TDD/first-test" />
+<meta property="og:url" content="http://localhost:4000/documentation/TDD/first-test" />
+<meta property="og:site_name" content="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-11-18T22:55:42+03:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="نوشتن اولین آزمون" />
+<meta name="twitter:site" content="@farhadmirzapour" />
+<meta name="twitter:creator" content="@Farhad Mirzapour" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"نوشتن اولین آزمون","url":"http://localhost:4000/documentation/TDD/first-test","datePublished":"2017-11-18T22:55:42+03:30","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"dateModified":"2017-11-18T22:55:42+03:30","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/documentation/TDD/first-test"},"author":{"@type":"Person","name":"Farhad Mirzapour"},"description":"در این قسمت می خواهیم روند توسعه نرم افزار براساس TDD را در قالب یک مثال بیان کنیم. می خواهیم قطعه کدی نوشته شود که با دریافت یک جمله تعداد کاراکتر مشخص شده ای را شمارش نماید. مفهوم Arrange, Act Assert الگوها در توسعه نرم افزار بسیار مفید هستند. آنها یک راه برای برداشتن یک مشکل پیچیده دارند و آن را به چند مرحله (کوچکتر و ساده تر) تبدیل می کنند. بهترین الگوها، الگوهایی هستند که به آنها عادت و احساس راحتی کنید، به طوری که «شما به دنبال الگوی دیگری نیستید». در مورد نوشتن آزمونهای واحد ،الگوی Arrange, Act, Assert الگویی استاندارد و منطقی می باشد. AAA بیانگر سه مرحله برای ایجاد تست واحد می باشد: کلمه Arrange اشاره دارد به تنظیم تست شما با تعریف ورودی ها و خروجی های مورد انتظار . برای مثال مفهوم Arrange را می توان در این تست با تعریف یک جمله انتخابی، کاراکتری که به دنبال آن هستیم و نتیجه مورد انتظار بصورت زیر پیاده سازی کرد : &lt;?php namespace Test; class StringUtils extends \\PHPUnit_Framework_TestCase { public function testShouldBeAbleToCountNumberOfLettersInSimpleSentence() { $sentenceToScan = &quot;TDD is awesome!&quot;; $characterToScanFor = &#39;e&#39;; $expectedResult = 2; } } گام بعد در الگوی AAA عملیلت Act می باشد. در این مرحله کلاس و متدی که قرار است بر روی آن تست شود را فراخوانی و نتیجه آن را دریافت می کنیم. برای مثال بالا نام کلاس را StringUtils انتخاب می کنیم همچنین به نظر نام findNumberOfOccurences نام توصیفی خوبی برای متدی که قرار است مورد آزمون قرار گیرد باشد. بنابراین در کد زیر در خط 12 نمونه ای از کلاس ایجاد و در خط 13 متد مورد نظر را فراخوانی و نتیجه آن را دریافت می کنیم (توجه کنید در عمل هنوز کلاس و متدهای مربوطه را ایجاد نکرده ایم): &lt;?php namespace Test; class StringUtils extends \\PHPUnit_Framework_TestCase { public function testShouldBeAbleToCountNumberOfLettersInSimpleSentence() { $sentenceToScan = &quot;TDD is awesome!&quot;; $characterToScanFor = &#39;e&#39;; $expectedResult = 2; $stringUtils = new StringUtils(); $result = $stringUtils-&gt;findNumberOfOccurences($sentenceToScan, $characterToScanFor); } } سرانجام به مرحله Assert می رسیم. در این مرحله ما تائید می کنیم که نتیجه دریافتی از متد مربوطه (result$) منطبق با مقدار مورد انتظار (expectedResult$) می باشد یا خیر. ما این کار را با استفاده از متدهای Assert انجام می دهیم. کلاس Assert یک کلاس استاتیک است که بخشی از چارچوب برنامه PHPUnit می باشد و مجموعه ای از روش های ارزیابی داده ها را فراهم می کند و سیگنال هایی را نشان می دهد که یک آزمون شکست خورده است و یا نتیجه غیرقابل حل بوده است. برای این مثال از متد assertEquals استفاده می کنیم که تساوی دو مقدار را بررسی می کند. چنانچه دو مقدار برابر نباشند برنامه PHPUnit به ما می گوید که تست شکست خورده است واجرای آزمون با علت شکست گزارش داده شده و متوقف می گردد، در غیر اینصورت اجرای آزمون ادامه پیدا می کند. این به شما این امکان را می دهد تا چند آزمون را در یک آزمون انجام دهید : &lt;?php namespace Test; class StringUtils extends \\PHPUnit_Framework_TestCase { public function testShouldBeAbleToCountNumberOfLettersInSimpleSentence() { $sentenceToScan = &quot;TDD is awesome!&quot;; $characterToScanFor = &#39;e&#39;; $expectedResult = 2; $stringUtils = new StringUtils(); $result = $stringUtils-&gt;findNumberOfOccurences($sentenceToScan, $characterToScanFor); $this-&gt;assertEquals($expectedResult, $result); } } مرحله اجرای تست تست آماده است، بنابراین اولین چیزی که می خواهیم انجام شود این است که سعی کنیم تستم را اجرا کنیم. این یک بخش کلیدی از گردش کار TDD است؛ یک تست را بنویسید و بلافاصله آن تست را اجرا کنید تا مشاهده کنیم تست شکست خورده است (و باید شکست بخورد). حقیقت یک تست شکست است، به خصوص شکستی که برای عملکردی نوشته شده است که هنوز کد نویسی نوشته نشده ،می تواند به ما اطلاعات فراوانی دهد. اگر من یک تست را برای یک عملکردی که هنوز وجود ندارد (کدنویسی نشده است) بنویسم و آن تست شکست بخورد، به من چند چیز را نشان می دهد : اول از همه می تواند به من این تائید (نه به معنای تضمین) را برساند که من آزمون را درست نوشته ام. زیرا اگر تست بلافاصله pass شود، به من این نتیجه را می رساند که قطعه عملکرد صحیح مورد نظر را تست نکرده ام (قطعه کد دیگری به اشتباه تست شده)، به دلیل اینکه عملکردی هنوز وجود ندارد و آزمون نباید pass شود. با مشاهده شکست بعد از اولین آزمون می توانم این اطمینان را حاصل کنم که کار من تکرار کار دیگری نیست. در بعضی موارد، به ویژه در پروژه های بزرگتر، ممکن است برای ایجاد قطعه ای از برنامه به اشتباه دوبار برنامه ریزی صورت گرفته باشد. در این مورد زمانیکه تست pass شود می تواند نشاندهنده این باشد که من دارم کاری که دیگری انجام داده را دوباره انجام می دهم. بسیار خب، تست مثال بالا را با اجرای دستور phpunit در ترمینال اجرا می کنیم: همانطور که مشاهده می کنید دلیل شکست خوردن تست ما این است که کلاس StringUtils و متد findNumberOfOccurences یافت نشده است. بنابراین در این مرحله اقدام به ایجاد کلاس StringUtils و متد findNumberOfOccurences در پروژه خود می کنیم: با فرض اینکه بخواهیم کلاس هایمان درون دایرکتوری به نام classes قرار گیرند این دایرکتوری را ایجاد و جهت شناسایی آن توسط composer با استفاده از روش PSR-4 فایل composer.json را همانند زیر تغییر داده سپس در ترمینال دستور composer dumpautoload را وارد می کنیم : { &quot;autoload&quot; : { &quot;psr-4&quot;: { &quot;Classes\\\\&quot; : &quot;classes/&quot; } } } به دلیل اینکه کلاس StringUtils را در فضای نام Classes قرار داده ایم بنابراین جهت استفاده در تست خود خط 11 را مانند زیر تغییر دهید : &lt;?php namespace Test; class StringUtils extends \\PHPUnit_Framework_TestCase { public function testShouldBeAbleToCountNumberOfLettersInSimpleSentence() { $sentenceToScan = &quot;TDD is awesome!&quot;; $characterToScanFor = &#39;e&#39;; $expectedResult = 2; $stringUtils = new \\Classes\\StringUtils(); $result = $stringUtils-&gt;findNumberOfOccurences($sentenceToScan, $characterToScanFor); $this-&gt;assertEquals($expectedResult, $result); } } جهت پیاده سازی کلاس StringUtils فایلی به نام stringUtils.php ایجاد و کدهای زیر را درون آن قرار دهید : &lt;?php namespace Classes; class StringUtils { public function __construct() { } public function findNumberOfOccurences($sentenceToScan, $characterToScanFor) { return 2; } } دستور phpunit را در ترمینال وارد کرده و نتیجه زیر را مشاهده می کنیم : همانطور که در کد بالا مشاهده می کنید ما ساده ترین پیاده سازی را جهت pass شدن آزمون انجام دادیم. بگذارید دوباره موضوع تست را بررسی کنیم: می خواهیم جمله &quot;!TDD is awesome&quot; بررسی و نتیجه شمارش تعداد کاراکتر &quot;e&quot; که برابر دو می باشد را برگرداند. بنابراین ساده ترین راه برای pass شدن آزمون این بوده که عدد 2 برگشت داده شود برای مثال بالا می توانیم بگوئیم مورد آزمون ما جهت صحت درستی برنامه ناکافی باشد. برای بهبود کیفیت کد، تست دیگری اضافه خواهیم کرد. می خواهیم صحت درستی شمارش تعداد کاراکتر n در جمله &quot;Once is unique, twice is a coincidence, three times is a pattern.&quot; که برابر 5 می باشد را بررسی کنیم. بنابراین تست دیگری اضافه می کنیم و خواهیم داشت : &lt;?php namespace Test; class StringUtils extends \\PHPUnit_Framework_TestCase { public function testShouldBeAbleToCountNumberOfLettersInSimpleSentence() { $sentenceToScan = &quot;TDD is awesome!&quot;; $characterToScanFor = &#39;e&#39;; $expectedResult = 2; $stringUtils = new \\Classes\\StringUtils(); $result = $stringUtils-&gt;findNumberOfOccurences($sentenceToScan, $characterToScanFor); $this-&gt;assertEquals($expectedResult, $result); } public function testShouldBeAbleToCountNumberOfLettersInAComplexSentence() { $sentenceToScan = &quot;Once is unique, twice is a coincidence, three times is a pattern.&quot;; $characterToScanFor = &#39;n&#39;; $expectedResult = 5; $stringUtils = new \\Classes\\StringUtils(); $result = $stringUtils-&gt;findNumberOfOccurences($sentenceToScan, $characterToScanFor); $this-&gt;assertEquals($expectedResult, $result); } } بعد از اجرای تست نتیجه زیر مشاهده می گردد : همانطور که در توضیحات دلیل شکست مشاهده می کنید، نتیجه مورد انتظار عدد 5 بوده درحالیکه عدد 2 برگردانده شده است. بنابراین ساده ترین کار برای pass شدن آزمون این است که الگوریتمی برای شمارش تعداد کاراکتر یک جمله نوشته شود. بنابراین متد findNumberOfOccurences بصورت زیر تغییر می دهیم : &lt;?php namespace Classes; class StringUtils { public function __construct() { } public function findNumberOfOccurences($sentenceToScan, $characterToScanFor) { $numberOfOccurenes = 0; for ($charIdx= 0; $charIdx &lt; strlen($sentenceToScan); $charIdx++) { if ($sentenceToScan[$charIdx] == $characterToScanFor) { $numberOfOccurenes++; } } return $numberOfOccurenes; } } این کد ممکن است بهینه ترین یا حتی بهترین راه برای حل این مشکل نباشد. اما در حال حاضر مهم نیست؛ این ساده ترین روش ممکنه است و ما به دنبال ساده ترین الگوریتم هایی هستیم که آزمون ها را انجام دهد. اگر دوباره تست های خود را اجرا کنیم می بینیم که این الگوریتم این نیاز را برآورده می کند: در ادامه مباحث پیشرفته تر TDD، با عملیات Refactoring این مثال را بازبینی خواهیم کرد.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="stylesheet" href="/assets/prisma/prism.css">
+    <!-- favicons and rss -->
+    <link rel="alternate" type="application/rss+xml" title="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" href="/feed.xml">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- header -->
+<header class="header" role="banner" aria-label="Header">
+    <button class="hamburger-button" onclick="hamburgerMenu();" role="button" aria-label="Hamburger menu button">
+        <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    </button>
+    <a href="/" class="logo" role="link" aria-label="Home">
+        <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo"/>
+    </a>
+    <nav class="navigation" role="navigation" aria-label="Navigation">
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item">
+                <a href="/" class="logo" role="menuitem" aria-label="Home">
+                    <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo"/>
+                </a>
+            </li>
+            
+            <li role="menuitem"><a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a></li>
+            
+            <li role="menuitem"><a href="/contactus" role="menuitem" aria-label="تماس">تماس</a></li>
+            
+        </ul>
+    </nav>
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox"/>
+        </form>
+    </div>
+</header>
+
+<nav id="hamburger-menu" role="navigation" aria-label="Hamburger menu">
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox"/>
+        </form>
+    </div>
+    <div class="home-nav" role="navigation" aria-label="Site navigation">
+        <a href="/" role="menuitem" aria-label="Home">صفحه اصلی</a>
+        
+        <a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a>
+        
+        <a href="/contactus" role="menuitem" aria-label="تماس">تماس</a>
+        
+    </div>
+
+    
+    <div class="doc-nav" role="navigation" aria-label="Documentation navigation">
+        <p role="presentation" aria-label="Category name">
+            اصول Test Driven Development
+        </p>
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/2017/11/15/test-driven-development.html" class="doc-link" role="link" aria-label="نوشتن اولین آزمون">مقدمه</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/TDD/phpunit" class="doc-link" role="link" aria-label="ابزار PHP Unit">ابزار PHP Unit</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/TDD/first-test" class="doc-link" role="link" aria-label="نوشتن اولین آزمون">نوشتن اولین آزمون</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/TDD/make-your-code-solid" class="doc-link" role="link" aria-label="نوشتن کد به سبک S.O.L.I.D">نوشتن کد به سبک S.O.L.I.D</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/TDD/dealing-with-defects" class="doc-link" role="link" aria-label="مفهوم Defects (نقص ها)">مفهوم Defects (نقص ها)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/TDD/refactoring-basics" class="doc-link" role="link" aria-label="مفهوم Refactoring (بازسازی)">مفهوم Refactoring (بازسازی)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/TDD/mocking" class="doc-link" role="link" aria-label="Mock Objects و Stub Methods">Mock Objects و Stub Methods</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </ul>
+    </div>
+    
+</nav>
+<!-- main content -->
+<main class="container" role="main">
+    <div class="rcdoccontainerimg">
+    <div class="rc-DRTVBanner-new rc-DRTVBanner-bigsize">
+    <div style="background: url('/images/original/stride-nyc-test-driven-development-chart-700x400.jpg'); " class="blurred_img"></div>
+    <div class="mask"></div>
+    <div class="bot"></div>
+    <div class="over">
+        <div class="container-rc">
+            <img class="image" src="/images/original/stride-nyc-test-driven-development-chart-700x400.jpg" alt="نوشتن اولین آزمون" height="190">
+            <div class="desktop-banner-container">
+                <h1 class="display-5-text headline">
+                    
+                    
+                    اصول Test Driven Development
+                    </h1>
+                <!--<div class="tagslist"><ul class='lyda-tag-list'><li class='lyda-tag-list-title'>برچسب ها</li><li><a class="tags" href="/tag/لاراول">#لاراول</a></li><li><a class="tags" href="/tag/لاراول-5-5">#لاراول 5.5</a></li></ul></div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="bread-crumb">-->
+<!--<div class="container   ">-->
+<!--<div class="pull-right ">-->
+<!--<div class="bread-button text-custom b-left">-->
+<!--انتشار : 2 ماه پیش-->
+<!--</div>-->
+<!--<a href="/category/article/" class="bread-button back-to-all b-left hidden-xs">همه مقالات</a>-->
+<!--<div class="cat-lable">-->
+<!--<a href="/category/article/laravel/">-->
+<!--لاراول-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<script>
+    $(window).scroll(function(){
+        var sticky = $('.doc-menu'),
+            scroll = $(window).scrollTop();
+        if (scroll >= 101) {sticky.addClass('doc-header-scroll'); }
+        else {sticky.removeClass('doc-header-scroll'); };
+    });
+</script>
+</div>
+<div class="doc-container">
+
+    <div class="doc-menu">
+        
+        <ul>
+            <li>
+                <a  href="/2017/11/15/test-driven-development.html" class="active doc-link" role="link">
+                    مقدمه
+                </a>
+            </li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li>
+                <a title="ابزار PHP Unit" href="/documentation/TDD/phpunit" class="active doc-link" role="link">
+                    ابزار PHP Unit
+                </a>
+            </li>
+            
+            
+            
+            <li>
+                <a title="نوشتن اولین آزمون" href="/documentation/TDD/first-test" class="active doc-link" role="link">
+                    نوشتن اولین آزمون
+                </a>
+            </li>
+            
+            
+            
+            <li>
+                <a title="نوشتن کد به سبک S.O.L.I.D" href="/documentation/TDD/make-your-code-solid" class="active doc-link" role="link">
+                    نوشتن کد به سبک S.O.L.I.D
+                </a>
+            </li>
+            
+            
+            
+            <li>
+                <a title="مفهوم Defects (نقص ها)" href="/documentation/TDD/dealing-with-defects" class="active doc-link" role="link">
+                    مفهوم Defects (نقص ها)
+                </a>
+            </li>
+            
+            
+            
+            <li>
+                <a title="مفهوم Refactoring (بازسازی)" href="/documentation/TDD/refactoring-basics" class="active doc-link" role="link">
+                    مفهوم Refactoring (بازسازی)
+                </a>
+            </li>
+            
+            
+            
+            <li>
+                <a title="Mock Objects و Stub Methods" href="/documentation/TDD/mocking" class="active doc-link" role="link">
+                    Mock Objects و Stub Methods
+                </a>
+            </li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </ul>
+        
+    </div>
+
+    <article class="documentation">
+        <header class="doc-header">
+            <div class="time">
+                تاریخ :      شنبه 27 آبان 1396
+            </div>
+            
+        </header>
+        <section class="anchored">
+            <p>
+  در این قسمت می خواهیم روند توسعه نرم افزار براساس TDD  را در قالب یک مثال بیان کنیم.
+</p>
+
+<blockquote>
+<p>
+می خواهیم قطعه کدی نوشته شود که با دریافت یک جمله تعداد کاراکتر مشخص شده ای را شمارش نماید.
+</p>
+</blockquote>
+
+<p>
+
+</p>
+
+<h3>مفهوم Arrange, Act Assert</h3>
+
+<p>
+الگوها در توسعه نرم افزار بسیار مفید هستند. آنها یک راه برای برداشتن یک مشکل پیچیده دارند و آن را به چند مرحله (کوچکتر و  ساده تر) تبدیل می کنند. بهترین الگوها، الگوهایی هستند که به آنها عادت و احساس راحتی کنید، به طوری که «شما به دنبال الگوی دیگری نیستید». در مورد نوشتن آزمونهای واحد ،الگوی Arrange, Act, Assert الگویی استاندارد و منطقی می باشد.
+</p>
+
+<p>
+AAA بیانگر سه مرحله برای ایجاد تست واحد می باشد:
+</p>
+
+<ol>
+
+<li>
+<p>
+کلمه Arrange اشاره دارد به تنظیم تست شما با تعریف ورودی ها و خروجی های مورد انتظار .
+</p>
+<p>
+برای مثال مفهوم Arrange  را می توان در این تست با تعریف یک جمله انتخابی، کاراکتری که به دنبال آن هستیم و نتیجه مورد انتظار بصورت زیر پیاده سازی کرد :
+</p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+namespace Test;
+
+class StringUtils extends \PHPUnit_Framework_TestCase
+{
+    public function testShouldBeAbleToCountNumberOfLettersInSimpleSentence()
+    {
+        $sentenceToScan = "TDD is awesome!";
+		$characterToScanFor = 'e';
+		$expectedResult = 2;
+    }
+}
+</code></pre>
+
+</li>
+
+
+<li>
+<p>
+گام بعد در الگوی AAA عملیلت Act  می باشد. در این مرحله کلاس و متدی که قرار است بر روی آن تست شود را فراخوانی و نتیجه آن را دریافت می کنیم.
+</p>
+<p>
+برای مثال بالا نام کلاس را StringUtils انتخاب می کنیم همچنین به نظر نام findNumberOfOccurences نام توصیفی خوبی برای متدی که قرار است مورد آزمون قرار گیرد باشد. بنابراین در کد زیر در خط 12 نمونه ای از کلاس ایجاد و در خط 13 متد مورد نظر را فراخوانی و نتیجه آن را دریافت می کنیم (توجه کنید در عمل هنوز کلاس و متدهای مربوطه را ایجاد نکرده ایم):
+</p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+namespace Test;
+
+class StringUtils extends \PHPUnit_Framework_TestCase
+{
+    public function testShouldBeAbleToCountNumberOfLettersInSimpleSentence()
+    {
+        $sentenceToScan = "TDD is awesome!";
+		$characterToScanFor = 'e';
+		$expectedResult = 2;
+
+		$stringUtils = new StringUtils();
+		$result = $stringUtils-&gt;findNumberOfOccurences($sentenceToScan, $characterToScanFor);
+    }
+}
+</code></pre>
+</li>
+
+<li>
+<p>
+ سرانجام به مرحله Assert می رسیم. در این مرحله ما تائید می کنیم که نتیجه دریافتی از متد مربوطه (result$) منطبق با مقدار مورد انتظار (expectedResult$) می باشد یا خیر.
+</p>
+
+<p>
+ ما این کار را با استفاده از متدهای Assert انجام می دهیم. کلاس Assert یک کلاس استاتیک است که بخشی از چارچوب برنامه PHPUnit می باشد و مجموعه ای از روش های ارزیابی داده ها را فراهم می کند و سیگنال هایی را نشان می دهد که یک آزمون شکست خورده است و یا نتیجه غیرقابل حل بوده است.
+</p>
+
+<p>
+برای این مثال از متد assertEquals استفاده می کنیم که تساوی دو مقدار را بررسی می کند. چنانچه دو مقدار برابر نباشند برنامه PHPUnit  به ما می گوید که تست شکست خورده است واجرای آزمون با علت شکست گزارش داده شده و متوقف می گردد، در غیر اینصورت اجرای آزمون ادامه پیدا می کند. این به شما این امکان را می دهد تا چند آزمون را در یک آزمون انجام دهید :
+</p>
+<pre><code class="language-php   line-numbers">&lt;?php
+namespace Test;
+
+class StringUtils extends \PHPUnit_Framework_TestCase
+{
+    public function testShouldBeAbleToCountNumberOfLettersInSimpleSentence()
+    {
+        $sentenceToScan = "TDD is awesome!";
+        $characterToScanFor = 'e';
+        $expectedResult = 2;
+
+        $stringUtils = new StringUtils();
+        $result = $stringUtils-&gt;findNumberOfOccurences($sentenceToScan, $characterToScanFor);
+
+        $this-&gt;assertEquals($expectedResult, $result);
+    }
+}
+</code></pre>
+</li>
+</ol>
+
+<p><br /></p>
+<h3>مرحله اجرای تست</h3>
+
+<p>
+تست آماده است، بنابراین اولین چیزی که می خواهیم انجام شود این است که سعی کنیم تستم را اجرا کنیم. این یک بخش کلیدی از گردش کار TDD است؛ یک تست را بنویسید و بلافاصله آن تست را اجرا کنید تا مشاهده کنیم تست شکست خورده است (و باید شکست بخورد).
+<p>
+
+<blockquote>
+<p>
+ حقیقت یک تست شکست است، به خصوص شکستی که برای عملکردی نوشته شده است که هنوز کد نویسی نوشته نشده ،می تواند به ما اطلاعات فراوانی دهد.
+</p>
+</blockquote>
+
+<p>
+اگر من یک تست را برای یک عملکردی که هنوز وجود ندارد (کدنویسی نشده است) بنویسم و آن تست شکست بخورد، به من چند چیز را نشان می دهد :
+</p>
+<ul>
+<li>
+اول از همه می تواند به من این تائید (نه به معنای تضمین) را برساند که من آزمون را درست نوشته ام. زیرا اگر تست بلافاصله pass شود، به من این نتیجه را می رساند که قطعه عملکرد صحیح مورد نظر را تست نکرده ام (قطعه کد دیگری به اشتباه تست شده)، به دلیل اینکه عملکردی هنوز وجود ندارد و آزمون نباید pass شود.
+</li>
+
+<li>
+با مشاهده شکست بعد از اولین آزمون می توانم این اطمینان را حاصل کنم که کار من تکرار کار دیگری نیست. در بعضی موارد، به ویژه در پروژه های بزرگتر، ممکن است برای ایجاد قطعه ای از برنامه به اشتباه دوبار برنامه ریزی صورت گرفته باشد. در این مورد زمانیکه تست pass شود می تواند نشاندهنده این باشد که من دارم کاری که دیگری انجام داده را دوباره انجام می دهم.
+</li>
+</ul>
+
+<p>
+بسیار خب، تست مثال بالا را با اجرای دستور phpunit  در ترمینال اجرا می کنیم:
+</p>
+
+<div align="center">
+<img src="/images/post/pass1.jpg" alt="نوشتن اولین آزمون" />
+</div>
+
+<p>
+همانطور که مشاهده می کنید دلیل شکست خوردن تست ما این است که کلاس StringUtils و متد findNumberOfOccurences یافت نشده است.
+</p>
+
+<p>بنابراین در این مرحله اقدام به ایجاد کلاس StringUtils و متد findNumberOfOccurences در پروژه خود می کنیم: </p>
+
+<ol>
+<li>
+<p>
+با فرض اینکه بخواهیم کلاس هایمان درون دایرکتوری به نام classes  قرار گیرند این دایرکتوری را ایجاد و جهت شناسایی آن توسط composer با استفاده از روش PSR-4 فایل composer.json را همانند زیر تغییر داده سپس در ترمینال دستور composer dumpautoload را وارد می کنیم :
+</p>
+
+<pre><code class="language-json   line-numbers">{
+	"autoload" : {
+		"psr-4": {
+			"Classes\\" : "classes/"
+		}
+	}
+}
+</code></pre>
+</li>
+
+<li>
+<p>به دلیل اینکه کلاس StringUtils را در فضای نام Classes قرار داده ایم بنابراین جهت استفاده در تست خود خط 11 را مانند زیر تغییر دهید :</p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+namespace Test;
+
+class StringUtils extends \PHPUnit_Framework_TestCase
+{
+    public function testShouldBeAbleToCountNumberOfLettersInSimpleSentence()
+    {
+        $sentenceToScan = "TDD is awesome!";
+        $characterToScanFor = 'e';
+        $expectedResult = 2;
+
+        $stringUtils = new \Classes\StringUtils();
+        $result = $stringUtils-&gt;findNumberOfOccurences($sentenceToScan, $characterToScanFor);
+
+        $this-&gt;assertEquals($expectedResult, $result);
+    }
+}
+
+</code></pre>
+</li>
+
+<li>
+<p>جهت پیاده سازی کلاس StringUtils فایلی به نام stringUtils.php ایجاد و کدهای زیر را درون آن قرار دهید :   </p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+namespace Classes;
+
+class StringUtils
+{
+    public function __construct()
+    {
+    }
+
+    public function findNumberOfOccurences($sentenceToScan, $characterToScanFor)
+    {
+        return 2;
+    }
+}
+</code></pre>
+
+</li>
+
+<li>
+دستور phpunit را در ترمینال وارد کرده و نتیجه زیر را مشاهده می کنیم :
+
+<div align="center">
+<img src="/images/post/pass2.jpg" alt="نوشتن اولین آزمون" />
+</div>
+
+
+</li>
+</ol>
+
+<p>
+همانطور که در کد بالا مشاهده می کنید ما ساده ترین پیاده سازی را جهت pass شدن آزمون انجام دادیم. بگذارید دوباره موضوع تست را بررسی کنیم:
+</p>
+
+<p>
+<b>
+می خواهیم جمله "!TDD is awesome" بررسی و نتیجه شمارش تعداد کاراکتر "e" که برابر دو می باشد را برگرداند.
+</b>
+</p>
+
+<p>
+بنابراین ساده ترین راه برای pass  شدن آزمون این بوده که عدد 2 برگشت داده شود
+</p>
+
+
+<p>
+برای مثال بالا می توانیم بگوئیم مورد آزمون ما جهت صحت درستی برنامه ناکافی باشد. برای بهبود کیفیت کد، تست دیگری اضافه خواهیم کرد.
+</p>
+<p>
+می خواهیم صحت درستی شمارش تعداد کاراکتر n  در جمله  "Once is unique, twice is a coincidence, three times is a pattern." که برابر 5 می باشد را بررسی کنیم. بنابراین تست دیگری اضافه می کنیم و خواهیم داشت :
+</p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+namespace Test;
+
+class StringUtils extends \PHPUnit_Framework_TestCase
+{
+    public function testShouldBeAbleToCountNumberOfLettersInSimpleSentence()
+    {
+        $sentenceToScan = "TDD is awesome!";
+        $characterToScanFor = 'e';
+        $expectedResult = 2;
+
+        $stringUtils = new \Classes\StringUtils();
+        $result = $stringUtils-&gt;findNumberOfOccurences($sentenceToScan, $characterToScanFor);
+
+        $this-&gt;assertEquals($expectedResult, $result);
+    }
+
+    public function testShouldBeAbleToCountNumberOfLettersInAComplexSentence()
+    {
+        $sentenceToScan = "Once is unique, twice is a coincidence, three times is a pattern.";
+        $characterToScanFor = 'n';
+        $expectedResult = 5;
+
+        $stringUtils = new \Classes\StringUtils();
+        $result = $stringUtils-&gt;findNumberOfOccurences($sentenceToScan, $characterToScanFor);
+
+        $this-&gt;assertEquals($expectedResult, $result);
+    }
+}
+</code></pre>
+
+<p>
+بعد از اجرای تست نتیجه زیر مشاهده می گردد :
+
+<div align="center">
+<img src="/images/post/pass3.jpg" alt="نوشتن اولین آزمون" />
+</div>
+
+</p>
+
+<p>
+همانطور که در توضیحات دلیل شکست مشاهده می کنید، نتیجه مورد انتظار عدد 5 بوده درحالیکه عدد 2 برگردانده شده است.
+</p>
+
+<p>
+بنابراین ساده ترین کار برای pass  شدن آزمون این است که الگوریتمی برای شمارش تعداد کاراکتر یک جمله نوشته شود. بنابراین متد findNumberOfOccurences بصورت زیر تغییر می دهیم :
+</p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+namespace Classes;
+
+class StringUtils
+{
+    public function __construct()
+    {
+    }
+
+    public function findNumberOfOccurences($sentenceToScan, $characterToScanFor)
+    {
+        $numberOfOccurenes = 0;
+        for ($charIdx= 0; $charIdx &lt; strlen($sentenceToScan); $charIdx++) {
+            if ($sentenceToScan[$charIdx] == $characterToScanFor) {
+                $numberOfOccurenes++;
+            }
+        }
+        return $numberOfOccurenes;
+    }
+}
+</code></pre>
+
+<p>
+این کد ممکن است بهینه ترین یا حتی بهترین راه برای حل این مشکل نباشد. اما در حال حاضر مهم نیست؛ این ساده ترین روش ممکنه است و ما به دنبال ساده ترین الگوریتم هایی هستیم که آزمون ها را انجام دهد. اگر دوباره تست های خود را اجرا کنیم می بینیم که این الگوریتم این نیاز را برآورده می کند:
+</p>
+
+<div align="center">
+<img src="/images/post/pass4.jpg" alt="نوشتن اولین آزمون" />
+</div>
+
+<p>
+در ادامه مباحث پیشرفته تر TDD، با عملیات Refactoring این مثال را بازبینی خواهیم کرد.
+</p>
+</p></p>
+
+        </section>
+        
+<hr>
+<p>
+<div>منابع مورد مطالعه جهت جمع آوری این مطلب:</div>
+<div  class="refrencehref">
+        https://jtreminio.com/2013/03/unit-testing-tutorial-introduction-to-phpunit/ <br> https://www.telerik.com/blogs/30-days-of-tdd-day-three-your-first-test <br> https://www.telerik.com/blogs/30-days-of-tdd-day-four-making-your-first-test-pass
+</div>
+</p>
+
+        <hr>
+        <style>
+    #commentsdiv{
+        background-color: #f5f5f5;
+        border: 1px solid #c5c5c5;
+        border-bottom: 0px !important;
+        padding: 12px;
+    }
+    #commentsborder{
+        background-color: #fff;
+        border: 1px solid #c5c5c5;
+        white-space: normal;
+        padding: 20px;
+    }
+</style>
+
+<div id="commentsdiv">نظرات</div>
+<div id="commentsborder">
+<div id="wpac-comment"></div>
+</div>
+<script type="text/javascript">
+wpac_init = window.wpac_init || [];
+wpac_init.push({widget: 'Comment', id: 7878});
+(function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = 'https://embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+})();
+</script>
+
+    </article>
+</div>
+<script src="/assets/js/anchor.min.js"></script>
+<script>
+    anchors.options = {
+        placement: 'left',
+        visible: 'always',
+//        icon: '#',
+    };
+    anchors.add('.anchored h2,.anchored h3,.anchored h4,.anchored h5,.anchored h6');
+
+    (function($){
+        if(window.location.hash) {
+            var hash = decodeURIComponent(window.location.hash);
+            gotohash($(hash).offset().top);
+        }
+        $('a.anchorjs-link').click(function(){
+			gotohash($(this).offset().top);
+        });
+        $('a.anchorjs').click(function(){
+			var id = '#' + $(this).attr('title');
+			gotohash($(id).offset().top);
+        });		
+        function gotohash(top){
+            var headerHeight = 70; // Get fixed header height
+            $('html,body').animate({
+                scrollTop: top - headerHeight
+            }, 20);
+        }
+    })(jQuery);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+   $(document).ready(function (){
+
+     var scrollPosition = getParameterByName('scroll');
+     if(scrollPosition)
+      $(".doc-menu").scrollTop(scrollPosition);
+
+     $('.doc-link').click(function(){
+        var scrollTop = $(".doc-menu").scrollTop();
+        if(scrollTop > 0)
+          $(this).attr("href",this.href + "?scroll=" + $(".doc-menu").scrollTop());
+     });
+
+     function getParameterByName(name, url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+   });
+</script>
+    <div id="back-to-top" role="button" aria-label="Back to top">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+    </div>
+</main>
+<!-- footer -->
+
+<footer class="footer" role="contentinfo" aria-label="Site footer">
+    <div class="navigation" role="navigation" aria-label="Footer links">
+        <a href="http://localhost:4000" class="avatar" role="link" ></a>
+        <ul role="menubar" aria-label="Footer links menubar">
+            <li class="footer-products" role="menuitem" aria-label="Products">
+                تولیدات
+                <ul role="menu" aria-hidden="true" aria-label="Products link">
+                </ul>
+            </li>
+            <li class="footer-blog" role="menuitem" aria-label="Blog">
+                مقالات
+                <ul role="menu" aria-hidden="true" aria-label="Blog link">
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2020/07/03/marriage.html" role="link" aria-label="ازدواج">ازدواج</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2019/10/11/vuejs.html" role="link" aria-label="آموزش vuejs">آموزش vuejs</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/18/laravel.html" role="link" aria-label="آموزش Laravel">آموزش Laravel</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/articles/2017/12/13/laravelcollective.html" role="link" aria-label="معرفی Laravel Collective">معرفی Laravel Collective</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/06/design-patterns.html" role="link" aria-label="معرفی  Design Pattern">معرفی  Design Pattern</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/blog" role="link" aria-label="Read more">Read More</a></li>
+                </ul>
+            </li>
+
+            <li class="footer-connect" role="menuitem" aria-label="Connect">
+                تماس
+                <ul role="menu" aria-hidden="true" aria-label="Connect link">
+                    <li role="listitem" aria-label="Connect link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub">GitHub</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://www.linkedin.com/in/farhad-mirzapour/" target="_blank" role="link" aria-label="Linkedin">Linkedin</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter">Twitter</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="socials"  role="navigation" aria-label="Social links">
+        <ul role="menu" aria-hidden="true" aria-label="Social link">
+            <li role="listitem" aria-label="Social link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://www.linkedin.com/in/farhad-mirzapour-0043b862/" target="_blank" role="link" aria-label="Linkedin"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="/feed.xml" role="link" aria-label="RSS"><i class="fa fa-rss-square" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+    <div class="copyright" role="contentinfo" aria-label="Copyright">
+        <p>&copy; <script type="text/javascript">document.write(new Date().getFullYear());</script> Farhad Mirzapour</p>
+    </div>
+</footer>
+
+<!-- scripts -->
+<script src="/assets/js/hamburger-menu.js"></script>
+
+<script src="/assets/js/elevator.min.js"></script>
+<script src="/assets/js/back-to-top.js"></script>
+<script src="/assets/prisma/prism.js"></script>
+<!-- google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108878564-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-108878564-1');
+</script>
+
+</body>
+</html>

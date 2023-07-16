@@ -1,0 +1,2091 @@
+<!DOCTYPE html>
+<html lang="">
+<!-- head -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>اصول requests | مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="اصول requests" />
+<meta name="author" content="Farhad Mirzapour" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="برای دسترسی به نمونه‌ای از درخواست HTTP فعلی در لاراول از طریق روش تزریق وابستگی (dependency injection)، باید نمونه کلاس Illuminate\Http\Request را در متد کنترلر خود اعلان نوع یا type-hint کنید. درخواست ورودی به صورت خودکار توسط service container تزریق می‌شود: &lt;?php namespace App\Http\Controllers; use Illuminate\Http\Request; class UserController extends Controller { /** * Store a new user. * * @param Request $request * @return Response */ public function store(Request $request) { $name = $request-&gt;input(&#39;name&#39;); // } } تزریق وابستگی و استفاده از پارامترهای مسیر در صورتی که، متد کنترلر در انتظار دریافت ورودی از یک پارامتر مسیر باشد، می‌توانید پارامترهای مسیر را پس از وابستگی‌های دیگر لیست کنید. برای مثال، اگر مسیر شما مانند مثال زیر تعریف شده باشد: Route::put(&#39;user/{id}&#39;, &#39;UserController@update&#39;); می‌توانید نمونه کلاس Illuminate\Http\Request را اعلان نوع کنید و با تعریف متد کنترلر به صورت مثال زیر به پارامتر مسیر یا همان id ، دسترسی داشته باشید: &lt;?php namespace App\Http\Controllers; use Illuminate\Http\Request; class UserController extends Controller { /** * Update the specified user. * * @param Request $request * @param string $id * @return Response */ public function update(Request $request, $id) { // } } دسترسی به درخواست HTTP از طریق route closure همچنین، می‌توانید نمونه کلاس Illuminate\Http\Request را در route closure اعلان نوع کنید. service container به صورت خودکار درخواست ورودی را به Closure در هنگام اجرای آن تزریق می‌کند: use Illuminate\Http\Request; Route::get(&#39;/&#39;, function (Request $request) { // }); به کارگیری متد‌ها و مسیر در درخواست HTTP جهت بررسی درخواست HTTP در برنامه، نمونه کلاس Illuminate\Http\Request چندین متد ارائه می‌دهد و از کلاس Symfony\Component\HttpFoundation\Request ارث بری می‌کند. در ادامه، برخی از مهمترین متدهای این کلاس را با هم بررسی می‌کنیم. بازیابی مسیر درخواست‌ها HTTP متد path اطلاعات مربوط به مسیر یک درخواست را بازمی‌گرداند. بنابراین، اگر درخواست ورودی به آدرس http://domain.com/foo/bar ارسال شود، این متد قسمت foo/bar را بازمی‌گرداند: $uri = $request-&gt;path(); توسط متد is می‌توانید مطمئن شوید که مسیر درخواست ورودی مطابق با یک الگوی خاص تعریف شده است یا خیر. در هنگام استفاده از این متد می‌توان کاراکتر * را نیز به عنوان یک wildcard بکار برد: if ($request-&gt;is(&#39;admin/*&#39;)) { // } دریافت URL درخواست‌ها برای بازیابی URL کامل یک درخواست ورودی، می‌توانید متد url یا fullUrl را بکار ببرید. متد url برای بازیابی URL بدون رشته پرس و جو بکار می‌رود، در حالی که متد fullUrl رشته پرس و جو را نیز شامل می‌شود. // Without Query String... $url = $request-&gt;url(); // With Query String... $url = $request-&gt;fullUrl(); بازیابی متد درخواست‌ها متد method فعل یا متد درخواست HTTP را برای یک درخواست بازگشت می‌دهد. می‌توانید از متد isMethod برای بررسی اینکه متد درخواست HTTP با یک رشته مشخص مطابق است یا خیر، استفاده کنید: $method = $request-&gt;method(); if ($request-&gt;isMethod(&#39;post&#39;)) { // } استفاده از درخواست‌های PSR-7 استاندارد PSR-7 رابط‌هایی را برای پیغام‌های HTTP مانند درخواست‌ها و پاسخ‌ها ارائه می‌دهد. اگر می‌خواهید به نمونه‌ای از درخواست PSR-7 به جای یک درخواست لاراول دسترسی داشته باشید، در ابتدا بایستی چند کتابخانه مهم را نصب کنید. لاراول از کامپوننت Symfony HTTP Message Bridge برای تبدیل درخواست‌ها و پاسخ‌های لاراول به پیاده سازی‌های سازگار با PSR-7 استفاده می‌کند: composer require symfony/psr-http-message-bridge composer require zendframework/zend-diactoros زمانی که این کتابخانه‌ها را نصب کردید، می‌توانید با type-hint کردن رابط درخواست درroute Closure یا متد کنترلر خود به یک درخواست PSR-7 دسترسی داشته باشید: use Psr\Http\Message\ServerRequestInterface; Route::get(&#39;/&#39;, function (ServerRequestInterface $request) { // }); اگر نمونه‌ای از پاسخ PSR-7 از یک مسیر یا کنترلر برگردانده شود، این پاسخ به صورت خودکار به یک پاسخ لاراول تبدیل می‌شود و توسط فریم ورک نمایش داده می‌شود. مرتب سازی ورودی درخواست HTTP به صورت پیش‌فرض middlewareهای TrimStrings و ConvertEmptyStringsToNull در پشته middleware عمومی برنامه لاراول قرار دارند. این middlewareها توسط کلاس App\Http\Kernel در پشته لیست شده‌اند. این middlewareها به صورت خودکار تمام فیلدهای رشته ورودی بر روی درخواست را مرتب می‌کنند، همچنین هر فیلد رشته خالی را به null تبدیل می‌کنند. این موضوع باعث می‌شود تا هیچ نگرانی در مورد کارهای کوچک و عادی از این قبیل، در مسیرها و کنترلرهای خود نداشته نباشیم. اگر می‌خواهید این ویژگی را در برنامه خود غیرفعال کنید، می‌توانید این دو middleware را از پشته middleware برنامه خود حذف کنید، می‌توانید این کار را با حذف آن‌ها از خصوصیت $middleware کلاس App\Http\Kernel انجام دهید. دريافت ورودی درخواست در لاراول بازیابی تمام داده‌های ورودی درخواست می‌توانید تمام داده‌های ورودی را به عنوان یک array با استفاده از متد all بازیابی کنید: $input = $request-&gt;all(); بازیابی مقدار ورودی درخواست با استفاده از چند متد ساده، می‌توانید به تمام ورودی‌های کاربر از نمونه کلاس Illuminate\Http\Request دسترسی داشته باشید و نگران اینکه کدام متد HTTP برای درخواست استفاده شود، نباشید. صرف نظر از متد درخواست HTTP، از متد input نیز می‌توانید برای بازیابی ورودی کاربر استفاده کنید: $name = $request-&gt;input(&#39;name&#39;); می‌توانید یک مقدار پیش‌فرض را به عنوان آرگومان دوم به متد input منتقل کنید. اگر مقدار ورودی در درخواست کاربر موجود نباشد، این مقدار بازگردانده خواهد شد: $name = $request-&gt;input(&#39;name&#39;, &#39;Sally&#39;); در هنگام کار با فرم‌هایی که ورودی‌های آن‌ها به صورت آرایه‌ای هستند، می‌توانید از علامت «نقطه» برای دسترسی به آرایه‌ها استفاده کنید: $name = $request-&gt;input(&#39;products.0.name&#39;); $names = $request-&gt;input(&#39;products.*.name&#39;); گرفتن ورودی از رشته پرس و جو درخواست در حالی که متد input مقادیر را از کل درخواست کاربر (شامل رشته پرس و جو) بازیابی می‌کند، متد query ، مقادیر را فقط از رشته پرس و جو بازیابی می‌کند: $name = $request-&gt;query(&#39;name&#39;); اگر مقدار داده رشته پرس و جو درخواست شده موجود نباشد، آرگومان دوم این متد بازگشت داده می‌شود: $name = $request-&gt;query(&#39;name&#39;, &#39;Helen&#39;); می‌توانید متد query را بدون هیچ آرگومانی به منظور بازیابی تمام مقادیر رشته پرس و جو به عنوان یک آرایه انجمنی فراخوانی کنید: $query = $request-&gt;query(); دریافت ورودی درخواست از طریق خصوصیات پویا همچنین، می‌توانید به ورودی کاربر با استفاده از خواص پویا بر روی نمونه کلاس Illuminate\Http\Request دسترسی داشته باشید. برای مثال، اگر یکی از فرم‌های درخواست، شامل یک فیلد name باشد، می‌توانید به مقدار فیلد مانند مثال زیر دسترسی داشته باشید: $name = $request-&gt;name; هنگام استفاده از خواص پویا، لاراول ابتدا مقدار پارامتر را در کل درخواست جستجو می‌کند. اگر مقدار پارامتر موجود نباشد، لاراول مقدار پارامتر را در پارامترهای مسیر جستجو می‌کند. بازیابی مقادیر ورودی JSON در درخواست لاراول هنگام ارسال درخواست‌های JSON به برنامه، تا زمانی که هدر Content-Type درخواست به درستی بر روی application/json تنظیم شده باشد، می‌توانید از طریق متد input به داده‌های JSON دسترسی داشته باشید. حتی می‌توانید از علامت «نقطه» برای کاوش در آرایه‌های JSON استفاده کنید: $name = $request-&gt;input(&#39;user.name&#39;); بازیابی بخش‌هایی از داده‌های ورودی اگر نیاز به بازیابی زیرمجموعه‌ای از داده‌های ورودی دارید، می‌توانید از متدهای only و except استفاده کنید. هر دو متد، یک array یا یک لیست پویا از آرگومان‌ها را می‌پذیرند. $input = $request-&gt;only([&#39;username&#39;, &#39;password&#39;]); $input = $request-&gt;only(&#39;username&#39;, &#39;password&#39;); $input = $request-&gt;except([&#39;credit_card&#39;]); $input = $request-&gt;except(&#39;credit_card&#39;); متد only جفت كليد و مقداری که درخواست مي‌كنيد را برمی‌گرداند. با این وجود، اگر کلید و مقداری در درخواست موجود نباشد، برگردانده نمی‌شوند. تعیین مقدار ورودی درخواست در صورت وجود از متد has برای تعیین اینکه آیا یک مقدار در درخواست موجود است یا خیر، استفاده می‌شود. اگر مقدار در یک درخواست موجود باشد، این متد مقدار true را برمی‌گرداند: if ($request-&gt;has(&#39;name&#39;)) { // } زمانی که از یک آرایه استفاده می‌شود، متد has برای تعیین اینکه تمام مقادیر مشخص شده در آرایه موجود هستند یا خیر، استفاده می‌شود: if ($request-&gt;has([&#39;name&#39;, &#39;email&#39;])) { // } می‌توانید از متد filled برای تعیین اینکه یک مقدار در درخواست موجود است و خالی نیست، استفاده کنید: if ($request-&gt;filled(&#39;name&#39;)) { // } حفظ ورودی‌های قبلی درخواست در لاراول لاراول این امکان را فراهم می‌کند که ورودی یک درخواست را در طول درخواست بعدی حفظ کنید. این ویژگی برای بارگزاری مجدد فرم‌ها با مقادیر قبلی، پس از تشخیص خطاهای اعتبار سنجی بسیار مفید است. با این حال، اگر از ویژگی‌های اعتبار سنجی موجود در لاراول استفاده می‌کنید، لزومی ندارد که از این متدها به صورت دستی استفاده کنید، زیرا برخی از امکانات اعتبار سنجی از پیش ساخته شده در لاراول این متدها را به صورت خودکار فراخوانی می‌کنند. اضافه کردن ورودی درخواست به session در لاراول متد flash در نمونه کلاس Illuminate\Http\Request ورودی فعلی را به صورت فوری در session قرار می‌دهد، به طوری که این ورودی در طول درخواست بعدی کاربر به برنامه نیز در دسترس باشد: $request-&gt;flash(); همچنین، برای قرار دادن زیرمجموعه‌ای از داده‌های درخواست در session می‌توانید از متدهای flashOnly و flashExcept استفاده کنید. این متدها برای حفظ اطلاعات حساسی مانند کلمات عبور در session مفید هستند. $request-&gt;flashOnly([&#39;username&#39;, &#39;email&#39;]); $request-&gt;flashExcept(&#39;password&#39;); قرار دادن ورودی درخواست در session و تغییر مسیر (redirect) از آنجا که اغلب ورودی در session قرار داده می‌شود و سپس تغییر مسیر (redirect) به صفحه قبل انجام می‌گیرد، می‌توانید با استفاده از متد withInput قرار دادن ورودی در sessionرا به تغییر مسیر یا redirect متصل کنید: return redirect(&#39;form&#39;)-&gt;withInput(); return redirect(&#39;form&#39;)-&gt;withInput( $request-&gt;except(&#39;password&#39;) ); بازیابی ورودی قبلی قرار داده شده در session برای بازیابی داده‌های قرار داده شده در session از درخواست قبلی، از متد old بر روی نمونه کلاس Request استفاده می‌شود. متد old داده‌های ورودی که قبلا در session قرار گرفته‌اند را از session بازیابی می‌کند: $username = $request-&gt;old(&#39;username&#39;); همچنین، لاراول یک تابع کمکی old عمومی ارائه می‌دهد. اگر ورودی‌های قبلی را در یک قالب Blade نمایش می‌دهید، به راحتی می‌توانید از تابع کمکی old استفاده کنید. اگر هیچ ورودی قبلی برای فیلد داده موجود نباشد، مقدار null بازگشت داده خواهد شد: &lt;input type=&quot;text&quot; name=&quot;username&quot; value=&quot;{{ old(&#39;username&#39;) }}&quot;&gt; کوکی‌ها و درخواست‌ها در لاراول بازیابی کوکی‌ها از درخواست‌ها تمام کوکی‌هایی که توسط فریم ورک لاراول ایجاد می‌شوند، رمزگذاری شده و توسط یک کد تأیید اعتبار امضا می‌شوند، بنابراین، اگر کوکی‌ها توسط کلاینت تغییر کنند، نامعتبر تلقی خواهند شد. برای بازیابی مقدار کوکی از یک درخواست، می‌توان از متد cookie بر روی نمونه کلاس Illuminate\Http\Request استفاده کرد. $value = $request-&gt;cookie(&#39;name&#39;); همچنین، می‌توانید از facade Cookie نیز برای دسترسی به مقادیر کوکی استفاده کنید: $value = Cookie::get(&#39;name&#39;); پیوست کوکی‌ها به پاسخ‌های HTTP در لاراول می‌توانید یک کوکی را به یک پاسخ و نمونه خروجی کلاس Illuminate\Http\Response با استفاده از متد cookie پیوست کنید. در این صورت، باید اسم، مقدار و تعداد دقیقه‌هایی را که کوکی باید معتبر باشد، را به این متد انتقال دهید: return response(&#39;Hello World&#39;)-&gt;cookie( &#39;name&#39;, &#39;value&#39;, $minutes ); متد cookie چند آرگومان دیگر را نیز می‌پذیرد که به نسبت کمتری استفاده می‌شوند. return response(&#39;Hello World&#39;)-&gt;cookie( &#39;name&#39;, &#39;value&#39;, $minutes, $path, $domain, $secure, $httpOnly ); همچنین، می‌توانید از facade Cookie برای صف بندی کوکی جهت پیوست به پاسخی که از برنامه خارج می‌شود، استفاده کنید. متد queue یک نمونه کلاس Cookie یا آرگومان‌های موردنیاز برای ایجاد یک نمونه کوکی را می‌پذیرد. این کوکی‌ها قبل از ارسال پاسخ خروجی به مرورگر به آن وصل می‌شوند: Cookie::queue(Cookie::make(&#39;name&#39;, &#39;value&#39;, $minutes)); Cookie::queue(&#39;name&#39;, &#39;value&#39;, $minutes); ایجاد نمونه کوکی برای پاسخ‌ها در لاراول اگر می‌خواهید یک نمونه کلاس مانند Symfony\Component\HttpFoundation\Cookie ایجاد کنید که بتواند به یک مورد پاسخ در یک زمان دیگر وصل شود، می‌توانید از تابع کمکی cookie عمومی استفاده کنید. این کوکی دوباره به کلاینت ارسال نمی‌شود مگر آنکه به یک نمونه پاسخ وصل شود: $cookie = cookie(&#39;name&#39;, &#39;value&#39;, $minutes); return response(&#39;Hello World&#39;)-&gt;cookie($cookie); فایل‌ها و درخواست‌ها در لاراول بازیابی فایل‌های آپلود شده می‌توانید به فایل‌های آپلود شده از نمونه کلاس Illuminate\Http\Request ، با استفاده از متد file یا با استفاده از خواص پویا دسترسی داشته باشید. متد file یک نمونه از کلاس Illuminate\Http\UploadedFile را برمی‌گرداند که از کلاس SplFileInfo مربوط به PHP ارث بری می‌کند و متدهای متعددی برای تعامل با فایل‌ها در اختیار ما قرار می‌دهد: $file = $request-&gt;file(&#39;photo&#39;); $file = $request-&gt;photo; می‌توان با استفاده از متد hasFile وجود یک فایل در یک درخواست را مشخص کرد: if ($request-&gt;hasFile(&#39;photo&#39;)) { // } تایید بارگزاری‌های موفق فایل‌ها از طریق متد isValid علاوه بر چک کردن وجود فایل، می‌توان مشخص کرد که هیچ‌گونه مشکلی در آپلود فایل وجود ندارد: if ($request-&gt;file(&#39;photo&#39;)-&gt;isValid()) { // } مسیرهای فایل‌ها و پسوندها کلاس UploadedFile شامل متدهایی برای دسترسی به مسیر کامل و مناسب فایل و پسوند آن است. متد extension تلاش می‌کند، پسوند فایل را بر اساس محتویات داخل آن حدس بزند. این پسوند ممکن است از پسوندی که توسط کلاینت ارائه شده است، متفاوت باشد: $path = $request-&gt;photo-&gt;path(); $extension = $request-&gt;photo-&gt;extension(); استفاده از سایر متدهای فایل انواع متدهای دیگری نیز در نمونه کلاس UploadedFile وجود دارد. می‌توانید مستندات API را برای کسب اطلاعات بیشتر در مورد این متدها بررسی کنید. ذخیره فایل‌های آپلود شده برای ذخیره یک فایل آپلود شده، معمولاً از یکی از فایل‌ سیستم‌های پیکربندی شده استفاده می‌شود. نمونه کلاس UploadedFile دارای یک متد store است که یک فایل آپلود شده را بر روی یکی از دیسک‌هایی که ممکن است مکانی در فایل سیستم محلی شما یا حتی یک مکان ذخیره سازی ابری مانند Amazon S3 باشد، ذخیره می‌کند. متد store مسیری را که فایل باید در دایرکتوری ریشه فایل سیستم پیکربندی شده ذخیره ‌شود، می‌پذیرد. این مسیر نباید شامل یک نام فایل باشد، زیرا یک شناسه یا ID منحصر به فرد به صورت خودکار به عنوان نام فایل ایجاد می‌شود. متد store همچنین یک آرگومان دوم که استفاده از آن اختیاری است را برای نام دیسکی که باید برای ذخیره فایل مورد استفاده قرار گیرد، می‌پذیرد. این متد مسیر فایل را نسبت به ریشه دیسک بازمی‌گرداند: $path = $request-&gt;photo-&gt;store(&#39;images&#39;); $path = $request-&gt;photo-&gt;store(&#39;images&#39;, &#39;s3&#39;); اگر نمی‌خواهید نام فایل به صورت خودکار تولید شود، می‌توانید از متد storeAs که مسیر، نام فایل و نام دیسک را به عنوان آرگومان می‌پذیرد، استفاده کنید: $path = $request-&gt;photo-&gt;storeAs(&#39;images&#39;, &#39;filename.jpg&#39;); $path = $request-&gt;photo-&gt;storeAs(&#39;images&#39;, &#39;filename.jpg&#39;, &#39;s3&#39;); پیکربندی پروکسی‌های معتبر (Trusted Proxies) زمانی که برنامه‌های خود را پشت یک توازن بار اجرا می‌کنید که گواهینامه‌های TLS / SSL را متوقف می‌کنند، متوجه خواهید شد که برنامه شما گاهی لینک‌های HTTPS را ایجاد نمی‌کند. به طور معمول، این امر به دلیل این است که برنامه در حال بارگزاری ترافیک از یک متعادل کننده بار در پورت 80 است و ایجاد لینک‌های امن را فراموش می‌کند. برای حل این مشکل، می‌توانید از middleware App\Http\Middleware\TrustProxies که به صورت پیش‌فرض در یک برنامه لاراول قرار دارد، استفاده کنید. این middleware به شما امکان می‌دهد تا بتوانید به سرعت متعادل کننده بار یا پروکسی‌هایی که باید توسط برنامه مورد اعتماد قرار گیرند را سفارشی کنید. پروکسی‌های مورد اعتماد باید به عنوان یک آرایه در خصوصیت $proxies این middleware لیست شوند. علاوه بر پیکربندی پروکسی‌های قابل اعتماد، می‌توانید هدرهایی را که توسط پروکسی ارسال می‌شوند با اطلاعات مربوط به درخواست اصلی را نیز پیکربندی کنید. &lt;?php namespace App\Http\Middleware; use Illuminate\Http\Request; use Fideloper\Proxy\TrustProxies as Middleware; class TrustProxies extends Middleware { /** * The trusted proxies for this application. * * @var array */ protected $proxies = [ &#39;192.168.1.1&#39;, &#39;192.168.1.2&#39;, ]; /** * The current proxy header mappings. * * @var array */ protected $headers = [ Request::HEADER_FORWARDED =&gt; &#39;FORWARDED&#39;, Request::HEADER_X_FORWARDED_FOR =&gt; &#39;X_FORWARDED_FOR&#39;, Request::HEADER_X_FORWARDED_HOST =&gt; &#39;X_FORWARDED_HOST&#39;, Request::HEADER_X_FORWARDED_PORT =&gt; &#39;X_FORWARDED_PORT&#39;, Request::HEADER_X_FORWARDED_PROTO =&gt; &#39;X_FORWARDED_PROTO&#39;, ]; } ایجاد اعتماد به تمام پروکسی‌ها اگر از Amazon AWS یا یکی دیگر از ارائه دهندگان تعادل بار ابری استفاده می کنید، ممکن است آدرس‌های IP متعادل کننده‌های واقعی را ندانید. در این صورت، می‌توانید از ** برای اعتماد به تمام پروکسی‌ها استفاده کنید: /** * The trusted proxies for this application. * * @var array */ protected $proxies = &#39;**&#39;;" />
+<meta property="og:description" content="برای دسترسی به نمونه‌ای از درخواست HTTP فعلی در لاراول از طریق روش تزریق وابستگی (dependency injection)، باید نمونه کلاس Illuminate\Http\Request را در متد کنترلر خود اعلان نوع یا type-hint کنید. درخواست ورودی به صورت خودکار توسط service container تزریق می‌شود: &lt;?php namespace App\Http\Controllers; use Illuminate\Http\Request; class UserController extends Controller { /** * Store a new user. * * @param Request $request * @return Response */ public function store(Request $request) { $name = $request-&gt;input(&#39;name&#39;); // } } تزریق وابستگی و استفاده از پارامترهای مسیر در صورتی که، متد کنترلر در انتظار دریافت ورودی از یک پارامتر مسیر باشد، می‌توانید پارامترهای مسیر را پس از وابستگی‌های دیگر لیست کنید. برای مثال، اگر مسیر شما مانند مثال زیر تعریف شده باشد: Route::put(&#39;user/{id}&#39;, &#39;UserController@update&#39;); می‌توانید نمونه کلاس Illuminate\Http\Request را اعلان نوع کنید و با تعریف متد کنترلر به صورت مثال زیر به پارامتر مسیر یا همان id ، دسترسی داشته باشید: &lt;?php namespace App\Http\Controllers; use Illuminate\Http\Request; class UserController extends Controller { /** * Update the specified user. * * @param Request $request * @param string $id * @return Response */ public function update(Request $request, $id) { // } } دسترسی به درخواست HTTP از طریق route closure همچنین، می‌توانید نمونه کلاس Illuminate\Http\Request را در route closure اعلان نوع کنید. service container به صورت خودکار درخواست ورودی را به Closure در هنگام اجرای آن تزریق می‌کند: use Illuminate\Http\Request; Route::get(&#39;/&#39;, function (Request $request) { // }); به کارگیری متد‌ها و مسیر در درخواست HTTP جهت بررسی درخواست HTTP در برنامه، نمونه کلاس Illuminate\Http\Request چندین متد ارائه می‌دهد و از کلاس Symfony\Component\HttpFoundation\Request ارث بری می‌کند. در ادامه، برخی از مهمترین متدهای این کلاس را با هم بررسی می‌کنیم. بازیابی مسیر درخواست‌ها HTTP متد path اطلاعات مربوط به مسیر یک درخواست را بازمی‌گرداند. بنابراین، اگر درخواست ورودی به آدرس http://domain.com/foo/bar ارسال شود، این متد قسمت foo/bar را بازمی‌گرداند: $uri = $request-&gt;path(); توسط متد is می‌توانید مطمئن شوید که مسیر درخواست ورودی مطابق با یک الگوی خاص تعریف شده است یا خیر. در هنگام استفاده از این متد می‌توان کاراکتر * را نیز به عنوان یک wildcard بکار برد: if ($request-&gt;is(&#39;admin/*&#39;)) { // } دریافت URL درخواست‌ها برای بازیابی URL کامل یک درخواست ورودی، می‌توانید متد url یا fullUrl را بکار ببرید. متد url برای بازیابی URL بدون رشته پرس و جو بکار می‌رود، در حالی که متد fullUrl رشته پرس و جو را نیز شامل می‌شود. // Without Query String... $url = $request-&gt;url(); // With Query String... $url = $request-&gt;fullUrl(); بازیابی متد درخواست‌ها متد method فعل یا متد درخواست HTTP را برای یک درخواست بازگشت می‌دهد. می‌توانید از متد isMethod برای بررسی اینکه متد درخواست HTTP با یک رشته مشخص مطابق است یا خیر، استفاده کنید: $method = $request-&gt;method(); if ($request-&gt;isMethod(&#39;post&#39;)) { // } استفاده از درخواست‌های PSR-7 استاندارد PSR-7 رابط‌هایی را برای پیغام‌های HTTP مانند درخواست‌ها و پاسخ‌ها ارائه می‌دهد. اگر می‌خواهید به نمونه‌ای از درخواست PSR-7 به جای یک درخواست لاراول دسترسی داشته باشید، در ابتدا بایستی چند کتابخانه مهم را نصب کنید. لاراول از کامپوننت Symfony HTTP Message Bridge برای تبدیل درخواست‌ها و پاسخ‌های لاراول به پیاده سازی‌های سازگار با PSR-7 استفاده می‌کند: composer require symfony/psr-http-message-bridge composer require zendframework/zend-diactoros زمانی که این کتابخانه‌ها را نصب کردید، می‌توانید با type-hint کردن رابط درخواست درroute Closure یا متد کنترلر خود به یک درخواست PSR-7 دسترسی داشته باشید: use Psr\Http\Message\ServerRequestInterface; Route::get(&#39;/&#39;, function (ServerRequestInterface $request) { // }); اگر نمونه‌ای از پاسخ PSR-7 از یک مسیر یا کنترلر برگردانده شود، این پاسخ به صورت خودکار به یک پاسخ لاراول تبدیل می‌شود و توسط فریم ورک نمایش داده می‌شود. مرتب سازی ورودی درخواست HTTP به صورت پیش‌فرض middlewareهای TrimStrings و ConvertEmptyStringsToNull در پشته middleware عمومی برنامه لاراول قرار دارند. این middlewareها توسط کلاس App\Http\Kernel در پشته لیست شده‌اند. این middlewareها به صورت خودکار تمام فیلدهای رشته ورودی بر روی درخواست را مرتب می‌کنند، همچنین هر فیلد رشته خالی را به null تبدیل می‌کنند. این موضوع باعث می‌شود تا هیچ نگرانی در مورد کارهای کوچک و عادی از این قبیل، در مسیرها و کنترلرهای خود نداشته نباشیم. اگر می‌خواهید این ویژگی را در برنامه خود غیرفعال کنید، می‌توانید این دو middleware را از پشته middleware برنامه خود حذف کنید، می‌توانید این کار را با حذف آن‌ها از خصوصیت $middleware کلاس App\Http\Kernel انجام دهید. دريافت ورودی درخواست در لاراول بازیابی تمام داده‌های ورودی درخواست می‌توانید تمام داده‌های ورودی را به عنوان یک array با استفاده از متد all بازیابی کنید: $input = $request-&gt;all(); بازیابی مقدار ورودی درخواست با استفاده از چند متد ساده، می‌توانید به تمام ورودی‌های کاربر از نمونه کلاس Illuminate\Http\Request دسترسی داشته باشید و نگران اینکه کدام متد HTTP برای درخواست استفاده شود، نباشید. صرف نظر از متد درخواست HTTP، از متد input نیز می‌توانید برای بازیابی ورودی کاربر استفاده کنید: $name = $request-&gt;input(&#39;name&#39;); می‌توانید یک مقدار پیش‌فرض را به عنوان آرگومان دوم به متد input منتقل کنید. اگر مقدار ورودی در درخواست کاربر موجود نباشد، این مقدار بازگردانده خواهد شد: $name = $request-&gt;input(&#39;name&#39;, &#39;Sally&#39;); در هنگام کار با فرم‌هایی که ورودی‌های آن‌ها به صورت آرایه‌ای هستند، می‌توانید از علامت «نقطه» برای دسترسی به آرایه‌ها استفاده کنید: $name = $request-&gt;input(&#39;products.0.name&#39;); $names = $request-&gt;input(&#39;products.*.name&#39;); گرفتن ورودی از رشته پرس و جو درخواست در حالی که متد input مقادیر را از کل درخواست کاربر (شامل رشته پرس و جو) بازیابی می‌کند، متد query ، مقادیر را فقط از رشته پرس و جو بازیابی می‌کند: $name = $request-&gt;query(&#39;name&#39;); اگر مقدار داده رشته پرس و جو درخواست شده موجود نباشد، آرگومان دوم این متد بازگشت داده می‌شود: $name = $request-&gt;query(&#39;name&#39;, &#39;Helen&#39;); می‌توانید متد query را بدون هیچ آرگومانی به منظور بازیابی تمام مقادیر رشته پرس و جو به عنوان یک آرایه انجمنی فراخوانی کنید: $query = $request-&gt;query(); دریافت ورودی درخواست از طریق خصوصیات پویا همچنین، می‌توانید به ورودی کاربر با استفاده از خواص پویا بر روی نمونه کلاس Illuminate\Http\Request دسترسی داشته باشید. برای مثال، اگر یکی از فرم‌های درخواست، شامل یک فیلد name باشد، می‌توانید به مقدار فیلد مانند مثال زیر دسترسی داشته باشید: $name = $request-&gt;name; هنگام استفاده از خواص پویا، لاراول ابتدا مقدار پارامتر را در کل درخواست جستجو می‌کند. اگر مقدار پارامتر موجود نباشد، لاراول مقدار پارامتر را در پارامترهای مسیر جستجو می‌کند. بازیابی مقادیر ورودی JSON در درخواست لاراول هنگام ارسال درخواست‌های JSON به برنامه، تا زمانی که هدر Content-Type درخواست به درستی بر روی application/json تنظیم شده باشد، می‌توانید از طریق متد input به داده‌های JSON دسترسی داشته باشید. حتی می‌توانید از علامت «نقطه» برای کاوش در آرایه‌های JSON استفاده کنید: $name = $request-&gt;input(&#39;user.name&#39;); بازیابی بخش‌هایی از داده‌های ورودی اگر نیاز به بازیابی زیرمجموعه‌ای از داده‌های ورودی دارید، می‌توانید از متدهای only و except استفاده کنید. هر دو متد، یک array یا یک لیست پویا از آرگومان‌ها را می‌پذیرند. $input = $request-&gt;only([&#39;username&#39;, &#39;password&#39;]); $input = $request-&gt;only(&#39;username&#39;, &#39;password&#39;); $input = $request-&gt;except([&#39;credit_card&#39;]); $input = $request-&gt;except(&#39;credit_card&#39;); متد only جفت كليد و مقداری که درخواست مي‌كنيد را برمی‌گرداند. با این وجود، اگر کلید و مقداری در درخواست موجود نباشد، برگردانده نمی‌شوند. تعیین مقدار ورودی درخواست در صورت وجود از متد has برای تعیین اینکه آیا یک مقدار در درخواست موجود است یا خیر، استفاده می‌شود. اگر مقدار در یک درخواست موجود باشد، این متد مقدار true را برمی‌گرداند: if ($request-&gt;has(&#39;name&#39;)) { // } زمانی که از یک آرایه استفاده می‌شود، متد has برای تعیین اینکه تمام مقادیر مشخص شده در آرایه موجود هستند یا خیر، استفاده می‌شود: if ($request-&gt;has([&#39;name&#39;, &#39;email&#39;])) { // } می‌توانید از متد filled برای تعیین اینکه یک مقدار در درخواست موجود است و خالی نیست، استفاده کنید: if ($request-&gt;filled(&#39;name&#39;)) { // } حفظ ورودی‌های قبلی درخواست در لاراول لاراول این امکان را فراهم می‌کند که ورودی یک درخواست را در طول درخواست بعدی حفظ کنید. این ویژگی برای بارگزاری مجدد فرم‌ها با مقادیر قبلی، پس از تشخیص خطاهای اعتبار سنجی بسیار مفید است. با این حال، اگر از ویژگی‌های اعتبار سنجی موجود در لاراول استفاده می‌کنید، لزومی ندارد که از این متدها به صورت دستی استفاده کنید، زیرا برخی از امکانات اعتبار سنجی از پیش ساخته شده در لاراول این متدها را به صورت خودکار فراخوانی می‌کنند. اضافه کردن ورودی درخواست به session در لاراول متد flash در نمونه کلاس Illuminate\Http\Request ورودی فعلی را به صورت فوری در session قرار می‌دهد، به طوری که این ورودی در طول درخواست بعدی کاربر به برنامه نیز در دسترس باشد: $request-&gt;flash(); همچنین، برای قرار دادن زیرمجموعه‌ای از داده‌های درخواست در session می‌توانید از متدهای flashOnly و flashExcept استفاده کنید. این متدها برای حفظ اطلاعات حساسی مانند کلمات عبور در session مفید هستند. $request-&gt;flashOnly([&#39;username&#39;, &#39;email&#39;]); $request-&gt;flashExcept(&#39;password&#39;); قرار دادن ورودی درخواست در session و تغییر مسیر (redirect) از آنجا که اغلب ورودی در session قرار داده می‌شود و سپس تغییر مسیر (redirect) به صفحه قبل انجام می‌گیرد، می‌توانید با استفاده از متد withInput قرار دادن ورودی در sessionرا به تغییر مسیر یا redirect متصل کنید: return redirect(&#39;form&#39;)-&gt;withInput(); return redirect(&#39;form&#39;)-&gt;withInput( $request-&gt;except(&#39;password&#39;) ); بازیابی ورودی قبلی قرار داده شده در session برای بازیابی داده‌های قرار داده شده در session از درخواست قبلی، از متد old بر روی نمونه کلاس Request استفاده می‌شود. متد old داده‌های ورودی که قبلا در session قرار گرفته‌اند را از session بازیابی می‌کند: $username = $request-&gt;old(&#39;username&#39;); همچنین، لاراول یک تابع کمکی old عمومی ارائه می‌دهد. اگر ورودی‌های قبلی را در یک قالب Blade نمایش می‌دهید، به راحتی می‌توانید از تابع کمکی old استفاده کنید. اگر هیچ ورودی قبلی برای فیلد داده موجود نباشد، مقدار null بازگشت داده خواهد شد: &lt;input type=&quot;text&quot; name=&quot;username&quot; value=&quot;{{ old(&#39;username&#39;) }}&quot;&gt; کوکی‌ها و درخواست‌ها در لاراول بازیابی کوکی‌ها از درخواست‌ها تمام کوکی‌هایی که توسط فریم ورک لاراول ایجاد می‌شوند، رمزگذاری شده و توسط یک کد تأیید اعتبار امضا می‌شوند، بنابراین، اگر کوکی‌ها توسط کلاینت تغییر کنند، نامعتبر تلقی خواهند شد. برای بازیابی مقدار کوکی از یک درخواست، می‌توان از متد cookie بر روی نمونه کلاس Illuminate\Http\Request استفاده کرد. $value = $request-&gt;cookie(&#39;name&#39;); همچنین، می‌توانید از facade Cookie نیز برای دسترسی به مقادیر کوکی استفاده کنید: $value = Cookie::get(&#39;name&#39;); پیوست کوکی‌ها به پاسخ‌های HTTP در لاراول می‌توانید یک کوکی را به یک پاسخ و نمونه خروجی کلاس Illuminate\Http\Response با استفاده از متد cookie پیوست کنید. در این صورت، باید اسم، مقدار و تعداد دقیقه‌هایی را که کوکی باید معتبر باشد، را به این متد انتقال دهید: return response(&#39;Hello World&#39;)-&gt;cookie( &#39;name&#39;, &#39;value&#39;, $minutes ); متد cookie چند آرگومان دیگر را نیز می‌پذیرد که به نسبت کمتری استفاده می‌شوند. return response(&#39;Hello World&#39;)-&gt;cookie( &#39;name&#39;, &#39;value&#39;, $minutes, $path, $domain, $secure, $httpOnly ); همچنین، می‌توانید از facade Cookie برای صف بندی کوکی جهت پیوست به پاسخی که از برنامه خارج می‌شود، استفاده کنید. متد queue یک نمونه کلاس Cookie یا آرگومان‌های موردنیاز برای ایجاد یک نمونه کوکی را می‌پذیرد. این کوکی‌ها قبل از ارسال پاسخ خروجی به مرورگر به آن وصل می‌شوند: Cookie::queue(Cookie::make(&#39;name&#39;, &#39;value&#39;, $minutes)); Cookie::queue(&#39;name&#39;, &#39;value&#39;, $minutes); ایجاد نمونه کوکی برای پاسخ‌ها در لاراول اگر می‌خواهید یک نمونه کلاس مانند Symfony\Component\HttpFoundation\Cookie ایجاد کنید که بتواند به یک مورد پاسخ در یک زمان دیگر وصل شود، می‌توانید از تابع کمکی cookie عمومی استفاده کنید. این کوکی دوباره به کلاینت ارسال نمی‌شود مگر آنکه به یک نمونه پاسخ وصل شود: $cookie = cookie(&#39;name&#39;, &#39;value&#39;, $minutes); return response(&#39;Hello World&#39;)-&gt;cookie($cookie); فایل‌ها و درخواست‌ها در لاراول بازیابی فایل‌های آپلود شده می‌توانید به فایل‌های آپلود شده از نمونه کلاس Illuminate\Http\Request ، با استفاده از متد file یا با استفاده از خواص پویا دسترسی داشته باشید. متد file یک نمونه از کلاس Illuminate\Http\UploadedFile را برمی‌گرداند که از کلاس SplFileInfo مربوط به PHP ارث بری می‌کند و متدهای متعددی برای تعامل با فایل‌ها در اختیار ما قرار می‌دهد: $file = $request-&gt;file(&#39;photo&#39;); $file = $request-&gt;photo; می‌توان با استفاده از متد hasFile وجود یک فایل در یک درخواست را مشخص کرد: if ($request-&gt;hasFile(&#39;photo&#39;)) { // } تایید بارگزاری‌های موفق فایل‌ها از طریق متد isValid علاوه بر چک کردن وجود فایل، می‌توان مشخص کرد که هیچ‌گونه مشکلی در آپلود فایل وجود ندارد: if ($request-&gt;file(&#39;photo&#39;)-&gt;isValid()) { // } مسیرهای فایل‌ها و پسوندها کلاس UploadedFile شامل متدهایی برای دسترسی به مسیر کامل و مناسب فایل و پسوند آن است. متد extension تلاش می‌کند، پسوند فایل را بر اساس محتویات داخل آن حدس بزند. این پسوند ممکن است از پسوندی که توسط کلاینت ارائه شده است، متفاوت باشد: $path = $request-&gt;photo-&gt;path(); $extension = $request-&gt;photo-&gt;extension(); استفاده از سایر متدهای فایل انواع متدهای دیگری نیز در نمونه کلاس UploadedFile وجود دارد. می‌توانید مستندات API را برای کسب اطلاعات بیشتر در مورد این متدها بررسی کنید. ذخیره فایل‌های آپلود شده برای ذخیره یک فایل آپلود شده، معمولاً از یکی از فایل‌ سیستم‌های پیکربندی شده استفاده می‌شود. نمونه کلاس UploadedFile دارای یک متد store است که یک فایل آپلود شده را بر روی یکی از دیسک‌هایی که ممکن است مکانی در فایل سیستم محلی شما یا حتی یک مکان ذخیره سازی ابری مانند Amazon S3 باشد، ذخیره می‌کند. متد store مسیری را که فایل باید در دایرکتوری ریشه فایل سیستم پیکربندی شده ذخیره ‌شود، می‌پذیرد. این مسیر نباید شامل یک نام فایل باشد، زیرا یک شناسه یا ID منحصر به فرد به صورت خودکار به عنوان نام فایل ایجاد می‌شود. متد store همچنین یک آرگومان دوم که استفاده از آن اختیاری است را برای نام دیسکی که باید برای ذخیره فایل مورد استفاده قرار گیرد، می‌پذیرد. این متد مسیر فایل را نسبت به ریشه دیسک بازمی‌گرداند: $path = $request-&gt;photo-&gt;store(&#39;images&#39;); $path = $request-&gt;photo-&gt;store(&#39;images&#39;, &#39;s3&#39;); اگر نمی‌خواهید نام فایل به صورت خودکار تولید شود، می‌توانید از متد storeAs که مسیر، نام فایل و نام دیسک را به عنوان آرگومان می‌پذیرد، استفاده کنید: $path = $request-&gt;photo-&gt;storeAs(&#39;images&#39;, &#39;filename.jpg&#39;); $path = $request-&gt;photo-&gt;storeAs(&#39;images&#39;, &#39;filename.jpg&#39;, &#39;s3&#39;); پیکربندی پروکسی‌های معتبر (Trusted Proxies) زمانی که برنامه‌های خود را پشت یک توازن بار اجرا می‌کنید که گواهینامه‌های TLS / SSL را متوقف می‌کنند، متوجه خواهید شد که برنامه شما گاهی لینک‌های HTTPS را ایجاد نمی‌کند. به طور معمول، این امر به دلیل این است که برنامه در حال بارگزاری ترافیک از یک متعادل کننده بار در پورت 80 است و ایجاد لینک‌های امن را فراموش می‌کند. برای حل این مشکل، می‌توانید از middleware App\Http\Middleware\TrustProxies که به صورت پیش‌فرض در یک برنامه لاراول قرار دارد، استفاده کنید. این middleware به شما امکان می‌دهد تا بتوانید به سرعت متعادل کننده بار یا پروکسی‌هایی که باید توسط برنامه مورد اعتماد قرار گیرند را سفارشی کنید. پروکسی‌های مورد اعتماد باید به عنوان یک آرایه در خصوصیت $proxies این middleware لیست شوند. علاوه بر پیکربندی پروکسی‌های قابل اعتماد، می‌توانید هدرهایی را که توسط پروکسی ارسال می‌شوند با اطلاعات مربوط به درخواست اصلی را نیز پیکربندی کنید. &lt;?php namespace App\Http\Middleware; use Illuminate\Http\Request; use Fideloper\Proxy\TrustProxies as Middleware; class TrustProxies extends Middleware { /** * The trusted proxies for this application. * * @var array */ protected $proxies = [ &#39;192.168.1.1&#39;, &#39;192.168.1.2&#39;, ]; /** * The current proxy header mappings. * * @var array */ protected $headers = [ Request::HEADER_FORWARDED =&gt; &#39;FORWARDED&#39;, Request::HEADER_X_FORWARDED_FOR =&gt; &#39;X_FORWARDED_FOR&#39;, Request::HEADER_X_FORWARDED_HOST =&gt; &#39;X_FORWARDED_HOST&#39;, Request::HEADER_X_FORWARDED_PORT =&gt; &#39;X_FORWARDED_PORT&#39;, Request::HEADER_X_FORWARDED_PROTO =&gt; &#39;X_FORWARDED_PROTO&#39;, ]; } ایجاد اعتماد به تمام پروکسی‌ها اگر از Amazon AWS یا یکی دیگر از ارائه دهندگان تعادل بار ابری استفاده می کنید، ممکن است آدرس‌های IP متعادل کننده‌های واقعی را ندانید. در این صورت، می‌توانید از ** برای اعتماد به تمام پروکسی‌ها استفاده کنید: /** * The trusted proxies for this application. * * @var array */ protected $proxies = &#39;**&#39;;" />
+<link rel="canonical" href="http://localhost:4000/documentation/laravel/The-Basics/requests" />
+<meta property="og:url" content="http://localhost:4000/documentation/laravel/The-Basics/requests" />
+<meta property="og:site_name" content="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-02-03T10:40:42+03:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="اصول requests" />
+<meta name="twitter:site" content="@farhadmirzapour" />
+<meta name="twitter:creator" content="@Farhad Mirzapour" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"اصول requests","url":"http://localhost:4000/documentation/laravel/The-Basics/requests","datePublished":"2018-02-03T10:40:42+03:30","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"dateModified":"2018-02-03T10:40:42+03:30","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/documentation/laravel/The-Basics/requests"},"author":{"@type":"Person","name":"Farhad Mirzapour"},"description":"برای دسترسی به نمونه‌ای از درخواست HTTP فعلی در لاراول از طریق روش تزریق وابستگی (dependency injection)، باید نمونه کلاس Illuminate\\Http\\Request را در متد کنترلر خود اعلان نوع یا type-hint کنید. درخواست ورودی به صورت خودکار توسط service container تزریق می‌شود: &lt;?php namespace App\\Http\\Controllers; use Illuminate\\Http\\Request; class UserController extends Controller { /** * Store a new user. * * @param Request $request * @return Response */ public function store(Request $request) { $name = $request-&gt;input(&#39;name&#39;); // } } تزریق وابستگی و استفاده از پارامترهای مسیر در صورتی که، متد کنترلر در انتظار دریافت ورودی از یک پارامتر مسیر باشد، می‌توانید پارامترهای مسیر را پس از وابستگی‌های دیگر لیست کنید. برای مثال، اگر مسیر شما مانند مثال زیر تعریف شده باشد: Route::put(&#39;user/{id}&#39;, &#39;UserController@update&#39;); می‌توانید نمونه کلاس Illuminate\\Http\\Request را اعلان نوع کنید و با تعریف متد کنترلر به صورت مثال زیر به پارامتر مسیر یا همان id ، دسترسی داشته باشید: &lt;?php namespace App\\Http\\Controllers; use Illuminate\\Http\\Request; class UserController extends Controller { /** * Update the specified user. * * @param Request $request * @param string $id * @return Response */ public function update(Request $request, $id) { // } } دسترسی به درخواست HTTP از طریق route closure همچنین، می‌توانید نمونه کلاس Illuminate\\Http\\Request را در route closure اعلان نوع کنید. service container به صورت خودکار درخواست ورودی را به Closure در هنگام اجرای آن تزریق می‌کند: use Illuminate\\Http\\Request; Route::get(&#39;/&#39;, function (Request $request) { // }); به کارگیری متد‌ها و مسیر در درخواست HTTP جهت بررسی درخواست HTTP در برنامه، نمونه کلاس Illuminate\\Http\\Request چندین متد ارائه می‌دهد و از کلاس Symfony\\Component\\HttpFoundation\\Request ارث بری می‌کند. در ادامه، برخی از مهمترین متدهای این کلاس را با هم بررسی می‌کنیم. بازیابی مسیر درخواست‌ها HTTP متد path اطلاعات مربوط به مسیر یک درخواست را بازمی‌گرداند. بنابراین، اگر درخواست ورودی به آدرس http://domain.com/foo/bar ارسال شود، این متد قسمت foo/bar را بازمی‌گرداند: $uri = $request-&gt;path(); توسط متد is می‌توانید مطمئن شوید که مسیر درخواست ورودی مطابق با یک الگوی خاص تعریف شده است یا خیر. در هنگام استفاده از این متد می‌توان کاراکتر * را نیز به عنوان یک wildcard بکار برد: if ($request-&gt;is(&#39;admin/*&#39;)) { // } دریافت URL درخواست‌ها برای بازیابی URL کامل یک درخواست ورودی، می‌توانید متد url یا fullUrl را بکار ببرید. متد url برای بازیابی URL بدون رشته پرس و جو بکار می‌رود، در حالی که متد fullUrl رشته پرس و جو را نیز شامل می‌شود. // Without Query String... $url = $request-&gt;url(); // With Query String... $url = $request-&gt;fullUrl(); بازیابی متد درخواست‌ها متد method فعل یا متد درخواست HTTP را برای یک درخواست بازگشت می‌دهد. می‌توانید از متد isMethod برای بررسی اینکه متد درخواست HTTP با یک رشته مشخص مطابق است یا خیر، استفاده کنید: $method = $request-&gt;method(); if ($request-&gt;isMethod(&#39;post&#39;)) { // } استفاده از درخواست‌های PSR-7 استاندارد PSR-7 رابط‌هایی را برای پیغام‌های HTTP مانند درخواست‌ها و پاسخ‌ها ارائه می‌دهد. اگر می‌خواهید به نمونه‌ای از درخواست PSR-7 به جای یک درخواست لاراول دسترسی داشته باشید، در ابتدا بایستی چند کتابخانه مهم را نصب کنید. لاراول از کامپوننت Symfony HTTP Message Bridge برای تبدیل درخواست‌ها و پاسخ‌های لاراول به پیاده سازی‌های سازگار با PSR-7 استفاده می‌کند: composer require symfony/psr-http-message-bridge composer require zendframework/zend-diactoros زمانی که این کتابخانه‌ها را نصب کردید، می‌توانید با type-hint کردن رابط درخواست درroute Closure یا متد کنترلر خود به یک درخواست PSR-7 دسترسی داشته باشید: use Psr\\Http\\Message\\ServerRequestInterface; Route::get(&#39;/&#39;, function (ServerRequestInterface $request) { // }); اگر نمونه‌ای از پاسخ PSR-7 از یک مسیر یا کنترلر برگردانده شود، این پاسخ به صورت خودکار به یک پاسخ لاراول تبدیل می‌شود و توسط فریم ورک نمایش داده می‌شود. مرتب سازی ورودی درخواست HTTP به صورت پیش‌فرض middlewareهای TrimStrings و ConvertEmptyStringsToNull در پشته middleware عمومی برنامه لاراول قرار دارند. این middlewareها توسط کلاس App\\Http\\Kernel در پشته لیست شده‌اند. این middlewareها به صورت خودکار تمام فیلدهای رشته ورودی بر روی درخواست را مرتب می‌کنند، همچنین هر فیلد رشته خالی را به null تبدیل می‌کنند. این موضوع باعث می‌شود تا هیچ نگرانی در مورد کارهای کوچک و عادی از این قبیل، در مسیرها و کنترلرهای خود نداشته نباشیم. اگر می‌خواهید این ویژگی را در برنامه خود غیرفعال کنید، می‌توانید این دو middleware را از پشته middleware برنامه خود حذف کنید، می‌توانید این کار را با حذف آن‌ها از خصوصیت $middleware کلاس App\\Http\\Kernel انجام دهید. دريافت ورودی درخواست در لاراول بازیابی تمام داده‌های ورودی درخواست می‌توانید تمام داده‌های ورودی را به عنوان یک array با استفاده از متد all بازیابی کنید: $input = $request-&gt;all(); بازیابی مقدار ورودی درخواست با استفاده از چند متد ساده، می‌توانید به تمام ورودی‌های کاربر از نمونه کلاس Illuminate\\Http\\Request دسترسی داشته باشید و نگران اینکه کدام متد HTTP برای درخواست استفاده شود، نباشید. صرف نظر از متد درخواست HTTP، از متد input نیز می‌توانید برای بازیابی ورودی کاربر استفاده کنید: $name = $request-&gt;input(&#39;name&#39;); می‌توانید یک مقدار پیش‌فرض را به عنوان آرگومان دوم به متد input منتقل کنید. اگر مقدار ورودی در درخواست کاربر موجود نباشد، این مقدار بازگردانده خواهد شد: $name = $request-&gt;input(&#39;name&#39;, &#39;Sally&#39;); در هنگام کار با فرم‌هایی که ورودی‌های آن‌ها به صورت آرایه‌ای هستند، می‌توانید از علامت «نقطه» برای دسترسی به آرایه‌ها استفاده کنید: $name = $request-&gt;input(&#39;products.0.name&#39;); $names = $request-&gt;input(&#39;products.*.name&#39;); گرفتن ورودی از رشته پرس و جو درخواست در حالی که متد input مقادیر را از کل درخواست کاربر (شامل رشته پرس و جو) بازیابی می‌کند، متد query ، مقادیر را فقط از رشته پرس و جو بازیابی می‌کند: $name = $request-&gt;query(&#39;name&#39;); اگر مقدار داده رشته پرس و جو درخواست شده موجود نباشد، آرگومان دوم این متد بازگشت داده می‌شود: $name = $request-&gt;query(&#39;name&#39;, &#39;Helen&#39;); می‌توانید متد query را بدون هیچ آرگومانی به منظور بازیابی تمام مقادیر رشته پرس و جو به عنوان یک آرایه انجمنی فراخوانی کنید: $query = $request-&gt;query(); دریافت ورودی درخواست از طریق خصوصیات پویا همچنین، می‌توانید به ورودی کاربر با استفاده از خواص پویا بر روی نمونه کلاس Illuminate\\Http\\Request دسترسی داشته باشید. برای مثال، اگر یکی از فرم‌های درخواست، شامل یک فیلد name باشد، می‌توانید به مقدار فیلد مانند مثال زیر دسترسی داشته باشید: $name = $request-&gt;name; هنگام استفاده از خواص پویا، لاراول ابتدا مقدار پارامتر را در کل درخواست جستجو می‌کند. اگر مقدار پارامتر موجود نباشد، لاراول مقدار پارامتر را در پارامترهای مسیر جستجو می‌کند. بازیابی مقادیر ورودی JSON در درخواست لاراول هنگام ارسال درخواست‌های JSON به برنامه، تا زمانی که هدر Content-Type درخواست به درستی بر روی application/json تنظیم شده باشد، می‌توانید از طریق متد input به داده‌های JSON دسترسی داشته باشید. حتی می‌توانید از علامت «نقطه» برای کاوش در آرایه‌های JSON استفاده کنید: $name = $request-&gt;input(&#39;user.name&#39;); بازیابی بخش‌هایی از داده‌های ورودی اگر نیاز به بازیابی زیرمجموعه‌ای از داده‌های ورودی دارید، می‌توانید از متدهای only و except استفاده کنید. هر دو متد، یک array یا یک لیست پویا از آرگومان‌ها را می‌پذیرند. $input = $request-&gt;only([&#39;username&#39;, &#39;password&#39;]); $input = $request-&gt;only(&#39;username&#39;, &#39;password&#39;); $input = $request-&gt;except([&#39;credit_card&#39;]); $input = $request-&gt;except(&#39;credit_card&#39;); متد only جفت كليد و مقداری که درخواست مي‌كنيد را برمی‌گرداند. با این وجود، اگر کلید و مقداری در درخواست موجود نباشد، برگردانده نمی‌شوند. تعیین مقدار ورودی درخواست در صورت وجود از متد has برای تعیین اینکه آیا یک مقدار در درخواست موجود است یا خیر، استفاده می‌شود. اگر مقدار در یک درخواست موجود باشد، این متد مقدار true را برمی‌گرداند: if ($request-&gt;has(&#39;name&#39;)) { // } زمانی که از یک آرایه استفاده می‌شود، متد has برای تعیین اینکه تمام مقادیر مشخص شده در آرایه موجود هستند یا خیر، استفاده می‌شود: if ($request-&gt;has([&#39;name&#39;, &#39;email&#39;])) { // } می‌توانید از متد filled برای تعیین اینکه یک مقدار در درخواست موجود است و خالی نیست، استفاده کنید: if ($request-&gt;filled(&#39;name&#39;)) { // } حفظ ورودی‌های قبلی درخواست در لاراول لاراول این امکان را فراهم می‌کند که ورودی یک درخواست را در طول درخواست بعدی حفظ کنید. این ویژگی برای بارگزاری مجدد فرم‌ها با مقادیر قبلی، پس از تشخیص خطاهای اعتبار سنجی بسیار مفید است. با این حال، اگر از ویژگی‌های اعتبار سنجی موجود در لاراول استفاده می‌کنید، لزومی ندارد که از این متدها به صورت دستی استفاده کنید، زیرا برخی از امکانات اعتبار سنجی از پیش ساخته شده در لاراول این متدها را به صورت خودکار فراخوانی می‌کنند. اضافه کردن ورودی درخواست به session در لاراول متد flash در نمونه کلاس Illuminate\\Http\\Request ورودی فعلی را به صورت فوری در session قرار می‌دهد، به طوری که این ورودی در طول درخواست بعدی کاربر به برنامه نیز در دسترس باشد: $request-&gt;flash(); همچنین، برای قرار دادن زیرمجموعه‌ای از داده‌های درخواست در session می‌توانید از متدهای flashOnly و flashExcept استفاده کنید. این متدها برای حفظ اطلاعات حساسی مانند کلمات عبور در session مفید هستند. $request-&gt;flashOnly([&#39;username&#39;, &#39;email&#39;]); $request-&gt;flashExcept(&#39;password&#39;); قرار دادن ورودی درخواست در session و تغییر مسیر (redirect) از آنجا که اغلب ورودی در session قرار داده می‌شود و سپس تغییر مسیر (redirect) به صفحه قبل انجام می‌گیرد، می‌توانید با استفاده از متد withInput قرار دادن ورودی در sessionرا به تغییر مسیر یا redirect متصل کنید: return redirect(&#39;form&#39;)-&gt;withInput(); return redirect(&#39;form&#39;)-&gt;withInput( $request-&gt;except(&#39;password&#39;) ); بازیابی ورودی قبلی قرار داده شده در session برای بازیابی داده‌های قرار داده شده در session از درخواست قبلی، از متد old بر روی نمونه کلاس Request استفاده می‌شود. متد old داده‌های ورودی که قبلا در session قرار گرفته‌اند را از session بازیابی می‌کند: $username = $request-&gt;old(&#39;username&#39;); همچنین، لاراول یک تابع کمکی old عمومی ارائه می‌دهد. اگر ورودی‌های قبلی را در یک قالب Blade نمایش می‌دهید، به راحتی می‌توانید از تابع کمکی old استفاده کنید. اگر هیچ ورودی قبلی برای فیلد داده موجود نباشد، مقدار null بازگشت داده خواهد شد: &lt;input type=&quot;text&quot; name=&quot;username&quot; value=&quot;{{ old(&#39;username&#39;) }}&quot;&gt; کوکی‌ها و درخواست‌ها در لاراول بازیابی کوکی‌ها از درخواست‌ها تمام کوکی‌هایی که توسط فریم ورک لاراول ایجاد می‌شوند، رمزگذاری شده و توسط یک کد تأیید اعتبار امضا می‌شوند، بنابراین، اگر کوکی‌ها توسط کلاینت تغییر کنند، نامعتبر تلقی خواهند شد. برای بازیابی مقدار کوکی از یک درخواست، می‌توان از متد cookie بر روی نمونه کلاس Illuminate\\Http\\Request استفاده کرد. $value = $request-&gt;cookie(&#39;name&#39;); همچنین، می‌توانید از facade Cookie نیز برای دسترسی به مقادیر کوکی استفاده کنید: $value = Cookie::get(&#39;name&#39;); پیوست کوکی‌ها به پاسخ‌های HTTP در لاراول می‌توانید یک کوکی را به یک پاسخ و نمونه خروجی کلاس Illuminate\\Http\\Response با استفاده از متد cookie پیوست کنید. در این صورت، باید اسم، مقدار و تعداد دقیقه‌هایی را که کوکی باید معتبر باشد، را به این متد انتقال دهید: return response(&#39;Hello World&#39;)-&gt;cookie( &#39;name&#39;, &#39;value&#39;, $minutes ); متد cookie چند آرگومان دیگر را نیز می‌پذیرد که به نسبت کمتری استفاده می‌شوند. return response(&#39;Hello World&#39;)-&gt;cookie( &#39;name&#39;, &#39;value&#39;, $minutes, $path, $domain, $secure, $httpOnly ); همچنین، می‌توانید از facade Cookie برای صف بندی کوکی جهت پیوست به پاسخی که از برنامه خارج می‌شود، استفاده کنید. متد queue یک نمونه کلاس Cookie یا آرگومان‌های موردنیاز برای ایجاد یک نمونه کوکی را می‌پذیرد. این کوکی‌ها قبل از ارسال پاسخ خروجی به مرورگر به آن وصل می‌شوند: Cookie::queue(Cookie::make(&#39;name&#39;, &#39;value&#39;, $minutes)); Cookie::queue(&#39;name&#39;, &#39;value&#39;, $minutes); ایجاد نمونه کوکی برای پاسخ‌ها در لاراول اگر می‌خواهید یک نمونه کلاس مانند Symfony\\Component\\HttpFoundation\\Cookie ایجاد کنید که بتواند به یک مورد پاسخ در یک زمان دیگر وصل شود، می‌توانید از تابع کمکی cookie عمومی استفاده کنید. این کوکی دوباره به کلاینت ارسال نمی‌شود مگر آنکه به یک نمونه پاسخ وصل شود: $cookie = cookie(&#39;name&#39;, &#39;value&#39;, $minutes); return response(&#39;Hello World&#39;)-&gt;cookie($cookie); فایل‌ها و درخواست‌ها در لاراول بازیابی فایل‌های آپلود شده می‌توانید به فایل‌های آپلود شده از نمونه کلاس Illuminate\\Http\\Request ، با استفاده از متد file یا با استفاده از خواص پویا دسترسی داشته باشید. متد file یک نمونه از کلاس Illuminate\\Http\\UploadedFile را برمی‌گرداند که از کلاس SplFileInfo مربوط به PHP ارث بری می‌کند و متدهای متعددی برای تعامل با فایل‌ها در اختیار ما قرار می‌دهد: $file = $request-&gt;file(&#39;photo&#39;); $file = $request-&gt;photo; می‌توان با استفاده از متد hasFile وجود یک فایل در یک درخواست را مشخص کرد: if ($request-&gt;hasFile(&#39;photo&#39;)) { // } تایید بارگزاری‌های موفق فایل‌ها از طریق متد isValid علاوه بر چک کردن وجود فایل، می‌توان مشخص کرد که هیچ‌گونه مشکلی در آپلود فایل وجود ندارد: if ($request-&gt;file(&#39;photo&#39;)-&gt;isValid()) { // } مسیرهای فایل‌ها و پسوندها کلاس UploadedFile شامل متدهایی برای دسترسی به مسیر کامل و مناسب فایل و پسوند آن است. متد extension تلاش می‌کند، پسوند فایل را بر اساس محتویات داخل آن حدس بزند. این پسوند ممکن است از پسوندی که توسط کلاینت ارائه شده است، متفاوت باشد: $path = $request-&gt;photo-&gt;path(); $extension = $request-&gt;photo-&gt;extension(); استفاده از سایر متدهای فایل انواع متدهای دیگری نیز در نمونه کلاس UploadedFile وجود دارد. می‌توانید مستندات API را برای کسب اطلاعات بیشتر در مورد این متدها بررسی کنید. ذخیره فایل‌های آپلود شده برای ذخیره یک فایل آپلود شده، معمولاً از یکی از فایل‌ سیستم‌های پیکربندی شده استفاده می‌شود. نمونه کلاس UploadedFile دارای یک متد store است که یک فایل آپلود شده را بر روی یکی از دیسک‌هایی که ممکن است مکانی در فایل سیستم محلی شما یا حتی یک مکان ذخیره سازی ابری مانند Amazon S3 باشد، ذخیره می‌کند. متد store مسیری را که فایل باید در دایرکتوری ریشه فایل سیستم پیکربندی شده ذخیره ‌شود، می‌پذیرد. این مسیر نباید شامل یک نام فایل باشد، زیرا یک شناسه یا ID منحصر به فرد به صورت خودکار به عنوان نام فایل ایجاد می‌شود. متد store همچنین یک آرگومان دوم که استفاده از آن اختیاری است را برای نام دیسکی که باید برای ذخیره فایل مورد استفاده قرار گیرد، می‌پذیرد. این متد مسیر فایل را نسبت به ریشه دیسک بازمی‌گرداند: $path = $request-&gt;photo-&gt;store(&#39;images&#39;); $path = $request-&gt;photo-&gt;store(&#39;images&#39;, &#39;s3&#39;); اگر نمی‌خواهید نام فایل به صورت خودکار تولید شود، می‌توانید از متد storeAs که مسیر، نام فایل و نام دیسک را به عنوان آرگومان می‌پذیرد، استفاده کنید: $path = $request-&gt;photo-&gt;storeAs(&#39;images&#39;, &#39;filename.jpg&#39;); $path = $request-&gt;photo-&gt;storeAs(&#39;images&#39;, &#39;filename.jpg&#39;, &#39;s3&#39;); پیکربندی پروکسی‌های معتبر (Trusted Proxies) زمانی که برنامه‌های خود را پشت یک توازن بار اجرا می‌کنید که گواهینامه‌های TLS / SSL را متوقف می‌کنند، متوجه خواهید شد که برنامه شما گاهی لینک‌های HTTPS را ایجاد نمی‌کند. به طور معمول، این امر به دلیل این است که برنامه در حال بارگزاری ترافیک از یک متعادل کننده بار در پورت 80 است و ایجاد لینک‌های امن را فراموش می‌کند. برای حل این مشکل، می‌توانید از middleware App\\Http\\Middleware\\TrustProxies که به صورت پیش‌فرض در یک برنامه لاراول قرار دارد، استفاده کنید. این middleware به شما امکان می‌دهد تا بتوانید به سرعت متعادل کننده بار یا پروکسی‌هایی که باید توسط برنامه مورد اعتماد قرار گیرند را سفارشی کنید. پروکسی‌های مورد اعتماد باید به عنوان یک آرایه در خصوصیت $proxies این middleware لیست شوند. علاوه بر پیکربندی پروکسی‌های قابل اعتماد، می‌توانید هدرهایی را که توسط پروکسی ارسال می‌شوند با اطلاعات مربوط به درخواست اصلی را نیز پیکربندی کنید. &lt;?php namespace App\\Http\\Middleware; use Illuminate\\Http\\Request; use Fideloper\\Proxy\\TrustProxies as Middleware; class TrustProxies extends Middleware { /** * The trusted proxies for this application. * * @var array */ protected $proxies = [ &#39;192.168.1.1&#39;, &#39;192.168.1.2&#39;, ]; /** * The current proxy header mappings. * * @var array */ protected $headers = [ Request::HEADER_FORWARDED =&gt; &#39;FORWARDED&#39;, Request::HEADER_X_FORWARDED_FOR =&gt; &#39;X_FORWARDED_FOR&#39;, Request::HEADER_X_FORWARDED_HOST =&gt; &#39;X_FORWARDED_HOST&#39;, Request::HEADER_X_FORWARDED_PORT =&gt; &#39;X_FORWARDED_PORT&#39;, Request::HEADER_X_FORWARDED_PROTO =&gt; &#39;X_FORWARDED_PROTO&#39;, ]; } ایجاد اعتماد به تمام پروکسی‌ها اگر از Amazon AWS یا یکی دیگر از ارائه دهندگان تعادل بار ابری استفاده می کنید، ممکن است آدرس‌های IP متعادل کننده‌های واقعی را ندانید. در این صورت، می‌توانید از ** برای اعتماد به تمام پروکسی‌ها استفاده کنید: /** * The trusted proxies for this application. * * @var array */ protected $proxies = &#39;**&#39;;","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="stylesheet" href="/assets/prisma/prism.css">
+    <!-- favicons and rss -->
+    <link rel="alternate" type="application/rss+xml" title="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" href="/feed.xml">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- header -->
+<header class="header" role="banner" aria-label="Header">
+    <button class="hamburger-button" onclick="hamburgerMenu();" role="button" aria-label="Hamburger menu button">
+        <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    </button>
+    <a href="/" class="logo" role="link" aria-label="Home">
+        <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo">
+    </a>
+    <nav class="navigation" role="navigation" aria-label="Navigation">
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item">
+                <a href="/" class="logo" role="menuitem" aria-label="Home">
+                    <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo">
+                </a>
+            </li>
+            
+            <li role="menuitem"><a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a></li>
+            
+            <li role="menuitem"><a href="/contactus" role="menuitem" aria-label="تماس">تماس</a></li>
+            
+        </ul>
+    </nav>
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox">
+        </form>
+    </div>
+</header>
+
+<nav id="hamburger-menu" role="navigation" aria-label="Hamburger menu">
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox">
+        </form>
+    </div>
+    <div class="home-nav" role="navigation" aria-label="Site navigation">
+        <a href="/" role="menuitem" aria-label="Home">صفحه اصلی</a>
+        
+        <a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a>
+        
+        <a href="/contactus" role="menuitem" aria-label="تماس">تماس</a>
+        
+    </div>
+
+    
+    <div class="doc-nav" role="navigation" aria-label="Documentation navigation">
+        <p role="presentation" aria-label="Category name">
+            اصول آموزش Laravel
+        </p>
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/2017/12/18/laravel.html" class="doc-link" role="link" aria-label="اصول requests">مقدمه</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Digging-Deeper/collections" class="doc-link" role="link" aria-label="معرفی collections">معرفی collections</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Database/database" class="doc-link" role="link" aria-label="پایگاه داده ها">پایگاه داده ها</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Database/queries" class="doc-link" role="link" aria-label="آشنایی با Query Builder">آشنایی با Query Builder</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent" class="doc-link" role="link" aria-label="آشنایی با eloquent">آشنایی با eloquent</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-relationships" class="doc-link" role="link" aria-label="eloquent relationships  آموزش">eloquent relationships  آموزش</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-mutators" class="doc-link" role="link" aria-label="آشنایی با eloquent mutators">آشنایی با eloquent mutators</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-collections" class="doc-link" role="link" aria-label="آشنایی با eloquent collections">آشنایی با eloquent collections</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-serialization" class="doc-link" role="link" aria-label="آشنایی با eloquent serialization">آشنایی با eloquent serialization</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Architecture-Concepts/lifecycle" class="doc-link" role="link" aria-label="چرخه ی حیات درخواست (Request Lifecycle)">چرخه ی حیات درخواست (Request Lifecycle)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/routing" class="doc-link" role="link" aria-label="Routing یا مسیریابی در لاراول">Routing یا مسیریابی در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/middleware" class="doc-link" role="link" aria-label="آموزش Middleware">آموزش Middleware</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/csrf" class="doc-link" role="link" aria-label="حفاظت CSRF">حفاظت CSRF</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/controllers" class="doc-link" role="link" aria-label="استفاده از Controller">استفاده از Controller</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/requests" class="doc-link" role="link" aria-label="اصول requests">اصول requests</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/views" class="doc-link" role="link" aria-label="ایجاد view">ایجاد view</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/session" class="doc-link" role="link" aria-label="استفاده از  Session">استفاده از  Session</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/responses" class="doc-link" role="link" aria-label="پاسخ Response">پاسخ Response</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/urls" class="doc-link" role="link" aria-label="تولید URL در لاراول">تولید URL در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/validation" class="doc-link" role="link" aria-label="validation یا اعتبارسنجی در لاراول">validation یا اعتبارسنجی در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/errors" class="doc-link" role="link" aria-label="مدیریت Errors &amp; Logging">مدیریت Errors &amp; Logging</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/blade" class="doc-link" role="link" aria-label="Blade Templates">Blade Templates</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/localization" class="doc-link" role="link" aria-label="اصول localization">اصول localization</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/frontend" class="doc-link" role="link" aria-label="JavaScript &amp; CSS Scaffolding">JavaScript &amp; CSS Scaffolding</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </ul>
+    </div>
+    
+</nav>
+<!-- main content -->
+<main class="container" role="main">
+    <div class="rcdoccontainerimg">
+<div class="rc-DRTVBanner-new rc-DRTVBanner-bigsize">
+    <div style="background: url('/images/original/laravel.png'); " class="blurred_img"></div>
+    <div class="mask"></div>
+    <div class="bot"></div>
+    <div class="over">
+        <div class="container-rc">
+            <img class="image" src="/images/original/laravel.png" alt="اصول requests" height="190">
+            <div class="desktop-banner-container">
+                <h1 class="display-5-text headline">
+                    
+                    
+                    اصول آموزش Laravel
+                    </h1>
+                <!--<div class="tagslist"><ul class='lyda-tag-list'><li class='lyda-tag-list-title'>برچسب ها</li><li><a class="tags" href="/tag/لاراول">#لاراول</a></li><li><a class="tags" href="/tag/لاراول-5-5">#لاراول 5.5</a></li></ul></div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="bread-crumb">-->
+<!--<div class="container   ">-->
+<!--<div class="pull-right ">-->
+<!--<div class="bread-button text-custom b-left">-->
+<!--انتشار : 2 ماه پیش-->
+<!--</div>-->
+<!--<a href="/category/article/" class="bread-button back-to-all b-left hidden-xs">همه مقالات</a>-->
+<!--<div class="cat-lable">-->
+<!--<a href="/category/article/laravel/">-->
+<!--لاراول-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<script>
+    $(window).scroll(function(){
+        var sticky = $('.doc-menu'),
+            scroll = $(window).scrollTop();
+        if (scroll >= 101) {sticky.addClass('doc-header-scroll'); }
+        else {sticky.removeClass('doc-header-scroll'); };
+    });
+</script>
+</div>
+<div class="doc-container">
+
+    <div class="doc-menu">
+    
+    <ul>
+        <li>
+            <a href="/2017/12/18/laravel.html" class="active doc-link" role="link">
+                مقدمه
+            </a>
+        </li>
+        
+        <li>
+            <span class="caret">معماری Laravel</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="چرخه ی حیات درخواست (Request Lifecycle)" href="/documentation/laravel/Architecture-Concepts/lifecycle" class="active doc-link" role="link">
+                چرخه ی حیات درخواست (Request Lifecycle)
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم اساسی</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="Routing یا مسیریابی در لاراول" href="/documentation/laravel/The-Basics/routing" class="active doc-link" role="link">
+                Routing یا مسیریابی در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آموزش Middleware" href="/documentation/laravel/The-Basics/middleware" class="active doc-link" role="link">
+                آموزش Middleware
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="حفاظت CSRF" href="/documentation/laravel/The-Basics/csrf" class="active doc-link" role="link">
+                حفاظت CSRF
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="استفاده از Controller" href="/documentation/laravel/The-Basics/controllers" class="active doc-link" role="link">
+                استفاده از Controller
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول requests" href="/documentation/laravel/The-Basics/requests" class="active doc-link" role="link">
+                اصول requests
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="ایجاد view" href="/documentation/laravel/The-Basics/views" class="active doc-link" role="link">
+                ایجاد view
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="استفاده از  Session" href="/documentation/laravel/The-Basics/session" class="active doc-link" role="link">
+                استفاده از  Session
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="پاسخ Response" href="/documentation/laravel/The-Basics/responses" class="active doc-link" role="link">
+                پاسخ Response
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="تولید URL در لاراول" href="/documentation/laravel/The-Basics/urls" class="active doc-link" role="link">
+                تولید URL در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="validation یا اعتبارسنجی در لاراول" href="/documentation/laravel/The-Basics/validation" class="active doc-link" role="link">
+                validation یا اعتبارسنجی در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="مدیریت Errors &amp; Logging" href="/documentation/laravel/The-Basics/errors" class="active doc-link" role="link">
+                مدیریت Errors &amp; Logging
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">Front End</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="Blade Templates" href="/documentation/laravel/Frontend/blade" class="active doc-link" role="link">
+                Blade Templates
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول localization" href="/documentation/laravel/Frontend/localization" class="active doc-link" role="link">
+                اصول localization
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="JavaScript &amp; CSS Scaffolding" href="/documentation/laravel/Frontend/frontend" class="active doc-link" role="link">
+                JavaScript &amp; CSS Scaffolding
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم پیشرفته تر</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="معرفی collections" href="/documentation/laravel/Digging-Deeper/collections" class="active doc-link" role="link">
+                معرفی collections
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">پایگاه داده ها</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="پایگاه داده ها" href="/documentation/laravel/Database/database" class="active doc-link" role="link">
+                پایگاه داده ها
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با Query Builder" href="/documentation/laravel/Database/queries" class="active doc-link" role="link">
+                آشنایی با Query Builder
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">Eloquent ORM</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent" href="/documentation/laravel/Eloquent-ORM/eloquent" class="active doc-link" role="link">
+                آشنایی با eloquent
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="eloquent relationships  آموزش" href="/documentation/laravel/Eloquent-ORM/eloquent-relationships" class="active doc-link" role="link">
+                eloquent relationships  آموزش
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent mutators" href="/documentation/laravel/Eloquent-ORM/eloquent-mutators" class="active doc-link" role="link">
+                آشنایی با eloquent mutators
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent collections" href="/documentation/laravel/Eloquent-ORM/eloquent-collections" class="active doc-link" role="link">
+                آشنایی با eloquent collections
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent serialization" href="/documentation/laravel/Eloquent-ORM/eloquent-serialization" class="active doc-link" role="link">
+                آشنایی با eloquent serialization
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+    </ul>
+    
+</div>
+
+    <article class="documentation">
+        <header class="doc-header">
+            <div class="time">
+                    تاریخ :      شنبه 14 بهمن 1396
+            </div>
+                
+        </header>
+        <section class="anchored">
+            <p>
+برای دسترسی به نمونه‌ای از درخواست HTTP فعلی در لاراول از طریق روش تزریق وابستگی (dependency injection)، باید نمونه کلاس Illuminate\Http\Request را در متد کنترلر خود اعلان نوع یا type-hint کنید. درخواست ورودی به صورت خودکار توسط service container تزریق می‌شود:
+</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class UserController extends Controller
+{
+    /**
+     * Store a new user.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    public function store(Request $request)
+    {
+        $name = $request-&gt;input('name');
+
+        //
+    }
+}
+</code></pre>
+
+<p><br></p>
+<h3>تزریق وابستگی و استفاده از پارامترهای مسیر</h3>
+
+<p>
+در صورتی که، متد کنترلر در انتظار دریافت ورودی از یک پارامتر مسیر باشد، می‌توانید پارامترهای مسیر را پس از وابستگی‌های دیگر لیست کنید. برای مثال، اگر مسیر شما مانند مثال زیر تعریف شده باشد:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::put('user/{id}', 'UserController@update');
+</code></pre>
+
+<p>
+می‌توانید نمونه کلاس Illuminate\Http\Request را اعلان نوع کنید و با تعریف متد کنترلر به صورت مثال زیر به پارامتر مسیر یا همان id ، دسترسی داشته باشید:
+</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class UserController extends Controller
+{
+    /**
+     * Update the specified user.
+     *
+     * @param  Request  $request
+     * @param  string  $id
+     * @return Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+}
+</code></pre>
+
+<p><br></p>
+<h3>دسترسی به درخواست HTTP  از طریق route closure</h3>
+
+<p>
+همچنین، می‌توانید نمونه کلاس Illuminate\Http\Request را در route closure اعلان نوع کنید. service container به صورت خودکار درخواست ورودی را به Closure در هنگام اجرای آن تزریق می‌کند:
+</p>
+
+<pre><code class="language-php  line-numbers">use Illuminate\Http\Request;
+
+Route::get('/', function (Request $request) {
+    //
+});
+</code></pre>
+
+<p>
+<a name="request-path-and-method"></a>
+</p>
+
+<p><br></p>
+<h3>به کارگیری متد‌ها و مسیر در درخواست HTTP </h3>
+
+<p>
+جهت بررسی درخواست HTTP در برنامه، نمونه کلاس Illuminate\Http\Request چندین متد ارائه می‌دهد و از کلاس Symfony\Component\HttpFoundation\Request ارث بری می‌کند. در ادامه، برخی از مهمترین متدهای این کلاس را با هم بررسی می‌کنیم.
+</p>
+
+<p><br></p>
+<h3>بازیابی مسیر درخواست‌ها HTTP </h3>
+
+<p>
+متد path اطلاعات مربوط به مسیر یک درخواست را بازمی‌گرداند. بنابراین، اگر درخواست ورودی به آدرس http://domain.com/foo/bar ارسال شود، این متد قسمت foo/bar را بازمی‌گرداند:
+</p>
+
+<pre><code class="language-php  line-numbers">$uri = $request-&gt;path();
+</code></pre>
+
+<p>
+توسط متد is می‌توانید مطمئن شوید که مسیر درخواست ورودی مطابق با یک الگوی خاص تعریف شده است یا خیر. در هنگام استفاده از این متد می‌توان کاراکتر * را نیز به عنوان یک wildcard بکار برد:
+</p>
+
+<pre><code class="language-php  line-numbers">if ($request-&gt;is('admin/*')) {
+    //
+}
+</code></pre>
+
+<p><br></p>
+<h3>دریافت URL درخواست‌ها </h3>
+
+<p>
+برای بازیابی URL کامل یک درخواست ورودی، می‌توانید متد url یا fullUrl را بکار ببرید. متد url برای بازیابی URL بدون رشته پرس و جو بکار می‌رود، در حالی که متد fullUrl رشته پرس و جو را نیز شامل می‌شود.
+</p>
+
+<pre><code class="language-php  line-numbers">// Without Query String...
+$url = $request-&gt;url();
+
+// With Query String...
+$url = $request-&gt;fullUrl();
+</code></pre>
+
+<p><br></p>
+<h3>بازیابی متد درخواست‌ها </h3>
+
+<p>
+متد method فعل یا متد درخواست HTTP را برای یک درخواست بازگشت می‌دهد. می‌توانید از متد isMethod برای بررسی اینکه متد درخواست HTTP با یک رشته مشخص مطابق است یا خیر، استفاده کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">$method = $request-&gt;method();
+
+if ($request-&gt;isMethod('post')) {
+    //
+}
+</code></pre>
+
+<p>
+<a name="psr7-requests"></a>
+</p>
+
+<p><br></p>
+<h3>استفاده از درخواست‌های PSR-7</h3>
+
+<p>
+استاندارد PSR-7 رابط‌هایی را برای پیغام‌های HTTP مانند درخواست‌ها و پاسخ‌ها ارائه می‌دهد. اگر می‌خواهید به نمونه‌ای از درخواست PSR-7 به جای یک درخواست لاراول دسترسی داشته باشید، در ابتدا بایستی چند کتابخانه مهم را نصب کنید. لاراول از کامپوننت Symfony HTTP Message Bridge برای تبدیل درخواست‌ها و پاسخ‌های لاراول به پیاده سازی‌های سازگار با PSR-7 استفاده می‌کند:
+</p>
+
+<pre><code class="language-php  line-numbers">composer require symfony/psr-http-message-bridge
+composer require zendframework/zend-diactoros
+</code></pre>
+
+<p>
+زمانی که این کتابخانه‌ها را نصب کردید، می‌توانید با type-hint کردن رابط درخواست درroute Closure یا متد کنترلر خود به یک درخواست PSR-7 دسترسی داشته باشید:
+</p>
+
+<pre><code class="language-php  line-numbers">use Psr\Http\Message\ServerRequestInterface;
+
+Route::get('/', function (ServerRequestInterface $request) {
+    //
+});
+</code></pre>
+
+<blockquote class="has-icon tip">
+ اگر نمونه‌ای از پاسخ PSR-7 از یک مسیر یا کنترلر برگردانده شود، این پاسخ به صورت خودکار به یک پاسخ لاراول تبدیل می‌شود و توسط فریم ورک نمایش داده می‌شود.
+</blockquote>
+
+<p>
+<a name="input-trimming-and-normalization"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#input-trimming-and-normalization">مرتب سازی ورودی درخواست HTTP</a></h3>
+
+<p>
+به صورت پیش‌فرض middlewareهای TrimStrings و ConvertEmptyStringsToNull در پشته middleware عمومی برنامه لاراول قرار دارند. این middlewareها توسط کلاس App\Http\Kernel در پشته لیست شده‌اند. این middlewareها به صورت خودکار تمام فیلدهای رشته ورودی بر روی درخواست را مرتب می‌کنند، همچنین هر فیلد رشته خالی را به null تبدیل می‌کنند. این موضوع باعث می‌شود تا هیچ نگرانی در مورد کارهای کوچک و عادی از این قبیل، در مسیرها و کنترلرهای خود نداشته نباشیم.
+</p>
+
+<p>
+اگر می‌خواهید این ویژگی را در برنامه خود غیرفعال کنید، می‌توانید این دو middleware را از پشته middleware برنامه خود حذف کنید، می‌توانید این کار را با حذف آن‌ها از خصوصیت $middleware کلاس App\Http\Kernel انجام دهید.
+</p>
+
+<p>
+<a name="retrieving-input"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#retrieving-input">دريافت ورودی درخواست در لاراول</a></h3>
+
+<h3>بازیابی تمام داده‌های ورودی درخواست</h3>
+
+<p>
+می‌توانید تمام داده‌های ورودی را به عنوان یک array با استفاده از متد all بازیابی کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">$input = $request-&gt;all();
+</code></pre>
+
+<p><br></p>
+<h3>بازیابی مقدار ورودی درخواست </h3>
+
+<p>
+با استفاده از چند متد ساده، می‌توانید به تمام ورودی‌های کاربر از نمونه کلاس Illuminate\Http\Request دسترسی داشته باشید و نگران اینکه کدام متد HTTP برای درخواست استفاده شود، نباشید. صرف نظر از متد درخواست HTTP، از متد input نیز می‌توانید برای بازیابی ورودی کاربر استفاده کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">$name = $request-&gt;input('name');
+</code></pre>
+
+<p>
+می‌توانید یک مقدار پیش‌فرض را به عنوان آرگومان دوم به متد input منتقل کنید. اگر مقدار ورودی در درخواست کاربر موجود نباشد، این مقدار بازگردانده خواهد شد:
+</p>
+
+<pre><code class="language-php  line-numbers">$name = $request-&gt;input('name', 'Sally');
+</code></pre>
+
+<p>
+در هنگام کار با فرم‌هایی که ورودی‌های آن‌ها به صورت آرایه‌ای هستند، می‌توانید از علامت «نقطه» برای دسترسی به آرایه‌ها استفاده کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">$name = $request-&gt;input('products.0.name');
+
+$names = $request-&gt;input('products.*.name');
+</code></pre>
+
+<p><br></p>
+<h3>گرفتن ورودی از رشته پرس و جو درخواست</h3>
+
+<p>
+در حالی که متد input مقادیر را از کل درخواست کاربر (شامل رشته پرس و جو) بازیابی می‌کند، متد query ، مقادیر را فقط از رشته پرس و جو بازیابی می‌کند:
+</p>
+
+<pre><code class="language-php  line-numbers">$name = $request-&gt;query('name');
+</code></pre>
+
+<p>
+اگر مقدار داده رشته پرس و جو درخواست شده موجود نباشد، آرگومان دوم این متد بازگشت داده می‌شود:
+</p>
+
+<pre><code class="language-php  line-numbers">$name = $request-&gt;query('name', 'Helen');
+</code></pre>
+
+<p>
+می‌توانید متد query را بدون هیچ آرگومانی به منظور بازیابی تمام مقادیر رشته پرس و جو به عنوان یک آرایه انجمنی فراخوانی کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">$query = $request-&gt;query();
+</code></pre>
+
+<p><br></p>
+<h3>دریافت ورودی درخواست از طریق خصوصیات پویا </h3>
+
+<p>
+همچنین، می‌توانید به ورودی کاربر با استفاده از خواص پویا بر روی نمونه کلاس Illuminate\Http\Request دسترسی داشته باشید. برای مثال، اگر یکی از فرم‌های درخواست، شامل یک فیلد name باشد، می‌توانید به مقدار فیلد مانند مثال زیر دسترسی داشته باشید:
+</p>
+
+<pre><code class="language-php  line-numbers">$name = $request-&gt;name;
+</code></pre>
+
+<p>
+هنگام استفاده از خواص پویا، لاراول ابتدا مقدار پارامتر را در کل درخواست جستجو می‌کند. اگر مقدار پارامتر موجود نباشد، لاراول مقدار پارامتر را در پارامترهای مسیر جستجو می‌کند.
+</p>
+
+<p><br></p>
+<h3>بازیابی مقادیر ورودی JSON در درخواست لاراول</h3>
+
+<p>
+هنگام ارسال درخواست‌های JSON به برنامه، تا زمانی که هدر Content-Type درخواست به درستی بر روی application/json تنظیم شده باشد، می‌توانید از طریق متد input به داده‌های JSON دسترسی داشته باشید. حتی می‌توانید از علامت «نقطه» برای کاوش در آرایه‌های JSON استفاده کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">$name = $request-&gt;input('user.name');
+</code></pre>
+
+<p><br></p>
+<h3>بازیابی بخش‌هایی از داده‌های ورودی </h3>
+
+<p>
+اگر نیاز به بازیابی زیرمجموعه‌ای از داده‌های ورودی دارید، می‌توانید از متدهای only و except استفاده کنید. هر دو متد، یک array یا یک لیست پویا از آرگومان‌ها را می‌پذیرند.
+</p>
+
+<pre><code class="language-php  line-numbers">$input = $request-&gt;only(['username', 'password']);
+
+$input = $request-&gt;only('username', 'password');
+
+$input = $request-&gt;except(['credit_card']);
+
+$input = $request-&gt;except('credit_card');
+</code></pre>
+
+<blockquote class="has-icon tip">
+ متد only جفت كليد و مقداری که درخواست مي‌كنيد را برمی‌گرداند. با این وجود، اگر کلید و مقداری در درخواست موجود نباشد، برگردانده نمی‌شوند.
+</blockquote>
+
+<p><br></p>
+<h3>تعیین مقدار ورودی درخواست در صورت وجود</h3>
+
+<p>
+از متد has برای تعیین اینکه آیا یک مقدار در درخواست موجود است یا خیر، استفاده می‌شود. اگر مقدار در یک درخواست موجود باشد، این متد مقدار true را برمی‌گرداند:
+</p>
+
+<pre><code class="language-php  line-numbers">if ($request-&gt;has('name')) {
+    //
+}
+</code></pre>
+
+<p>
+زمانی که از یک آرایه استفاده می‌شود، متد has برای تعیین اینکه تمام مقادیر مشخص شده در آرایه موجود هستند یا خیر، استفاده می‌شود:
+</p>
+
+<pre><code class="language-php  line-numbers">if ($request-&gt;has(['name', 'email'])) {
+    //
+}
+</code></pre>
+
+<p>
+می‌توانید از متد filled برای تعیین اینکه یک مقدار در درخواست موجود است و خالی نیست، استفاده کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">if ($request-&gt;filled('name')) {
+    //
+}
+</code></pre>
+
+<p>
+<a name="old-input"></a>
+</p>
+
+<p><br></p>
+<h3>حفظ ورودی‌های قبلی درخواست در لاراول</h3>
+
+<p>
+لاراول این امکان را فراهم می‌کند که ورودی یک درخواست را در طول درخواست بعدی حفظ کنید. این ویژگی برای بارگزاری مجدد فرم‌ها با مقادیر قبلی، پس از تشخیص خطاهای اعتبار سنجی بسیار مفید است. با این حال، اگر از ویژگی‌های اعتبار سنجی موجود در لاراول استفاده می‌کنید، لزومی ندارد که از این متدها به صورت دستی استفاده کنید، زیرا برخی از امکانات اعتبار سنجی از پیش ساخته شده در لاراول این متدها را به صورت خودکار فراخوانی می‌کنند.
+</p>
+
+<p><br></p>
+<h3>اضافه کردن ورودی درخواست به session در لاراول</h3>
+
+<p>
+متد flash در نمونه کلاس Illuminate\Http\Request ورودی فعلی را به صورت فوری در session قرار می‌دهد، به طوری که این ورودی در طول درخواست بعدی کاربر به برنامه نیز در دسترس باشد:
+</p>
+
+<pre><code class="language-php  line-numbers">$request-&gt;flash();
+</code></pre>
+
+<p>
+همچنین، برای قرار دادن زیرمجموعه‌ای از داده‌های درخواست در session می‌توانید از متدهای flashOnly و flashExcept استفاده کنید. این متدها برای حفظ اطلاعات حساسی مانند کلمات عبور در session مفید هستند.
+</p>
+
+<pre><code class="language-php  line-numbers">$request-&gt;flashOnly(['username', 'email']);
+
+$request-&gt;flashExcept('password');
+</code></pre>
+
+<p><br></p>
+<h3>قرار دادن ورودی درخواست در session و تغییر مسیر (redirect) </h3>
+
+<p>
+از آنجا که اغلب ورودی در session قرار داده می‌شود و سپس تغییر مسیر (redirect) به صفحه قبل انجام می‌گیرد، می‌توانید با استفاده از متد withInput قرار دادن ورودی در sessionرا به تغییر مسیر یا redirect متصل کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">return redirect('form')-&gt;withInput();
+
+return redirect('form')-&gt;withInput(
+    $request-&gt;except('password')
+);
+</code></pre>
+
+<p><br></p>
+<h3>بازیابی ورودی قبلی قرار داده شده در session</h3>
+
+<p>
+برای بازیابی داده‌های قرار داده شده در session از درخواست قبلی، از متد old بر روی نمونه کلاس Request استفاده می‌شود. متد old داده‌های ورودی که قبلا در session قرار گرفته‌اند را از session بازیابی می‌کند:
+</p>
+
+<pre><code class="language-php  line-numbers">$username = $request-&gt;old('username');
+</code></pre>
+
+<p>
+همچنین، لاراول یک تابع کمکی old عمومی ارائه می‌دهد. اگر ورودی‌های قبلی را در یک قالب Blade نمایش می‌دهید، به راحتی می‌توانید از تابع کمکی old استفاده کنید. اگر هیچ ورودی قبلی برای فیلد داده موجود نباشد، مقدار null بازگشت داده خواهد شد:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"username"</span> <span class="na">value=</span><span class="s">"{{ old('username') }}"</span><span class="nt">&gt;</span>
+</code></pre></div></div>
+
+<p>
+<a name="cookies"></a>
+</p>
+
+<p><br></p>
+<h3>کوکی‌ها و درخواست‌ها در لاراول</h3>
+
+<p><br></p>
+<h3>بازیابی کوکی‌ها از درخواست‌ها </h3>
+
+<p>
+تمام کوکی‌هایی که توسط فریم ورک لاراول ایجاد می‌شوند، رمزگذاری شده و توسط یک کد تأیید اعتبار امضا می‌شوند، بنابراین، اگر کوکی‌ها توسط کلاینت تغییر کنند، نامعتبر تلقی خواهند شد. برای بازیابی مقدار کوکی از یک درخواست، می‌توان از متد cookie بر روی نمونه کلاس Illuminate\Http\Request استفاده کرد.
+</p>
+
+<pre><code class="language-php  line-numbers">$value = $request-&gt;cookie('name');
+</code></pre>
+
+<p>
+همچنین، می‌توانید از facade Cookie  نیز برای دسترسی به مقادیر کوکی استفاده کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">$value = Cookie::get('name');
+</code></pre>
+
+<p><br></p>
+<h3>پیوست کوکی‌ها به پاسخ‌های HTTP در لاراول</h3>
+
+<p>
+می‌توانید یک کوکی را به یک پاسخ و نمونه خروجی کلاس Illuminate\Http\Response با استفاده از متد cookie پیوست کنید. در این صورت، باید اسم، مقدار و تعداد دقیقه‌هایی را که کوکی باید معتبر باشد، را به این متد انتقال دهید:
+</p>
+
+<pre><code class="language-php  line-numbers">return response('Hello World')-&gt;cookie(
+    'name', 'value', $minutes
+);
+</code></pre>
+
+<p>
+متد cookie چند آرگومان دیگر را نیز می‌پذیرد که به نسبت کمتری استفاده می‌شوند.
+</p>
+
+<pre><code class="language-php  line-numbers">return response('Hello World')-&gt;cookie(
+    'name', 'value', $minutes, $path, $domain, $secure, $httpOnly
+);
+</code></pre>
+
+<p>
+همچنین، می‌توانید از facade Cookie  برای صف بندی کوکی جهت پیوست به پاسخی که از برنامه خارج می‌شود، استفاده کنید. متد queue یک نمونه کلاس Cookie یا آرگومان‌های موردنیاز برای ایجاد یک نمونه کوکی را می‌پذیرد. این کوکی‌ها قبل از ارسال پاسخ خروجی به مرورگر به آن وصل می‌شوند:
+</p>
+
+<pre><code class="language-php  line-numbers">Cookie::queue(Cookie::make('name', 'value', $minutes));
+
+Cookie::queue('name', 'value', $minutes);
+</code></pre>
+
+<p><br></p>
+<h3>ایجاد نمونه کوکی برای پاسخ‌ها در لاراول</h3>
+
+<p>
+اگر می‌خواهید یک نمونه کلاس مانند Symfony\Component\HttpFoundation\Cookie ایجاد کنید که بتواند به یک مورد پاسخ در یک زمان دیگر وصل شود، می‌توانید از تابع کمکی cookie عمومی استفاده کنید. این کوکی دوباره به کلاینت ارسال نمی‌شود مگر آنکه به یک نمونه پاسخ وصل شود:
+</p>
+
+<pre><code class="language-php  line-numbers">$cookie = cookie('name', 'value', $minutes);
+
+return response('Hello World')-&gt;cookie($cookie);
+</code></pre>
+
+<p>
+<a name="files"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#files">فایل‌ها و درخواست‌ها در لاراول</a></h3>
+
+<p>
+<a name="retrieving-uploaded-files"></a>
+</p>
+
+<p><br></p>
+<h3>بازیابی فایل‌های آپلود شده</h3>
+
+<p>
+می‌توانید به فایل‌های آپلود شده از نمونه کلاس Illuminate\Http\Request ، با استفاده از متد file یا با استفاده از خواص پویا دسترسی داشته باشید. متد file یک نمونه از کلاس Illuminate\Http\UploadedFile را برمی‌گرداند که از کلاس SplFileInfo مربوط به PHP ارث بری می‌کند و متدهای متعددی برای تعامل با فایل‌ها در اختیار ما قرار می‌دهد:
+</p>
+
+<pre><code class="language-php  line-numbers">$file = $request-&gt;file('photo');
+
+$file = $request-&gt;photo;
+</code></pre>
+
+<p>
+می‌توان با استفاده از متد hasFile وجود یک فایل در یک درخواست را مشخص کرد:
+</p>
+
+<pre><code class="language-php  line-numbers">if ($request-&gt;hasFile('photo')) {
+    //
+}
+</code></pre>
+
+<p><br></p>
+<h3>تایید بارگزاری‌های موفق فایل‌ها</h3>
+
+<p>
+از طریق متد isValid علاوه بر چک کردن وجود فایل، می‌توان مشخص کرد که هیچ‌گونه مشکلی در آپلود فایل وجود ندارد:
+</p>
+
+<pre><code class="language-php  line-numbers">if ($request-&gt;file('photo')-&gt;isValid()) {
+    //
+}
+</code></pre>
+
+<p><br></p>
+<h3>مسیرهای فایل‌ها و پسوندها</h3>
+
+<p>
+کلاس UploadedFile شامل متدهایی برای دسترسی به مسیر کامل و مناسب فایل و پسوند آن است. متد extension تلاش می‌کند، پسوند فایل را بر اساس محتویات داخل آن حدس بزند. این پسوند ممکن است از پسوندی که توسط کلاینت ارائه شده است، متفاوت باشد:
+</p>
+
+<pre><code class="language-php  line-numbers">$path = $request-&gt;photo-&gt;path();
+
+$extension = $request-&gt;photo-&gt;extension();
+</code></pre>
+
+<p><br></p>
+<h3>استفاده از سایر متدهای فایل</h3>
+
+<p>
+انواع متدهای دیگری نیز در نمونه کلاس UploadedFile وجود دارد. می‌توانید مستندات API را برای کسب اطلاعات بیشتر در مورد این متدها بررسی کنید.
+</p>
+
+<p>
+<a name="storing-uploaded-files"></a>
+</p>
+
+<p><br></p>
+<h3>ذخیره فایل‌های آپلود شده</h3>
+
+<p>
+برای ذخیره یک فایل آپلود شده، معمولاً از یکی از فایل‌ سیستم‌های پیکربندی شده استفاده می‌شود. نمونه کلاس UploadedFile دارای یک متد store است که یک فایل آپلود شده را بر روی یکی از دیسک‌هایی که ممکن است مکانی در فایل سیستم محلی شما یا حتی یک مکان ذخیره سازی ابری مانند Amazon S3 باشد، ذخیره می‌کند.
+</p>
+
+<p>
+متد store مسیری را که فایل باید در دایرکتوری ریشه فایل سیستم پیکربندی شده ذخیره ‌شود، می‌پذیرد. این مسیر نباید شامل یک نام فایل باشد، زیرا یک شناسه یا ID منحصر به فرد به صورت خودکار به عنوان نام فایل ایجاد می‌شود.
+</p>
+
+<p>
+متد store همچنین یک آرگومان دوم که استفاده از آن اختیاری است را برای نام دیسکی که باید برای ذخیره فایل مورد استفاده قرار گیرد، می‌پذیرد. این متد مسیر فایل را نسبت به ریشه دیسک بازمی‌گرداند:
+</p>
+
+<pre><code class="language-php  line-numbers">$path = $request-&gt;photo-&gt;store('images');
+
+$path = $request-&gt;photo-&gt;store('images', 's3');
+</code></pre>
+
+<p>
+اگر نمی‌خواهید نام فایل به صورت خودکار تولید شود، می‌توانید از متد storeAs که مسیر، نام فایل و نام دیسک را به عنوان آرگومان می‌پذیرد، استفاده کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">$path = $request-&gt;photo-&gt;storeAs('images', 'filename.jpg');
+
+$path = $request-&gt;photo-&gt;storeAs('images', 'filename.jpg', 's3');
+</code></pre>
+
+<p>
+<a name="configuring-trusted-proxies"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#configuring-trusted-proxies">پیکربندی پروکسی‌های معتبر (Trusted Proxies)</a></h3>
+
+<p>
+زمانی که برنامه‌های خود را پشت یک توازن بار اجرا می‌کنید که گواهینامه‌های TLS / SSL را متوقف می‌کنند، متوجه خواهید شد که برنامه شما گاهی لینک‌های HTTPS را ایجاد نمی‌کند. به طور معمول، این امر به دلیل این است که برنامه در حال بارگزاری ترافیک از یک متعادل کننده بار در پورت 80 است و ایجاد لینک‌های امن را فراموش می‌کند.
+</p>
+
+<p>
+برای حل این مشکل، می‌توانید از middleware App\Http\Middleware\TrustProxies که به صورت پیش‌فرض در یک برنامه لاراول قرار دارد، استفاده کنید. این middleware به شما امکان می‌دهد تا بتوانید به سرعت متعادل کننده بار یا پروکسی‌هایی که باید توسط برنامه مورد اعتماد قرار گیرند را سفارشی کنید. پروکسی‌های مورد اعتماد باید به عنوان یک آرایه در خصوصیت $proxies این middleware لیست شوند. علاوه بر پیکربندی پروکسی‌های قابل اعتماد، می‌توانید هدرهایی را که توسط پروکسی ارسال می‌شوند با اطلاعات مربوط به درخواست اصلی را نیز پیکربندی کنید.
+</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+
+namespace App\Http\Middleware;
+
+use Illuminate\Http\Request;
+use Fideloper\Proxy\TrustProxies as Middleware;
+
+class TrustProxies extends Middleware
+{
+    /**
+     * The trusted proxies for this application.
+     *
+     * @var array
+     */
+    protected $proxies = [
+        '192.168.1.1',
+        '192.168.1.2',
+    ];
+
+    /**
+     * The current proxy header mappings.
+     *
+     * @var array
+     */
+    protected $headers = [
+        Request::HEADER_FORWARDED =&gt; 'FORWARDED',
+        Request::HEADER_X_FORWARDED_FOR =&gt; 'X_FORWARDED_FOR',
+        Request::HEADER_X_FORWARDED_HOST =&gt; 'X_FORWARDED_HOST',
+        Request::HEADER_X_FORWARDED_PORT =&gt; 'X_FORWARDED_PORT',
+        Request::HEADER_X_FORWARDED_PROTO =&gt; 'X_FORWARDED_PROTO',
+    ];
+}
+</code></pre>
+
+<p><br></p>
+<h3>ایجاد اعتماد به تمام پروکسی‌ها</h3>
+
+<p>
+اگر از Amazon AWS یا یکی دیگر از ارائه دهندگان تعادل بار ابری استفاده می کنید، ممکن است آدرس‌های IP متعادل کننده‌های واقعی را ندانید. در این صورت، می‌توانید از ** برای اعتماد به تمام پروکسی‌ها استفاده کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">/**
+ * The trusted proxies for this application.
+ *
+ * @var array
+ */
+protected $proxies = '**';
+</code></pre>
+
+        </section>
+        
+<hr>
+<p>
+</p>
+<div>منابع مورد مطالعه جهت جمع آوری این مطلب:</div>
+<div class="refrencehref">
+        https://laravel.com/docs/5.5/requests <br> https://www.lydaweb.com/article/courses/laravel-5-5-tutorial/239/درخواست-http-لاراول
+</div>
+
+
+        <hr>
+        <style>
+    #commentsdiv{
+        background-color: #f5f5f5;
+        border: 1px solid #c5c5c5;
+        border-bottom: 0px !important;
+        padding: 12px;
+    }
+    #commentsborder{
+        background-color: #fff;
+        border: 1px solid #c5c5c5;
+        white-space: normal;
+        padding: 20px;
+    }
+</style>
+
+<div id="commentsdiv">نظرات</div>
+<div id="commentsborder">
+<div id="wpac-comment"></div>
+</div>
+<script type="text/javascript">
+wpac_init = window.wpac_init || [];
+wpac_init.push({widget: 'Comment', id: 7878});
+(function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = 'https://embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+})();
+</script>
+
+    </article>
+</div>
+<script src="/assets/js/anchor.min.js"></script>
+<script>
+    anchors.options = {
+        placement: 'left',
+        visible: 'always',
+//        icon: '#',
+    };
+    anchors.add('.anchored h2,.anchored h3,.anchored h4,.anchored h5,.anchored h6');
+
+    (function($){
+        if(window.location.hash) {
+            var hash = decodeURIComponent(window.location.hash);
+            gotohash($(hash).offset().top);
+        }
+        $('a.anchorjs-link').click(function(){
+			gotohash($(this).offset().top);
+        });
+        $('a.anchorjs').click(function(){
+			var id = '#' + $(this).attr('title');
+			gotohash($(id).offset().top);
+        });		
+        function gotohash(top){
+            var headerHeight = 70; // Get fixed header height
+            $('html,body').animate({
+                scrollTop: top - headerHeight
+            }, 20);
+        }
+    })(jQuery);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+   $(document).ready(function (){
+
+     var scrollPosition = getParameterByName('scroll');
+     if(scrollPosition)
+      $(".doc-menu").scrollTop(scrollPosition);
+
+     $('.doc-link').click(function(){
+        var scrollTop = $(".doc-menu").scrollTop();
+        if(scrollTop > 0)
+          $(this).attr("href",this.href + "?scroll=" + $(".doc-menu").scrollTop());
+     });
+
+     function getParameterByName(name, url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+   });
+</script>
+    <div id="back-to-top" role="button" aria-label="Back to top">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+    </div>
+</main>
+<!-- footer -->
+
+<footer class="footer" role="contentinfo" aria-label="Site footer">
+    <div class="navigation" role="navigation" aria-label="Footer links">
+        <a href="http://localhost:4000" class="avatar" role="link"></a>
+        <ul role="menubar" aria-label="Footer links menubar">
+            <li class="footer-products" role="menuitem" aria-label="Products">
+                تولیدات
+                <ul role="menu" aria-hidden="true" aria-label="Products link">
+                </ul>
+            </li>
+            <li class="footer-blog" role="menuitem" aria-label="Blog">
+                مقالات
+                <ul role="menu" aria-hidden="true" aria-label="Blog link">
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2020/07/03/marriage.html" role="link" aria-label="ازدواج">ازدواج</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2019/10/11/vuejs.html" role="link" aria-label="آموزش vuejs">آموزش vuejs</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/18/laravel.html" role="link" aria-label="آموزش Laravel">آموزش Laravel</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/articles/2017/12/13/laravelcollective.html" role="link" aria-label="معرفی Laravel Collective">معرفی Laravel Collective</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/06/design-patterns.html" role="link" aria-label="معرفی  Design Pattern">معرفی  Design Pattern</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/blog" role="link" aria-label="Read more">Read More</a></li>
+                </ul>
+            </li>
+
+            <li class="footer-connect" role="menuitem" aria-label="Connect">
+                تماس
+                <ul role="menu" aria-hidden="true" aria-label="Connect link">
+                    <li role="listitem" aria-label="Connect link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub">GitHub</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://www.linkedin.com/in/farhad-mirzapour/" target="_blank" role="link" aria-label="Linkedin">Linkedin</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter">Twitter</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="socials" role="navigation" aria-label="Social links">
+        <ul role="menu" aria-hidden="true" aria-label="Social link">
+            <li role="listitem" aria-label="Social link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://www.linkedin.com/in/farhad-mirzapour-0043b862/" target="_blank" role="link" aria-label="Linkedin"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="/feed.xml" role="link" aria-label="RSS"><i class="fa fa-rss-square" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+    <div class="copyright" role="contentinfo" aria-label="Copyright">
+        <p>© <script type="text/javascript">document.write(new Date().getFullYear());</script> Farhad Mirzapour</p>
+    </div>
+</footer>
+
+<!-- scripts -->
+<script src="/assets/js/hamburger-menu.js"></script>
+
+<script src="/assets/js/elevator.min.js"></script>
+<script src="/assets/js/back-to-top.js"></script>
+<script src="/assets/prisma/prism.js"></script>
+<!-- google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108878564-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-108878564-1');
+</script>
+
+</body>
+</html>

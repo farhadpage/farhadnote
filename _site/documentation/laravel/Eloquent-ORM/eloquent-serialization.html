@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html lang="">
+<!-- head -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>آشنایی با eloquent serialization | مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="آشنایی با eloquent serialization" />
+<meta name="author" content="Farhad Mirzapour" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="به هنگام ساخت API برای JSON، اغلب لازم می شود مدل ها و رابطه های خود را به فرمت آرایه یا JSON تبدیل نمایید. Eloquent برای اجرای این نوع عملیات تبدیل متدهای کارآمدی را ارائه نموده و همچنین به شما اجازه می دهد attribute هایی که در فرایند serialization لحاظ می شوند را مدیریت کنید (سریالی شدن / serialization به پروسه ای اشاره دارد که در آن یک object یا مجموعه ای از object ها که به یکدیگر اشاره می کنند به صورت گروهی از بایت ها یا فرمت داده ای XML درآمده که متعاقبا می توان آن را ذخیره یا منتقل کرد. در مقابل Deserialization به فرایندی گفته می شود که در آن گروهی از بایت ها دریافت شده و به دنبال آن به object یا مجموعه ای از object ها تبدیل می شوند). تبدیل یک مدل به آرایه Serializing To Arrays می توان با استفاده از متد toArray یک مدل و رابطه های بارگذاری شده آن را به نوع آرایه تبدیل نمایید. متد مذکور یک تابع recursive یا به اصطلاح بازگشتی است، بنابراین تمامی attribute ها و relation ها (از جمله رابطه ی رابطه ها) به آرایه تبدیل می شوند: $user = App\User::with(&#39;roles&#39;)-&gt;first(); return $user-&gt;toArray(); همچنین می توانید collection ها را به آرایه تبدیل نمایید: $users = App\User::all(); return $users-&gt;toArray(); تبدیل یک مدل به فرمت JSON (Serializing To JSON) برای تبدیل یک مدل به JSON، می توانید متد toJson را فراخوانی نمایید. این متد نیز مانند toArray، یک تابع بازگشتی است. از اینرو تمامیattribute ها و relation ها به نوع JSON تبدیل می شوند: $user = App\User::find(1); return $user-&gt;toJson(); یا می توانید یک مدل یا collection را به نوع رشته تبدیل نمایید. این فرایند خود سبب فراخوانی خودکار متد toJson می شود و رشته ی تولید شده را به JSON تبدیل می کند: $user = App\User::find(1); return (string) $user; از آنجایی که مدل ها و collection ها پس از تبدیل نوع به رشته، به فرمت JSON تبدیل می شوند، شما می توانید شی Eloquent را مستقیما ازroute ها یا controller های اپلیکیشن بازگردانی نمایید (return): Route::get(&#39;users&#39;, function () { return App\User::all(); }); مخفی سازی attribute ها به هنگام تبدیل به JSON یا آرایه گاهی لازم می شود attribute هایی نظیر گذرواژه ها که در نسخه ی تبدیل شده به آرایه یا JSON آن مدل لحاظ می شود را محدود نمایید. برای این منظور، کافی است یک property به نام $hidden به مدل خود اضافه نمایید و سپس attribute دلخواه را در آن قرار دهید: &lt;?php namespace App; use Illuminate\Database\Eloquent\Model; class User extends Model { /** * The attributes that should be hidden for arrays. * * @var array */ protected $hidden = [&#39;password&#39;]; } در زمان پنهان سازی رابطه ها لازم است از اسم متد استفاده کنید، نه از اسم dynamic property آن. یا (به روشی دیگر) می توانید با استفاده از property به نام visible یک لیست سفید تعریف نموده و در آن attribute هایی که می خواهید در نسخه ی تبدیل شده به JSON یا آرایه از مدل موجود باشند را مشخص نمایید: &lt;?php namespace App; use Illuminate\Database\Eloquent\Model; class User extends Model { /** * The attributes that should be visible in arrays. * * @var array */ protected $visible = [&#39;first_name&#39;, &#39;last_name&#39;]; } ویرایش قابلیت رویت و دسترسی یک property مخفی به صورت موقت اگر می خواهید برخی attribute هایی که غالبا مخفی هستند را در نمونه ی مدل خروجی قابل دسترس و visible نمایید (لیستی از attribute ها تعریف کنید که در آرایه یا JSON تبدیل وجود داشته باشند)، در آن صورت بایستی متد makeVisible را بکار ببرید. return $user-&gt;makeVisible(&#39;attribute&#39;)-&gt;toArray(); به همین ترتیب، می توان برخی از attribute هایی که اغلب visible و قابل دسترس هستند را به صورت موقت از دسترس خارج نمایید (hiddenکنید). برای نیل به این هدف، Eloquent متد makeHidden را در اختیار برنامه نویس قرار می دهد. این متد در خروجی نمونه ای از مدل مورد نظر را برگردانده و زمینه را برای فراخوانی زنجیره ای متدها فراهم می آورد: return $user-&gt;makeHidden(&#39;attribute&#39;)-&gt;toArray(); افزودن attribute های جدید در نسخه ی آرایه و JSON از مدل گاهی لازم می شود attribute هایی را در آرایه اضافه کنید که ستون متناظری در پایگاه داده ندارند. برای این منظور ابتدا بایستی یک accessorبرای مقدار مورد نظر تعریف نمایید: &lt;?php namespace App; use Illuminate\Database\Eloquent\Model; class User extends Model { /** * Get the administrator flag for the user. * * @return bool */ public function getIsAdminAttribute() { return $this-&gt;attributes[&#39;admin&#39;] == &#39;yes&#39;; } } پس از ایجاد accessor مربوطه، کافی است اسم attribute را به متغیر appends در مدل اضافه نمایید: &lt;?php namespace App; use Illuminate\Database\Eloquent\Model; class User extends Model { /** * The accessors to append to the model&#39;s array form. * * @var array */ protected $appends = [&#39;is_admin&#39;]; } پس از اضافه شدن attribute به لیست مقادیر appends، این attribute هم در نسخه ی تبدیل شده به آرایه و هم در نسخه ی JSON از مدل لحاظ خواهد شد. attribute های موجود در آرایه appends از تنظیمات visible و hidden پیکربندی شده در مدل کاملا پیروی می کنند. Date Serialization لاراول کتابخانه تاریخ کربن را به منظور ارائه سفارشی مناسب از فرمت سریال JSON کربن گسترش می دهد. برای سفارشی کردن اینکه چگونه تمامی کربن ها در طول برنامه شما سریال می شوند، از روش Carbon :: serializeUsing استفاده کنید. روش serializeUsing یک Closure را پذیرفته که رشته ای از تاریخ برای سریال سازی JSON را برمی گرداند: &lt;?php namespace App\Providers; use Illuminate\Support\Carbon; use Illuminate\Support\ServiceProvider; class AppServiceProvider extends ServiceProvider { /** * Perform post-registration booting of services. * * @return void */ public function boot() { Carbon::serializeUsing(function ($carbon) { return $carbon-&gt;format(&#39;U&#39;); }); } /** * Register bindings in the container. * * @return void */ public function register() { // } }" />
+<meta property="og:description" content="به هنگام ساخت API برای JSON، اغلب لازم می شود مدل ها و رابطه های خود را به فرمت آرایه یا JSON تبدیل نمایید. Eloquent برای اجرای این نوع عملیات تبدیل متدهای کارآمدی را ارائه نموده و همچنین به شما اجازه می دهد attribute هایی که در فرایند serialization لحاظ می شوند را مدیریت کنید (سریالی شدن / serialization به پروسه ای اشاره دارد که در آن یک object یا مجموعه ای از object ها که به یکدیگر اشاره می کنند به صورت گروهی از بایت ها یا فرمت داده ای XML درآمده که متعاقبا می توان آن را ذخیره یا منتقل کرد. در مقابل Deserialization به فرایندی گفته می شود که در آن گروهی از بایت ها دریافت شده و به دنبال آن به object یا مجموعه ای از object ها تبدیل می شوند). تبدیل یک مدل به آرایه Serializing To Arrays می توان با استفاده از متد toArray یک مدل و رابطه های بارگذاری شده آن را به نوع آرایه تبدیل نمایید. متد مذکور یک تابع recursive یا به اصطلاح بازگشتی است، بنابراین تمامی attribute ها و relation ها (از جمله رابطه ی رابطه ها) به آرایه تبدیل می شوند: $user = App\User::with(&#39;roles&#39;)-&gt;first(); return $user-&gt;toArray(); همچنین می توانید collection ها را به آرایه تبدیل نمایید: $users = App\User::all(); return $users-&gt;toArray(); تبدیل یک مدل به فرمت JSON (Serializing To JSON) برای تبدیل یک مدل به JSON، می توانید متد toJson را فراخوانی نمایید. این متد نیز مانند toArray، یک تابع بازگشتی است. از اینرو تمامیattribute ها و relation ها به نوع JSON تبدیل می شوند: $user = App\User::find(1); return $user-&gt;toJson(); یا می توانید یک مدل یا collection را به نوع رشته تبدیل نمایید. این فرایند خود سبب فراخوانی خودکار متد toJson می شود و رشته ی تولید شده را به JSON تبدیل می کند: $user = App\User::find(1); return (string) $user; از آنجایی که مدل ها و collection ها پس از تبدیل نوع به رشته، به فرمت JSON تبدیل می شوند، شما می توانید شی Eloquent را مستقیما ازroute ها یا controller های اپلیکیشن بازگردانی نمایید (return): Route::get(&#39;users&#39;, function () { return App\User::all(); }); مخفی سازی attribute ها به هنگام تبدیل به JSON یا آرایه گاهی لازم می شود attribute هایی نظیر گذرواژه ها که در نسخه ی تبدیل شده به آرایه یا JSON آن مدل لحاظ می شود را محدود نمایید. برای این منظور، کافی است یک property به نام $hidden به مدل خود اضافه نمایید و سپس attribute دلخواه را در آن قرار دهید: &lt;?php namespace App; use Illuminate\Database\Eloquent\Model; class User extends Model { /** * The attributes that should be hidden for arrays. * * @var array */ protected $hidden = [&#39;password&#39;]; } در زمان پنهان سازی رابطه ها لازم است از اسم متد استفاده کنید، نه از اسم dynamic property آن. یا (به روشی دیگر) می توانید با استفاده از property به نام visible یک لیست سفید تعریف نموده و در آن attribute هایی که می خواهید در نسخه ی تبدیل شده به JSON یا آرایه از مدل موجود باشند را مشخص نمایید: &lt;?php namespace App; use Illuminate\Database\Eloquent\Model; class User extends Model { /** * The attributes that should be visible in arrays. * * @var array */ protected $visible = [&#39;first_name&#39;, &#39;last_name&#39;]; } ویرایش قابلیت رویت و دسترسی یک property مخفی به صورت موقت اگر می خواهید برخی attribute هایی که غالبا مخفی هستند را در نمونه ی مدل خروجی قابل دسترس و visible نمایید (لیستی از attribute ها تعریف کنید که در آرایه یا JSON تبدیل وجود داشته باشند)، در آن صورت بایستی متد makeVisible را بکار ببرید. return $user-&gt;makeVisible(&#39;attribute&#39;)-&gt;toArray(); به همین ترتیب، می توان برخی از attribute هایی که اغلب visible و قابل دسترس هستند را به صورت موقت از دسترس خارج نمایید (hiddenکنید). برای نیل به این هدف، Eloquent متد makeHidden را در اختیار برنامه نویس قرار می دهد. این متد در خروجی نمونه ای از مدل مورد نظر را برگردانده و زمینه را برای فراخوانی زنجیره ای متدها فراهم می آورد: return $user-&gt;makeHidden(&#39;attribute&#39;)-&gt;toArray(); افزودن attribute های جدید در نسخه ی آرایه و JSON از مدل گاهی لازم می شود attribute هایی را در آرایه اضافه کنید که ستون متناظری در پایگاه داده ندارند. برای این منظور ابتدا بایستی یک accessorبرای مقدار مورد نظر تعریف نمایید: &lt;?php namespace App; use Illuminate\Database\Eloquent\Model; class User extends Model { /** * Get the administrator flag for the user. * * @return bool */ public function getIsAdminAttribute() { return $this-&gt;attributes[&#39;admin&#39;] == &#39;yes&#39;; } } پس از ایجاد accessor مربوطه، کافی است اسم attribute را به متغیر appends در مدل اضافه نمایید: &lt;?php namespace App; use Illuminate\Database\Eloquent\Model; class User extends Model { /** * The accessors to append to the model&#39;s array form. * * @var array */ protected $appends = [&#39;is_admin&#39;]; } پس از اضافه شدن attribute به لیست مقادیر appends، این attribute هم در نسخه ی تبدیل شده به آرایه و هم در نسخه ی JSON از مدل لحاظ خواهد شد. attribute های موجود در آرایه appends از تنظیمات visible و hidden پیکربندی شده در مدل کاملا پیروی می کنند. Date Serialization لاراول کتابخانه تاریخ کربن را به منظور ارائه سفارشی مناسب از فرمت سریال JSON کربن گسترش می دهد. برای سفارشی کردن اینکه چگونه تمامی کربن ها در طول برنامه شما سریال می شوند، از روش Carbon :: serializeUsing استفاده کنید. روش serializeUsing یک Closure را پذیرفته که رشته ای از تاریخ برای سریال سازی JSON را برمی گرداند: &lt;?php namespace App\Providers; use Illuminate\Support\Carbon; use Illuminate\Support\ServiceProvider; class AppServiceProvider extends ServiceProvider { /** * Perform post-registration booting of services. * * @return void */ public function boot() { Carbon::serializeUsing(function ($carbon) { return $carbon-&gt;format(&#39;U&#39;); }); } /** * Register bindings in the container. * * @return void */ public function register() { // } }" />
+<link rel="canonical" href="http://localhost:4000/documentation/laravel/Eloquent-ORM/eloquent-serialization" />
+<meta property="og:url" content="http://localhost:4000/documentation/laravel/Eloquent-ORM/eloquent-serialization" />
+<meta property="og:site_name" content="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-01-19T22:37:42+03:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="آشنایی با eloquent serialization" />
+<meta name="twitter:site" content="@farhadmirzapour" />
+<meta name="twitter:creator" content="@Farhad Mirzapour" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"آشنایی با eloquent serialization","url":"http://localhost:4000/documentation/laravel/Eloquent-ORM/eloquent-serialization","datePublished":"2018-01-19T22:37:42+03:30","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"dateModified":"2018-01-19T22:37:42+03:30","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/documentation/laravel/Eloquent-ORM/eloquent-serialization"},"author":{"@type":"Person","name":"Farhad Mirzapour"},"description":"به هنگام ساخت API برای JSON، اغلب لازم می شود مدل ها و رابطه های خود را به فرمت آرایه یا JSON تبدیل نمایید. Eloquent برای اجرای این نوع عملیات تبدیل متدهای کارآمدی را ارائه نموده و همچنین به شما اجازه می دهد attribute هایی که در فرایند serialization لحاظ می شوند را مدیریت کنید (سریالی شدن / serialization به پروسه ای اشاره دارد که در آن یک object یا مجموعه ای از object ها که به یکدیگر اشاره می کنند به صورت گروهی از بایت ها یا فرمت داده ای XML درآمده که متعاقبا می توان آن را ذخیره یا منتقل کرد. در مقابل Deserialization به فرایندی گفته می شود که در آن گروهی از بایت ها دریافت شده و به دنبال آن به object یا مجموعه ای از object ها تبدیل می شوند). تبدیل یک مدل به آرایه Serializing To Arrays می توان با استفاده از متد toArray یک مدل و رابطه های بارگذاری شده آن را به نوع آرایه تبدیل نمایید. متد مذکور یک تابع recursive یا به اصطلاح بازگشتی است، بنابراین تمامی attribute ها و relation ها (از جمله رابطه ی رابطه ها) به آرایه تبدیل می شوند: $user = App\\User::with(&#39;roles&#39;)-&gt;first(); return $user-&gt;toArray(); همچنین می توانید collection ها را به آرایه تبدیل نمایید: $users = App\\User::all(); return $users-&gt;toArray(); تبدیل یک مدل به فرمت JSON (Serializing To JSON) برای تبدیل یک مدل به JSON، می توانید متد toJson را فراخوانی نمایید. این متد نیز مانند toArray، یک تابع بازگشتی است. از اینرو تمامیattribute ها و relation ها به نوع JSON تبدیل می شوند: $user = App\\User::find(1); return $user-&gt;toJson(); یا می توانید یک مدل یا collection را به نوع رشته تبدیل نمایید. این فرایند خود سبب فراخوانی خودکار متد toJson می شود و رشته ی تولید شده را به JSON تبدیل می کند: $user = App\\User::find(1); return (string) $user; از آنجایی که مدل ها و collection ها پس از تبدیل نوع به رشته، به فرمت JSON تبدیل می شوند، شما می توانید شی Eloquent را مستقیما ازroute ها یا controller های اپلیکیشن بازگردانی نمایید (return): Route::get(&#39;users&#39;, function () { return App\\User::all(); }); مخفی سازی attribute ها به هنگام تبدیل به JSON یا آرایه گاهی لازم می شود attribute هایی نظیر گذرواژه ها که در نسخه ی تبدیل شده به آرایه یا JSON آن مدل لحاظ می شود را محدود نمایید. برای این منظور، کافی است یک property به نام $hidden به مدل خود اضافه نمایید و سپس attribute دلخواه را در آن قرار دهید: &lt;?php namespace App; use Illuminate\\Database\\Eloquent\\Model; class User extends Model { /** * The attributes that should be hidden for arrays. * * @var array */ protected $hidden = [&#39;password&#39;]; } در زمان پنهان سازی رابطه ها لازم است از اسم متد استفاده کنید، نه از اسم dynamic property آن. یا (به روشی دیگر) می توانید با استفاده از property به نام visible یک لیست سفید تعریف نموده و در آن attribute هایی که می خواهید در نسخه ی تبدیل شده به JSON یا آرایه از مدل موجود باشند را مشخص نمایید: &lt;?php namespace App; use Illuminate\\Database\\Eloquent\\Model; class User extends Model { /** * The attributes that should be visible in arrays. * * @var array */ protected $visible = [&#39;first_name&#39;, &#39;last_name&#39;]; } ویرایش قابلیت رویت و دسترسی یک property مخفی به صورت موقت اگر می خواهید برخی attribute هایی که غالبا مخفی هستند را در نمونه ی مدل خروجی قابل دسترس و visible نمایید (لیستی از attribute ها تعریف کنید که در آرایه یا JSON تبدیل وجود داشته باشند)، در آن صورت بایستی متد makeVisible را بکار ببرید. return $user-&gt;makeVisible(&#39;attribute&#39;)-&gt;toArray(); به همین ترتیب، می توان برخی از attribute هایی که اغلب visible و قابل دسترس هستند را به صورت موقت از دسترس خارج نمایید (hiddenکنید). برای نیل به این هدف، Eloquent متد makeHidden را در اختیار برنامه نویس قرار می دهد. این متد در خروجی نمونه ای از مدل مورد نظر را برگردانده و زمینه را برای فراخوانی زنجیره ای متدها فراهم می آورد: return $user-&gt;makeHidden(&#39;attribute&#39;)-&gt;toArray(); افزودن attribute های جدید در نسخه ی آرایه و JSON از مدل گاهی لازم می شود attribute هایی را در آرایه اضافه کنید که ستون متناظری در پایگاه داده ندارند. برای این منظور ابتدا بایستی یک accessorبرای مقدار مورد نظر تعریف نمایید: &lt;?php namespace App; use Illuminate\\Database\\Eloquent\\Model; class User extends Model { /** * Get the administrator flag for the user. * * @return bool */ public function getIsAdminAttribute() { return $this-&gt;attributes[&#39;admin&#39;] == &#39;yes&#39;; } } پس از ایجاد accessor مربوطه، کافی است اسم attribute را به متغیر appends در مدل اضافه نمایید: &lt;?php namespace App; use Illuminate\\Database\\Eloquent\\Model; class User extends Model { /** * The accessors to append to the model&#39;s array form. * * @var array */ protected $appends = [&#39;is_admin&#39;]; } پس از اضافه شدن attribute به لیست مقادیر appends، این attribute هم در نسخه ی تبدیل شده به آرایه و هم در نسخه ی JSON از مدل لحاظ خواهد شد. attribute های موجود در آرایه appends از تنظیمات visible و hidden پیکربندی شده در مدل کاملا پیروی می کنند. Date Serialization لاراول کتابخانه تاریخ کربن را به منظور ارائه سفارشی مناسب از فرمت سریال JSON کربن گسترش می دهد. برای سفارشی کردن اینکه چگونه تمامی کربن ها در طول برنامه شما سریال می شوند، از روش Carbon :: serializeUsing استفاده کنید. روش serializeUsing یک Closure را پذیرفته که رشته ای از تاریخ برای سریال سازی JSON را برمی گرداند: &lt;?php namespace App\\Providers; use Illuminate\\Support\\Carbon; use Illuminate\\Support\\ServiceProvider; class AppServiceProvider extends ServiceProvider { /** * Perform post-registration booting of services. * * @return void */ public function boot() { Carbon::serializeUsing(function ($carbon) { return $carbon-&gt;format(&#39;U&#39;); }); } /** * Register bindings in the container. * * @return void */ public function register() { // } }","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="stylesheet" href="/assets/prisma/prism.css">
+    <!-- favicons and rss -->
+    <link rel="alternate" type="application/rss+xml" title="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" href="/feed.xml">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- header -->
+<header class="header" role="banner" aria-label="Header">
+    <button class="hamburger-button" onclick="hamburgerMenu();" role="button" aria-label="Hamburger menu button">
+        <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    </button>
+    <a href="/" class="logo" role="link" aria-label="Home">
+        <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo">
+    </a>
+    <nav class="navigation" role="navigation" aria-label="Navigation">
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item">
+                <a href="/" class="logo" role="menuitem" aria-label="Home">
+                    <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo">
+                </a>
+            </li>
+            
+            <li role="menuitem"><a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a></li>
+            
+            <li role="menuitem"><a href="/contactus" role="menuitem" aria-label="تماس">تماس</a></li>
+            
+        </ul>
+    </nav>
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox">
+        </form>
+    </div>
+</header>
+
+<nav id="hamburger-menu" role="navigation" aria-label="Hamburger menu">
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox">
+        </form>
+    </div>
+    <div class="home-nav" role="navigation" aria-label="Site navigation">
+        <a href="/" role="menuitem" aria-label="Home">صفحه اصلی</a>
+        
+        <a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a>
+        
+        <a href="/contactus" role="menuitem" aria-label="تماس">تماس</a>
+        
+    </div>
+
+    
+    <div class="doc-nav" role="navigation" aria-label="Documentation navigation">
+        <p role="presentation" aria-label="Category name">
+            اصول آموزش Laravel
+        </p>
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/2017/12/18/laravel.html" class="doc-link" role="link" aria-label="آشنایی با eloquent serialization">مقدمه</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Digging-Deeper/collections" class="doc-link" role="link" aria-label="معرفی collections">معرفی collections</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Database/database" class="doc-link" role="link" aria-label="پایگاه داده ها">پایگاه داده ها</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Database/queries" class="doc-link" role="link" aria-label="آشنایی با Query Builder">آشنایی با Query Builder</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent" class="doc-link" role="link" aria-label="آشنایی با eloquent">آشنایی با eloquent</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-relationships" class="doc-link" role="link" aria-label="eloquent relationships  آموزش">eloquent relationships  آموزش</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-mutators" class="doc-link" role="link" aria-label="آشنایی با eloquent mutators">آشنایی با eloquent mutators</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-collections" class="doc-link" role="link" aria-label="آشنایی با eloquent collections">آشنایی با eloquent collections</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-serialization" class="doc-link" role="link" aria-label="آشنایی با eloquent serialization">آشنایی با eloquent serialization</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Architecture-Concepts/lifecycle" class="doc-link" role="link" aria-label="چرخه ی حیات درخواست (Request Lifecycle)">چرخه ی حیات درخواست (Request Lifecycle)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/routing" class="doc-link" role="link" aria-label="Routing یا مسیریابی در لاراول">Routing یا مسیریابی در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/middleware" class="doc-link" role="link" aria-label="آموزش Middleware">آموزش Middleware</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/csrf" class="doc-link" role="link" aria-label="حفاظت CSRF">حفاظت CSRF</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/controllers" class="doc-link" role="link" aria-label="استفاده از Controller">استفاده از Controller</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/requests" class="doc-link" role="link" aria-label="اصول requests">اصول requests</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/views" class="doc-link" role="link" aria-label="ایجاد view">ایجاد view</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/session" class="doc-link" role="link" aria-label="استفاده از  Session">استفاده از  Session</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/responses" class="doc-link" role="link" aria-label="پاسخ Response">پاسخ Response</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/urls" class="doc-link" role="link" aria-label="تولید URL در لاراول">تولید URL در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/validation" class="doc-link" role="link" aria-label="validation یا اعتبارسنجی در لاراول">validation یا اعتبارسنجی در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/errors" class="doc-link" role="link" aria-label="مدیریت Errors &amp; Logging">مدیریت Errors &amp; Logging</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/blade" class="doc-link" role="link" aria-label="Blade Templates">Blade Templates</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/localization" class="doc-link" role="link" aria-label="اصول localization">اصول localization</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/frontend" class="doc-link" role="link" aria-label="JavaScript &amp; CSS Scaffolding">JavaScript &amp; CSS Scaffolding</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </ul>
+    </div>
+    
+</nav>
+<!-- main content -->
+<main class="container" role="main">
+    <div class="rcdoccontainerimg">
+<div class="rc-DRTVBanner-new rc-DRTVBanner-bigsize">
+    <div style="background: url('/images/original/laravel.png'); " class="blurred_img"></div>
+    <div class="mask"></div>
+    <div class="bot"></div>
+    <div class="over">
+        <div class="container-rc">
+            <img class="image" src="/images/original/laravel.png" alt="آشنایی با eloquent serialization" height="190">
+            <div class="desktop-banner-container">
+                <h1 class="display-5-text headline">
+                    
+                    
+                    اصول آموزش Laravel
+                    </h1>
+                <!--<div class="tagslist"><ul class='lyda-tag-list'><li class='lyda-tag-list-title'>برچسب ها</li><li><a class="tags" href="/tag/لاراول">#لاراول</a></li><li><a class="tags" href="/tag/لاراول-5-5">#لاراول 5.5</a></li></ul></div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="bread-crumb">-->
+<!--<div class="container   ">-->
+<!--<div class="pull-right ">-->
+<!--<div class="bread-button text-custom b-left">-->
+<!--انتشار : 2 ماه پیش-->
+<!--</div>-->
+<!--<a href="/category/article/" class="bread-button back-to-all b-left hidden-xs">همه مقالات</a>-->
+<!--<div class="cat-lable">-->
+<!--<a href="/category/article/laravel/">-->
+<!--لاراول-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<script>
+    $(window).scroll(function(){
+        var sticky = $('.doc-menu'),
+            scroll = $(window).scrollTop();
+        if (scroll >= 101) {sticky.addClass('doc-header-scroll'); }
+        else {sticky.removeClass('doc-header-scroll'); };
+    });
+</script>
+</div>
+<div class="doc-container">
+
+    <div class="doc-menu">
+    
+    <ul>
+        <li>
+            <a href="/2017/12/18/laravel.html" class="active doc-link" role="link">
+                مقدمه
+            </a>
+        </li>
+        
+        <li>
+            <span class="caret">معماری Laravel</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="چرخه ی حیات درخواست (Request Lifecycle)" href="/documentation/laravel/Architecture-Concepts/lifecycle" class="active doc-link" role="link">
+                چرخه ی حیات درخواست (Request Lifecycle)
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم اساسی</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="Routing یا مسیریابی در لاراول" href="/documentation/laravel/The-Basics/routing" class="active doc-link" role="link">
+                Routing یا مسیریابی در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آموزش Middleware" href="/documentation/laravel/The-Basics/middleware" class="active doc-link" role="link">
+                آموزش Middleware
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="حفاظت CSRF" href="/documentation/laravel/The-Basics/csrf" class="active doc-link" role="link">
+                حفاظت CSRF
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="استفاده از Controller" href="/documentation/laravel/The-Basics/controllers" class="active doc-link" role="link">
+                استفاده از Controller
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول requests" href="/documentation/laravel/The-Basics/requests" class="active doc-link" role="link">
+                اصول requests
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="ایجاد view" href="/documentation/laravel/The-Basics/views" class="active doc-link" role="link">
+                ایجاد view
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="استفاده از  Session" href="/documentation/laravel/The-Basics/session" class="active doc-link" role="link">
+                استفاده از  Session
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="پاسخ Response" href="/documentation/laravel/The-Basics/responses" class="active doc-link" role="link">
+                پاسخ Response
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="تولید URL در لاراول" href="/documentation/laravel/The-Basics/urls" class="active doc-link" role="link">
+                تولید URL در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="validation یا اعتبارسنجی در لاراول" href="/documentation/laravel/The-Basics/validation" class="active doc-link" role="link">
+                validation یا اعتبارسنجی در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="مدیریت Errors &amp; Logging" href="/documentation/laravel/The-Basics/errors" class="active doc-link" role="link">
+                مدیریت Errors &amp; Logging
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">Front End</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="Blade Templates" href="/documentation/laravel/Frontend/blade" class="active doc-link" role="link">
+                Blade Templates
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول localization" href="/documentation/laravel/Frontend/localization" class="active doc-link" role="link">
+                اصول localization
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="JavaScript &amp; CSS Scaffolding" href="/documentation/laravel/Frontend/frontend" class="active doc-link" role="link">
+                JavaScript &amp; CSS Scaffolding
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم پیشرفته تر</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="معرفی collections" href="/documentation/laravel/Digging-Deeper/collections" class="active doc-link" role="link">
+                معرفی collections
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">پایگاه داده ها</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="پایگاه داده ها" href="/documentation/laravel/Database/database" class="active doc-link" role="link">
+                پایگاه داده ها
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با Query Builder" href="/documentation/laravel/Database/queries" class="active doc-link" role="link">
+                آشنایی با Query Builder
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">Eloquent ORM</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent" href="/documentation/laravel/Eloquent-ORM/eloquent" class="active doc-link" role="link">
+                آشنایی با eloquent
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="eloquent relationships  آموزش" href="/documentation/laravel/Eloquent-ORM/eloquent-relationships" class="active doc-link" role="link">
+                eloquent relationships  آموزش
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent mutators" href="/documentation/laravel/Eloquent-ORM/eloquent-mutators" class="active doc-link" role="link">
+                آشنایی با eloquent mutators
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent collections" href="/documentation/laravel/Eloquent-ORM/eloquent-collections" class="active doc-link" role="link">
+                آشنایی با eloquent collections
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent serialization" href="/documentation/laravel/Eloquent-ORM/eloquent-serialization" class="active doc-link" role="link">
+                آشنایی با eloquent serialization
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+    </ul>
+    
+</div>
+
+    <article class="documentation">
+        <header class="doc-header">
+            <div class="time">
+                    تاریخ :      جمعه 29 دی 1396
+            </div>
+                
+        </header>
+        <section class="anchored">
+            <p>
+به هنگام ساخت API برای JSON، اغلب لازم می شود مدل ها و رابطه های خود را به فرمت آرایه یا JSON تبدیل نمایید. Eloquent برای اجرای این نوع عملیات تبدیل متدهای کارآمدی را ارائه نموده و همچنین به شما اجازه می دهد attribute هایی که در فرایند serialization لحاظ می شوند را مدیریت کنید (سریالی شدن / serialization به پروسه ای اشاره دارد که در آن یک object یا مجموعه ای از object ها که به یکدیگر اشاره می کنند به صورت گروهی از بایت ها یا فرمت داده ای XML درآمده که متعاقبا می توان آن را ذخیره یا منتقل کرد. در مقابل Deserialization به فرایندی گفته می شود که در آن گروهی از بایت ها دریافت شده و به دنبال آن به object یا مجموعه ای از object ها تبدیل می شوند).
+</p>
+<p>
+<a name="serializing-models-and-collections"></a>
+</p>
+
+<p><br></p>
+<h3>تبدیل یک مدل به آرایه Serializing To Arrays</h3>
+<p>
+می توان با استفاده از متد toArray یک مدل و رابطه های بارگذاری شده آن را به نوع آرایه تبدیل نمایید. متد مذکور یک تابع recursive یا به اصطلاح بازگشتی است، بنابراین تمامی attribute ها و relation ها (از جمله رابطه ی رابطه ها) به آرایه تبدیل می شوند:
+</p>
+
+<pre><code class="language-php  line-numbers">$user = App\User::with('roles')-&gt;first();
+
+return $user-&gt;toArray();
+</code></pre>
+
+<p>
+همچنین می توانید collection ها را به آرایه تبدیل نمایید:
+</p>
+
+<pre><code class="language-php  line-numbers">$users = App\User::all();
+
+return $users-&gt;toArray();
+</code></pre>
+
+<p>
+<a name="serializing-to-json"></a>
+</p>
+
+<p><br></p>
+<h3>تبدیل یک مدل به فرمت JSON (Serializing To JSON)</h3>
+<p>
+برای تبدیل یک مدل به JSON، می توانید متد toJson را فراخوانی نمایید. این متد نیز مانند toArray، یک تابع بازگشتی است. از اینرو تمامیattribute ها و relation ها به نوع JSON تبدیل می شوند:
+</p>
+
+<pre><code class="language-php  line-numbers">$user = App\User::find(1);
+
+return $user-&gt;toJson();
+</code></pre>
+
+<p>
+یا می توانید یک مدل یا collection را به نوع رشته تبدیل نمایید. این فرایند خود سبب فراخوانی خودکار متد toJson می شود و رشته ی تولید شده را به JSON تبدیل می کند:
+</p>
+
+<pre><code class="language-php  line-numbers">$user = App\User::find(1);
+
+return (string) $user;
+</code></pre>
+
+<p>
+از آنجایی که مدل ها و collection ها پس از تبدیل نوع به رشته، به فرمت JSON تبدیل می شوند، شما می توانید شی Eloquent را مستقیما ازroute ها یا controller های اپلیکیشن بازگردانی نمایید (return):
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('users', function () {
+    return App\User::all();
+});
+</code></pre>
+
+<p>
+<a name="hiding-attributes-from-json"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#hiding-attributes-from-json">مخفی سازی attribute ها به هنگام تبدیل به JSON یا آرایه</a></h3>
+<p>
+گاهی لازم می شود attribute هایی نظیر گذرواژه ها که در نسخه ی تبدیل شده به آرایه یا JSON آن مدل لحاظ می شود را محدود نمایید. برای این منظور، کافی است یک property به نام $hidden به مدل خود اضافه نمایید و سپس attribute دلخواه را در آن قرار دهید:
+</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class User extends Model
+{
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['password'];
+}
+</code></pre>
+
+<blockquote class="has-icon note">
+در زمان پنهان سازی رابطه ها لازم است از اسم متد استفاده کنید، نه از اسم dynamic property آن.
+</blockquote>
+
+<p>
+یا (به روشی دیگر) می توانید با استفاده از property به نام visible یک لیست سفید تعریف نموده و در آن attribute هایی که می خواهید در نسخه ی تبدیل شده به JSON یا آرایه از مدل موجود باشند را مشخص نمایید:
+</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class User extends Model
+{
+    /**
+     * The attributes that should be visible in arrays.
+     *
+     * @var array
+     */
+    protected $visible = ['first_name', 'last_name'];
+}
+</code></pre>
+
+<p><br></p>
+<h3>ویرایش قابلیت رویت و دسترسی یک property مخفی به صورت موقت</h3>
+<p>
+اگر می خواهید برخی attribute هایی که غالبا مخفی هستند را در نمونه ی مدل خروجی قابل دسترس و visible نمایید (لیستی از attribute ها تعریف کنید که در آرایه یا JSON تبدیل وجود داشته باشند)، در آن صورت بایستی متد makeVisible را بکار ببرید.
+</p>
+
+<pre><code class="language-php  line-numbers">return $user-&gt;makeVisible('attribute')-&gt;toArray();
+</code></pre>
+
+<p>
+به همین ترتیب، می توان برخی از attribute هایی که اغلب visible و قابل دسترس هستند را به صورت موقت از دسترس خارج نمایید (hiddenکنید). برای نیل به این هدف، Eloquent متد makeHidden را در اختیار برنامه نویس قرار می دهد. این متد در خروجی نمونه ای از مدل مورد نظر را برگردانده و زمینه را برای فراخوانی زنجیره ای متدها فراهم می آورد:
+</p>
+
+<pre><code class="language-php  line-numbers">return $user-&gt;makeHidden('attribute')-&gt;toArray();
+</code></pre>
+
+<p>
+<a name="appending-values-to-json"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#appending-values-to-json">افزودن attribute های جدید در نسخه ی آرایه و JSON از مدل</a></h3>
+<p>
+گاهی لازم می شود attribute هایی را در آرایه اضافه کنید که ستون متناظری در پایگاه داده ندارند. برای این منظور ابتدا بایستی یک accessorبرای مقدار مورد نظر تعریف نمایید:
+</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class User extends Model
+{
+    /**
+     * Get the administrator flag for the user.
+     *
+     * @return bool
+     */
+    public function getIsAdminAttribute()
+    {
+        return $this-&gt;attributes['admin'] == 'yes';
+    }
+}
+</code></pre>
+
+<p>
+پس از ایجاد accessor مربوطه، کافی است اسم attribute را به متغیر appends در مدل اضافه نمایید:
+</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class User extends Model
+{
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['is_admin'];
+}
+</code></pre>
+
+<p>
+پس از اضافه شدن attribute به لیست مقادیر appends، این attribute هم در نسخه ی تبدیل شده به آرایه و هم در نسخه ی JSON از مدل لحاظ خواهد شد. attribute های موجود در آرایه appends از تنظیمات visible و hidden پیکربندی شده در مدل کاملا پیروی می کنند.
+</p>
+<p>
+<a name="date-serialization"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#date-serialization">Date Serialization</a></h3>
+<p>
+لاراول کتابخانه تاریخ کربن را به منظور ارائه سفارشی مناسب از فرمت سریال JSON کربن گسترش می دهد. برای سفارشی کردن اینکه چگونه تمامی کربن ها در طول برنامه شما سریال می شوند، از روش Carbon :: serializeUsing استفاده کنید. روش serializeUsing یک Closure  را پذیرفته که رشته ای از تاریخ برای سریال سازی JSON را برمی گرداند:
+</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+
+namespace App\Providers;
+
+use Illuminate\Support\Carbon;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Perform post-registration booting of services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        Carbon::serializeUsing(function ($carbon) {
+            return $carbon-&gt;format('U');
+        });
+    }
+
+    /**
+     * Register bindings in the container.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
+    }
+}
+</code></pre>
+
+        </section>
+        
+<hr>
+<p>
+</p>
+<div>منابع مورد مطالعه جهت جمع آوری این مطلب:</div>
+<div class="refrencehref">
+        https://laravel.com/docs/5.5/eloquent-serialization <br> www.tahlildadeh.com/ArticleDetails/آموزش-serialization-در-Eloquent
+</div>
+
+
+        <hr>
+        <style>
+    #commentsdiv{
+        background-color: #f5f5f5;
+        border: 1px solid #c5c5c5;
+        border-bottom: 0px !important;
+        padding: 12px;
+    }
+    #commentsborder{
+        background-color: #fff;
+        border: 1px solid #c5c5c5;
+        white-space: normal;
+        padding: 20px;
+    }
+</style>
+
+<div id="commentsdiv">نظرات</div>
+<div id="commentsborder">
+<div id="wpac-comment"></div>
+</div>
+<script type="text/javascript">
+wpac_init = window.wpac_init || [];
+wpac_init.push({widget: 'Comment', id: 7878});
+(function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = 'https://embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+})();
+</script>
+
+    </article>
+</div>
+<script src="/assets/js/anchor.min.js"></script>
+<script>
+    anchors.options = {
+        placement: 'left',
+        visible: 'always',
+//        icon: '#',
+    };
+    anchors.add('.anchored h2,.anchored h3,.anchored h4,.anchored h5,.anchored h6');
+
+    (function($){
+        if(window.location.hash) {
+            var hash = decodeURIComponent(window.location.hash);
+            gotohash($(hash).offset().top);
+        }
+        $('a.anchorjs-link').click(function(){
+			gotohash($(this).offset().top);
+        });
+        $('a.anchorjs').click(function(){
+			var id = '#' + $(this).attr('title');
+			gotohash($(id).offset().top);
+        });		
+        function gotohash(top){
+            var headerHeight = 70; // Get fixed header height
+            $('html,body').animate({
+                scrollTop: top - headerHeight
+            }, 20);
+        }
+    })(jQuery);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+   $(document).ready(function (){
+
+     var scrollPosition = getParameterByName('scroll');
+     if(scrollPosition)
+      $(".doc-menu").scrollTop(scrollPosition);
+
+     $('.doc-link').click(function(){
+        var scrollTop = $(".doc-menu").scrollTop();
+        if(scrollTop > 0)
+          $(this).attr("href",this.href + "?scroll=" + $(".doc-menu").scrollTop());
+     });
+
+     function getParameterByName(name, url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+   });
+</script>
+    <div id="back-to-top" role="button" aria-label="Back to top">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+    </div>
+</main>
+<!-- footer -->
+
+<footer class="footer" role="contentinfo" aria-label="Site footer">
+    <div class="navigation" role="navigation" aria-label="Footer links">
+        <a href="http://localhost:4000" class="avatar" role="link"></a>
+        <ul role="menubar" aria-label="Footer links menubar">
+            <li class="footer-products" role="menuitem" aria-label="Products">
+                تولیدات
+                <ul role="menu" aria-hidden="true" aria-label="Products link">
+                </ul>
+            </li>
+            <li class="footer-blog" role="menuitem" aria-label="Blog">
+                مقالات
+                <ul role="menu" aria-hidden="true" aria-label="Blog link">
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2020/07/03/marriage.html" role="link" aria-label="ازدواج">ازدواج</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2019/10/11/vuejs.html" role="link" aria-label="آموزش vuejs">آموزش vuejs</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/18/laravel.html" role="link" aria-label="آموزش Laravel">آموزش Laravel</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/articles/2017/12/13/laravelcollective.html" role="link" aria-label="معرفی Laravel Collective">معرفی Laravel Collective</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/06/design-patterns.html" role="link" aria-label="معرفی  Design Pattern">معرفی  Design Pattern</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/blog" role="link" aria-label="Read more">Read More</a></li>
+                </ul>
+            </li>
+
+            <li class="footer-connect" role="menuitem" aria-label="Connect">
+                تماس
+                <ul role="menu" aria-hidden="true" aria-label="Connect link">
+                    <li role="listitem" aria-label="Connect link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub">GitHub</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://www.linkedin.com/in/farhad-mirzapour/" target="_blank" role="link" aria-label="Linkedin">Linkedin</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter">Twitter</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="socials" role="navigation" aria-label="Social links">
+        <ul role="menu" aria-hidden="true" aria-label="Social link">
+            <li role="listitem" aria-label="Social link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://www.linkedin.com/in/farhad-mirzapour-0043b862/" target="_blank" role="link" aria-label="Linkedin"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="/feed.xml" role="link" aria-label="RSS"><i class="fa fa-rss-square" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+    <div class="copyright" role="contentinfo" aria-label="Copyright">
+        <p>© <script type="text/javascript">document.write(new Date().getFullYear());</script> Farhad Mirzapour</p>
+    </div>
+</footer>
+
+<!-- scripts -->
+<script src="/assets/js/hamburger-menu.js"></script>
+
+<script src="/assets/js/elevator.min.js"></script>
+<script src="/assets/js/back-to-top.js"></script>
+<script src="/assets/prisma/prism.js"></script>
+<!-- google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108878564-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-108878564-1');
+</script>
+
+</body>
+</html>

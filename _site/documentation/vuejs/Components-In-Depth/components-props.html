@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="">
+<!-- head -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>props | مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="props" />
+<meta name="author" content="Farhad Mirzapour" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Prop Casing (camelCase vs kebab-case) نام ویژگی های HTML نسبت به حروف کوچک و بزرگ حساس نیستند ، بنابراین مرورگرها هر حرف بزرگ را به صورت کوچک تفسیر می کنند. این بدان معنی است که وقتی از الگوهای in-DOM استفاده می کنید ، نام هایprop که بصورت camelCased معرفی می شوند باید از معادل kebab-cased (جدا شده با خط فاصله) استفاده کنند. Vue.component(&#39;blog-post&#39;, { // camelCase in JavaScript props: [&#39;postTitle&#39;], template: &#39;&#39; }) &amp;#x3C;!-- kebab-case in HTML --&amp;#x3E; &amp;#x3C;blog-post post-title=&amp;#x22;hello!&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; باز هم ، اگر از الگوهای رشته استفاده می کنید ، این محدودیت اعمال نمی شود. انواع Prop (Prop Types) تاکنون ، ما فقط لیست prop هایی را مشاهده کرده ایم که به عنوان آرایه ای از رشته ها لیست شده اند: props: [&#39;title&#39;, &#39;likes&#39;, &#39;isPublished&#39;, &#39;commentIds&#39;, &#39;author&#39;] معمولاً ، شما می خواهید هر یک از prop ها دارای نوع خاصی از مقدار باشد. در این موارد ، شما می توانید لیست prop ها را به عنوان یک object فهرست کنید: props: { title: String, likes: Number, isPublished: Boolean, commentIds: Array, author: Object, callback: Function, contactsPromise: Promise // or any other constructor } با اینکار نه تنها کامپوننت شما مستند می شود ، بلکه در صورت استفاده نوع اشتباه ، به کاربران در کنسول جاوا اسکریپت مرورگر نیز هشدار می دهد. می توانید در مورد نوع بررسی و سایر اعتبار سنجی ها type checks and other prop validationsاطلاعات بیشتری کسب کنید. Passing Static or Dynamic Props تاکنون مشاهده کرده اید که prop ها یک مقدار ثابت را عبور می دادند ، مانند: &amp;#x3C;blog-post title=&amp;#x22;My journey with Vue&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; همچنین شما prop هایی را دیده اید که با استفاده از v-bind به صورت پویا ثبت شده اند ، مانند: &amp;#x3C;!-- Dynamically assign the value of a variable --&amp;#x3E; &amp;#x3C;blog-post v-bind:title=&amp;#x22;post.title&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; &amp;#x3C;!-- Dynamically assign the value of a complex expression --&amp;#x3E; &amp;#x3C;blog-post v-bind:title=&amp;#x22;post.title + &amp;#x27; by &amp;#x27; + post.author.name&amp;#x22; &amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; در دو مثال بالا ، ما مقادیر رشته ای را منتقل کردیم ، اما هر نوع از مقدار می تواند به یک prop منتقل شود. Passing a Number &amp;#x3C;!-- Even though &amp;#x60;42&amp;#x60; is static, we need v-bind to tell Vue that --&amp;#x3E; &amp;#x3C;!-- this is a JavaScript expression rather than a string. --&amp;#x3E; &amp;#x3C;blog-post v-bind:likes=&amp;#x22;42&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; &amp;#x3C;!-- Dynamically assign to the value of a variable. --&amp;#x3E; &amp;#x3C;blog-post v-bind:likes=&amp;#x22;post.likes&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; Passing a Boolean &amp;#x3C;!-- Including the prop with no value will imply &amp;#x60;true&amp;#x60;. --&amp;#x3E; &amp;#x3C;blog-post is-published&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; &amp;#x3C;!-- Even though &amp;#x60;false&amp;#x60; is static, we need v-bind to tell Vue that --&amp;#x3E; &amp;#x3C;!-- this is a JavaScript expression rather than a string. --&amp;#x3E; &amp;#x3C;blog-post v-bind:is-published=&amp;#x22;false&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; &amp;#x3C;!-- Dynamically assign to the value of a variable. --&amp;#x3E; &amp;#x3C;blog-post v-bind:is-published=&amp;#x22;post.isPublished&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; Passing an Array &amp;#x3C;!-- Even though the array is static, we need v-bind to tell Vue that --&amp;#x3E; &amp;#x3C;!-- this is a JavaScript expression rather than a string. --&amp;#x3E; &amp;#x3C;blog-post v-bind:comment-ids=&amp;#x22;[234, 266, 273]&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; &amp;#x3C;!-- Dynamically assign to the value of a variable. --&amp;#x3E; &amp;#x3C;blog-post v-bind:comment-ids=&amp;#x22;post.commentIds&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; Passing an Object &amp;#x3C;!-- Even though the object is static, we need v-bind to tell Vue that --&amp;#x3E; &amp;#x3C;!-- this is a JavaScript expression rather than a string. --&amp;#x3E; &amp;#x3C;blog-post v-bind:author=&amp;#x22;{ name: &amp;#x27;Veronica&amp;#x27;, company: &amp;#x27;Veridian Dynamics&amp;#x27; }&amp;#x22; &amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; &amp;#x3C;!-- Dynamically assign to the value of a variable. --&amp;#x3E; &amp;#x3C;blog-post v-bind:author=&amp;#x22;post.author&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; Passing the Properties of an Object اگر می خواهید تمام خصوصیات یک شی را به prop منتقل کنید ، می توانید از v-bind بدون آرگومان استفاده کنید v-bind به جای v-bind: prop-name . به عنوان مثال: post: { id: 1, title: &#39;My Journey with Vue&#39; } الگوی زیر : &amp;#x3C;blog-post v-bind=&amp;#x22;post&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; معادل است با : &amp;#x3C;blog-post v-bind:id=&amp;#x22;post.id&amp;#x22; v-bind:title=&amp;#x22;post.title&amp;#x22; &amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; جریان داده یک طرفه (One-Way Data Flow) همه prop ها از یک اتصال یک طرفه بین ویژگی های فرزند و والد شکل می گیرند: وقتی ویژگی والد به روز شود ، به سمت فرزند حرکت می کند ، اما برعکس اینچنین نیست. این باعث می شود کامپوننت های فرزند به طور تصادفی وضعیت والدین را تغییر ندهند ، که باعث می شود جریان داده های برنامه شما دشوارتر باشد. علاوه بر این ، هر بار که کانپوننت والد به روز شود ، تمام prop ها در کامپوننت فرزند با آخرین مقدار تازه می شوند. این بدان معناست که شما نباید prop یک کامپوننت فرزند را تغییر دهید. اگر این کار را انجام دهید ، Vue در کنسول به شما هشدار می دهد. معمولاً دو حالت وجود دارد که وسوسه انگیز است که یک prop را تغییر دهید: از prop برای عبور مقدار اولیه استفاده شود. بعد از آن ، کامپوننت فرزند از آن به عنوان یک ویژگی داده محلی استفاده می کند. در این حالت ، بهتر است یک ویژگی داده محلی را تعریف کنید که از prop به عنوان مقدار اولیه خود استفاده کند: props: [&amp;#x27;initialCounter&amp;#x27;], data: function () { return { counter: this.initialCounter } } چنانچه بخواهیم prop به عنوان یک مقدار raw منتقل شود که نیاز به تغییر دارد. در این حالت ، بهتر است یک ویژگی computed را با عنوان مقدار prop تعریف کنید: props: [&amp;#x27;size&amp;#x27;], computed: { normalizedSize: function () { return this.size.trim().toLowerCase() } } توجه داشته باشید که objects و arrays در JavaScript با استفاده از مرجع منتقل می شوند ، بنابراین اگر prop یک آرایه یا شی باشد ، تغییر دادن شی یا آرایه درون کامپوننت فرزند بر وضعیت والد تأثیر می گذارد. Prop Validation کامپوننت ها می توانند الزامات مربوط به prop های خود را تعیین کنند ، مانند انواع قبلاً مشاهده شده. چنانچه شرطی برآورده نشود Vue در کنسول جاوا اسکریپت مرورگر به شما هشدار می دهد. این امر به ویژه در هنگام توسعه کامپوننت های در حال توسعه بسیار مفید است. برای تعیین اعتبار سنجی ، می توانید به جای آرایه ای از رشته ها ، می توانید یک object را به همراه الزامات اعتبار سنجی ارائه دهید. مثلا: Vue.component(&amp;#x27;my-component&amp;#x27;, { props: { // Basic type check (&amp;#x60;null&amp;#x60; and &amp;#x60;undefined&amp;#x60; values will pass any type validation) propA: Number, // Multiple possible types propB: [String, Number], // Required string propC: { type: String, required: true }, // Number with a default value propD: { type: Number, default: 100 }, // Object with a default value propE: { type: Object, // Object or array defaults must be returned from // a factory function default: function () { return { message: &amp;#x27;hello&amp;#x27; } } }, // Custom validator function propF: { validator: function (value) { // The value must match one of these strings return [&amp;#x27;success&amp;#x27;, &amp;#x27;warning&amp;#x27;, &amp;#x27;danger&amp;#x27;].indexOf(value) !== -1 } } } }) هنگامی که اعتبار سنجی مورد تایید نبود ، Vue یک هشدار کنسول تولید می کند . توجه داشته باشید که prop ها قبل از ایجاد نمونه کامپوننت تأیید می شوند ، بنابراین خصوصیات نمونه (به عنوان مثال data ، computed و غیره) در داخل توابع پیش فرض یا اعتبارسنج در دسترس نخواهند بود. Prop Validation نوع داده می تواند یکی از سازندگان بومی زیر باشد: String Number Boolean String Array Object Date Function Symbol علاوه بر این ، type همچنین می تواند سازنده سفارشی تابع باشد و با یک instanceof بررسی می شود. به عنوان مثال ، با توجه به عملکرد سازنده زیر: function Person (firstName, lastName) { this.firstName = firstName this.lastName = lastName } می توانید اینطور استفاده کنید : Vue.component(&amp;#x27;blog-post&amp;#x27;, { props: { author: Person } }) جهت تأیید مقدار author prop ایجاد شده با new Person . Non-Prop Attributes non-prop attribute خاصیتی است که به یک کامپوننت منتقل می شود ، اما prop مربوطه تعریف نشده است. در حالی که props های صریحاً تعریف شده برای انتقال اطلاعات به یک کامپوننت فرزند ترجیح داده می شوند ، نویسندگان کتابخانه های کامپوننت همیشه نمی توانند زمینه هایی را که ممکن است کامپوننت های شان در آنها استفاده شود پیش بینی کنند. به همین دلیل کامپوننت ها می توانند صفات دلخواه را که به عنصر کامپوننت root اضافه می شوند ، بپذیرند. به عنوان مثال ، تصور کنید که ما از یک کامپوننت 3rd-party به نام bootstrap-date-input به همراه پلاگین Bootstrap که نیاز به ویژگی data-date-picker در input نیاز دارد استفاده می کنیم. ما می توانیم این ویژگی را به نمونه کامپوننت خود اضافه کنیم : &amp;#x3C;bootstrap-date-input data-date-picker=&amp;#x22;activated&amp;#x22;&amp;#x3E;&amp;#x3C;/bootstrap-date-input&amp;#x3E; و ویژگی data-date-picker=&quot;activated&quot; بصورت اتوماتیک به المان روت bootstrap-date-input اضافه خواهد شد. Replacing/Merging with Existing Attributes قالب زیر را برای bootstrap-date-input تصور کنید : &amp;#x3C;input type=&amp;#x22;date&amp;#x22; class=&amp;#x22;form-control&amp;#x22;&amp;#x3E; جهت تعیین یک قالب برای پلاگین date picker ، ممکن است لازم باشد class خاصی اضافه کنیم ، مانند این: &amp;#x3C;bootstrap-date-input data-date-picker=&amp;#x22;activated&amp;#x22; class=&amp;#x22;date-picker-theme-dark&amp;#x22; &amp;#x3E;&amp;#x3C;/bootstrap-date-input&amp;#x3E; در این حالت ، دو مقدار متفاوت برای class تعریف می شود: form-control که توسط کامپوننت در الگوی خود تنظیم شده است : date-picker-theme-dark که توسط والد آن به کامپوننت منتقل می شوند : برای بیشتر ویژگی ها ، مقدار ارائه شده به کامپوننت جایگزین مقادیر تعیین شده توسط کامپوننت خواهد شد. بنابراین به عنوان مثال ، type = &quot;text&quot; جایگزین type = &quot;date&quot; می شود و احتمالاً آن را می شکند! خوشبختانه ، ویژگی های class و style کمی هوشمند تر هستند ، بنابراین هر دو مقدار با هم ادغام می شوند و مقدار نهایی را می سازند. form-control date-picker-theme-dark : Disabling Attribute Inheritance اگر نمی خواهید عنصر ریشه یک کامپوننت ویژگی ها را به ارث برساند ، می توانید inheritAttrs: false را در کامپوننت تنظیم نمایید. برای مثال : Vue.component(&amp;#x27;my-component&amp;#x27;, { inheritAttrs: false, // ... }) این به ویژه می تواند در ترکیب با نمونه ویژگی $attrs که شامل نام ویژگی ها و مقادیر منتقل شده به یک کامپوننت است مفید باشد ، مانند موارد زیر: { required: true, placeholder: &amp;#x27;Enter your username&amp;#x27; } با inheritAttrs: false و $attrs ، می توانید به صورت دستی تصمیم بگیرید که کدام ویژگی را می خواهید منتقل کنید ، که اغلب برای کامپوننت پایه مطلوب است: Vue.component(&amp;#x27;base-input&amp;#x27;, { inheritAttrs: false, props: [&amp;#x27;label&amp;#x27;, &amp;#x27;value&amp;#x27;], template: &amp;#x60; &amp;#x3C;label&amp;#x3E; &amp;#x3C;input v-bind=&amp;#x22;$attrs&amp;#x22; v-bind:value=&amp;#x22;value&amp;#x22; v-on:input=&amp;#x22;$emit(&amp;#x27;input&amp;#x27;, $event.target.value)&amp;#x22; &amp;#x3E; &amp;#x3C;/label&amp;#x3E; &amp;#x60; }) توجه داشته باشید که گزینه inheritAttrs: false بر روی style و class انقیاد شده (bindings) تاثیری نمی گذارد. این الگو به شما امکان می دهد از کامپوننت های پایه بیشتر شبیه عناصر raw HTML استفاده کنید ، بدون اینکه به این عنصر توجه کنید که ریشه اصلی آن چیست: &amp;#x3C;base-input label=&amp;#x22;Username:&amp;#x22; v-model=&amp;#x22;username&amp;#x22; required placeholder=&amp;#x22;Enter your username&amp;#x22; &amp;#x3E;&amp;#x3C;/base-input&amp;#x3E;" />
+<meta property="og:description" content="Prop Casing (camelCase vs kebab-case) نام ویژگی های HTML نسبت به حروف کوچک و بزرگ حساس نیستند ، بنابراین مرورگرها هر حرف بزرگ را به صورت کوچک تفسیر می کنند. این بدان معنی است که وقتی از الگوهای in-DOM استفاده می کنید ، نام هایprop که بصورت camelCased معرفی می شوند باید از معادل kebab-cased (جدا شده با خط فاصله) استفاده کنند. Vue.component(&#39;blog-post&#39;, { // camelCase in JavaScript props: [&#39;postTitle&#39;], template: &#39;&#39; }) &amp;#x3C;!-- kebab-case in HTML --&amp;#x3E; &amp;#x3C;blog-post post-title=&amp;#x22;hello!&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; باز هم ، اگر از الگوهای رشته استفاده می کنید ، این محدودیت اعمال نمی شود. انواع Prop (Prop Types) تاکنون ، ما فقط لیست prop هایی را مشاهده کرده ایم که به عنوان آرایه ای از رشته ها لیست شده اند: props: [&#39;title&#39;, &#39;likes&#39;, &#39;isPublished&#39;, &#39;commentIds&#39;, &#39;author&#39;] معمولاً ، شما می خواهید هر یک از prop ها دارای نوع خاصی از مقدار باشد. در این موارد ، شما می توانید لیست prop ها را به عنوان یک object فهرست کنید: props: { title: String, likes: Number, isPublished: Boolean, commentIds: Array, author: Object, callback: Function, contactsPromise: Promise // or any other constructor } با اینکار نه تنها کامپوننت شما مستند می شود ، بلکه در صورت استفاده نوع اشتباه ، به کاربران در کنسول جاوا اسکریپت مرورگر نیز هشدار می دهد. می توانید در مورد نوع بررسی و سایر اعتبار سنجی ها type checks and other prop validationsاطلاعات بیشتری کسب کنید. Passing Static or Dynamic Props تاکنون مشاهده کرده اید که prop ها یک مقدار ثابت را عبور می دادند ، مانند: &amp;#x3C;blog-post title=&amp;#x22;My journey with Vue&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; همچنین شما prop هایی را دیده اید که با استفاده از v-bind به صورت پویا ثبت شده اند ، مانند: &amp;#x3C;!-- Dynamically assign the value of a variable --&amp;#x3E; &amp;#x3C;blog-post v-bind:title=&amp;#x22;post.title&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; &amp;#x3C;!-- Dynamically assign the value of a complex expression --&amp;#x3E; &amp;#x3C;blog-post v-bind:title=&amp;#x22;post.title + &amp;#x27; by &amp;#x27; + post.author.name&amp;#x22; &amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; در دو مثال بالا ، ما مقادیر رشته ای را منتقل کردیم ، اما هر نوع از مقدار می تواند به یک prop منتقل شود. Passing a Number &amp;#x3C;!-- Even though &amp;#x60;42&amp;#x60; is static, we need v-bind to tell Vue that --&amp;#x3E; &amp;#x3C;!-- this is a JavaScript expression rather than a string. --&amp;#x3E; &amp;#x3C;blog-post v-bind:likes=&amp;#x22;42&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; &amp;#x3C;!-- Dynamically assign to the value of a variable. --&amp;#x3E; &amp;#x3C;blog-post v-bind:likes=&amp;#x22;post.likes&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; Passing a Boolean &amp;#x3C;!-- Including the prop with no value will imply &amp;#x60;true&amp;#x60;. --&amp;#x3E; &amp;#x3C;blog-post is-published&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; &amp;#x3C;!-- Even though &amp;#x60;false&amp;#x60; is static, we need v-bind to tell Vue that --&amp;#x3E; &amp;#x3C;!-- this is a JavaScript expression rather than a string. --&amp;#x3E; &amp;#x3C;blog-post v-bind:is-published=&amp;#x22;false&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; &amp;#x3C;!-- Dynamically assign to the value of a variable. --&amp;#x3E; &amp;#x3C;blog-post v-bind:is-published=&amp;#x22;post.isPublished&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; Passing an Array &amp;#x3C;!-- Even though the array is static, we need v-bind to tell Vue that --&amp;#x3E; &amp;#x3C;!-- this is a JavaScript expression rather than a string. --&amp;#x3E; &amp;#x3C;blog-post v-bind:comment-ids=&amp;#x22;[234, 266, 273]&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; &amp;#x3C;!-- Dynamically assign to the value of a variable. --&amp;#x3E; &amp;#x3C;blog-post v-bind:comment-ids=&amp;#x22;post.commentIds&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; Passing an Object &amp;#x3C;!-- Even though the object is static, we need v-bind to tell Vue that --&amp;#x3E; &amp;#x3C;!-- this is a JavaScript expression rather than a string. --&amp;#x3E; &amp;#x3C;blog-post v-bind:author=&amp;#x22;{ name: &amp;#x27;Veronica&amp;#x27;, company: &amp;#x27;Veridian Dynamics&amp;#x27; }&amp;#x22; &amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; &amp;#x3C;!-- Dynamically assign to the value of a variable. --&amp;#x3E; &amp;#x3C;blog-post v-bind:author=&amp;#x22;post.author&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; Passing the Properties of an Object اگر می خواهید تمام خصوصیات یک شی را به prop منتقل کنید ، می توانید از v-bind بدون آرگومان استفاده کنید v-bind به جای v-bind: prop-name . به عنوان مثال: post: { id: 1, title: &#39;My Journey with Vue&#39; } الگوی زیر : &amp;#x3C;blog-post v-bind=&amp;#x22;post&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; معادل است با : &amp;#x3C;blog-post v-bind:id=&amp;#x22;post.id&amp;#x22; v-bind:title=&amp;#x22;post.title&amp;#x22; &amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; جریان داده یک طرفه (One-Way Data Flow) همه prop ها از یک اتصال یک طرفه بین ویژگی های فرزند و والد شکل می گیرند: وقتی ویژگی والد به روز شود ، به سمت فرزند حرکت می کند ، اما برعکس اینچنین نیست. این باعث می شود کامپوننت های فرزند به طور تصادفی وضعیت والدین را تغییر ندهند ، که باعث می شود جریان داده های برنامه شما دشوارتر باشد. علاوه بر این ، هر بار که کانپوننت والد به روز شود ، تمام prop ها در کامپوننت فرزند با آخرین مقدار تازه می شوند. این بدان معناست که شما نباید prop یک کامپوننت فرزند را تغییر دهید. اگر این کار را انجام دهید ، Vue در کنسول به شما هشدار می دهد. معمولاً دو حالت وجود دارد که وسوسه انگیز است که یک prop را تغییر دهید: از prop برای عبور مقدار اولیه استفاده شود. بعد از آن ، کامپوننت فرزند از آن به عنوان یک ویژگی داده محلی استفاده می کند. در این حالت ، بهتر است یک ویژگی داده محلی را تعریف کنید که از prop به عنوان مقدار اولیه خود استفاده کند: props: [&amp;#x27;initialCounter&amp;#x27;], data: function () { return { counter: this.initialCounter } } چنانچه بخواهیم prop به عنوان یک مقدار raw منتقل شود که نیاز به تغییر دارد. در این حالت ، بهتر است یک ویژگی computed را با عنوان مقدار prop تعریف کنید: props: [&amp;#x27;size&amp;#x27;], computed: { normalizedSize: function () { return this.size.trim().toLowerCase() } } توجه داشته باشید که objects و arrays در JavaScript با استفاده از مرجع منتقل می شوند ، بنابراین اگر prop یک آرایه یا شی باشد ، تغییر دادن شی یا آرایه درون کامپوننت فرزند بر وضعیت والد تأثیر می گذارد. Prop Validation کامپوننت ها می توانند الزامات مربوط به prop های خود را تعیین کنند ، مانند انواع قبلاً مشاهده شده. چنانچه شرطی برآورده نشود Vue در کنسول جاوا اسکریپت مرورگر به شما هشدار می دهد. این امر به ویژه در هنگام توسعه کامپوننت های در حال توسعه بسیار مفید است. برای تعیین اعتبار سنجی ، می توانید به جای آرایه ای از رشته ها ، می توانید یک object را به همراه الزامات اعتبار سنجی ارائه دهید. مثلا: Vue.component(&amp;#x27;my-component&amp;#x27;, { props: { // Basic type check (&amp;#x60;null&amp;#x60; and &amp;#x60;undefined&amp;#x60; values will pass any type validation) propA: Number, // Multiple possible types propB: [String, Number], // Required string propC: { type: String, required: true }, // Number with a default value propD: { type: Number, default: 100 }, // Object with a default value propE: { type: Object, // Object or array defaults must be returned from // a factory function default: function () { return { message: &amp;#x27;hello&amp;#x27; } } }, // Custom validator function propF: { validator: function (value) { // The value must match one of these strings return [&amp;#x27;success&amp;#x27;, &amp;#x27;warning&amp;#x27;, &amp;#x27;danger&amp;#x27;].indexOf(value) !== -1 } } } }) هنگامی که اعتبار سنجی مورد تایید نبود ، Vue یک هشدار کنسول تولید می کند . توجه داشته باشید که prop ها قبل از ایجاد نمونه کامپوننت تأیید می شوند ، بنابراین خصوصیات نمونه (به عنوان مثال data ، computed و غیره) در داخل توابع پیش فرض یا اعتبارسنج در دسترس نخواهند بود. Prop Validation نوع داده می تواند یکی از سازندگان بومی زیر باشد: String Number Boolean String Array Object Date Function Symbol علاوه بر این ، type همچنین می تواند سازنده سفارشی تابع باشد و با یک instanceof بررسی می شود. به عنوان مثال ، با توجه به عملکرد سازنده زیر: function Person (firstName, lastName) { this.firstName = firstName this.lastName = lastName } می توانید اینطور استفاده کنید : Vue.component(&amp;#x27;blog-post&amp;#x27;, { props: { author: Person } }) جهت تأیید مقدار author prop ایجاد شده با new Person . Non-Prop Attributes non-prop attribute خاصیتی است که به یک کامپوننت منتقل می شود ، اما prop مربوطه تعریف نشده است. در حالی که props های صریحاً تعریف شده برای انتقال اطلاعات به یک کامپوننت فرزند ترجیح داده می شوند ، نویسندگان کتابخانه های کامپوننت همیشه نمی توانند زمینه هایی را که ممکن است کامپوننت های شان در آنها استفاده شود پیش بینی کنند. به همین دلیل کامپوننت ها می توانند صفات دلخواه را که به عنصر کامپوننت root اضافه می شوند ، بپذیرند. به عنوان مثال ، تصور کنید که ما از یک کامپوننت 3rd-party به نام bootstrap-date-input به همراه پلاگین Bootstrap که نیاز به ویژگی data-date-picker در input نیاز دارد استفاده می کنیم. ما می توانیم این ویژگی را به نمونه کامپوننت خود اضافه کنیم : &amp;#x3C;bootstrap-date-input data-date-picker=&amp;#x22;activated&amp;#x22;&amp;#x3E;&amp;#x3C;/bootstrap-date-input&amp;#x3E; و ویژگی data-date-picker=&quot;activated&quot; بصورت اتوماتیک به المان روت bootstrap-date-input اضافه خواهد شد. Replacing/Merging with Existing Attributes قالب زیر را برای bootstrap-date-input تصور کنید : &amp;#x3C;input type=&amp;#x22;date&amp;#x22; class=&amp;#x22;form-control&amp;#x22;&amp;#x3E; جهت تعیین یک قالب برای پلاگین date picker ، ممکن است لازم باشد class خاصی اضافه کنیم ، مانند این: &amp;#x3C;bootstrap-date-input data-date-picker=&amp;#x22;activated&amp;#x22; class=&amp;#x22;date-picker-theme-dark&amp;#x22; &amp;#x3E;&amp;#x3C;/bootstrap-date-input&amp;#x3E; در این حالت ، دو مقدار متفاوت برای class تعریف می شود: form-control که توسط کامپوننت در الگوی خود تنظیم شده است : date-picker-theme-dark که توسط والد آن به کامپوننت منتقل می شوند : برای بیشتر ویژگی ها ، مقدار ارائه شده به کامپوننت جایگزین مقادیر تعیین شده توسط کامپوننت خواهد شد. بنابراین به عنوان مثال ، type = &quot;text&quot; جایگزین type = &quot;date&quot; می شود و احتمالاً آن را می شکند! خوشبختانه ، ویژگی های class و style کمی هوشمند تر هستند ، بنابراین هر دو مقدار با هم ادغام می شوند و مقدار نهایی را می سازند. form-control date-picker-theme-dark : Disabling Attribute Inheritance اگر نمی خواهید عنصر ریشه یک کامپوننت ویژگی ها را به ارث برساند ، می توانید inheritAttrs: false را در کامپوننت تنظیم نمایید. برای مثال : Vue.component(&amp;#x27;my-component&amp;#x27;, { inheritAttrs: false, // ... }) این به ویژه می تواند در ترکیب با نمونه ویژگی $attrs که شامل نام ویژگی ها و مقادیر منتقل شده به یک کامپوننت است مفید باشد ، مانند موارد زیر: { required: true, placeholder: &amp;#x27;Enter your username&amp;#x27; } با inheritAttrs: false و $attrs ، می توانید به صورت دستی تصمیم بگیرید که کدام ویژگی را می خواهید منتقل کنید ، که اغلب برای کامپوننت پایه مطلوب است: Vue.component(&amp;#x27;base-input&amp;#x27;, { inheritAttrs: false, props: [&amp;#x27;label&amp;#x27;, &amp;#x27;value&amp;#x27;], template: &amp;#x60; &amp;#x3C;label&amp;#x3E; &amp;#x3C;input v-bind=&amp;#x22;$attrs&amp;#x22; v-bind:value=&amp;#x22;value&amp;#x22; v-on:input=&amp;#x22;$emit(&amp;#x27;input&amp;#x27;, $event.target.value)&amp;#x22; &amp;#x3E; &amp;#x3C;/label&amp;#x3E; &amp;#x60; }) توجه داشته باشید که گزینه inheritAttrs: false بر روی style و class انقیاد شده (bindings) تاثیری نمی گذارد. این الگو به شما امکان می دهد از کامپوننت های پایه بیشتر شبیه عناصر raw HTML استفاده کنید ، بدون اینکه به این عنصر توجه کنید که ریشه اصلی آن چیست: &amp;#x3C;base-input label=&amp;#x22;Username:&amp;#x22; v-model=&amp;#x22;username&amp;#x22; required placeholder=&amp;#x22;Enter your username&amp;#x22; &amp;#x3E;&amp;#x3C;/base-input&amp;#x3E;" />
+<link rel="canonical" href="http://localhost:4000/documentation/vuejs/Components-In-Depth/components-props" />
+<meta property="og:url" content="http://localhost:4000/documentation/vuejs/Components-In-Depth/components-props" />
+<meta property="og:site_name" content="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-05-14T18:02:42+04:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="props" />
+<meta name="twitter:site" content="@farhadmirzapour" />
+<meta name="twitter:creator" content="@Farhad Mirzapour" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"props","url":"http://localhost:4000/documentation/vuejs/Components-In-Depth/components-props","datePublished":"2021-05-14T18:02:42+04:30","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"dateModified":"2021-05-14T18:02:42+04:30","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/documentation/vuejs/Components-In-Depth/components-props"},"author":{"@type":"Person","name":"Farhad Mirzapour"},"description":"Prop Casing (camelCase vs kebab-case) نام ویژگی های HTML نسبت به حروف کوچک و بزرگ حساس نیستند ، بنابراین مرورگرها هر حرف بزرگ را به صورت کوچک تفسیر می کنند. این بدان معنی است که وقتی از الگوهای in-DOM استفاده می کنید ، نام هایprop که بصورت camelCased معرفی می شوند باید از معادل kebab-cased (جدا شده با خط فاصله) استفاده کنند. Vue.component(&#39;blog-post&#39;, { // camelCase in JavaScript props: [&#39;postTitle&#39;], template: &#39;&#39; }) &amp;#x3C;!-- kebab-case in HTML --&amp;#x3E; &amp;#x3C;blog-post post-title=&amp;#x22;hello!&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; باز هم ، اگر از الگوهای رشته استفاده می کنید ، این محدودیت اعمال نمی شود. انواع Prop (Prop Types) تاکنون ، ما فقط لیست prop هایی را مشاهده کرده ایم که به عنوان آرایه ای از رشته ها لیست شده اند: props: [&#39;title&#39;, &#39;likes&#39;, &#39;isPublished&#39;, &#39;commentIds&#39;, &#39;author&#39;] معمولاً ، شما می خواهید هر یک از prop ها دارای نوع خاصی از مقدار باشد. در این موارد ، شما می توانید لیست prop ها را به عنوان یک object فهرست کنید: props: { title: String, likes: Number, isPublished: Boolean, commentIds: Array, author: Object, callback: Function, contactsPromise: Promise // or any other constructor } با اینکار نه تنها کامپوننت شما مستند می شود ، بلکه در صورت استفاده نوع اشتباه ، به کاربران در کنسول جاوا اسکریپت مرورگر نیز هشدار می دهد. می توانید در مورد نوع بررسی و سایر اعتبار سنجی ها type checks and other prop validationsاطلاعات بیشتری کسب کنید. Passing Static or Dynamic Props تاکنون مشاهده کرده اید که prop ها یک مقدار ثابت را عبور می دادند ، مانند: &amp;#x3C;blog-post title=&amp;#x22;My journey with Vue&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; همچنین شما prop هایی را دیده اید که با استفاده از v-bind به صورت پویا ثبت شده اند ، مانند: &amp;#x3C;!-- Dynamically assign the value of a variable --&amp;#x3E; &amp;#x3C;blog-post v-bind:title=&amp;#x22;post.title&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; &amp;#x3C;!-- Dynamically assign the value of a complex expression --&amp;#x3E; &amp;#x3C;blog-post v-bind:title=&amp;#x22;post.title + &amp;#x27; by &amp;#x27; + post.author.name&amp;#x22; &amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; در دو مثال بالا ، ما مقادیر رشته ای را منتقل کردیم ، اما هر نوع از مقدار می تواند به یک prop منتقل شود. Passing a Number &amp;#x3C;!-- Even though &amp;#x60;42&amp;#x60; is static, we need v-bind to tell Vue that --&amp;#x3E; &amp;#x3C;!-- this is a JavaScript expression rather than a string. --&amp;#x3E; &amp;#x3C;blog-post v-bind:likes=&amp;#x22;42&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; &amp;#x3C;!-- Dynamically assign to the value of a variable. --&amp;#x3E; &amp;#x3C;blog-post v-bind:likes=&amp;#x22;post.likes&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; Passing a Boolean &amp;#x3C;!-- Including the prop with no value will imply &amp;#x60;true&amp;#x60;. --&amp;#x3E; &amp;#x3C;blog-post is-published&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; &amp;#x3C;!-- Even though &amp;#x60;false&amp;#x60; is static, we need v-bind to tell Vue that --&amp;#x3E; &amp;#x3C;!-- this is a JavaScript expression rather than a string. --&amp;#x3E; &amp;#x3C;blog-post v-bind:is-published=&amp;#x22;false&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; &amp;#x3C;!-- Dynamically assign to the value of a variable. --&amp;#x3E; &amp;#x3C;blog-post v-bind:is-published=&amp;#x22;post.isPublished&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; Passing an Array &amp;#x3C;!-- Even though the array is static, we need v-bind to tell Vue that --&amp;#x3E; &amp;#x3C;!-- this is a JavaScript expression rather than a string. --&amp;#x3E; &amp;#x3C;blog-post v-bind:comment-ids=&amp;#x22;[234, 266, 273]&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; &amp;#x3C;!-- Dynamically assign to the value of a variable. --&amp;#x3E; &amp;#x3C;blog-post v-bind:comment-ids=&amp;#x22;post.commentIds&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; Passing an Object &amp;#x3C;!-- Even though the object is static, we need v-bind to tell Vue that --&amp;#x3E; &amp;#x3C;!-- this is a JavaScript expression rather than a string. --&amp;#x3E; &amp;#x3C;blog-post v-bind:author=&amp;#x22;{ name: &amp;#x27;Veronica&amp;#x27;, company: &amp;#x27;Veridian Dynamics&amp;#x27; }&amp;#x22; &amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; &amp;#x3C;!-- Dynamically assign to the value of a variable. --&amp;#x3E; &amp;#x3C;blog-post v-bind:author=&amp;#x22;post.author&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; Passing the Properties of an Object اگر می خواهید تمام خصوصیات یک شی را به prop منتقل کنید ، می توانید از v-bind بدون آرگومان استفاده کنید v-bind به جای v-bind: prop-name . به عنوان مثال: post: { id: 1, title: &#39;My Journey with Vue&#39; } الگوی زیر : &amp;#x3C;blog-post v-bind=&amp;#x22;post&amp;#x22;&amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; معادل است با : &amp;#x3C;blog-post v-bind:id=&amp;#x22;post.id&amp;#x22; v-bind:title=&amp;#x22;post.title&amp;#x22; &amp;#x3E;&amp;#x3C;/blog-post&amp;#x3E; جریان داده یک طرفه (One-Way Data Flow) همه prop ها از یک اتصال یک طرفه بین ویژگی های فرزند و والد شکل می گیرند: وقتی ویژگی والد به روز شود ، به سمت فرزند حرکت می کند ، اما برعکس اینچنین نیست. این باعث می شود کامپوننت های فرزند به طور تصادفی وضعیت والدین را تغییر ندهند ، که باعث می شود جریان داده های برنامه شما دشوارتر باشد. علاوه بر این ، هر بار که کانپوننت والد به روز شود ، تمام prop ها در کامپوننت فرزند با آخرین مقدار تازه می شوند. این بدان معناست که شما نباید prop یک کامپوننت فرزند را تغییر دهید. اگر این کار را انجام دهید ، Vue در کنسول به شما هشدار می دهد. معمولاً دو حالت وجود دارد که وسوسه انگیز است که یک prop را تغییر دهید: از prop برای عبور مقدار اولیه استفاده شود. بعد از آن ، کامپوننت فرزند از آن به عنوان یک ویژگی داده محلی استفاده می کند. در این حالت ، بهتر است یک ویژگی داده محلی را تعریف کنید که از prop به عنوان مقدار اولیه خود استفاده کند: props: [&amp;#x27;initialCounter&amp;#x27;], data: function () { return { counter: this.initialCounter } } چنانچه بخواهیم prop به عنوان یک مقدار raw منتقل شود که نیاز به تغییر دارد. در این حالت ، بهتر است یک ویژگی computed را با عنوان مقدار prop تعریف کنید: props: [&amp;#x27;size&amp;#x27;], computed: { normalizedSize: function () { return this.size.trim().toLowerCase() } } توجه داشته باشید که objects و arrays در JavaScript با استفاده از مرجع منتقل می شوند ، بنابراین اگر prop یک آرایه یا شی باشد ، تغییر دادن شی یا آرایه درون کامپوننت فرزند بر وضعیت والد تأثیر می گذارد. Prop Validation کامپوننت ها می توانند الزامات مربوط به prop های خود را تعیین کنند ، مانند انواع قبلاً مشاهده شده. چنانچه شرطی برآورده نشود Vue در کنسول جاوا اسکریپت مرورگر به شما هشدار می دهد. این امر به ویژه در هنگام توسعه کامپوننت های در حال توسعه بسیار مفید است. برای تعیین اعتبار سنجی ، می توانید به جای آرایه ای از رشته ها ، می توانید یک object را به همراه الزامات اعتبار سنجی ارائه دهید. مثلا: Vue.component(&amp;#x27;my-component&amp;#x27;, { props: { // Basic type check (&amp;#x60;null&amp;#x60; and &amp;#x60;undefined&amp;#x60; values will pass any type validation) propA: Number, // Multiple possible types propB: [String, Number], // Required string propC: { type: String, required: true }, // Number with a default value propD: { type: Number, default: 100 }, // Object with a default value propE: { type: Object, // Object or array defaults must be returned from // a factory function default: function () { return { message: &amp;#x27;hello&amp;#x27; } } }, // Custom validator function propF: { validator: function (value) { // The value must match one of these strings return [&amp;#x27;success&amp;#x27;, &amp;#x27;warning&amp;#x27;, &amp;#x27;danger&amp;#x27;].indexOf(value) !== -1 } } } }) هنگامی که اعتبار سنجی مورد تایید نبود ، Vue یک هشدار کنسول تولید می کند . توجه داشته باشید که prop ها قبل از ایجاد نمونه کامپوننت تأیید می شوند ، بنابراین خصوصیات نمونه (به عنوان مثال data ، computed و غیره) در داخل توابع پیش فرض یا اعتبارسنج در دسترس نخواهند بود. Prop Validation نوع داده می تواند یکی از سازندگان بومی زیر باشد: String Number Boolean String Array Object Date Function Symbol علاوه بر این ، type همچنین می تواند سازنده سفارشی تابع باشد و با یک instanceof بررسی می شود. به عنوان مثال ، با توجه به عملکرد سازنده زیر: function Person (firstName, lastName) { this.firstName = firstName this.lastName = lastName } می توانید اینطور استفاده کنید : Vue.component(&amp;#x27;blog-post&amp;#x27;, { props: { author: Person } }) جهت تأیید مقدار author prop ایجاد شده با new Person . Non-Prop Attributes non-prop attribute خاصیتی است که به یک کامپوننت منتقل می شود ، اما prop مربوطه تعریف نشده است. در حالی که props های صریحاً تعریف شده برای انتقال اطلاعات به یک کامپوننت فرزند ترجیح داده می شوند ، نویسندگان کتابخانه های کامپوننت همیشه نمی توانند زمینه هایی را که ممکن است کامپوننت های شان در آنها استفاده شود پیش بینی کنند. به همین دلیل کامپوننت ها می توانند صفات دلخواه را که به عنصر کامپوننت root اضافه می شوند ، بپذیرند. به عنوان مثال ، تصور کنید که ما از یک کامپوننت 3rd-party به نام bootstrap-date-input به همراه پلاگین Bootstrap که نیاز به ویژگی data-date-picker در input نیاز دارد استفاده می کنیم. ما می توانیم این ویژگی را به نمونه کامپوننت خود اضافه کنیم : &amp;#x3C;bootstrap-date-input data-date-picker=&amp;#x22;activated&amp;#x22;&amp;#x3E;&amp;#x3C;/bootstrap-date-input&amp;#x3E; و ویژگی data-date-picker=&quot;activated&quot; بصورت اتوماتیک به المان روت bootstrap-date-input اضافه خواهد شد. Replacing/Merging with Existing Attributes قالب زیر را برای bootstrap-date-input تصور کنید : &amp;#x3C;input type=&amp;#x22;date&amp;#x22; class=&amp;#x22;form-control&amp;#x22;&amp;#x3E; جهت تعیین یک قالب برای پلاگین date picker ، ممکن است لازم باشد class خاصی اضافه کنیم ، مانند این: &amp;#x3C;bootstrap-date-input data-date-picker=&amp;#x22;activated&amp;#x22; class=&amp;#x22;date-picker-theme-dark&amp;#x22; &amp;#x3E;&amp;#x3C;/bootstrap-date-input&amp;#x3E; در این حالت ، دو مقدار متفاوت برای class تعریف می شود: form-control که توسط کامپوننت در الگوی خود تنظیم شده است : date-picker-theme-dark که توسط والد آن به کامپوننت منتقل می شوند : برای بیشتر ویژگی ها ، مقدار ارائه شده به کامپوننت جایگزین مقادیر تعیین شده توسط کامپوننت خواهد شد. بنابراین به عنوان مثال ، type = &quot;text&quot; جایگزین type = &quot;date&quot; می شود و احتمالاً آن را می شکند! خوشبختانه ، ویژگی های class و style کمی هوشمند تر هستند ، بنابراین هر دو مقدار با هم ادغام می شوند و مقدار نهایی را می سازند. form-control date-picker-theme-dark : Disabling Attribute Inheritance اگر نمی خواهید عنصر ریشه یک کامپوننت ویژگی ها را به ارث برساند ، می توانید inheritAttrs: false را در کامپوننت تنظیم نمایید. برای مثال : Vue.component(&amp;#x27;my-component&amp;#x27;, { inheritAttrs: false, // ... }) این به ویژه می تواند در ترکیب با نمونه ویژگی $attrs که شامل نام ویژگی ها و مقادیر منتقل شده به یک کامپوننت است مفید باشد ، مانند موارد زیر: { required: true, placeholder: &amp;#x27;Enter your username&amp;#x27; } با inheritAttrs: false و $attrs ، می توانید به صورت دستی تصمیم بگیرید که کدام ویژگی را می خواهید منتقل کنید ، که اغلب برای کامپوننت پایه مطلوب است: Vue.component(&amp;#x27;base-input&amp;#x27;, { inheritAttrs: false, props: [&amp;#x27;label&amp;#x27;, &amp;#x27;value&amp;#x27;], template: &amp;#x60; &amp;#x3C;label&amp;#x3E; &amp;#x3C;input v-bind=&amp;#x22;$attrs&amp;#x22; v-bind:value=&amp;#x22;value&amp;#x22; v-on:input=&amp;#x22;$emit(&amp;#x27;input&amp;#x27;, $event.target.value)&amp;#x22; &amp;#x3E; &amp;#x3C;/label&amp;#x3E; &amp;#x60; }) توجه داشته باشید که گزینه inheritAttrs: false بر روی style و class انقیاد شده (bindings) تاثیری نمی گذارد. این الگو به شما امکان می دهد از کامپوننت های پایه بیشتر شبیه عناصر raw HTML استفاده کنید ، بدون اینکه به این عنصر توجه کنید که ریشه اصلی آن چیست: &amp;#x3C;base-input label=&amp;#x22;Username:&amp;#x22; v-model=&amp;#x22;username&amp;#x22; required placeholder=&amp;#x22;Enter your username&amp;#x22; &amp;#x3E;&amp;#x3C;/base-input&amp;#x3E;","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="stylesheet" href="/assets/prisma/prism.css">
+    <!-- favicons and rss -->
+    <link rel="alternate" type="application/rss+xml" title="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" href="/feed.xml">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- header -->
+<header class="header" role="banner" aria-label="Header">
+    <button class="hamburger-button" onclick="hamburgerMenu();" role="button" aria-label="Hamburger menu button">
+        <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    </button>
+    <a href="/" class="logo" role="link" aria-label="Home">
+        <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo"/>
+    </a>
+    <nav class="navigation" role="navigation" aria-label="Navigation">
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item">
+                <a href="/" class="logo" role="menuitem" aria-label="Home">
+                    <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo"/>
+                </a>
+            </li>
+            
+            <li role="menuitem"><a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a></li>
+            
+            <li role="menuitem"><a href="/contactus" role="menuitem" aria-label="تماس">تماس</a></li>
+            
+        </ul>
+    </nav>
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox"/>
+        </form>
+    </div>
+</header>
+
+<nav id="hamburger-menu" role="navigation" aria-label="Hamburger menu">
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox"/>
+        </form>
+    </div>
+    <div class="home-nav" role="navigation" aria-label="Site navigation">
+        <a href="/" role="menuitem" aria-label="Home">صفحه اصلی</a>
+        
+        <a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a>
+        
+        <a href="/contactus" role="menuitem" aria-label="تماس">تماس</a>
+        
+    </div>
+
+    
+    <div class="doc-nav" role="navigation" aria-label="Documentation navigation">
+        <p role="presentation" aria-label="Category name">
+            اصول آموزش vuejs
+        </p>
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/2019/10/11/vuejs.html" class="doc-link" role="link" aria-label="props">مقدمه</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/The-Vue-Instance" class="doc-link" role="link" aria-label="ایجاد نمونه Vue">ایجاد نمونه Vue</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Template-Syntax" class="doc-link" role="link" aria-label="اصول قالب در Vue">اصول قالب در Vue</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Computed-Properties-and-Watchers" class="doc-link" role="link" aria-label="خاصیت Computed و Watchers">خاصیت Computed و Watchers</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Class-and-Style-Bindings" class="doc-link" role="link" aria-label="اتصال Class و Style">اتصال Class و Style</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Conditional-Rendering" class="doc-link" role="link" aria-label="رندرینگ شرطی  (Conditional Rendering)">رندرینگ شرطی  (Conditional Rendering)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/List-Rendering" class="doc-link" role="link" aria-label="رندر List (List Rendering)">رندر List (List Rendering)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Event-Handling" class="doc-link" role="link" aria-label="کار با رویدادها(Event Handling)">کار با رویدادها(Event Handling)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Form-Input-Bindings" class="doc-link" role="link" aria-label="اتصال داده به ورودی فرم (Form Input Bindings)">اتصال داده به ورودی فرم (Form Input Bindings)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Components-Basics" class="doc-link" role="link" aria-label="اصول پایه Component">اصول پایه Component</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Components-In-Depth/Component-Registration" class="doc-link" role="link" aria-label="ثبت Component">ثبت Component</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Components-In-Depth/components-props" class="doc-link" role="link" aria-label="props">props</a></li>
+            
+            
+        </ul>
+    </div>
+    
+</nav>
+<!-- main content -->
+<main class="container" role="main">
+    <div class="rcdoccontainerimg">
+<div class="rc-DRTVBanner-new rc-DRTVBanner-bigsize">
+    <div style="background: url('/images/original/vuejs.jpg'); " class="blurred_img"></div>
+    <div class="mask"></div>
+    <div class="bot"></div>
+    <div class="over">
+        <div class="container-rc">
+            <img class="image" src="/images/original/vuejs.jpg" alt="props" height="190">
+            <div class="desktop-banner-container">
+                <h1 class="display-5-text headline">
+                    
+                    
+                    اصول آموزش vuejs
+                    </h1>
+                <!--<div class="tagslist"><ul class='lyda-tag-list'><li class='lyda-tag-list-title'>برچسب ها</li><li><a class="tags" href="/tag/لاراول">#لاراول</a></li><li><a class="tags" href="/tag/لاراول-5-5">#لاراول 5.5</a></li></ul></div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="bread-crumb">-->
+<!--<div class="container   ">-->
+<!--<div class="pull-right ">-->
+<!--<div class="bread-button text-custom b-left">-->
+<!--انتشار : 2 ماه پیش-->
+<!--</div>-->
+<!--<a href="/category/article/" class="bread-button back-to-all b-left hidden-xs">همه مقالات</a>-->
+<!--<div class="cat-lable">-->
+<!--<a href="/category/article/laravel/">-->
+<!--لاراول-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<script>
+    $(window).scroll(function(){
+        var sticky = $('.doc-menu'),
+            scroll = $(window).scrollTop();
+        if (scroll >= 101) {sticky.addClass('doc-header-scroll'); }
+        else {sticky.removeClass('doc-header-scroll'); };
+    });
+</script>
+</div>
+<div class="doc-container">
+
+    <div class="doc-menu">
+    
+    <ul>
+        <li>
+            <a  href="/2019/10/11/vuejs.html" class="active doc-link" role="link">
+                مقدمه
+            </a>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم اساسی</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="ایجاد نمونه Vue" href="/documentation/vuejs/Essentials/The-Vue-Instance" class="active doc-link" role="link">
+                ایجاد نمونه Vue
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول قالب در Vue" href="/documentation/vuejs/Essentials/Template-Syntax" class="active doc-link" role="link">
+                اصول قالب در Vue
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="خاصیت Computed و Watchers" href="/documentation/vuejs/Essentials/Computed-Properties-and-Watchers" class="active doc-link" role="link">
+                خاصیت Computed و Watchers
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اتصال Class و Style" href="/documentation/vuejs/Essentials/Class-and-Style-Bindings" class="active doc-link" role="link">
+                اتصال Class و Style
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="رندرینگ شرطی  (Conditional Rendering)" href="/documentation/vuejs/Essentials/Conditional-Rendering" class="active doc-link" role="link">
+                رندرینگ شرطی  (Conditional Rendering)
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="رندر List (List Rendering)" href="/documentation/vuejs/Essentials/List-Rendering" class="active doc-link" role="link">
+                رندر List (List Rendering)
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="کار با رویدادها(Event Handling)" href="/documentation/vuejs/Essentials/Event-Handling" class="active doc-link" role="link">
+                کار با رویدادها(Event Handling)
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اتصال داده به ورودی فرم (Form Input Bindings)" href="/documentation/vuejs/Essentials/Form-Input-Bindings" class="active doc-link" role="link">
+                اتصال داده به ورودی فرم (Form Input Bindings)
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول پایه Component" href="/documentation/vuejs/Essentials/Components-Basics" class="active doc-link" role="link">
+                اصول پایه Component
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">کامپوننت ها</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="ثبت Component" href="/documentation/vuejs/Components-In-Depth/Component-Registration" class="active doc-link" role="link">
+                ثبت Component
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="props" href="/documentation/vuejs/Components-In-Depth/components-props" class="active doc-link" role="link">
+                props
+            </a>
+        </li>
+        
+        
+            </ul>
+        </li>
+        
+    </ul>
+    
+</div>
+
+    <article class="documentation">
+        <header class="doc-header">
+            <div class="time">
+                    تاریخ :      جمعه 24 اردیبهشت 1400
+            </div>
+                
+        </header>
+        <section class="anchored">
+            <p>
+</p>
+
+<h3>Prop Casing (camelCase vs kebab-case)</h3>
+
+<p>
+نام ویژگی های HTML نسبت به حروف کوچک و بزرگ حساس نیستند ، بنابراین مرورگرها هر حرف بزرگ را به صورت کوچک تفسیر می کنند. این بدان معنی است که وقتی از الگوهای in-DOM  استفاده می کنید ، نام هایprop  که بصورت  camelCased  معرفی می شوند باید از معادل kebab-cased (جدا شده با خط فاصله) استفاده کنند.
+</p>
+<pre><code class="language-javascript  line-numbers">Vue.component('blog-post', {
+  // camelCase in JavaScript
+  props: ['postTitle'],
+  template: '<h3></h3>'
+})
+</code></pre>
+
+<pre><code class="language-html  line-numbers">&#x3C;!-- kebab-case in HTML --&#x3E;
+&#x3C;blog-post post-title=&#x22;hello!&#x22;&#x3E;&#x3C;/blog-post&#x3E;
+</code></pre>
+<p>
+باز هم ، اگر از الگوهای رشته استفاده می کنید ، این محدودیت اعمال نمی شود.
+</p>
+<p><br /></p>
+
+<h3>  انواع Prop  (Prop Types)</h3>
+<p>
+تاکنون ، ما فقط لیست prop هایی را مشاهده کرده ایم که به عنوان آرایه ای از رشته ها لیست شده اند:
+</p>
+
+<pre><code class="language-javascript  line-numbers">props: ['title', 'likes', 'isPublished', 'commentIds', 'author']
+</code></pre>
+
+<p>
+معمولاً ، شما می خواهید هر یک از prop  ها دارای نوع خاصی از مقدار  باشد. در این موارد ، شما می توانید لیست prop ها  را به عنوان یک object فهرست کنید:
+</p>
+
+<pre><code class="language-javascript  line-numbers">props: {
+  title: String,
+  likes: Number,
+  isPublished: Boolean,
+  commentIds: Array,
+  author: Object,
+  callback: Function,
+  contactsPromise: Promise // or any other constructor
+}
+</code></pre>
+
+<p>
+با اینکار نه تنها کامپوننت شما مستند می شود ، بلکه در صورت استفاده نوع اشتباه ، به کاربران در کنسول جاوا اسکریپت مرورگر نیز هشدار می دهد.  می توانید در مورد نوع بررسی و سایر اعتبار سنجی ها    <a href="https://vuejs.org/v2/guide/components-props.html#Prop-Validation"> type checks and other prop validations</a>اطلاعات بیشتری کسب کنید.
+</p>
+
+<p><br /></p>
+
+<h3> Passing Static or Dynamic Props</h3>
+<p>
+تاکنون مشاهده کرده اید که prop  ها  یک مقدار ثابت را عبور می دادند ، مانند:
+</p>
+
+<pre><code class="language-javascript  line-numbers">&#x3C;blog-post title=&#x22;My journey with Vue&#x22;&#x3E;&#x3C;/blog-post&#x3E;
+</code></pre>
+
+<p>
+همچنین شما prop  هایی را دیده اید که با استفاده از v-bind  به صورت پویا ثبت شده اند ، مانند:
+</p>
+
+<pre><code class="language-html  line-numbers">&#x3C;!-- Dynamically assign the value of a variable --&#x3E;
+&#x3C;blog-post v-bind:title=&#x22;post.title&#x22;&#x3E;&#x3C;/blog-post&#x3E;
+
+&#x3C;!-- Dynamically assign the value of a complex expression --&#x3E;
+&#x3C;blog-post
+  v-bind:title=&#x22;post.title + &#x27; by &#x27; + post.author.name&#x22;
+&#x3E;&#x3C;/blog-post&#x3E;
+</code></pre>
+
+<p>
+در دو مثال بالا ، ما مقادیر رشته ای را منتقل کردیم ، اما هر نوع از مقدار می تواند به یک prop منتقل شود.
+</p>
+
+<p><br /></p>
+<h4>
+<a href="#Passing-a-Number" class="headerlink" title="Passing a Number" data-scroll="">Passing a Number</a>
+</h4>
+
+<pre><code class="language-html  line-numbers">&#x3C;!-- Even though &#x60;42&#x60; is static, we need v-bind to tell Vue that --&#x3E;
+&#x3C;!-- this is a JavaScript expression rather than a string.       --&#x3E;
+&#x3C;blog-post v-bind:likes=&#x22;42&#x22;&#x3E;&#x3C;/blog-post&#x3E;
+
+&#x3C;!-- Dynamically assign to the value of a variable. --&#x3E;
+&#x3C;blog-post v-bind:likes=&#x22;post.likes&#x22;&#x3E;&#x3C;/blog-post&#x3E;
+</code></pre>
+<p><br /></p>
+
+<h4>
+<a href="#Passing-a-Boolean" class="headerlink" title="Passing a Boolean" data-scroll="">Passing a Boolean</a>
+</h4>
+
+<pre><code class="language-html  line-numbers">&#x3C;!-- Including the prop with no value will imply &#x60;true&#x60;. --&#x3E;
+&#x3C;blog-post is-published&#x3E;&#x3C;/blog-post&#x3E;
+
+&#x3C;!-- Even though &#x60;false&#x60; is static, we need v-bind to tell Vue that --&#x3E;
+&#x3C;!-- this is a JavaScript expression rather than a string.          --&#x3E;
+&#x3C;blog-post v-bind:is-published=&#x22;false&#x22;&#x3E;&#x3C;/blog-post&#x3E;
+
+&#x3C;!-- Dynamically assign to the value of a variable. --&#x3E;
+&#x3C;blog-post v-bind:is-published=&#x22;post.isPublished&#x22;&#x3E;&#x3C;/blog-post&#x3E;
+</code></pre>
+<p><br /></p>
+
+<h4>
+<a href="#Passing-an-Array" class="headerlink" title="Passing an Array" data-scroll="">Passing an Array</a>
+</h4>
+
+<pre><code class="language-html  line-numbers">&#x3C;!-- Even though the array is static, we need v-bind to tell Vue that --&#x3E;
+&#x3C;!-- this is a JavaScript expression rather than a string.            --&#x3E;
+&#x3C;blog-post v-bind:comment-ids=&#x22;[234, 266, 273]&#x22;&#x3E;&#x3C;/blog-post&#x3E;
+
+&#x3C;!-- Dynamically assign to the value of a variable. --&#x3E;
+&#x3C;blog-post v-bind:comment-ids=&#x22;post.commentIds&#x22;&#x3E;&#x3C;/blog-post&#x3E;
+</code></pre>
+<p><br /></p>
+
+<h4>
+<a href="#Passing-an-Object" class="headerlink" title="Passing an Object" data-scroll="">Passing an Object</a>
+</h4>
+
+<pre><code class="language-html  line-numbers">&#x3C;!-- Even though the object is static, we need v-bind to tell Vue that --&#x3E;
+&#x3C;!-- this is a JavaScript expression rather than a string.             --&#x3E;
+&#x3C;blog-post
+  v-bind:author=&#x22;{
+    name: &#x27;Veronica&#x27;,
+    company: &#x27;Veridian Dynamics&#x27;
+  }&#x22;
+&#x3E;&#x3C;/blog-post&#x3E;
+
+&#x3C;!-- Dynamically assign to the value of a variable. --&#x3E;
+&#x3C;blog-post v-bind:author=&#x22;post.author&#x22;&#x3E;&#x3C;/blog-post&#x3E;
+</code></pre>
+
+<p><br /></p>
+<h4>
+<a href="#Passing-the-Properties-of-an-Object" class="headerlink" title="Passing the Properties of an Object" data-scroll="">Passing the Properties of an Object</a>
+</h4>
+<p>
+اگر می خواهید تمام خصوصیات یک شی را به prop منتقل کنید ، می توانید از v-bind بدون آرگومان استفاده کنید v-bind به جای  v-bind: prop-name . به عنوان مثال:
+</p>
+
+<pre><code class="language-javascript  line-numbers">post: {
+  id: 1,
+  title: 'My Journey with Vue'
+}
+</code></pre>
+
+<p>الگوی زیر :</p>
+<pre><code class="language-html  line-numbers">&#x3C;blog-post v-bind=&#x22;post&#x22;&#x3E;&#x3C;/blog-post&#x3E;
+</code></pre>
+<p>معادل است با :</p>
+
+<pre><code class="language-html  line-numbers">&#x3C;blog-post
+  v-bind:id=&#x22;post.id&#x22;
+  v-bind:title=&#x22;post.title&#x22;
+&#x3E;&#x3C;/blog-post&#x3E;
+</code></pre>
+
+<p><br /></p>
+
+<h3>جریان داده یک طرفه (One-Way Data Flow)</h3>
+<p>
+همه prop  ها از یک اتصال یک طرفه بین ویژگی های فرزند و والد  شکل می گیرند: وقتی ویژگی والد به روز شود ، به سمت فرزند  حرکت می کند ، اما برعکس اینچنین نیست. این باعث می شود کامپوننت های  فرزند  به طور تصادفی وضعیت والدین را تغییر ندهند ، که باعث می شود جریان داده های برنامه شما دشوارتر باشد.
+</p>
+
+<p>
+علاوه بر این ، هر بار که  کانپوننت  والد به روز شود ، تمام prop  ها در کامپوننت فرزند با آخرین مقدار تازه می شوند. این بدان معناست که شما نباید prop  یک کامپوننت  فرزند را تغییر دهید. اگر این کار را انجام دهید ، Vue در کنسول به شما هشدار می دهد.
+</p>
+
+<p>
+معمولاً دو حالت وجود دارد که وسوسه انگیز است که یک prop را تغییر دهید: 
+</p>
+
+<p>
+<ul>
+<li>
+<p>
+از prop برای عبور مقدار اولیه استفاده شود. بعد از آن ، کامپوننت فرزند از آن به عنوان یک ویژگی داده محلی استفاده می کند. در این حالت ، بهتر است یک ویژگی داده محلی را تعریف کنید که از prop به عنوان مقدار اولیه خود استفاده کند:
+</p>
+<pre><code class="language-javascript  line-numbers">props: [&#x27;initialCounter&#x27;],
+data: function () {
+  return {
+    counter: this.initialCounter
+  }
+}
+</code></pre>
+
+</li>
+
+<li>
+<p>
+چنانچه بخواهیم prop به عنوان یک مقدار  raw  منتقل شود که  نیاز به تغییر دارد. در این حالت ، بهتر است یک ویژگی computed را با عنوان مقدار prop تعریف کنید:
+</p>
+<pre><code class="language-javascript  line-numbers">props: [&#x27;size&#x27;],
+computed: {
+  normalizedSize: function () {
+    return this.size.trim().toLowerCase()
+  }
+}
+</code></pre>
+
+</li>
+
+</ul>
+</p>
+
+<blockquote class="has-icon tip">
+<div>
+توجه داشته باشید که objects  و arrays در JavaScript با استفاده از مرجع منتقل می شوند ، بنابراین اگر prop یک آرایه یا شی باشد ، تغییر دادن شی یا آرایه درون  کامپوننت فرزند بر وضعیت والد تأثیر می گذارد.
+</div>
+</blockquote>
+
+<p><br /></p>
+
+<h3>Prop Validation</h3>
+<p>
+کامپوننت ها می توانند الزامات مربوط به prop های خود را تعیین کنند ، مانند انواع قبلاً مشاهده شده. چنانچه شرطی برآورده نشود    Vue در کنسول جاوا اسکریپت مرورگر به شما هشدار می دهد. این امر به ویژه در هنگام توسعه کامپوننت های در حال توسعه بسیار مفید است.
+</p>
+
+<p>
+برای تعیین اعتبار سنجی ، می توانید به جای آرایه ای از رشته ها ، می توانید یک object را به همراه الزامات اعتبار سنجی ارائه دهید. مثلا:
+</p>
+
+<pre><code class="language-javascript  line-numbers">Vue.component(&#x27;my-component&#x27;, {
+  props: {
+    // Basic type check (&#x60;null&#x60; and &#x60;undefined&#x60; values will pass any type validation)
+    propA: Number,
+    // Multiple possible types
+    propB: [String, Number],
+    // Required string
+    propC: {
+      type: String,
+      required: true
+    },
+    // Number with a default value
+    propD: {
+      type: Number,
+      default: 100
+    },
+    // Object with a default value
+    propE: {
+      type: Object,
+      // Object or array defaults must be returned from
+      // a factory function
+      default: function () {
+        return { message: &#x27;hello&#x27; }
+      }
+    },
+    // Custom validator function
+    propF: {
+      validator: function (value) {
+        // The value must match one of these strings
+        return [&#x27;success&#x27;, &#x27;warning&#x27;, &#x27;danger&#x27;].indexOf(value) !== -1
+      }
+    }
+  }
+})
+</code></pre>
+
+<p>
+هنگامی که اعتبار سنجی مورد تایید نبود ، Vue یک هشدار کنسول تولید می کند .
+</p>
+
+<blockquote class="has-icon tip">
+<div>
+توجه داشته باشید که prop  ها قبل از ایجاد نمونه کامپوننت تأیید می شوند ، بنابراین خصوصیات نمونه (به عنوان مثال data ، computed و غیره) در داخل توابع پیش فرض یا اعتبارسنج در دسترس نخواهند بود.
+</div>
+</blockquote>
+
+<p><br /></p>
+
+<h3>Prop Validation</h3>
+<p>
+نوع داده می تواند یکی از سازندگان بومی زیر باشد:
+</p>
+<p>
+<ul style="direction: ltr">
+<li>String</li>
+<li>Number</li>
+<li>Boolean</li>
+<li>String</li>
+<li>Array</li>
+<li>Object</li>
+<li>Date</li>
+<li>Function</li>
+<li>Symbol</li>
+</ul>
+
+</p>
+<p>
+علاوه بر این ، type همچنین می تواند سازنده سفارشی تابع باشد و با یک instanceof   بررسی می شود. به عنوان مثال ، با توجه به عملکرد سازنده زیر:
+</p>
+
+<pre><code class="language-javascript  line-numbers">function Person (firstName, lastName) {
+  this.firstName = firstName
+  this.lastName = lastName
+}
+</code></pre>
+
+<p>
+می توانید اینطور استفاده کنید :
+</p>
+
+<pre><code class="language-javascript  line-numbers">Vue.component(&#x27;blog-post&#x27;, {
+  props: {
+    author: Person
+  }
+})
+</code></pre>
+
+<p>
+جهت تأیید مقدار author prop  ایجاد شده با  new Person .
+</p>
+
+<p><br /></p>
+
+<h3>Non-Prop Attributes</h3>
+<p>
+ non-prop attribute  خاصیتی است که به یک کامپوننت منتقل می شود ، اما prop مربوطه تعریف نشده است.
+</p>
+<p>
+در حالی که props  های صریحاً تعریف شده برای انتقال اطلاعات به یک کامپوننت فرزند  ترجیح داده می شوند ، نویسندگان کتابخانه های کامپوننت همیشه نمی توانند زمینه هایی را که ممکن است کامپوننت های شان در آنها استفاده شود پیش بینی کنند. به همین دلیل کامپوننت ها می توانند صفات دلخواه را که به عنصر کامپوننت root اضافه می شوند ، بپذیرند.
+</p>
+
+<p>
+به عنوان مثال ، تصور کنید که ما از یک کامپوننت 3rd-party  به نام  bootstrap-date-input   به همراه پلاگین  Bootstrap  که نیاز به  ویژگی data-date-picker در input نیاز دارد استفاده می کنیم. ما می توانیم این ویژگی را به نمونه کامپوننت خود اضافه کنیم :
+</p>
+
+<pre><code class="language-html  line-numbers">&#x3C;bootstrap-date-input data-date-picker=&#x22;activated&#x22;&#x3E;&#x3C;/bootstrap-date-input&#x3E;
+</code></pre>
+
+<p>
+و ویژگی  data-date-picker="activated"  بصورت اتوماتیک به المان روت bootstrap-date-input اضافه خواهد شد.
+</p>
+
+<p><br /></p>
+
+<h3>Replacing/Merging with Existing Attributes</h3>
+<p>
+ قالب زیر را برای bootstrap-date-input تصور کنید :
+</p>
+
+<pre><code class="language-html  line-numbers">&#x3C;input type=&#x22;date&#x22; class=&#x22;form-control&#x22;&#x3E;
+</code></pre>
+<p>
+جهت تعیین یک قالب برای پلاگین date picker  ، ممکن است لازم باشد class  خاصی اضافه کنیم ، مانند این:
+</p>
+
+<pre><code class="language-html  line-numbers">&#x3C;bootstrap-date-input
+  data-date-picker=&#x22;activated&#x22;
+  class=&#x22;date-picker-theme-dark&#x22;
+&#x3E;&#x3C;/bootstrap-date-input&#x3E;
+</code></pre>
+
+<p>
+در این حالت ، دو مقدار متفاوت برای class  تعریف می شود:
+</p>
+
+<ul>
+<li>
+form-control که توسط کامپوننت در الگوی خود تنظیم شده است :
+</li>
+<li>
+date-picker-theme-dark که توسط والد آن به کامپوننت منتقل می شوند :
+</li>
+</ul>
+
+<p>
+برای بیشتر ویژگی ها ، مقدار ارائه شده به کامپوننت جایگزین مقادیر تعیین شده توسط کامپوننت خواهد شد. بنابراین به عنوان مثال ،   type = "text" جایگزین type = "date"  می شود و احتمالاً آن را می شکند! خوشبختانه ، ویژگی های class  و style  کمی هوشمند تر هستند ، بنابراین هر دو مقدار با هم ادغام می شوند و مقدار نهایی را می سازند. form-control date-picker-theme-dark : 
+</p>
+
+<p><br /></p>
+
+<h3>Disabling Attribute Inheritance</h3>
+<p>
+اگر نمی خواهید عنصر ریشه یک کامپوننت ویژگی ها را به ارث برساند ، می توانید inheritAttrs: false را در کامپوننت تنظیم نمایید. برای مثال :
+</p>
+
+<pre><code class="language-javascript  line-numbers">Vue.component(&#x27;my-component&#x27;, {
+  inheritAttrs: false,
+  // ...
+})
+</code></pre>
+
+<p>
+این به ویژه می تواند در ترکیب با نمونه ویژگی $attrs  که شامل نام ویژگی ها و مقادیر منتقل شده به یک کامپوننت است مفید باشد ، مانند موارد زیر:
+</p>
+
+<pre><code class="language-javascript  line-numbers">{
+  required: true,
+  placeholder: &#x27;Enter your username&#x27;
+}
+</code></pre>
+
+<p>
+با  inheritAttrs: false و $attrs ، می توانید به صورت دستی تصمیم بگیرید که کدام ویژگی را می خواهید منتقل کنید ، که اغلب برای کامپوننت پایه مطلوب است:
+</p>
+
+<pre><code class="language-javascript  line-numbers">Vue.component(&#x27;base-input&#x27;, {
+  inheritAttrs: false,
+  props: [&#x27;label&#x27;, &#x27;value&#x27;],
+  template: &#x60;
+    &#x3C;label&#x3E;
+      
+      &#x3C;input
+        v-bind=&#x22;$attrs&#x22;
+        v-bind:value=&#x22;value&#x22;
+        v-on:input=&#x22;$emit(&#x27;input&#x27;, $event.target.value)&#x22;
+      &#x3E;
+    &#x3C;/label&#x3E;
+  &#x60;
+})
+</code></pre>
+
+<blockquote class="has-icon tip">
+<div>
+توجه داشته باشید که گزینه inheritAttrs: false  بر روی style  و class  انقیاد شده (bindings) تاثیری نمی گذارد.
+</div>
+</blockquote>
+
+<p>
+این الگو به شما امکان می دهد از کامپوننت های پایه بیشتر شبیه عناصر raw HTML استفاده کنید ، بدون اینکه به این عنصر توجه کنید که ریشه اصلی آن چیست:
+</p>
+
+<pre><code class="language-javascript  line-numbers">&#x3C;base-input
+  label=&#x22;Username:&#x22;
+  v-model=&#x22;username&#x22;
+  required
+  placeholder=&#x22;Enter your username&#x22;
+&#x3E;&#x3C;/base-input&#x3E;
+</code></pre>
+
+        </section>
+        
+<hr>
+<p>
+<div>منابع مورد مطالعه جهت جمع آوری این مطلب:</div>
+<div  class="refrencehref">
+        https://vuejs.org/v2/guide/components-registration.html
+</div>
+</p>
+
+        <hr>
+        <style>
+    #commentsdiv{
+        background-color: #f5f5f5;
+        border: 1px solid #c5c5c5;
+        border-bottom: 0px !important;
+        padding: 12px;
+    }
+    #commentsborder{
+        background-color: #fff;
+        border: 1px solid #c5c5c5;
+        white-space: normal;
+        padding: 20px;
+    }
+</style>
+
+<div id="commentsdiv">نظرات</div>
+<div id="commentsborder">
+<div id="wpac-comment"></div>
+</div>
+<script type="text/javascript">
+wpac_init = window.wpac_init || [];
+wpac_init.push({widget: 'Comment', id: 7878});
+(function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = 'https://embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+})();
+</script>
+
+    </article>
+</div>
+<script src="/assets/js/anchor.min.js"></script>
+<script>
+    anchors.options = {
+        placement: 'left',
+        visible: 'always',
+//        icon: '#',
+    };
+    anchors.add('.anchored h2,.anchored h3,.anchored h4,.anchored h5,.anchored h6');
+
+    (function($){
+        if(window.location.hash) {
+            var hash = decodeURIComponent(window.location.hash);
+            gotohash($(hash).offset().top);
+        }
+        $('a.anchorjs-link').click(function(){
+			gotohash($(this).offset().top);
+        });
+        $('a.anchorjs').click(function(){
+			var id = '#' + $(this).attr('title');
+			gotohash($(id).offset().top);
+        });		
+        function gotohash(top){
+            var headerHeight = 70; // Get fixed header height
+            $('html,body').animate({
+                scrollTop: top - headerHeight
+            }, 20);
+        }
+    })(jQuery);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+   $(document).ready(function (){
+
+     var scrollPosition = getParameterByName('scroll');
+     if(scrollPosition)
+      $(".doc-menu").scrollTop(scrollPosition);
+
+     $('.doc-link').click(function(){
+        var scrollTop = $(".doc-menu").scrollTop();
+        if(scrollTop > 0)
+          $(this).attr("href",this.href + "?scroll=" + $(".doc-menu").scrollTop());
+     });
+
+     function getParameterByName(name, url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+   });
+</script>
+    <div id="back-to-top" role="button" aria-label="Back to top">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+    </div>
+</main>
+<!-- footer -->
+
+<footer class="footer" role="contentinfo" aria-label="Site footer">
+    <div class="navigation" role="navigation" aria-label="Footer links">
+        <a href="http://localhost:4000" class="avatar" role="link" ></a>
+        <ul role="menubar" aria-label="Footer links menubar">
+            <li class="footer-products" role="menuitem" aria-label="Products">
+                تولیدات
+                <ul role="menu" aria-hidden="true" aria-label="Products link">
+                </ul>
+            </li>
+            <li class="footer-blog" role="menuitem" aria-label="Blog">
+                مقالات
+                <ul role="menu" aria-hidden="true" aria-label="Blog link">
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2020/07/03/marriage.html" role="link" aria-label="ازدواج">ازدواج</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2019/10/11/vuejs.html" role="link" aria-label="آموزش vuejs">آموزش vuejs</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/18/laravel.html" role="link" aria-label="آموزش Laravel">آموزش Laravel</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/articles/2017/12/13/laravelcollective.html" role="link" aria-label="معرفی Laravel Collective">معرفی Laravel Collective</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/06/design-patterns.html" role="link" aria-label="معرفی  Design Pattern">معرفی  Design Pattern</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/blog" role="link" aria-label="Read more">Read More</a></li>
+                </ul>
+            </li>
+
+            <li class="footer-connect" role="menuitem" aria-label="Connect">
+                تماس
+                <ul role="menu" aria-hidden="true" aria-label="Connect link">
+                    <li role="listitem" aria-label="Connect link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub">GitHub</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://www.linkedin.com/in/farhad-mirzapour/" target="_blank" role="link" aria-label="Linkedin">Linkedin</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter">Twitter</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="socials"  role="navigation" aria-label="Social links">
+        <ul role="menu" aria-hidden="true" aria-label="Social link">
+            <li role="listitem" aria-label="Social link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://www.linkedin.com/in/farhad-mirzapour-0043b862/" target="_blank" role="link" aria-label="Linkedin"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="/feed.xml" role="link" aria-label="RSS"><i class="fa fa-rss-square" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+    <div class="copyright" role="contentinfo" aria-label="Copyright">
+        <p>&copy; <script type="text/javascript">document.write(new Date().getFullYear());</script> Farhad Mirzapour</p>
+    </div>
+</footer>
+
+<!-- scripts -->
+<script src="/assets/js/hamburger-menu.js"></script>
+
+<script src="/assets/js/elevator.min.js"></script>
+<script src="/assets/js/back-to-top.js"></script>
+<script src="/assets/prisma/prism.js"></script>
+<!-- google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108878564-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-108878564-1');
+</script>
+
+</body>
+</html>

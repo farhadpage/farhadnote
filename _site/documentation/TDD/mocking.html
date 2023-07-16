@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="">
+<!-- head -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Mock Objects و Stub Methods | مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Mock Objects و Stub Methods" />
+<meta name="author" content="Farhad Mirzapour" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="اغلب نرم‌افزارهایی که شما توسعه می‌دهید، از کلاس‌ها و اجزا (component) مختلفی تشکیل می‌شوند. در حالت ایده‌آل، هر کلاس یا جزء برای اجرای وظایف خاصی طراحی می‌شوند که این همان Single Responsibility Principle است. این کلاس‌ها و اجزا در کنار هم یک برنامه (Application) را تشکیل می‌دهند. طبیعت خاص کلاس‌های و اجزای واحد، وابستگی را غیرقابل اجتناب می‌کند. رابط کاربر (User Interface) شما به کلاس‌های business domain وابسته است و خود کلاس‌های business domain به چیزهایی مثل انبارهای خارجی داده (دیتابیس، فایل سیستم)، وب سرویس یا منابع و سیستم‌های خارجی دیگر وابسته هستند. وقتی ما تستهای واحد را می نویسیم، لازم است به یاد داشته باشیم که این آزمون باید بر روی کد خاصی که ما می خواهیم آن را تست کنیم متمرکز شده باشد. به کد زیر توجه کنید: &lt;?php namespace Classes; class Payment { const API_ID = 123456; const TRANS_KEY = &#39;TRANSACTION KEY&#39;; public function processPayment(array $paymentDetails) { $transaction = new \AuthorizeNetAIM(self::API_ID, self::TRANS_KEY); $transaction-&gt;amount = $paymentDetails[&#39;amount&#39;]; $transaction-&gt;card_num = $paymentDetails[&#39;card_num&#39;]; $transaction-&gt;exp_date = $paymentDetails[&#39;exp_date&#39;]; $response = $transaction-&gt;authorizeAndCapture(); if ($response-&gt;approved) { return $this-&gt;savePayment($response-&gt;transaction_id); } else { throw new \Exception($response-&gt;error_message); } } public function savePayment($transactionId) { // Logic for saving transaction ID to database or anywhere else would go in here return true; } } باتوجه به کد بالا متد processPayment حاوی منطقی برای پرداخت اینترنتی با اتصال به یک وب سرویس می باشد. همچنین متد savePayment (خط 25) وظیفه ذخیره سازی برخی از داده ها در پایگاه داده را برعهده دارد. دلایل زیادی وجود دارد که نمی خواهیم از کلاس واقعی و اجزای وابسته به آن در نوشتن تست استفاده کنیم : همانطور که ذکر شد، می خواهیم تست خود را بر روی قطعه کدی خاص (متدها و کلاس) متمرکز کنیم. این امر سبب می شود پیدا کردن نقص بسیار آسان تر و سریع تر گردد دلیل دیگری که نمی خواهیم از کلاس های واقعی برای آزمون ها استفاده کنیم این است که آنها می توانند آزمون های غیر قابل پیش بینی را انجام دهند. اگر تست واحد من یک پایگاه داده را هر بار که اجرا می کنیم بخواند، انتظار می رود مقدار خاصی در پایگاه داده وجود داشته باشد که در رنج آن پایگاه داده باشیم. همین امر سبب می شود آزمون ما غیر قابل پیش بینی گردد. سرعت مسئله دیگر است. می خواهیم تست هایم سریع باشند. کدهایی که با یک منبع خارجی مانند یک پایگاه داده یا یک سرویس وب ارتباط برقرار می کنند با توجه به تاخیر در برقراری ارتباط با این منابع خارجی، سرعت اجرای آن کاهش می یابد و زمانی که صدها آزمایش قرار است انجام شود سرعت اجرای تست نیز بسیار آهسته تر اجرا خواهند شد. Dependency Injection گام نخست برای راه حل این مشکل است. بنابراین شی transaction$ که از کلاس AuthorizeNetAIM ایجاد شده در خارج از متد processPayment ایجاد و به عنوان آرگومان تزریق می گردد : &lt;?php namespace Classes; class Payment { const API_ID = 123456; const TRANS_KEY = &#39;TRANSACTION KEY&#39;; public function processPayment(\AuthorizeNetAIM $transaction , array $paymentDetails) { $transaction-&gt;amount = $paymentDetails[&#39;amount&#39;]; $transaction-&gt;card_num = $paymentDetails[&#39;card_num&#39;]; $transaction-&gt;exp_date = $paymentDetails[&#39;exp_date&#39;]; $response = $transaction-&gt;authorizeAndCapture(); if ($response-&gt;approved) { return $this-&gt;savePayment($response-&gt;transaction_id); } else { throw new \Exception($response-&gt;error_message); } } public function savePayment($transactionId) { // Logic for saving transaction ID to database or anywhere else would go in here return true; } } مفهوم Mocks و Stubs و Fakes اکنون به مبحث Mocking می‌پردازیم. اگر واژه Mock را در فرهنگ لغت انگلیسی جستجو کنید, مفهوم “something made as an imitation” را مشاهده خواهید کرد. در واقع می‌توان اینطور تعریف کرد که Mocking به عملی تلقی می‌شود که یک چیز را به عنوان بدل ایجاد کنیم. Mocking در Unit Testing استفاده می‌شود. در هنگام Test یک Object, ممکن است این Object به Object های دیگری وابسته و برای پردازش به مقادیری که این Object ها بر می‌گردانند, نیاز داشته باشد. در واقع هدف از Mocking این است که می‌خواهیم کد ها را بدون دخالت Dependency های آنها اجرا کنیم. هدف این است که Mocked Object ها, نقش Object های واقعی را ایفا کنند. متد و یا متد هایی در این Object با متغیر های معینی فراخوانی می‌شود و نتیجه مورد نظر را بر می‌گرداند. برای مثال فرض کنید به یک متد که برای احراز هویت کاربر است, مقادیر نام کاربری و رمز عبور را ارسال می‌کنیم و سپس مشخص می‌کنیم که اگر مقادیر وارد شده, با مقادیر مورد نظر برابر بودند, سطح دسترسی خاصی را برگرداند. واضح است که این پردازش نیاز به ارتباط با پایگاه داده دارد. اما در اینجا تنها ورودی و خروجی متد را مشخص کرده‌ایم و پردازش متد مد نظر ما نیست. همین امر باعث می‌شود که حتی اگر متد دارای Dependency های خاصی است, در Testing مشکلی ایجاد نکند. روش دیگری نیز به نام Stubbing وجود دارد که در کنار Mocking قرار می‌گیرد. استفاده از Stubbing بسیار آسان است و هیچ Extra Dependency را در زمان Testing, دخالت نمی‌دهد. در واقع بخشی از کلاسی که مورد نیاز است را پیاده سازی می‌کنیم تا در زمان Testing بتوان از آن استفاده کرد. چه زمانی mock یک mock نیست؟ چه زمانی stub یا fake است؟ تفاوت این‌ها چیست؟ تفسیر Martin Fowler: Fakes: یک Fake شی‌ای است که یک مکانیزم داخلی دارد که نتایج قابل پیش‌بینی برمی‌گرداند، اما منطق کاری واقعی را پیاده‌سازی نکرده است. Stubs: یک Stub شی‌ای است که یک نتیجه مشخص را بر اساس یک سری ورودی مشخص برمی‌گرداند. اگر من به stub بگویم که هر وقت شخصی با شناسه 42 را خواستم عبارت John Doe را برگردان، stub همین کار را خواهد کرد. با این حال اگر من از stub بخواهم که شخصی با شناسه 41 را برگرداند، نمی‌داند چه کار باید بکند. بر حسب اینکه از کدام mocking framework استفاده کنم، stub یا exception ایجاد می‌کند یا یک شی null برمی‌گرداند. stub می‌تواند بعضی اطلاعات مربوط به نحوه فراخوانی مثل تعداد فراخوانی یا اینکه با چه داده‌هایی فراخوانی شده است را به یاد داشته باشد. Mocks: یک Mock یک نسخه پیچیده‌تر از stub است. همچنان مانند stub مقادیر را برمی‌گرداند، اما همچنین می‌تواند طوری برنامه‌ریزی شود که باید چند بار فراخوانی شود، به چه ترتیب یا به چه داده‌هایی. Spy: یک Spy نوعی mock است که یک شی را می‌گیرد و به جای ایجاد یک شی mock متدهایی که tester می‌خواهد mock کند را جایگزین می‌کند. Spy ها برای کدهای غیر TDD عالی هستند، اما باید خیلی مراقب باشید چرا که فراموش کردن چیزی که می‌بایست mock شود ممکن است نتایج فاجعه‌باری داشته باشد. Dummy: یک Dummy شی‌ای است که می‌تواند به عنوان جایگزین یک شی دیگر پاس داده شود اما استفاده نمی‌شود. Dummy ها در واقع placeholder محسوب می‌شوند. بر اساس تعاریف بالا، بعضی انواع mock ها هستند که خودمان می‌توانیم آن‌ها را ایجاد کنیم مثل Fake ها و Dummy ها. همچنین می‌توان یک stub ساده نوشت، اما زمان انجام این کار بر روی بهره‌وری من تاثیر خواهد داشت. خوشبختانه راه بهتری وجود دارد: استفاده از فریمورک‌های mocking. در ادامه از ابزار mock موجود در PHPunit استفاده خواهیم کرد. برای مثال بالا می خواهیم یک تست واحد نوشته شود. با توجه به کد بالا متد authorizeAndCapture در خط 15 عملیات اجرای تراکنش را برعهده داده دارد و نتیجه را بصورت یک شی در متغیر response$ ذخیره می نماید. چنانچه مقدار response-&gt;approved$ برابر true باشد به معنای موفقیت آمیز بودن تراکنش بوده و مقدار transaction_id را در پایگاه داده ذخیره می نماید. بنابراین از متد assertTrue جهت بررسی نتایج استفاده می شود و کدی مانند زیر خواهیم داشت : &lt;?php namespace Test; class PaymentTest extends \PHPUnit_Framework_TestCase { public function testProcessPaymentReturnsTrueOnSuccessfulPayment() { //Arrange $paymentDetails = array( &#39;amount&#39; =&gt; 123.99, &#39;card_num&#39; =&gt; &#39;4111-1111-1111-1111&#39;, &#39;exp_date&#39; =&gt; &#39;03/2013&#39; ); $payment = new \Classes\Payment(); $authorizeNet = new \AuthorizeNetAIM($payment::API_ID, $payment::TRANS_KEY); //Act $result = $payment-&gt;processPayment($authorizeNet, $paymentDetails); //Assert $this-&gt;assertTrue($result); } } فهمیدن کد این تست باید خیلی ساده باشد. در قسمت Arrange مبلغ و یک کارت پرداخت اینترنتی فرضی ایجاد کردیم و در قسمت Act , Assert مراحل پرداخت مورد آزمون قرار می گیرد. زمانیکه آزمون را اجرا می کنیم به دلیل اینکه یا کلاس AuthorizeNetAIM پیاده سازی نشده است و یا نمی توان به دلایلی نظیر قطعی اینترنت و ... با این وب سرویس ارتباط برقرار کرد بنابراین مشاهده می کنیم که آزمون fail می شود. بنابراین در اینجا از mock جهت ایجاد یک شی غیر واقعی از کلاس AuthorizeNetAIM استفاده می نمائیم : &lt;?php namespace Test; class PaymentTest extends \PHPUnit_Framework_TestCase { public function testProcessPaymentReturnsTrueOnSuccessfulPayment() { //Arrange $paymentDetails = array( &#39;amount&#39; =&gt; 123.99, &#39;card_num&#39; =&gt; &#39;4111-1111-1111-1111&#39;, &#39;exp_date&#39; =&gt; &#39;03/2013&#39; ); $payment = new \Classes\Payment(); $authorizeNet = $this-&gt;getMock(&#39;\AuthorizeNetAIM&#39;, array(&#39;__construct&#39;,&#39;authorizeAndCapture&#39;), array($payment::API_ID, $payment::TRANS_KEY)); //Act $result = $payment-&gt;processPayment($authorizeNet, $paymentDetails); //Assert $this-&gt;assertTrue($result); } } همانطور که مشاهده می کنید در خط 17 با استفاده از متد getMock کلاسی به نام AuthorizeNetAIM ایجاد کردیم که دارای دو متد construct__ و authorizeAndCapture می باشد. سپس نمونه ای از این کلاس را ایجاد کرده است. ساختار این متد بدین صورت است : public function getMock($originalClassName, $methods = array(), array $arguments = array(), $mockClassName = &#39;&#39;, $callOriginalConstructor = TRUE, $callOriginalClone = TRUE, $callAutoload = TRUE, $cloneArguments = TRUE) همچنین می توان از متد getMockBuilder نیز استفاده کرد که بدین صورت پیاده سازی می شود : $authorizeNet = $this-&gt;getMockBuilder(&#39;\AuthorizeNetAIM&#39;) -&gt;setMethods(array(&#39;__construct&#39;,&#39;authorizeAndCapture&#39;)) -&gt;setConstructorArgs(array($payment::API_ID, $payment::TRANS_KEY)) -&gt;getMock(); هم اکنون تست را بار دیگر اجرا می کنیم و نتیجه زیر مشاهده می گردد : این پیغام به این دلیل است که متدهایی که در کلاس های mock ایجاد می گردند همگی مقدار NULL را برگشت می دهند. برای مثال چنانچه دستور زیر را اجرا کنید مشاهده می کنید که مقدار NULL نمایش داده می شود : var_dump($authorizeNet-&gt;authorizeAndCapture()); بنابراین در اینجا از stub جهت override کردن متد مورد نظر و تعیین مقدار بازگشتی خود استفاده می کنیم . بنابراین کدی مانند زیر خواهیم داشت : &lt;?php namespace Test; class PaymentTest extends \PHPUnit_Framework_TestCase { public function testProcessPaymentReturnsTrueOnSuccessfulPayment() { //Arrange $paymentDetails = array( &#39;amount&#39; =&gt; 123.99, &#39;card_num&#39; =&gt; &#39;4111-1111-1111-1111&#39;, &#39;exp_date&#39; =&gt; &#39;03/2013&#39; ); $payment = new \Classes\Payment(); $authorizeNet = $this-&gt;getMock(&#39;\AuthorizeNetAIM&#39;, array(&#39;__construct&#39;,&#39;authorizeAndCapture&#39;), array($payment::API_ID, $payment::TRANS_KEY)); $response = new \stdClass(); $response-&gt;approved = true; $response-&gt;transaction_id = 123; $authorizeNet-&gt;expects($this-&gt;once()) -&gt;method(&#39;authorizeAndCapture&#39;) -&gt;will($this-&gt;returnValue($response)); //Act $result = $payment-&gt;processPayment($authorizeNet, $paymentDetails); //Assert $this-&gt;assertTrue($result); } } می دانیم نوع بازگشتی authorizeAndCapture یک شی می باشد که دارای دو عنصر approved که حاوی مقدار boolean و transaction_id که حاوی نوع داده int می باشد. بنابراین ابتدا مقدار بازگشتی را در خطوط 19 الی 21 ایجاد کردیم. سپس در خطوط 23 الی 25 مقدار بازگشتی مورد نظر خود به متد authorizeAndCapture نسبت داده ایم. با استفاده از متد expects تعداد دفعاتی که انتظار می رود متد مورد نظر ما در کد اجرا شود را تعیین می کنیم که می تواند شامل once, any, never باشد. با استفاده از متد method متد مورد نظر خود را تعیین می کنیم. و در آخر با استفاده از متدهای will , returnValue مقدار بازگشتی متد را مشخص می کنیم. هم اکنون با اجرای دوباره آزمون مشاهده خواهیم کرد که آزمون pass شده است." />
+<meta property="og:description" content="اغلب نرم‌افزارهایی که شما توسعه می‌دهید، از کلاس‌ها و اجزا (component) مختلفی تشکیل می‌شوند. در حالت ایده‌آل، هر کلاس یا جزء برای اجرای وظایف خاصی طراحی می‌شوند که این همان Single Responsibility Principle است. این کلاس‌ها و اجزا در کنار هم یک برنامه (Application) را تشکیل می‌دهند. طبیعت خاص کلاس‌های و اجزای واحد، وابستگی را غیرقابل اجتناب می‌کند. رابط کاربر (User Interface) شما به کلاس‌های business domain وابسته است و خود کلاس‌های business domain به چیزهایی مثل انبارهای خارجی داده (دیتابیس، فایل سیستم)، وب سرویس یا منابع و سیستم‌های خارجی دیگر وابسته هستند. وقتی ما تستهای واحد را می نویسیم، لازم است به یاد داشته باشیم که این آزمون باید بر روی کد خاصی که ما می خواهیم آن را تست کنیم متمرکز شده باشد. به کد زیر توجه کنید: &lt;?php namespace Classes; class Payment { const API_ID = 123456; const TRANS_KEY = &#39;TRANSACTION KEY&#39;; public function processPayment(array $paymentDetails) { $transaction = new \AuthorizeNetAIM(self::API_ID, self::TRANS_KEY); $transaction-&gt;amount = $paymentDetails[&#39;amount&#39;]; $transaction-&gt;card_num = $paymentDetails[&#39;card_num&#39;]; $transaction-&gt;exp_date = $paymentDetails[&#39;exp_date&#39;]; $response = $transaction-&gt;authorizeAndCapture(); if ($response-&gt;approved) { return $this-&gt;savePayment($response-&gt;transaction_id); } else { throw new \Exception($response-&gt;error_message); } } public function savePayment($transactionId) { // Logic for saving transaction ID to database or anywhere else would go in here return true; } } باتوجه به کد بالا متد processPayment حاوی منطقی برای پرداخت اینترنتی با اتصال به یک وب سرویس می باشد. همچنین متد savePayment (خط 25) وظیفه ذخیره سازی برخی از داده ها در پایگاه داده را برعهده دارد. دلایل زیادی وجود دارد که نمی خواهیم از کلاس واقعی و اجزای وابسته به آن در نوشتن تست استفاده کنیم : همانطور که ذکر شد، می خواهیم تست خود را بر روی قطعه کدی خاص (متدها و کلاس) متمرکز کنیم. این امر سبب می شود پیدا کردن نقص بسیار آسان تر و سریع تر گردد دلیل دیگری که نمی خواهیم از کلاس های واقعی برای آزمون ها استفاده کنیم این است که آنها می توانند آزمون های غیر قابل پیش بینی را انجام دهند. اگر تست واحد من یک پایگاه داده را هر بار که اجرا می کنیم بخواند، انتظار می رود مقدار خاصی در پایگاه داده وجود داشته باشد که در رنج آن پایگاه داده باشیم. همین امر سبب می شود آزمون ما غیر قابل پیش بینی گردد. سرعت مسئله دیگر است. می خواهیم تست هایم سریع باشند. کدهایی که با یک منبع خارجی مانند یک پایگاه داده یا یک سرویس وب ارتباط برقرار می کنند با توجه به تاخیر در برقراری ارتباط با این منابع خارجی، سرعت اجرای آن کاهش می یابد و زمانی که صدها آزمایش قرار است انجام شود سرعت اجرای تست نیز بسیار آهسته تر اجرا خواهند شد. Dependency Injection گام نخست برای راه حل این مشکل است. بنابراین شی transaction$ که از کلاس AuthorizeNetAIM ایجاد شده در خارج از متد processPayment ایجاد و به عنوان آرگومان تزریق می گردد : &lt;?php namespace Classes; class Payment { const API_ID = 123456; const TRANS_KEY = &#39;TRANSACTION KEY&#39;; public function processPayment(\AuthorizeNetAIM $transaction , array $paymentDetails) { $transaction-&gt;amount = $paymentDetails[&#39;amount&#39;]; $transaction-&gt;card_num = $paymentDetails[&#39;card_num&#39;]; $transaction-&gt;exp_date = $paymentDetails[&#39;exp_date&#39;]; $response = $transaction-&gt;authorizeAndCapture(); if ($response-&gt;approved) { return $this-&gt;savePayment($response-&gt;transaction_id); } else { throw new \Exception($response-&gt;error_message); } } public function savePayment($transactionId) { // Logic for saving transaction ID to database or anywhere else would go in here return true; } } مفهوم Mocks و Stubs و Fakes اکنون به مبحث Mocking می‌پردازیم. اگر واژه Mock را در فرهنگ لغت انگلیسی جستجو کنید, مفهوم “something made as an imitation” را مشاهده خواهید کرد. در واقع می‌توان اینطور تعریف کرد که Mocking به عملی تلقی می‌شود که یک چیز را به عنوان بدل ایجاد کنیم. Mocking در Unit Testing استفاده می‌شود. در هنگام Test یک Object, ممکن است این Object به Object های دیگری وابسته و برای پردازش به مقادیری که این Object ها بر می‌گردانند, نیاز داشته باشد. در واقع هدف از Mocking این است که می‌خواهیم کد ها را بدون دخالت Dependency های آنها اجرا کنیم. هدف این است که Mocked Object ها, نقش Object های واقعی را ایفا کنند. متد و یا متد هایی در این Object با متغیر های معینی فراخوانی می‌شود و نتیجه مورد نظر را بر می‌گرداند. برای مثال فرض کنید به یک متد که برای احراز هویت کاربر است, مقادیر نام کاربری و رمز عبور را ارسال می‌کنیم و سپس مشخص می‌کنیم که اگر مقادیر وارد شده, با مقادیر مورد نظر برابر بودند, سطح دسترسی خاصی را برگرداند. واضح است که این پردازش نیاز به ارتباط با پایگاه داده دارد. اما در اینجا تنها ورودی و خروجی متد را مشخص کرده‌ایم و پردازش متد مد نظر ما نیست. همین امر باعث می‌شود که حتی اگر متد دارای Dependency های خاصی است, در Testing مشکلی ایجاد نکند. روش دیگری نیز به نام Stubbing وجود دارد که در کنار Mocking قرار می‌گیرد. استفاده از Stubbing بسیار آسان است و هیچ Extra Dependency را در زمان Testing, دخالت نمی‌دهد. در واقع بخشی از کلاسی که مورد نیاز است را پیاده سازی می‌کنیم تا در زمان Testing بتوان از آن استفاده کرد. چه زمانی mock یک mock نیست؟ چه زمانی stub یا fake است؟ تفاوت این‌ها چیست؟ تفسیر Martin Fowler: Fakes: یک Fake شی‌ای است که یک مکانیزم داخلی دارد که نتایج قابل پیش‌بینی برمی‌گرداند، اما منطق کاری واقعی را پیاده‌سازی نکرده است. Stubs: یک Stub شی‌ای است که یک نتیجه مشخص را بر اساس یک سری ورودی مشخص برمی‌گرداند. اگر من به stub بگویم که هر وقت شخصی با شناسه 42 را خواستم عبارت John Doe را برگردان، stub همین کار را خواهد کرد. با این حال اگر من از stub بخواهم که شخصی با شناسه 41 را برگرداند، نمی‌داند چه کار باید بکند. بر حسب اینکه از کدام mocking framework استفاده کنم، stub یا exception ایجاد می‌کند یا یک شی null برمی‌گرداند. stub می‌تواند بعضی اطلاعات مربوط به نحوه فراخوانی مثل تعداد فراخوانی یا اینکه با چه داده‌هایی فراخوانی شده است را به یاد داشته باشد. Mocks: یک Mock یک نسخه پیچیده‌تر از stub است. همچنان مانند stub مقادیر را برمی‌گرداند، اما همچنین می‌تواند طوری برنامه‌ریزی شود که باید چند بار فراخوانی شود، به چه ترتیب یا به چه داده‌هایی. Spy: یک Spy نوعی mock است که یک شی را می‌گیرد و به جای ایجاد یک شی mock متدهایی که tester می‌خواهد mock کند را جایگزین می‌کند. Spy ها برای کدهای غیر TDD عالی هستند، اما باید خیلی مراقب باشید چرا که فراموش کردن چیزی که می‌بایست mock شود ممکن است نتایج فاجعه‌باری داشته باشد. Dummy: یک Dummy شی‌ای است که می‌تواند به عنوان جایگزین یک شی دیگر پاس داده شود اما استفاده نمی‌شود. Dummy ها در واقع placeholder محسوب می‌شوند. بر اساس تعاریف بالا، بعضی انواع mock ها هستند که خودمان می‌توانیم آن‌ها را ایجاد کنیم مثل Fake ها و Dummy ها. همچنین می‌توان یک stub ساده نوشت، اما زمان انجام این کار بر روی بهره‌وری من تاثیر خواهد داشت. خوشبختانه راه بهتری وجود دارد: استفاده از فریمورک‌های mocking. در ادامه از ابزار mock موجود در PHPunit استفاده خواهیم کرد. برای مثال بالا می خواهیم یک تست واحد نوشته شود. با توجه به کد بالا متد authorizeAndCapture در خط 15 عملیات اجرای تراکنش را برعهده داده دارد و نتیجه را بصورت یک شی در متغیر response$ ذخیره می نماید. چنانچه مقدار response-&gt;approved$ برابر true باشد به معنای موفقیت آمیز بودن تراکنش بوده و مقدار transaction_id را در پایگاه داده ذخیره می نماید. بنابراین از متد assertTrue جهت بررسی نتایج استفاده می شود و کدی مانند زیر خواهیم داشت : &lt;?php namespace Test; class PaymentTest extends \PHPUnit_Framework_TestCase { public function testProcessPaymentReturnsTrueOnSuccessfulPayment() { //Arrange $paymentDetails = array( &#39;amount&#39; =&gt; 123.99, &#39;card_num&#39; =&gt; &#39;4111-1111-1111-1111&#39;, &#39;exp_date&#39; =&gt; &#39;03/2013&#39; ); $payment = new \Classes\Payment(); $authorizeNet = new \AuthorizeNetAIM($payment::API_ID, $payment::TRANS_KEY); //Act $result = $payment-&gt;processPayment($authorizeNet, $paymentDetails); //Assert $this-&gt;assertTrue($result); } } فهمیدن کد این تست باید خیلی ساده باشد. در قسمت Arrange مبلغ و یک کارت پرداخت اینترنتی فرضی ایجاد کردیم و در قسمت Act , Assert مراحل پرداخت مورد آزمون قرار می گیرد. زمانیکه آزمون را اجرا می کنیم به دلیل اینکه یا کلاس AuthorizeNetAIM پیاده سازی نشده است و یا نمی توان به دلایلی نظیر قطعی اینترنت و ... با این وب سرویس ارتباط برقرار کرد بنابراین مشاهده می کنیم که آزمون fail می شود. بنابراین در اینجا از mock جهت ایجاد یک شی غیر واقعی از کلاس AuthorizeNetAIM استفاده می نمائیم : &lt;?php namespace Test; class PaymentTest extends \PHPUnit_Framework_TestCase { public function testProcessPaymentReturnsTrueOnSuccessfulPayment() { //Arrange $paymentDetails = array( &#39;amount&#39; =&gt; 123.99, &#39;card_num&#39; =&gt; &#39;4111-1111-1111-1111&#39;, &#39;exp_date&#39; =&gt; &#39;03/2013&#39; ); $payment = new \Classes\Payment(); $authorizeNet = $this-&gt;getMock(&#39;\AuthorizeNetAIM&#39;, array(&#39;__construct&#39;,&#39;authorizeAndCapture&#39;), array($payment::API_ID, $payment::TRANS_KEY)); //Act $result = $payment-&gt;processPayment($authorizeNet, $paymentDetails); //Assert $this-&gt;assertTrue($result); } } همانطور که مشاهده می کنید در خط 17 با استفاده از متد getMock کلاسی به نام AuthorizeNetAIM ایجاد کردیم که دارای دو متد construct__ و authorizeAndCapture می باشد. سپس نمونه ای از این کلاس را ایجاد کرده است. ساختار این متد بدین صورت است : public function getMock($originalClassName, $methods = array(), array $arguments = array(), $mockClassName = &#39;&#39;, $callOriginalConstructor = TRUE, $callOriginalClone = TRUE, $callAutoload = TRUE, $cloneArguments = TRUE) همچنین می توان از متد getMockBuilder نیز استفاده کرد که بدین صورت پیاده سازی می شود : $authorizeNet = $this-&gt;getMockBuilder(&#39;\AuthorizeNetAIM&#39;) -&gt;setMethods(array(&#39;__construct&#39;,&#39;authorizeAndCapture&#39;)) -&gt;setConstructorArgs(array($payment::API_ID, $payment::TRANS_KEY)) -&gt;getMock(); هم اکنون تست را بار دیگر اجرا می کنیم و نتیجه زیر مشاهده می گردد : این پیغام به این دلیل است که متدهایی که در کلاس های mock ایجاد می گردند همگی مقدار NULL را برگشت می دهند. برای مثال چنانچه دستور زیر را اجرا کنید مشاهده می کنید که مقدار NULL نمایش داده می شود : var_dump($authorizeNet-&gt;authorizeAndCapture()); بنابراین در اینجا از stub جهت override کردن متد مورد نظر و تعیین مقدار بازگشتی خود استفاده می کنیم . بنابراین کدی مانند زیر خواهیم داشت : &lt;?php namespace Test; class PaymentTest extends \PHPUnit_Framework_TestCase { public function testProcessPaymentReturnsTrueOnSuccessfulPayment() { //Arrange $paymentDetails = array( &#39;amount&#39; =&gt; 123.99, &#39;card_num&#39; =&gt; &#39;4111-1111-1111-1111&#39;, &#39;exp_date&#39; =&gt; &#39;03/2013&#39; ); $payment = new \Classes\Payment(); $authorizeNet = $this-&gt;getMock(&#39;\AuthorizeNetAIM&#39;, array(&#39;__construct&#39;,&#39;authorizeAndCapture&#39;), array($payment::API_ID, $payment::TRANS_KEY)); $response = new \stdClass(); $response-&gt;approved = true; $response-&gt;transaction_id = 123; $authorizeNet-&gt;expects($this-&gt;once()) -&gt;method(&#39;authorizeAndCapture&#39;) -&gt;will($this-&gt;returnValue($response)); //Act $result = $payment-&gt;processPayment($authorizeNet, $paymentDetails); //Assert $this-&gt;assertTrue($result); } } می دانیم نوع بازگشتی authorizeAndCapture یک شی می باشد که دارای دو عنصر approved که حاوی مقدار boolean و transaction_id که حاوی نوع داده int می باشد. بنابراین ابتدا مقدار بازگشتی را در خطوط 19 الی 21 ایجاد کردیم. سپس در خطوط 23 الی 25 مقدار بازگشتی مورد نظر خود به متد authorizeAndCapture نسبت داده ایم. با استفاده از متد expects تعداد دفعاتی که انتظار می رود متد مورد نظر ما در کد اجرا شود را تعیین می کنیم که می تواند شامل once, any, never باشد. با استفاده از متد method متد مورد نظر خود را تعیین می کنیم. و در آخر با استفاده از متدهای will , returnValue مقدار بازگشتی متد را مشخص می کنیم. هم اکنون با اجرای دوباره آزمون مشاهده خواهیم کرد که آزمون pass شده است." />
+<link rel="canonical" href="http://localhost:4000/documentation/TDD/mocking" />
+<meta property="og:url" content="http://localhost:4000/documentation/TDD/mocking" />
+<meta property="og:site_name" content="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-11-24T12:00:00+03:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Mock Objects و Stub Methods" />
+<meta name="twitter:site" content="@farhadmirzapour" />
+<meta name="twitter:creator" content="@Farhad Mirzapour" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"Mock Objects و Stub Methods","url":"http://localhost:4000/documentation/TDD/mocking","datePublished":"2017-11-24T12:00:00+03:30","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"dateModified":"2017-11-24T12:00:00+03:30","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/documentation/TDD/mocking"},"author":{"@type":"Person","name":"Farhad Mirzapour"},"description":"اغلب نرم‌افزارهایی که شما توسعه می‌دهید، از کلاس‌ها و اجزا (component) مختلفی تشکیل می‌شوند. در حالت ایده‌آل، هر کلاس یا جزء برای اجرای وظایف خاصی طراحی می‌شوند که این همان Single Responsibility Principle است. این کلاس‌ها و اجزا در کنار هم یک برنامه (Application) را تشکیل می‌دهند. طبیعت خاص کلاس‌های و اجزای واحد، وابستگی را غیرقابل اجتناب می‌کند. رابط کاربر (User Interface) شما به کلاس‌های business domain وابسته است و خود کلاس‌های business domain به چیزهایی مثل انبارهای خارجی داده (دیتابیس، فایل سیستم)، وب سرویس یا منابع و سیستم‌های خارجی دیگر وابسته هستند. وقتی ما تستهای واحد را می نویسیم، لازم است به یاد داشته باشیم که این آزمون باید بر روی کد خاصی که ما می خواهیم آن را تست کنیم متمرکز شده باشد. به کد زیر توجه کنید: &lt;?php namespace Classes; class Payment { const API_ID = 123456; const TRANS_KEY = &#39;TRANSACTION KEY&#39;; public function processPayment(array $paymentDetails) { $transaction = new \\AuthorizeNetAIM(self::API_ID, self::TRANS_KEY); $transaction-&gt;amount = $paymentDetails[&#39;amount&#39;]; $transaction-&gt;card_num = $paymentDetails[&#39;card_num&#39;]; $transaction-&gt;exp_date = $paymentDetails[&#39;exp_date&#39;]; $response = $transaction-&gt;authorizeAndCapture(); if ($response-&gt;approved) { return $this-&gt;savePayment($response-&gt;transaction_id); } else { throw new \\Exception($response-&gt;error_message); } } public function savePayment($transactionId) { // Logic for saving transaction ID to database or anywhere else would go in here return true; } } باتوجه به کد بالا متد processPayment حاوی منطقی برای پرداخت اینترنتی با اتصال به یک وب سرویس می باشد. همچنین متد savePayment (خط 25) وظیفه ذخیره سازی برخی از داده ها در پایگاه داده را برعهده دارد. دلایل زیادی وجود دارد که نمی خواهیم از کلاس واقعی و اجزای وابسته به آن در نوشتن تست استفاده کنیم : همانطور که ذکر شد، می خواهیم تست خود را بر روی قطعه کدی خاص (متدها و کلاس) متمرکز کنیم. این امر سبب می شود پیدا کردن نقص بسیار آسان تر و سریع تر گردد دلیل دیگری که نمی خواهیم از کلاس های واقعی برای آزمون ها استفاده کنیم این است که آنها می توانند آزمون های غیر قابل پیش بینی را انجام دهند. اگر تست واحد من یک پایگاه داده را هر بار که اجرا می کنیم بخواند، انتظار می رود مقدار خاصی در پایگاه داده وجود داشته باشد که در رنج آن پایگاه داده باشیم. همین امر سبب می شود آزمون ما غیر قابل پیش بینی گردد. سرعت مسئله دیگر است. می خواهیم تست هایم سریع باشند. کدهایی که با یک منبع خارجی مانند یک پایگاه داده یا یک سرویس وب ارتباط برقرار می کنند با توجه به تاخیر در برقراری ارتباط با این منابع خارجی، سرعت اجرای آن کاهش می یابد و زمانی که صدها آزمایش قرار است انجام شود سرعت اجرای تست نیز بسیار آهسته تر اجرا خواهند شد. Dependency Injection گام نخست برای راه حل این مشکل است. بنابراین شی transaction$ که از کلاس AuthorizeNetAIM ایجاد شده در خارج از متد processPayment ایجاد و به عنوان آرگومان تزریق می گردد : &lt;?php namespace Classes; class Payment { const API_ID = 123456; const TRANS_KEY = &#39;TRANSACTION KEY&#39;; public function processPayment(\\AuthorizeNetAIM $transaction , array $paymentDetails) { $transaction-&gt;amount = $paymentDetails[&#39;amount&#39;]; $transaction-&gt;card_num = $paymentDetails[&#39;card_num&#39;]; $transaction-&gt;exp_date = $paymentDetails[&#39;exp_date&#39;]; $response = $transaction-&gt;authorizeAndCapture(); if ($response-&gt;approved) { return $this-&gt;savePayment($response-&gt;transaction_id); } else { throw new \\Exception($response-&gt;error_message); } } public function savePayment($transactionId) { // Logic for saving transaction ID to database or anywhere else would go in here return true; } } مفهوم Mocks و Stubs و Fakes اکنون به مبحث Mocking می‌پردازیم. اگر واژه Mock را در فرهنگ لغت انگلیسی جستجو کنید, مفهوم “something made as an imitation” را مشاهده خواهید کرد. در واقع می‌توان اینطور تعریف کرد که Mocking به عملی تلقی می‌شود که یک چیز را به عنوان بدل ایجاد کنیم. Mocking در Unit Testing استفاده می‌شود. در هنگام Test یک Object, ممکن است این Object به Object های دیگری وابسته و برای پردازش به مقادیری که این Object ها بر می‌گردانند, نیاز داشته باشد. در واقع هدف از Mocking این است که می‌خواهیم کد ها را بدون دخالت Dependency های آنها اجرا کنیم. هدف این است که Mocked Object ها, نقش Object های واقعی را ایفا کنند. متد و یا متد هایی در این Object با متغیر های معینی فراخوانی می‌شود و نتیجه مورد نظر را بر می‌گرداند. برای مثال فرض کنید به یک متد که برای احراز هویت کاربر است, مقادیر نام کاربری و رمز عبور را ارسال می‌کنیم و سپس مشخص می‌کنیم که اگر مقادیر وارد شده, با مقادیر مورد نظر برابر بودند, سطح دسترسی خاصی را برگرداند. واضح است که این پردازش نیاز به ارتباط با پایگاه داده دارد. اما در اینجا تنها ورودی و خروجی متد را مشخص کرده‌ایم و پردازش متد مد نظر ما نیست. همین امر باعث می‌شود که حتی اگر متد دارای Dependency های خاصی است, در Testing مشکلی ایجاد نکند. روش دیگری نیز به نام Stubbing وجود دارد که در کنار Mocking قرار می‌گیرد. استفاده از Stubbing بسیار آسان است و هیچ Extra Dependency را در زمان Testing, دخالت نمی‌دهد. در واقع بخشی از کلاسی که مورد نیاز است را پیاده سازی می‌کنیم تا در زمان Testing بتوان از آن استفاده کرد. چه زمانی mock یک mock نیست؟ چه زمانی stub یا fake است؟ تفاوت این‌ها چیست؟ تفسیر Martin Fowler: Fakes: یک Fake شی‌ای است که یک مکانیزم داخلی دارد که نتایج قابل پیش‌بینی برمی‌گرداند، اما منطق کاری واقعی را پیاده‌سازی نکرده است. Stubs: یک Stub شی‌ای است که یک نتیجه مشخص را بر اساس یک سری ورودی مشخص برمی‌گرداند. اگر من به stub بگویم که هر وقت شخصی با شناسه 42 را خواستم عبارت John Doe را برگردان، stub همین کار را خواهد کرد. با این حال اگر من از stub بخواهم که شخصی با شناسه 41 را برگرداند، نمی‌داند چه کار باید بکند. بر حسب اینکه از کدام mocking framework استفاده کنم، stub یا exception ایجاد می‌کند یا یک شی null برمی‌گرداند. stub می‌تواند بعضی اطلاعات مربوط به نحوه فراخوانی مثل تعداد فراخوانی یا اینکه با چه داده‌هایی فراخوانی شده است را به یاد داشته باشد. Mocks: یک Mock یک نسخه پیچیده‌تر از stub است. همچنان مانند stub مقادیر را برمی‌گرداند، اما همچنین می‌تواند طوری برنامه‌ریزی شود که باید چند بار فراخوانی شود، به چه ترتیب یا به چه داده‌هایی. Spy: یک Spy نوعی mock است که یک شی را می‌گیرد و به جای ایجاد یک شی mock متدهایی که tester می‌خواهد mock کند را جایگزین می‌کند. Spy ها برای کدهای غیر TDD عالی هستند، اما باید خیلی مراقب باشید چرا که فراموش کردن چیزی که می‌بایست mock شود ممکن است نتایج فاجعه‌باری داشته باشد. Dummy: یک Dummy شی‌ای است که می‌تواند به عنوان جایگزین یک شی دیگر پاس داده شود اما استفاده نمی‌شود. Dummy ها در واقع placeholder محسوب می‌شوند. بر اساس تعاریف بالا، بعضی انواع mock ها هستند که خودمان می‌توانیم آن‌ها را ایجاد کنیم مثل Fake ها و Dummy ها. همچنین می‌توان یک stub ساده نوشت، اما زمان انجام این کار بر روی بهره‌وری من تاثیر خواهد داشت. خوشبختانه راه بهتری وجود دارد: استفاده از فریمورک‌های mocking. در ادامه از ابزار mock موجود در PHPunit استفاده خواهیم کرد. برای مثال بالا می خواهیم یک تست واحد نوشته شود. با توجه به کد بالا متد authorizeAndCapture در خط 15 عملیات اجرای تراکنش را برعهده داده دارد و نتیجه را بصورت یک شی در متغیر response$ ذخیره می نماید. چنانچه مقدار response-&gt;approved$ برابر true باشد به معنای موفقیت آمیز بودن تراکنش بوده و مقدار transaction_id را در پایگاه داده ذخیره می نماید. بنابراین از متد assertTrue جهت بررسی نتایج استفاده می شود و کدی مانند زیر خواهیم داشت : &lt;?php namespace Test; class PaymentTest extends \\PHPUnit_Framework_TestCase { public function testProcessPaymentReturnsTrueOnSuccessfulPayment() { //Arrange $paymentDetails = array( &#39;amount&#39; =&gt; 123.99, &#39;card_num&#39; =&gt; &#39;4111-1111-1111-1111&#39;, &#39;exp_date&#39; =&gt; &#39;03/2013&#39; ); $payment = new \\Classes\\Payment(); $authorizeNet = new \\AuthorizeNetAIM($payment::API_ID, $payment::TRANS_KEY); //Act $result = $payment-&gt;processPayment($authorizeNet, $paymentDetails); //Assert $this-&gt;assertTrue($result); } } فهمیدن کد این تست باید خیلی ساده باشد. در قسمت Arrange مبلغ و یک کارت پرداخت اینترنتی فرضی ایجاد کردیم و در قسمت Act , Assert مراحل پرداخت مورد آزمون قرار می گیرد. زمانیکه آزمون را اجرا می کنیم به دلیل اینکه یا کلاس AuthorizeNetAIM پیاده سازی نشده است و یا نمی توان به دلایلی نظیر قطعی اینترنت و ... با این وب سرویس ارتباط برقرار کرد بنابراین مشاهده می کنیم که آزمون fail می شود. بنابراین در اینجا از mock جهت ایجاد یک شی غیر واقعی از کلاس AuthorizeNetAIM استفاده می نمائیم : &lt;?php namespace Test; class PaymentTest extends \\PHPUnit_Framework_TestCase { public function testProcessPaymentReturnsTrueOnSuccessfulPayment() { //Arrange $paymentDetails = array( &#39;amount&#39; =&gt; 123.99, &#39;card_num&#39; =&gt; &#39;4111-1111-1111-1111&#39;, &#39;exp_date&#39; =&gt; &#39;03/2013&#39; ); $payment = new \\Classes\\Payment(); $authorizeNet = $this-&gt;getMock(&#39;\\AuthorizeNetAIM&#39;, array(&#39;__construct&#39;,&#39;authorizeAndCapture&#39;), array($payment::API_ID, $payment::TRANS_KEY)); //Act $result = $payment-&gt;processPayment($authorizeNet, $paymentDetails); //Assert $this-&gt;assertTrue($result); } } همانطور که مشاهده می کنید در خط 17 با استفاده از متد getMock کلاسی به نام AuthorizeNetAIM ایجاد کردیم که دارای دو متد construct__ و authorizeAndCapture می باشد. سپس نمونه ای از این کلاس را ایجاد کرده است. ساختار این متد بدین صورت است : public function getMock($originalClassName, $methods = array(), array $arguments = array(), $mockClassName = &#39;&#39;, $callOriginalConstructor = TRUE, $callOriginalClone = TRUE, $callAutoload = TRUE, $cloneArguments = TRUE) همچنین می توان از متد getMockBuilder نیز استفاده کرد که بدین صورت پیاده سازی می شود : $authorizeNet = $this-&gt;getMockBuilder(&#39;\\AuthorizeNetAIM&#39;) -&gt;setMethods(array(&#39;__construct&#39;,&#39;authorizeAndCapture&#39;)) -&gt;setConstructorArgs(array($payment::API_ID, $payment::TRANS_KEY)) -&gt;getMock(); هم اکنون تست را بار دیگر اجرا می کنیم و نتیجه زیر مشاهده می گردد : این پیغام به این دلیل است که متدهایی که در کلاس های mock ایجاد می گردند همگی مقدار NULL را برگشت می دهند. برای مثال چنانچه دستور زیر را اجرا کنید مشاهده می کنید که مقدار NULL نمایش داده می شود : var_dump($authorizeNet-&gt;authorizeAndCapture()); بنابراین در اینجا از stub جهت override کردن متد مورد نظر و تعیین مقدار بازگشتی خود استفاده می کنیم . بنابراین کدی مانند زیر خواهیم داشت : &lt;?php namespace Test; class PaymentTest extends \\PHPUnit_Framework_TestCase { public function testProcessPaymentReturnsTrueOnSuccessfulPayment() { //Arrange $paymentDetails = array( &#39;amount&#39; =&gt; 123.99, &#39;card_num&#39; =&gt; &#39;4111-1111-1111-1111&#39;, &#39;exp_date&#39; =&gt; &#39;03/2013&#39; ); $payment = new \\Classes\\Payment(); $authorizeNet = $this-&gt;getMock(&#39;\\AuthorizeNetAIM&#39;, array(&#39;__construct&#39;,&#39;authorizeAndCapture&#39;), array($payment::API_ID, $payment::TRANS_KEY)); $response = new \\stdClass(); $response-&gt;approved = true; $response-&gt;transaction_id = 123; $authorizeNet-&gt;expects($this-&gt;once()) -&gt;method(&#39;authorizeAndCapture&#39;) -&gt;will($this-&gt;returnValue($response)); //Act $result = $payment-&gt;processPayment($authorizeNet, $paymentDetails); //Assert $this-&gt;assertTrue($result); } } می دانیم نوع بازگشتی authorizeAndCapture یک شی می باشد که دارای دو عنصر approved که حاوی مقدار boolean و transaction_id که حاوی نوع داده int می باشد. بنابراین ابتدا مقدار بازگشتی را در خطوط 19 الی 21 ایجاد کردیم. سپس در خطوط 23 الی 25 مقدار بازگشتی مورد نظر خود به متد authorizeAndCapture نسبت داده ایم. با استفاده از متد expects تعداد دفعاتی که انتظار می رود متد مورد نظر ما در کد اجرا شود را تعیین می کنیم که می تواند شامل once, any, never باشد. با استفاده از متد method متد مورد نظر خود را تعیین می کنیم. و در آخر با استفاده از متدهای will , returnValue مقدار بازگشتی متد را مشخص می کنیم. هم اکنون با اجرای دوباره آزمون مشاهده خواهیم کرد که آزمون pass شده است.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="stylesheet" href="/assets/prisma/prism.css">
+    <!-- favicons and rss -->
+    <link rel="alternate" type="application/rss+xml" title="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" href="/feed.xml">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- header -->
+<header class="header" role="banner" aria-label="Header">
+    <button class="hamburger-button" onclick="hamburgerMenu();" role="button" aria-label="Hamburger menu button">
+        <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    </button>
+    <a href="/" class="logo" role="link" aria-label="Home">
+        <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo"/>
+    </a>
+    <nav class="navigation" role="navigation" aria-label="Navigation">
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item">
+                <a href="/" class="logo" role="menuitem" aria-label="Home">
+                    <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo"/>
+                </a>
+            </li>
+            
+            <li role="menuitem"><a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a></li>
+            
+            <li role="menuitem"><a href="/contactus" role="menuitem" aria-label="تماس">تماس</a></li>
+            
+        </ul>
+    </nav>
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox"/>
+        </form>
+    </div>
+</header>
+
+<nav id="hamburger-menu" role="navigation" aria-label="Hamburger menu">
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox"/>
+        </form>
+    </div>
+    <div class="home-nav" role="navigation" aria-label="Site navigation">
+        <a href="/" role="menuitem" aria-label="Home">صفحه اصلی</a>
+        
+        <a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a>
+        
+        <a href="/contactus" role="menuitem" aria-label="تماس">تماس</a>
+        
+    </div>
+
+    
+    <div class="doc-nav" role="navigation" aria-label="Documentation navigation">
+        <p role="presentation" aria-label="Category name">
+            اصول Test Driven Development
+        </p>
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/2017/11/15/test-driven-development.html" class="doc-link" role="link" aria-label="Mock Objects و Stub Methods">مقدمه</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/TDD/phpunit" class="doc-link" role="link" aria-label="ابزار PHP Unit">ابزار PHP Unit</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/TDD/first-test" class="doc-link" role="link" aria-label="نوشتن اولین آزمون">نوشتن اولین آزمون</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/TDD/make-your-code-solid" class="doc-link" role="link" aria-label="نوشتن کد به سبک S.O.L.I.D">نوشتن کد به سبک S.O.L.I.D</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/TDD/dealing-with-defects" class="doc-link" role="link" aria-label="مفهوم Defects (نقص ها)">مفهوم Defects (نقص ها)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/TDD/refactoring-basics" class="doc-link" role="link" aria-label="مفهوم Refactoring (بازسازی)">مفهوم Refactoring (بازسازی)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/TDD/mocking" class="doc-link" role="link" aria-label="Mock Objects و Stub Methods">Mock Objects و Stub Methods</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </ul>
+    </div>
+    
+</nav>
+<!-- main content -->
+<main class="container" role="main">
+    <div class="rcdoccontainerimg">
+    <div class="rc-DRTVBanner-new rc-DRTVBanner-bigsize">
+    <div style="background: url('/images/original/stride-nyc-test-driven-development-chart-700x400.jpg'); " class="blurred_img"></div>
+    <div class="mask"></div>
+    <div class="bot"></div>
+    <div class="over">
+        <div class="container-rc">
+            <img class="image" src="/images/original/stride-nyc-test-driven-development-chart-700x400.jpg" alt="Mock Objects و Stub Methods" height="190">
+            <div class="desktop-banner-container">
+                <h1 class="display-5-text headline">
+                    
+                    
+                    اصول Test Driven Development
+                    </h1>
+                <!--<div class="tagslist"><ul class='lyda-tag-list'><li class='lyda-tag-list-title'>برچسب ها</li><li><a class="tags" href="/tag/لاراول">#لاراول</a></li><li><a class="tags" href="/tag/لاراول-5-5">#لاراول 5.5</a></li></ul></div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="bread-crumb">-->
+<!--<div class="container   ">-->
+<!--<div class="pull-right ">-->
+<!--<div class="bread-button text-custom b-left">-->
+<!--انتشار : 2 ماه پیش-->
+<!--</div>-->
+<!--<a href="/category/article/" class="bread-button back-to-all b-left hidden-xs">همه مقالات</a>-->
+<!--<div class="cat-lable">-->
+<!--<a href="/category/article/laravel/">-->
+<!--لاراول-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<script>
+    $(window).scroll(function(){
+        var sticky = $('.doc-menu'),
+            scroll = $(window).scrollTop();
+        if (scroll >= 101) {sticky.addClass('doc-header-scroll'); }
+        else {sticky.removeClass('doc-header-scroll'); };
+    });
+</script>
+</div>
+<div class="doc-container">
+
+    <div class="doc-menu">
+        
+        <ul>
+            <li>
+                <a  href="/2017/11/15/test-driven-development.html" class="active doc-link" role="link">
+                    مقدمه
+                </a>
+            </li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li>
+                <a title="ابزار PHP Unit" href="/documentation/TDD/phpunit" class="active doc-link" role="link">
+                    ابزار PHP Unit
+                </a>
+            </li>
+            
+            
+            
+            <li>
+                <a title="نوشتن اولین آزمون" href="/documentation/TDD/first-test" class="active doc-link" role="link">
+                    نوشتن اولین آزمون
+                </a>
+            </li>
+            
+            
+            
+            <li>
+                <a title="نوشتن کد به سبک S.O.L.I.D" href="/documentation/TDD/make-your-code-solid" class="active doc-link" role="link">
+                    نوشتن کد به سبک S.O.L.I.D
+                </a>
+            </li>
+            
+            
+            
+            <li>
+                <a title="مفهوم Defects (نقص ها)" href="/documentation/TDD/dealing-with-defects" class="active doc-link" role="link">
+                    مفهوم Defects (نقص ها)
+                </a>
+            </li>
+            
+            
+            
+            <li>
+                <a title="مفهوم Refactoring (بازسازی)" href="/documentation/TDD/refactoring-basics" class="active doc-link" role="link">
+                    مفهوم Refactoring (بازسازی)
+                </a>
+            </li>
+            
+            
+            
+            <li>
+                <a title="Mock Objects و Stub Methods" href="/documentation/TDD/mocking" class="active doc-link" role="link">
+                    Mock Objects و Stub Methods
+                </a>
+            </li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </ul>
+        
+    </div>
+
+    <article class="documentation">
+        <header class="doc-header">
+            <div class="time">
+                تاریخ :      جمعه 3 آذر 1396
+            </div>
+            
+        </header>
+        <section class="anchored">
+            <p>
+اغلب نرم‌افزارهایی که شما توسعه می‌دهید، از کلاس‌ها و اجزا (component) مختلفی تشکیل می‌شوند. در حالت ایده‌آل، هر کلاس یا جزء برای اجرای وظایف خاصی طراحی می‌شوند که این همان Single Responsibility Principle است. این کلاس‌ها و اجزا در کنار هم یک برنامه (Application) را تشکیل می‌دهند. طبیعت خاص کلاس‌های و اجزای واحد، وابستگی را غیرقابل اجتناب می‌کند. رابط کاربر (User Interface) شما به کلاس‌های business domain وابسته است و خود کلاس‌های business domain به چیزهایی مثل انبارهای خارجی داده (دیتابیس، فایل سیستم)، وب سرویس یا منابع و سیستم‌های خارجی دیگر وابسته هستند.
+</p>
+
+<p>
+وقتی ما تستهای واحد را می نویسیم، لازم است به یاد داشته باشیم که این آزمون باید بر روی کد خاصی که ما می خواهیم آن را تست کنیم متمرکز شده باشد. به کد زیر توجه کنید:
+</p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+namespace Classes;
+
+class Payment
+{
+    const API_ID = 123456;
+    const TRANS_KEY = 'TRANSACTION KEY';
+
+    public function processPayment(array $paymentDetails)
+    {
+        $transaction = new \AuthorizeNetAIM(self::API_ID, self::TRANS_KEY);
+        $transaction-&gt;amount = $paymentDetails['amount'];
+        $transaction-&gt;card_num = $paymentDetails['card_num'];
+        $transaction-&gt;exp_date = $paymentDetails['exp_date'];
+
+        $response = $transaction-&gt;authorizeAndCapture();
+
+        if ($response-&gt;approved) {
+            return $this-&gt;savePayment($response-&gt;transaction_id);
+        } else {
+            throw new \Exception($response-&gt;error_message);
+        }
+    }
+
+    public function savePayment($transactionId)
+    {
+        // Logic for saving transaction ID to database or anywhere else would go in here
+        return true;
+    }
+}
+</code></pre>
+
+<p>
+باتوجه به کد بالا متد processPayment  حاوی منطقی  برای پرداخت اینترنتی با اتصال به یک وب سرویس می باشد. همچنین متد savePayment (خط 25) وظیفه ذخیره سازی برخی از داده ها در  پایگاه داده را برعهده دارد.
+</p>
+
+<p>
+دلایل زیادی وجود دارد که نمی خواهیم از  کلاس واقعی و اجزای وابسته به آن در نوشتن تست استفاده کنیم :
+</p>
+
+<ul>
+<li>
+همانطور که ذکر شد، می خواهیم تست خود را بر روی قطعه کدی خاص (متدها و کلاس) متمرکز کنیم. این امر سبب می شود پیدا کردن نقص بسیار آسان تر و سریع تر گردد
+</li>
+
+<li>
+دلیل دیگری که نمی خواهیم از کلاس های واقعی برای آزمون ها استفاده کنیم این است که آنها می توانند آزمون های غیر قابل پیش بینی را انجام دهند. اگر تست واحد من یک پایگاه داده را هر بار که اجرا می کنیم بخواند، انتظار می رود مقدار خاصی در پایگاه داده وجود داشته باشد که در رنج آن پایگاه داده باشیم. همین امر سبب می شود آزمون ما غیر قابل پیش بینی گردد.
+</li>
+
+<li>
+سرعت مسئله دیگر است. می خواهیم تست هایم سریع باشند. کدهایی که با یک منبع خارجی مانند یک پایگاه داده یا یک سرویس وب ارتباط برقرار می کنند با توجه به تاخیر در برقراری ارتباط با این منابع خارجی، سرعت اجرای آن  کاهش می یابد و زمانی که صدها آزمایش قرار است انجام شود سرعت اجرای تست نیز بسیار آهسته تر اجرا خواهند شد.
+</li>
+
+</ul>
+
+<p>
+ Dependency Injection گام نخست برای راه حل این مشکل است. بنابراین شی transaction$ که از کلاس AuthorizeNetAIM  ایجاد شده در خارج از متد processPayment ایجاد و به عنوان آرگومان تزریق می گردد :
+</p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+namespace Classes;
+
+class Payment
+{
+    const API_ID = 123456;
+    const TRANS_KEY = 'TRANSACTION KEY';
+
+    public function processPayment(\AuthorizeNetAIM $transaction , array $paymentDetails)
+    {
+        $transaction-&gt;amount = $paymentDetails['amount'];
+        $transaction-&gt;card_num = $paymentDetails['card_num'];
+        $transaction-&gt;exp_date = $paymentDetails['exp_date'];
+
+        $response = $transaction-&gt;authorizeAndCapture();
+
+        if ($response-&gt;approved) {
+            return $this-&gt;savePayment($response-&gt;transaction_id);
+        } else {
+            throw new \Exception($response-&gt;error_message);
+        }
+    }
+
+    public function savePayment($transactionId)
+    {
+        // Logic for saving transaction ID to database or anywhere else would go in here
+        return true;
+    }
+}
+</code></pre>
+
+<h3>مفهوم Mocks و Stubs و Fakes</h3>
+
+<p>
+اکنون به مبحث Mocking  می‌پردازیم. اگر واژه Mock را در فرهنگ لغت انگلیسی جستجو کنید, مفهوم “something made as an imitation” را مشاهده خواهید کرد. در واقع می‌توان اینطور تعریف کرد که Mocking به عملی تلقی می‌شود که یک چیز را به عنوان بدل ایجاد کنیم. Mocking در Unit Testing استفاده می‌شود. در هنگام  Test یک Object, ممکن است این Object به Object های دیگری وابسته و برای پردازش به مقادیری که این Object ها بر می‌گردانند, نیاز داشته باشد. در واقع هدف از Mocking این است که می‌خواهیم کد ها را بدون دخالت Dependency های آنها اجرا کنیم. هدف این است که Mocked Object ها, نقش Object های واقعی را ایفا کنند. متد و یا متد هایی در این Object با متغیر های معینی فراخوانی می‌شود و نتیجه مورد نظر را بر می‌گرداند.
+</p>
+
+<p>
+برای مثال فرض کنید به یک متد که برای احراز هویت کاربر است, مقادیر نام کاربری و رمز عبور را ارسال می‌کنیم و سپس مشخص می‌کنیم که اگر مقادیر وارد شده, با مقادیر مورد نظر برابر بودند,  سطح دسترسی خاصی را برگرداند. واضح است که این پردازش نیاز به ارتباط با پایگاه داده دارد. اما در اینجا تنها ورودی و خروجی متد را مشخص کرده‌ایم و پردازش متد مد نظر ما نیست. همین امر باعث می‌شود که حتی اگر متد دارای Dependency های خاصی است, در Testing مشکلی ایجاد نکند.
+</p>
+
+<p>
+روش دیگری نیز به نام Stubbing وجود دارد که در کنار Mocking قرار می‌گیرد. استفاده از Stubbing بسیار آسان است و هیچ Extra Dependency را در زمان Testing, دخالت نمی‌دهد. در واقع بخشی از کلاسی که مورد نیاز است را پیاده سازی می‌کنیم تا در زمان Testing بتوان از آن استفاده کرد.
+</p>
+
+<p>
+ چه زمانی mock یک mock نیست؟ چه زمانی stub یا fake است؟ تفاوت این‌ها چیست؟ تفسیر Martin Fowler:
+</p>
+
+<p>
+<ul>
+<li>
+<b>Fakes:</b> یک Fake شی‌ای است که یک مکانیزم داخلی دارد که نتایج قابل پیش‌بینی برمی‌گرداند، اما منطق کاری واقعی را پیاده‌سازی نکرده است.
+</li>
+
+<li>
+<b>Stubs:</b> یک Stub شی‌ای است که یک نتیجه مشخص را بر اساس یک سری ورودی مشخص برمی‌گرداند. اگر من به stub بگویم که هر وقت شخصی با شناسه 42 را خواستم عبارت John Doe را برگردان، stub همین کار را خواهد کرد. با این حال اگر من از stub بخواهم که شخصی با شناسه 41 را برگرداند، نمی‌داند چه کار باید بکند. بر حسب اینکه از کدام mocking framework استفاده کنم، stub یا exception ایجاد می‌کند یا یک شی null برمی‌گرداند. stub می‌تواند بعضی اطلاعات مربوط به نحوه فراخوانی مثل تعداد فراخوانی یا اینکه با چه داده‌هایی فراخوانی شده است را به یاد داشته باشد.
+</li>
+
+<li>
+<b>Mocks:</b> یک Mock یک نسخه پیچیده‌تر از stub است. همچنان مانند stub مقادیر را برمی‌گرداند، اما همچنین می‌تواند طوری برنامه‌ریزی شود که باید چند بار فراخوانی شود، به چه ترتیب یا به چه داده‌هایی.
+</li>
+
+<li>
+<b>Spy:</b> یک Spy نوعی mock است که یک شی را می‌گیرد و به جای ایجاد یک شی mock متدهایی که tester می‌خواهد mock کند را جایگزین می‌کند. Spy ها برای کدهای غیر TDD عالی هستند، اما باید خیلی مراقب باشید چرا که فراموش کردن چیزی که می‌بایست mock شود ممکن است نتایج فاجعه‌باری داشته باشد.
+</li>
+
+<li>
+<b>Dummy:</b> یک Dummy شی‌ای است که می‌تواند به عنوان جایگزین یک شی دیگر پاس داده شود اما استفاده نمی‌شود. Dummy ها در واقع placeholder محسوب می‌شوند.
+</li>
+
+</ul>
+</p>
+
+<p>
+بر اساس تعاریف بالا، بعضی انواع mock ها هستند که خودمان می‌توانیم آن‌ها را ایجاد کنیم مثل Fake ها و Dummy ها. همچنین می‌توان یک stub ساده نوشت، اما زمان انجام این کار بر روی بهره‌وری من تاثیر خواهد داشت. خوشبختانه راه بهتری وجود دارد: استفاده از فریمورک‌های mocking. در ادامه از ابزار mock موجود در PHPunit استفاده خواهیم کرد.
+</p>
+
+<p>
+برای مثال بالا می خواهیم یک تست واحد نوشته شود. با توجه به کد بالا متد authorizeAndCapture در خط 15  عملیات اجرای تراکنش را برعهده داده دارد و نتیجه را بصورت یک شی در متغیر response$ ذخیره می نماید. چنانچه مقدار response-&gt;approved$ برابر true  باشد به معنای موفقیت آمیز بودن تراکنش بوده و مقدار transaction_id را در پایگاه داده ذخیره می نماید. بنابراین از متد assertTrue جهت بررسی نتایج استفاده می شود و کدی مانند زیر خواهیم داشت :
+</p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+namespace Test;
+
+class PaymentTest  extends \PHPUnit_Framework_TestCase
+{
+
+    public function testProcessPaymentReturnsTrueOnSuccessfulPayment()
+    {
+        //Arrange
+        $paymentDetails = array(
+            'amount'   =&gt; 123.99,
+            'card_num' =&gt; '4111-1111-1111-1111',
+            'exp_date' =&gt; '03/2013'
+        );
+
+        $payment = new \Classes\Payment();
+        $authorizeNet = new \AuthorizeNetAIM($payment::API_ID, $payment::TRANS_KEY);
+
+        //Act
+        $result = $payment-&gt;processPayment($authorizeNet, $paymentDetails);
+
+        //Assert
+        $this-&gt;assertTrue($result);
+    }
+}
+</code></pre>
+
+<p>
+فهمیدن کد این تست باید خیلی ساده باشد. در قسمت Arrange  مبلغ و یک کارت پرداخت اینترنتی فرضی ایجاد کردیم و در قسمت Act , Assert  مراحل پرداخت مورد آزمون قرار می گیرد.
+</p>
+
+<p>
+ زمانیکه آزمون را اجرا می کنیم به دلیل اینکه یا کلاس AuthorizeNetAIM پیاده سازی نشده است و یا نمی توان به دلایلی نظیر قطعی اینترنت و ... با این وب سرویس ارتباط برقرار کرد بنابراین مشاهده می کنیم که آزمون fail  می شود.
+</p>
+
+<p>
+بنابراین در اینجا از mock  جهت ایجاد یک شی غیر واقعی از کلاس AuthorizeNetAIM استفاده می نمائیم :
+</p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+namespace Test;
+
+class PaymentTest  extends \PHPUnit_Framework_TestCase
+{
+
+    public function testProcessPaymentReturnsTrueOnSuccessfulPayment()
+    {
+        //Arrange
+        $paymentDetails = array(
+            'amount'   =&gt; 123.99,
+            'card_num' =&gt; '4111-1111-1111-1111',
+            'exp_date' =&gt; '03/2013'
+        );
+
+        $payment = new \Classes\Payment();
+        $authorizeNet = $this-&gt;getMock('\AuthorizeNetAIM', array('__construct','authorizeAndCapture'), array($payment::API_ID, $payment::TRANS_KEY));
+
+        //Act
+        $result = $payment-&gt;processPayment($authorizeNet, $paymentDetails);
+
+        //Assert
+        $this-&gt;assertTrue($result);
+    }
+}
+</code></pre>
+
+<p>
+همانطور که مشاهده می کنید در خط 17  با استفاده از متد getMock کلاسی به نام AuthorizeNetAIM ایجاد کردیم که دارای دو متد  construct__ و authorizeAndCapture می باشد. سپس نمونه ای از این کلاس را ایجاد کرده است. ساختار این متد بدین صورت است :
+</p>
+
+<blockquote>
+<p style="direction:ltr;text-align:left">
+public function getMock($originalClassName, $methods = array(), array $arguments = array(), $mockClassName = '', $callOriginalConstructor = TRUE, $callOriginalClone = TRUE, $callAutoload = TRUE, $cloneArguments = TRUE)
+</p>
+</blockquote>
+
+<p>
+همچنین می توان از متد getMockBuilder نیز استفاده کرد که بدین صورت پیاده سازی می شود :
+</p>
+
+<pre><code class="language-php   line-numbers">$authorizeNet = $this-&gt;getMockBuilder('\AuthorizeNetAIM')
+                     -&gt;setMethods(array('__construct','authorizeAndCapture'))
+                     -&gt;setConstructorArgs(array($payment::API_ID, $payment::TRANS_KEY))
+                     -&gt;getMock();
+</code></pre>
+
+<p>
+هم اکنون تست را بار دیگر اجرا می کنیم و نتیجه زیر مشاهده می گردد :
+</p>
+
+<div align="center">
+<img src="/images/post/mocktest2.jpg" alt="Mock Objects و Stub Methods" />
+</div>
+
+<p>
+این پیغام به این دلیل است که متدهایی که در کلاس های mock ایجاد می گردند همگی مقدار NULL  را برگشت می دهند. برای مثال چنانچه دستور زیر را اجرا کنید مشاهده می کنید که مقدار NULL  نمایش داده می شود :
+</p>
+
+<pre><code class="language-php   line-numbers">var_dump($authorizeNet-&gt;authorizeAndCapture());
+</code></pre>
+<p>
+ بنابراین در اینجا از stub  جهت override کردن متد مورد نظر و تعیین  مقدار بازگشتی  خود استفاده می کنیم . بنابراین کدی مانند زیر خواهیم داشت :
+</p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+namespace Test;
+
+class PaymentTest  extends \PHPUnit_Framework_TestCase
+{
+
+    public function testProcessPaymentReturnsTrueOnSuccessfulPayment()
+    {
+        //Arrange
+        $paymentDetails = array(
+            'amount'   =&gt; 123.99,
+            'card_num' =&gt; '4111-1111-1111-1111',
+            'exp_date' =&gt; '03/2013'
+        );
+
+        $payment = new \Classes\Payment();
+        $authorizeNet = $this-&gt;getMock('\AuthorizeNetAIM', array('__construct','authorizeAndCapture'), array($payment::API_ID, $payment::TRANS_KEY));
+
+        $response = new \stdClass();
+        $response-&gt;approved = true;
+        $response-&gt;transaction_id = 123;
+
+        $authorizeNet-&gt;expects($this-&gt;once())
+            -&gt;method('authorizeAndCapture')
+            -&gt;will($this-&gt;returnValue($response));
+
+        //Act
+        $result = $payment-&gt;processPayment($authorizeNet, $paymentDetails);
+
+        //Assert
+        $this-&gt;assertTrue($result);
+    }
+}
+</code></pre>
+
+<p>
+می دانیم نوع بازگشتی authorizeAndCapture یک شی می باشد که دارای دو عنصر approved که حاوی مقدار boolean  و transaction_id که حاوی نوع داده int  می باشد. بنابراین ابتدا مقدار بازگشتی را در خطوط 19 الی 21 ایجاد کردیم.
+</p>
+
+<p>
+سپس در خطوط 23 الی 25 مقدار بازگشتی مورد نظر خود به متد authorizeAndCapture نسبت داده ایم.
+</p>
+
+<p>
+با استفاده از متد expects تعداد دفعاتی که انتظار می رود متد مورد نظر ما در کد اجرا شود را تعیین می کنیم که می تواند شامل once, any, never  باشد.
+</p>
+<p>
+با استفاده از متد method متد مورد نظر خود را تعیین می کنیم.
+</p>
+
+<p>
+و در آخر با استفاده از متدهای will , returnValue مقدار بازگشتی متد را مشخص می کنیم.
+</p>
+
+<p>
+هم اکنون با اجرای دوباره آزمون مشاهده خواهیم کرد که آزمون pass شده است.
+</p>
+
+        </section>
+        
+<hr>
+<p>
+<div>منابع مورد مطالعه جهت جمع آوری این مطلب:</div>
+<div  class="refrencehref">
+        https://jtreminio.com/2013/03/unit-testing-tutorial-part-4-mock-objects-stub-methods-dependency-injection/ <br> https://www.telerik.com/blogs/30-days-of-tdd-day-11-what-s-the-deal-with-mocking <br> http://elmah.ir/post/94-۳۰-روز-با-tdd--روز-یازدهم---درباره-mocking/ <br>  http://zerotohero.ir/article/android/مقدمه-ای-بر-unit-test-در-جاوا-و-اندروید
+</div>
+</p>
+
+        <hr>
+        <style>
+    #commentsdiv{
+        background-color: #f5f5f5;
+        border: 1px solid #c5c5c5;
+        border-bottom: 0px !important;
+        padding: 12px;
+    }
+    #commentsborder{
+        background-color: #fff;
+        border: 1px solid #c5c5c5;
+        white-space: normal;
+        padding: 20px;
+    }
+</style>
+
+<div id="commentsdiv">نظرات</div>
+<div id="commentsborder">
+<div id="wpac-comment"></div>
+</div>
+<script type="text/javascript">
+wpac_init = window.wpac_init || [];
+wpac_init.push({widget: 'Comment', id: 7878});
+(function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = 'https://embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+})();
+</script>
+
+    </article>
+</div>
+<script src="/assets/js/anchor.min.js"></script>
+<script>
+    anchors.options = {
+        placement: 'left',
+        visible: 'always',
+//        icon: '#',
+    };
+    anchors.add('.anchored h2,.anchored h3,.anchored h4,.anchored h5,.anchored h6');
+
+    (function($){
+        if(window.location.hash) {
+            var hash = decodeURIComponent(window.location.hash);
+            gotohash($(hash).offset().top);
+        }
+        $('a.anchorjs-link').click(function(){
+			gotohash($(this).offset().top);
+        });
+        $('a.anchorjs').click(function(){
+			var id = '#' + $(this).attr('title');
+			gotohash($(id).offset().top);
+        });		
+        function gotohash(top){
+            var headerHeight = 70; // Get fixed header height
+            $('html,body').animate({
+                scrollTop: top - headerHeight
+            }, 20);
+        }
+    })(jQuery);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+   $(document).ready(function (){
+
+     var scrollPosition = getParameterByName('scroll');
+     if(scrollPosition)
+      $(".doc-menu").scrollTop(scrollPosition);
+
+     $('.doc-link').click(function(){
+        var scrollTop = $(".doc-menu").scrollTop();
+        if(scrollTop > 0)
+          $(this).attr("href",this.href + "?scroll=" + $(".doc-menu").scrollTop());
+     });
+
+     function getParameterByName(name, url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+   });
+</script>
+    <div id="back-to-top" role="button" aria-label="Back to top">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+    </div>
+</main>
+<!-- footer -->
+
+<footer class="footer" role="contentinfo" aria-label="Site footer">
+    <div class="navigation" role="navigation" aria-label="Footer links">
+        <a href="http://localhost:4000" class="avatar" role="link" ></a>
+        <ul role="menubar" aria-label="Footer links menubar">
+            <li class="footer-products" role="menuitem" aria-label="Products">
+                تولیدات
+                <ul role="menu" aria-hidden="true" aria-label="Products link">
+                </ul>
+            </li>
+            <li class="footer-blog" role="menuitem" aria-label="Blog">
+                مقالات
+                <ul role="menu" aria-hidden="true" aria-label="Blog link">
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2020/07/03/marriage.html" role="link" aria-label="ازدواج">ازدواج</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2019/10/11/vuejs.html" role="link" aria-label="آموزش vuejs">آموزش vuejs</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/18/laravel.html" role="link" aria-label="آموزش Laravel">آموزش Laravel</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/articles/2017/12/13/laravelcollective.html" role="link" aria-label="معرفی Laravel Collective">معرفی Laravel Collective</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/06/design-patterns.html" role="link" aria-label="معرفی  Design Pattern">معرفی  Design Pattern</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/blog" role="link" aria-label="Read more">Read More</a></li>
+                </ul>
+            </li>
+
+            <li class="footer-connect" role="menuitem" aria-label="Connect">
+                تماس
+                <ul role="menu" aria-hidden="true" aria-label="Connect link">
+                    <li role="listitem" aria-label="Connect link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub">GitHub</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://www.linkedin.com/in/farhad-mirzapour/" target="_blank" role="link" aria-label="Linkedin">Linkedin</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter">Twitter</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="socials"  role="navigation" aria-label="Social links">
+        <ul role="menu" aria-hidden="true" aria-label="Social link">
+            <li role="listitem" aria-label="Social link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://www.linkedin.com/in/farhad-mirzapour-0043b862/" target="_blank" role="link" aria-label="Linkedin"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="/feed.xml" role="link" aria-label="RSS"><i class="fa fa-rss-square" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+    <div class="copyright" role="contentinfo" aria-label="Copyright">
+        <p>&copy; <script type="text/javascript">document.write(new Date().getFullYear());</script> Farhad Mirzapour</p>
+    </div>
+</footer>
+
+<!-- scripts -->
+<script src="/assets/js/hamburger-menu.js"></script>
+
+<script src="/assets/js/elevator.min.js"></script>
+<script src="/assets/js/back-to-top.js"></script>
+<script src="/assets/prisma/prism.js"></script>
+<!-- google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108878564-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-108878564-1');
+</script>
+
+</body>
+</html>

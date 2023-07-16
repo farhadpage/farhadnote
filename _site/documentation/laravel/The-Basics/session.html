@@ -1,0 +1,1855 @@
+<!DOCTYPE html>
+<html lang="">
+<!-- head -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>استفاده از Session | مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="استفاده از Session" />
+<meta name="author" content="Farhad Mirzapour" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="از آنجا که برنامه‌های کاربردی تحت وب HTTP به صورت stateless یا بی ثبات هستند و اطلاعات کاربر را حفظ نمی‌کنند، استفاده از سشن (session) این امکان را فراهم می‌کند که بتوان اطلاعات کاربر را در طول چند درخواست ذخیره کرد. لاراول در حالت پیش‌فرض دارای انواع مختلفی از سشن‌ها به صورت backend است که از طریق یک API ساده و یکپارچه می‌توان به آن‌ها دسترسی داشت. لاراول از backendهای پرطرفدار مثل Memcached و Redis پشتیبانی می‌کند. پیکربندی تنظیمات session فایل پیکربندی سشن در config/session.php قرار دارد. حتماً باید گزینه‌های در دسترس موجود در این فایل را بررسی کنید. به صورت پیش‌فرض پیکربندی تنظیمات لاراول از درایور سشن file استفاده می‌کند که برای بسیاری از برنامه‌ها کارایی لازم را ارائه می‌دهد. در برنامه‌های تولید شده (production)، برای دستیابی به کارایی بهتر و سریعتر می‌توانید از درایور memcached یا redis استفاده کنید. گزینه پیکربندی driver سشن مشخص می‌کند که داده‌های سشن برای هر درخواست در کجا ذخیره می‌شوند. لاراول به صورت پیش‌فرض دارای چند درایور بزرگ و مهم است: file - سشن‌ها در آدرس storage/framework/sessions ذخیره می‌شوند.. cookie - سشن‌ها در کوکی‌های امن و رمزگذاری شده ذخیره می‌شوند.. database - سشن‌ها در پایگاه داده‌ مربوط به برنامه کاربردی ذخیره می‌شوند.. memcached / redis - سشن‌ها در یکی از storeهای سریع مبتنی بر کش موجود ذخیره می‌شوند. array - سشن‌ها در آرایه PHP ذخیره می‌شوند و پایدار نخواهند بود. از آرایه driver در زمان انجام تست استفاده می‌شود و مانع از ذخیره داده‌ها به صورت دائمی در سشن می‌شود. پیش نیازهای درایور session در لاراول پایگاه داده هر زمان که از درایور سشن database استفاده می‌کنید، باید یک جدول ایجاد کنید که حاوی آیتم‌های سشن باشد. در مثال زیر یک نمونه تعریف Schema برای این جدول را مشاهده می‌کنید: Schema::create(&#39;sessions&#39;, function ($table) { $table-&gt;string(&#39;id&#39;)-&gt;unique(); $table-&gt;unsignedInteger(&#39;user_id&#39;)-&gt;nullable(); $table-&gt;string(&#39;ip_address&#39;, 45)-&gt;nullable(); $table-&gt;text(&#39;user_agent&#39;)-&gt;nullable(); $table-&gt;text(&#39;payload&#39;); $table-&gt;integer(&#39;last_activity&#39;); }); می‌توان از دستور آرتیسان session:table برای ایجاد این migration استفاده کرد: php artisan session:table php artisan migrate Redis قبل از استفاده از سشن‌های Redis در لاراول، باید پکیج predis/predis (~1.0) را با استفاده از Composer نصب کنید. می‌توانید کانکشن‌های Redis را در فایل پیکربندی database پیکربندی کنید. در درون فایل پیکربندی session ، از گزینه connection می‌توان برای مشخص کردن کانکشن Redis مورد استفاده توسط سشن، استفاده کرد. بازیابی داده‌ها از session در لاراول دو روش اصلی برای کار با داده‌های سشن در لاراول وجود دارد؛ روش اول استفاده از تابع کمکی session عمومی و روش دوم استفاده از یک نمونه Request است. در ابتدا، دسترسی به سشن از طریق یک نمونه Request را بررسی می‌کنیم که می‌تواند بر روی یک متد کنترلر اعلان نوع یا type-hint شود. توجه کنید که وابستگی‌های متد کنترلر به صورت خودکار از طریق service container لاراول تزریق می‌شوند: &lt;?php namespace App\Http\Controllers; use Illuminate\Http\Request; use App\Http\Controllers\Controller; class UserController extends Controller { /** * Show the profile for the given user. * * @param Request $request * @param int $id * @return Response */ public function show(Request $request, $id) { $value = $request-&gt;session()-&gt;get(&#39;key&#39;); // } } در زمان بازیابی یک مقدار از سشن، می‌توان یک مقدار پیش‌فرض را نیز به عنوان آرگومان دوم به متد get انتقال داد. در صورتی که کلید مشخص شده در سشن موجود نباشد، این مقدار پیش‌فرض برگردانده می‌شود. اگر یک Closure را به عنوان مقدار پیش‌فرض به متد get انتقال دهید و کلید درخواست شده موجود نباشد، Closure اجرا شده و نتیجه آن بازگشت داده می‌شود: $value = $request-&gt;session()-&gt;get(&#39;key&#39;, &#39;default&#39;); $value = $request-&gt;session()-&gt;get(&#39;key&#39;, function () { return &#39;default&#39;; }); استفاده از تابع کمکی session در لاراول همچنین، می‌توان از تابع PHP عمومی session برای بازیابی و ذخیره داده‌ها در سشن استفاده کرد. زمانی که تابع کمکی session با یک آرگومان رشته‌ای واحد فراخوانی می‌شود، مقدار کلید آن سشن را باز می‌گرداند. زمانی که تابع کمکی با آرایه‌ای از جفت کلید و مقدار فراخوانی می‌شود، این مقادیر در سشن ذخیره می‌شوند: Route::get(&#39;home&#39;, function () { // Retrieve a piece of data from the session... $value = session(&#39;key&#39;); // Specifying a default value... $value = session(&#39;key&#39;, &#39;default&#39;); // Store a piece of data in the session... session([&#39;key&#39; =&gt; &#39;value&#39;]); }); بین کار با سشن از طریق یک HTTP request و از طریق یک تابع کمکی session عمومی، تفاوت اندکی وجود دارد. هر دو روش از طریق متد assertSessionHas که در تمام گزینه‌های تست موجود است، قابل تست کردن هستند. بازیابی تمام داده‌‌های session اگر بخواهید تمام داده‌ها را از سشن بازیابی کنید، باید از متد all به صورت زیراستفاده کنید: $data = $request-&gt;session()-&gt;all(); تعیین موجود بودن یک آیتم درون session برای تعیین اینکه آیا یک مقدار در سشن وجود دارد یا خیر، می‌توان از متد has استفاده کرد. اگر مقدار موردنظر موجود باشد، این متد مقدار true را برمی‌گرداند، در غیر این صورت مقدار null برگشت داده می‌شود: if ($request-&gt;session()-&gt;has(&#39;users&#39;)) { // } برای تعیین وجود یک مقدار در سشن، حتی اگر مقدار آن null باشد، می‌توانید از متد exists استفاده کنید. اگر مقدار موجود باشد، این متد مقدار true را برمی‌گرداند: if ($request-&gt;session()-&gt;exists(&#39;users&#39;)) { // } ذخیره سازی داده‌ها درون session به منظور ذخیره داده‌ها در سشن، معمولاً می‌توان از متد put یا تابع کمکی session به صورت زیر استفاده کرد: // Via a request instance... $request-&gt;session()-&gt;put(&#39;key&#39;, &#39;value&#39;); // Via the global helper... session([&#39;key&#39; =&gt; &#39;value&#39;]); push کردن مقادیر session آرایه از متد push می‌توان برای push کردن یک مقدار جدید بر روی مقدار سشنی که در یک آرایه وجود دارد، استفاده کرد. برای مثال، اگر کلید user.teams حاوی آرایه‌ای از نام‌های تیم باشد، می‌توان یک مقدار جدید را بر روی آرایه به صورت مثال زیر push کرد: $request-&gt;session()-&gt;push(&#39;user.teams&#39;, &#39;developers&#39;); بازیابی و حذف یک مورد از session با استفاده از متد pull می‌توان یک مورد را از سشن، توسط یک خط کد مانند مثال زیر بازیابی و حذف کرد: $value = $request-&gt;session()-&gt;pull(&#39;key&#39;, &#39;default&#39;); Flash کردن داده‌ها برای درخواست بعدی در session گاهی اوقات، ممکن است بخواهید آیتم‌های داده را فقط برای درخواست بعدی در سشن ذخیره کنید. این کار را می‌توان با استفاده از متد flash انجام داد. داده‌هایی که توسط این متد در سشن ذخیره می‌شود، در طول درخواست HTTP بعدی در دسترس خواهند بود و پس از آن حذف می‌شوند. استفاده از داده‌های flash شده، عمدتاً برای پیام‌های نشانگر وضعیت که عمر کوتاهی دارند، مفید است: $request-&gt;session()-&gt;flash(&#39;status&#39;, &#39;Task was successful!&#39;); اگر بخواهید، اطلاعات flash شده را برای چند درخواست بعدی حفظ کنید، می‌توانید از متد reflash استفاده کنید که تمام داده‌های flash شده را برای درخواست‌های اضافی بعدی حفظ می‌کند. برای حفظ داده‌های flash شده خاص، می‌توان از متد keep استفاده کرد: $request-&gt;session()-&gt;reflash(); $request-&gt;session()-&gt;keep([&#39;username&#39;, &#39;email&#39;]); پاک کردن داده‌ها از session متد forget یک تکه داده را از سشن حذف می‌کند. اگر بخواهید تمام داده‌ها را از سشن حذف کنید، می‌توانید از متد flush استفاده کنید: $request-&gt;session()-&gt;forget(&#39;key&#39;); $request-&gt;session()-&gt;flush(); ایجاد دوباره شناسه session ایجاد دوباره شناسه سشن، اغلب برای جلوگیری از حمله session fixation، توسط کاربران غیر مجاز صورت می‌گیرد. ایجاد دوباره شناسه سشن در لاراول به صورت خودکار در زمان احراز هویت کاربر انجام می‌شود، اگر از LoginController ساخته شده استفاده می‌کنید و نیاز به ایجاد دوباره شناسه سشن به صورت دستی دارید، می‌توانید از متد regenerate استفاده کنید. $request-&gt;session()-&gt;regenerate(); اضافه کردن درایور‌های session به صورت سفارشی پیاده سازی درایور session در لاراول درایور سشن سفارشی باید رابط SessionHandlerInterface را پیاده سازی کند. این رابط شامل چند متد ساده است که ما برای پیاده سازی به آن‌ها نیاز داریم. پیاده سازی MongoDB مانند مثال زیر است: &lt;?php namespace App\Extensions; class MongoSessionHandler implements \SessionHandlerInterface { public function open($savePath, $sessionName) {} public function close() {} public function read($sessionId) {} public function write($sessionId, $data) {} public function destroy($sessionId) {} public function gc($lifetime) {} } لاراول دایرکتوری پیش‌فرضی برای قرار دادن موارد اضافی ندارد. می‌توانید آن‌ها را هر جا که بخواهید قرار دهید. در این مثال، ما دایرکتوری Extensions را برای قرار دادن MongoSessionHandler ایجاد کردیم. از آنجا که اهداف از این متدها به راحتی قابل درک نیست، اجازه دهید به صورت خلاصه کارهایی که توسط هر متد انجام می‌شود را بررسی کنیم: The open معمولاً در سیستم‌های file based session store استفاده می‌شود. از آنجا که لاراول درایور سشن file را به صورت پیش‌فرض در خود دارد، نیاز به قرار دادن چیزی در این متد نخواهیم داشت و می‌توانید آن را به عنوان یک تکه کد خالی رها کنید. اما PHP از ما می‌خواهد این متد را پیاده سازی کنیم، می‌توان گفت این یک ضعف آشکار در طراحی رابط در زبان PHP است. The close مانند متد open ، معمولاً می‌تواند نادیده گرفته شود. برای اکثر درایورها، استفاده از آن لازم نیست. The read باید رشته داده‌های سشن مربوط به پارامتر ورودی $sessionId را بر‌گرداند. هنگام بازیابی یا ذخیره داده‌های سشن در درایور نیازی به انجام serialization و یا سایر عملیات رمزگذاری نیست، زیرا لاراول عملیات serialization را برای شما اجرا می‌کند. The write باید رشته $data ورودی مربوط به پارامتر $sessionId را به بعضی از سیستم‌های ذخیره سازی داده دائمی، مانند MongoDB، Dynamo و غیره بنویسد. مجدداً نباید عملیات serialization انجام دهید، لاراول قبلاً این کار را برای شما انجام داده است. The destroy باید داده‌های مربوط به پارامتر $sessionId را از حافظه دائمی حذف کند. The gc باید تمام داده‌های سشنی که قدیمی‌تر از پارامتر $lifetime ورودی هستند را از بین می‌برد که یک برچسب زمانی UNIX است. برای سیستم‌های مستقل مانند Memcached و Redis، این متد می‌تواند خالی باشد. ثبت درایور session زمانی که درایور پیاده سازی شد، می‌توانید آن را در فریم ورک ثبت کنید. برای اضافه کردن درایورهای اضافی به backend سشن در لاراول، می‌توانید از متد extend در fasade مربوط به Session استفاده کنید. باید متد extend را از متد boot در یک service provider فراخوانی کنید. می‌توانید این کار را از AppServiceProvider موجود انجام دهید یا یک provider جدید ایجاد کنید: &lt;?php namespace App\Providers; use App\Extensions\MongoSessionHandler; use Illuminate\Support\Facades\Session; use Illuminate\Support\ServiceProvider; class SessionServiceProvider extends ServiceProvider { /** * Perform post-registration booting of services. * * @return void */ public function boot() { Session::extend(&#39;mongo&#39;, function ($app) { // Return implementation of SessionHandlerInterface... return new MongoSessionHandler; }); } /** * Register bindings in the container. * * @return void */ public function register() { // } } زمانی که درایور سشن ثبت شد، می‌توانید از درایور mongo در فایل پیکربندی config/session.php خود استفاده کنید." />
+<meta property="og:description" content="از آنجا که برنامه‌های کاربردی تحت وب HTTP به صورت stateless یا بی ثبات هستند و اطلاعات کاربر را حفظ نمی‌کنند، استفاده از سشن (session) این امکان را فراهم می‌کند که بتوان اطلاعات کاربر را در طول چند درخواست ذخیره کرد. لاراول در حالت پیش‌فرض دارای انواع مختلفی از سشن‌ها به صورت backend است که از طریق یک API ساده و یکپارچه می‌توان به آن‌ها دسترسی داشت. لاراول از backendهای پرطرفدار مثل Memcached و Redis پشتیبانی می‌کند. پیکربندی تنظیمات session فایل پیکربندی سشن در config/session.php قرار دارد. حتماً باید گزینه‌های در دسترس موجود در این فایل را بررسی کنید. به صورت پیش‌فرض پیکربندی تنظیمات لاراول از درایور سشن file استفاده می‌کند که برای بسیاری از برنامه‌ها کارایی لازم را ارائه می‌دهد. در برنامه‌های تولید شده (production)، برای دستیابی به کارایی بهتر و سریعتر می‌توانید از درایور memcached یا redis استفاده کنید. گزینه پیکربندی driver سشن مشخص می‌کند که داده‌های سشن برای هر درخواست در کجا ذخیره می‌شوند. لاراول به صورت پیش‌فرض دارای چند درایور بزرگ و مهم است: file - سشن‌ها در آدرس storage/framework/sessions ذخیره می‌شوند.. cookie - سشن‌ها در کوکی‌های امن و رمزگذاری شده ذخیره می‌شوند.. database - سشن‌ها در پایگاه داده‌ مربوط به برنامه کاربردی ذخیره می‌شوند.. memcached / redis - سشن‌ها در یکی از storeهای سریع مبتنی بر کش موجود ذخیره می‌شوند. array - سشن‌ها در آرایه PHP ذخیره می‌شوند و پایدار نخواهند بود. از آرایه driver در زمان انجام تست استفاده می‌شود و مانع از ذخیره داده‌ها به صورت دائمی در سشن می‌شود. پیش نیازهای درایور session در لاراول پایگاه داده هر زمان که از درایور سشن database استفاده می‌کنید، باید یک جدول ایجاد کنید که حاوی آیتم‌های سشن باشد. در مثال زیر یک نمونه تعریف Schema برای این جدول را مشاهده می‌کنید: Schema::create(&#39;sessions&#39;, function ($table) { $table-&gt;string(&#39;id&#39;)-&gt;unique(); $table-&gt;unsignedInteger(&#39;user_id&#39;)-&gt;nullable(); $table-&gt;string(&#39;ip_address&#39;, 45)-&gt;nullable(); $table-&gt;text(&#39;user_agent&#39;)-&gt;nullable(); $table-&gt;text(&#39;payload&#39;); $table-&gt;integer(&#39;last_activity&#39;); }); می‌توان از دستور آرتیسان session:table برای ایجاد این migration استفاده کرد: php artisan session:table php artisan migrate Redis قبل از استفاده از سشن‌های Redis در لاراول، باید پکیج predis/predis (~1.0) را با استفاده از Composer نصب کنید. می‌توانید کانکشن‌های Redis را در فایل پیکربندی database پیکربندی کنید. در درون فایل پیکربندی session ، از گزینه connection می‌توان برای مشخص کردن کانکشن Redis مورد استفاده توسط سشن، استفاده کرد. بازیابی داده‌ها از session در لاراول دو روش اصلی برای کار با داده‌های سشن در لاراول وجود دارد؛ روش اول استفاده از تابع کمکی session عمومی و روش دوم استفاده از یک نمونه Request است. در ابتدا، دسترسی به سشن از طریق یک نمونه Request را بررسی می‌کنیم که می‌تواند بر روی یک متد کنترلر اعلان نوع یا type-hint شود. توجه کنید که وابستگی‌های متد کنترلر به صورت خودکار از طریق service container لاراول تزریق می‌شوند: &lt;?php namespace App\Http\Controllers; use Illuminate\Http\Request; use App\Http\Controllers\Controller; class UserController extends Controller { /** * Show the profile for the given user. * * @param Request $request * @param int $id * @return Response */ public function show(Request $request, $id) { $value = $request-&gt;session()-&gt;get(&#39;key&#39;); // } } در زمان بازیابی یک مقدار از سشن، می‌توان یک مقدار پیش‌فرض را نیز به عنوان آرگومان دوم به متد get انتقال داد. در صورتی که کلید مشخص شده در سشن موجود نباشد، این مقدار پیش‌فرض برگردانده می‌شود. اگر یک Closure را به عنوان مقدار پیش‌فرض به متد get انتقال دهید و کلید درخواست شده موجود نباشد، Closure اجرا شده و نتیجه آن بازگشت داده می‌شود: $value = $request-&gt;session()-&gt;get(&#39;key&#39;, &#39;default&#39;); $value = $request-&gt;session()-&gt;get(&#39;key&#39;, function () { return &#39;default&#39;; }); استفاده از تابع کمکی session در لاراول همچنین، می‌توان از تابع PHP عمومی session برای بازیابی و ذخیره داده‌ها در سشن استفاده کرد. زمانی که تابع کمکی session با یک آرگومان رشته‌ای واحد فراخوانی می‌شود، مقدار کلید آن سشن را باز می‌گرداند. زمانی که تابع کمکی با آرایه‌ای از جفت کلید و مقدار فراخوانی می‌شود، این مقادیر در سشن ذخیره می‌شوند: Route::get(&#39;home&#39;, function () { // Retrieve a piece of data from the session... $value = session(&#39;key&#39;); // Specifying a default value... $value = session(&#39;key&#39;, &#39;default&#39;); // Store a piece of data in the session... session([&#39;key&#39; =&gt; &#39;value&#39;]); }); بین کار با سشن از طریق یک HTTP request و از طریق یک تابع کمکی session عمومی، تفاوت اندکی وجود دارد. هر دو روش از طریق متد assertSessionHas که در تمام گزینه‌های تست موجود است، قابل تست کردن هستند. بازیابی تمام داده‌‌های session اگر بخواهید تمام داده‌ها را از سشن بازیابی کنید، باید از متد all به صورت زیراستفاده کنید: $data = $request-&gt;session()-&gt;all(); تعیین موجود بودن یک آیتم درون session برای تعیین اینکه آیا یک مقدار در سشن وجود دارد یا خیر، می‌توان از متد has استفاده کرد. اگر مقدار موردنظر موجود باشد، این متد مقدار true را برمی‌گرداند، در غیر این صورت مقدار null برگشت داده می‌شود: if ($request-&gt;session()-&gt;has(&#39;users&#39;)) { // } برای تعیین وجود یک مقدار در سشن، حتی اگر مقدار آن null باشد، می‌توانید از متد exists استفاده کنید. اگر مقدار موجود باشد، این متد مقدار true را برمی‌گرداند: if ($request-&gt;session()-&gt;exists(&#39;users&#39;)) { // } ذخیره سازی داده‌ها درون session به منظور ذخیره داده‌ها در سشن، معمولاً می‌توان از متد put یا تابع کمکی session به صورت زیر استفاده کرد: // Via a request instance... $request-&gt;session()-&gt;put(&#39;key&#39;, &#39;value&#39;); // Via the global helper... session([&#39;key&#39; =&gt; &#39;value&#39;]); push کردن مقادیر session آرایه از متد push می‌توان برای push کردن یک مقدار جدید بر روی مقدار سشنی که در یک آرایه وجود دارد، استفاده کرد. برای مثال، اگر کلید user.teams حاوی آرایه‌ای از نام‌های تیم باشد، می‌توان یک مقدار جدید را بر روی آرایه به صورت مثال زیر push کرد: $request-&gt;session()-&gt;push(&#39;user.teams&#39;, &#39;developers&#39;); بازیابی و حذف یک مورد از session با استفاده از متد pull می‌توان یک مورد را از سشن، توسط یک خط کد مانند مثال زیر بازیابی و حذف کرد: $value = $request-&gt;session()-&gt;pull(&#39;key&#39;, &#39;default&#39;); Flash کردن داده‌ها برای درخواست بعدی در session گاهی اوقات، ممکن است بخواهید آیتم‌های داده را فقط برای درخواست بعدی در سشن ذخیره کنید. این کار را می‌توان با استفاده از متد flash انجام داد. داده‌هایی که توسط این متد در سشن ذخیره می‌شود، در طول درخواست HTTP بعدی در دسترس خواهند بود و پس از آن حذف می‌شوند. استفاده از داده‌های flash شده، عمدتاً برای پیام‌های نشانگر وضعیت که عمر کوتاهی دارند، مفید است: $request-&gt;session()-&gt;flash(&#39;status&#39;, &#39;Task was successful!&#39;); اگر بخواهید، اطلاعات flash شده را برای چند درخواست بعدی حفظ کنید، می‌توانید از متد reflash استفاده کنید که تمام داده‌های flash شده را برای درخواست‌های اضافی بعدی حفظ می‌کند. برای حفظ داده‌های flash شده خاص، می‌توان از متد keep استفاده کرد: $request-&gt;session()-&gt;reflash(); $request-&gt;session()-&gt;keep([&#39;username&#39;, &#39;email&#39;]); پاک کردن داده‌ها از session متد forget یک تکه داده را از سشن حذف می‌کند. اگر بخواهید تمام داده‌ها را از سشن حذف کنید، می‌توانید از متد flush استفاده کنید: $request-&gt;session()-&gt;forget(&#39;key&#39;); $request-&gt;session()-&gt;flush(); ایجاد دوباره شناسه session ایجاد دوباره شناسه سشن، اغلب برای جلوگیری از حمله session fixation، توسط کاربران غیر مجاز صورت می‌گیرد. ایجاد دوباره شناسه سشن در لاراول به صورت خودکار در زمان احراز هویت کاربر انجام می‌شود، اگر از LoginController ساخته شده استفاده می‌کنید و نیاز به ایجاد دوباره شناسه سشن به صورت دستی دارید، می‌توانید از متد regenerate استفاده کنید. $request-&gt;session()-&gt;regenerate(); اضافه کردن درایور‌های session به صورت سفارشی پیاده سازی درایور session در لاراول درایور سشن سفارشی باید رابط SessionHandlerInterface را پیاده سازی کند. این رابط شامل چند متد ساده است که ما برای پیاده سازی به آن‌ها نیاز داریم. پیاده سازی MongoDB مانند مثال زیر است: &lt;?php namespace App\Extensions; class MongoSessionHandler implements \SessionHandlerInterface { public function open($savePath, $sessionName) {} public function close() {} public function read($sessionId) {} public function write($sessionId, $data) {} public function destroy($sessionId) {} public function gc($lifetime) {} } لاراول دایرکتوری پیش‌فرضی برای قرار دادن موارد اضافی ندارد. می‌توانید آن‌ها را هر جا که بخواهید قرار دهید. در این مثال، ما دایرکتوری Extensions را برای قرار دادن MongoSessionHandler ایجاد کردیم. از آنجا که اهداف از این متدها به راحتی قابل درک نیست، اجازه دهید به صورت خلاصه کارهایی که توسط هر متد انجام می‌شود را بررسی کنیم: The open معمولاً در سیستم‌های file based session store استفاده می‌شود. از آنجا که لاراول درایور سشن file را به صورت پیش‌فرض در خود دارد، نیاز به قرار دادن چیزی در این متد نخواهیم داشت و می‌توانید آن را به عنوان یک تکه کد خالی رها کنید. اما PHP از ما می‌خواهد این متد را پیاده سازی کنیم، می‌توان گفت این یک ضعف آشکار در طراحی رابط در زبان PHP است. The close مانند متد open ، معمولاً می‌تواند نادیده گرفته شود. برای اکثر درایورها، استفاده از آن لازم نیست. The read باید رشته داده‌های سشن مربوط به پارامتر ورودی $sessionId را بر‌گرداند. هنگام بازیابی یا ذخیره داده‌های سشن در درایور نیازی به انجام serialization و یا سایر عملیات رمزگذاری نیست، زیرا لاراول عملیات serialization را برای شما اجرا می‌کند. The write باید رشته $data ورودی مربوط به پارامتر $sessionId را به بعضی از سیستم‌های ذخیره سازی داده دائمی، مانند MongoDB، Dynamo و غیره بنویسد. مجدداً نباید عملیات serialization انجام دهید، لاراول قبلاً این کار را برای شما انجام داده است. The destroy باید داده‌های مربوط به پارامتر $sessionId را از حافظه دائمی حذف کند. The gc باید تمام داده‌های سشنی که قدیمی‌تر از پارامتر $lifetime ورودی هستند را از بین می‌برد که یک برچسب زمانی UNIX است. برای سیستم‌های مستقل مانند Memcached و Redis، این متد می‌تواند خالی باشد. ثبت درایور session زمانی که درایور پیاده سازی شد، می‌توانید آن را در فریم ورک ثبت کنید. برای اضافه کردن درایورهای اضافی به backend سشن در لاراول، می‌توانید از متد extend در fasade مربوط به Session استفاده کنید. باید متد extend را از متد boot در یک service provider فراخوانی کنید. می‌توانید این کار را از AppServiceProvider موجود انجام دهید یا یک provider جدید ایجاد کنید: &lt;?php namespace App\Providers; use App\Extensions\MongoSessionHandler; use Illuminate\Support\Facades\Session; use Illuminate\Support\ServiceProvider; class SessionServiceProvider extends ServiceProvider { /** * Perform post-registration booting of services. * * @return void */ public function boot() { Session::extend(&#39;mongo&#39;, function ($app) { // Return implementation of SessionHandlerInterface... return new MongoSessionHandler; }); } /** * Register bindings in the container. * * @return void */ public function register() { // } } زمانی که درایور سشن ثبت شد، می‌توانید از درایور mongo در فایل پیکربندی config/session.php خود استفاده کنید." />
+<link rel="canonical" href="http://localhost:4000/documentation/laravel/The-Basics/session" />
+<meta property="og:url" content="http://localhost:4000/documentation/laravel/The-Basics/session" />
+<meta property="og:site_name" content="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-02-09T14:29:42+03:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="استفاده از Session" />
+<meta name="twitter:site" content="@farhadmirzapour" />
+<meta name="twitter:creator" content="@Farhad Mirzapour" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"استفاده از Session","url":"http://localhost:4000/documentation/laravel/The-Basics/session","datePublished":"2018-02-09T14:29:42+03:30","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"dateModified":"2018-02-09T14:29:42+03:30","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/documentation/laravel/The-Basics/session"},"author":{"@type":"Person","name":"Farhad Mirzapour"},"description":"از آنجا که برنامه‌های کاربردی تحت وب HTTP به صورت stateless یا بی ثبات هستند و اطلاعات کاربر را حفظ نمی‌کنند، استفاده از سشن (session) این امکان را فراهم می‌کند که بتوان اطلاعات کاربر را در طول چند درخواست ذخیره کرد. لاراول در حالت پیش‌فرض دارای انواع مختلفی از سشن‌ها به صورت backend است که از طریق یک API ساده و یکپارچه می‌توان به آن‌ها دسترسی داشت. لاراول از backendهای پرطرفدار مثل Memcached و Redis پشتیبانی می‌کند. پیکربندی تنظیمات session فایل پیکربندی سشن در config/session.php قرار دارد. حتماً باید گزینه‌های در دسترس موجود در این فایل را بررسی کنید. به صورت پیش‌فرض پیکربندی تنظیمات لاراول از درایور سشن file استفاده می‌کند که برای بسیاری از برنامه‌ها کارایی لازم را ارائه می‌دهد. در برنامه‌های تولید شده (production)، برای دستیابی به کارایی بهتر و سریعتر می‌توانید از درایور memcached یا redis استفاده کنید. گزینه پیکربندی driver سشن مشخص می‌کند که داده‌های سشن برای هر درخواست در کجا ذخیره می‌شوند. لاراول به صورت پیش‌فرض دارای چند درایور بزرگ و مهم است: file - سشن‌ها در آدرس storage/framework/sessions ذخیره می‌شوند.. cookie - سشن‌ها در کوکی‌های امن و رمزگذاری شده ذخیره می‌شوند.. database - سشن‌ها در پایگاه داده‌ مربوط به برنامه کاربردی ذخیره می‌شوند.. memcached / redis - سشن‌ها در یکی از storeهای سریع مبتنی بر کش موجود ذخیره می‌شوند. array - سشن‌ها در آرایه PHP ذخیره می‌شوند و پایدار نخواهند بود. از آرایه driver در زمان انجام تست استفاده می‌شود و مانع از ذخیره داده‌ها به صورت دائمی در سشن می‌شود. پیش نیازهای درایور session در لاراول پایگاه داده هر زمان که از درایور سشن database استفاده می‌کنید، باید یک جدول ایجاد کنید که حاوی آیتم‌های سشن باشد. در مثال زیر یک نمونه تعریف Schema برای این جدول را مشاهده می‌کنید: Schema::create(&#39;sessions&#39;, function ($table) { $table-&gt;string(&#39;id&#39;)-&gt;unique(); $table-&gt;unsignedInteger(&#39;user_id&#39;)-&gt;nullable(); $table-&gt;string(&#39;ip_address&#39;, 45)-&gt;nullable(); $table-&gt;text(&#39;user_agent&#39;)-&gt;nullable(); $table-&gt;text(&#39;payload&#39;); $table-&gt;integer(&#39;last_activity&#39;); }); می‌توان از دستور آرتیسان session:table برای ایجاد این migration استفاده کرد: php artisan session:table php artisan migrate Redis قبل از استفاده از سشن‌های Redis در لاراول، باید پکیج predis/predis (~1.0) را با استفاده از Composer نصب کنید. می‌توانید کانکشن‌های Redis را در فایل پیکربندی database پیکربندی کنید. در درون فایل پیکربندی session ، از گزینه connection می‌توان برای مشخص کردن کانکشن Redis مورد استفاده توسط سشن، استفاده کرد. بازیابی داده‌ها از session در لاراول دو روش اصلی برای کار با داده‌های سشن در لاراول وجود دارد؛ روش اول استفاده از تابع کمکی session عمومی و روش دوم استفاده از یک نمونه Request است. در ابتدا، دسترسی به سشن از طریق یک نمونه Request را بررسی می‌کنیم که می‌تواند بر روی یک متد کنترلر اعلان نوع یا type-hint شود. توجه کنید که وابستگی‌های متد کنترلر به صورت خودکار از طریق service container لاراول تزریق می‌شوند: &lt;?php namespace App\\Http\\Controllers; use Illuminate\\Http\\Request; use App\\Http\\Controllers\\Controller; class UserController extends Controller { /** * Show the profile for the given user. * * @param Request $request * @param int $id * @return Response */ public function show(Request $request, $id) { $value = $request-&gt;session()-&gt;get(&#39;key&#39;); // } } در زمان بازیابی یک مقدار از سشن، می‌توان یک مقدار پیش‌فرض را نیز به عنوان آرگومان دوم به متد get انتقال داد. در صورتی که کلید مشخص شده در سشن موجود نباشد، این مقدار پیش‌فرض برگردانده می‌شود. اگر یک Closure را به عنوان مقدار پیش‌فرض به متد get انتقال دهید و کلید درخواست شده موجود نباشد، Closure اجرا شده و نتیجه آن بازگشت داده می‌شود: $value = $request-&gt;session()-&gt;get(&#39;key&#39;, &#39;default&#39;); $value = $request-&gt;session()-&gt;get(&#39;key&#39;, function () { return &#39;default&#39;; }); استفاده از تابع کمکی session در لاراول همچنین، می‌توان از تابع PHP عمومی session برای بازیابی و ذخیره داده‌ها در سشن استفاده کرد. زمانی که تابع کمکی session با یک آرگومان رشته‌ای واحد فراخوانی می‌شود، مقدار کلید آن سشن را باز می‌گرداند. زمانی که تابع کمکی با آرایه‌ای از جفت کلید و مقدار فراخوانی می‌شود، این مقادیر در سشن ذخیره می‌شوند: Route::get(&#39;home&#39;, function () { // Retrieve a piece of data from the session... $value = session(&#39;key&#39;); // Specifying a default value... $value = session(&#39;key&#39;, &#39;default&#39;); // Store a piece of data in the session... session([&#39;key&#39; =&gt; &#39;value&#39;]); }); بین کار با سشن از طریق یک HTTP request و از طریق یک تابع کمکی session عمومی، تفاوت اندکی وجود دارد. هر دو روش از طریق متد assertSessionHas که در تمام گزینه‌های تست موجود است، قابل تست کردن هستند. بازیابی تمام داده‌‌های session اگر بخواهید تمام داده‌ها را از سشن بازیابی کنید، باید از متد all به صورت زیراستفاده کنید: $data = $request-&gt;session()-&gt;all(); تعیین موجود بودن یک آیتم درون session برای تعیین اینکه آیا یک مقدار در سشن وجود دارد یا خیر، می‌توان از متد has استفاده کرد. اگر مقدار موردنظر موجود باشد، این متد مقدار true را برمی‌گرداند، در غیر این صورت مقدار null برگشت داده می‌شود: if ($request-&gt;session()-&gt;has(&#39;users&#39;)) { // } برای تعیین وجود یک مقدار در سشن، حتی اگر مقدار آن null باشد، می‌توانید از متد exists استفاده کنید. اگر مقدار موجود باشد، این متد مقدار true را برمی‌گرداند: if ($request-&gt;session()-&gt;exists(&#39;users&#39;)) { // } ذخیره سازی داده‌ها درون session به منظور ذخیره داده‌ها در سشن، معمولاً می‌توان از متد put یا تابع کمکی session به صورت زیر استفاده کرد: // Via a request instance... $request-&gt;session()-&gt;put(&#39;key&#39;, &#39;value&#39;); // Via the global helper... session([&#39;key&#39; =&gt; &#39;value&#39;]); push کردن مقادیر session آرایه از متد push می‌توان برای push کردن یک مقدار جدید بر روی مقدار سشنی که در یک آرایه وجود دارد، استفاده کرد. برای مثال، اگر کلید user.teams حاوی آرایه‌ای از نام‌های تیم باشد، می‌توان یک مقدار جدید را بر روی آرایه به صورت مثال زیر push کرد: $request-&gt;session()-&gt;push(&#39;user.teams&#39;, &#39;developers&#39;); بازیابی و حذف یک مورد از session با استفاده از متد pull می‌توان یک مورد را از سشن، توسط یک خط کد مانند مثال زیر بازیابی و حذف کرد: $value = $request-&gt;session()-&gt;pull(&#39;key&#39;, &#39;default&#39;); Flash کردن داده‌ها برای درخواست بعدی در session گاهی اوقات، ممکن است بخواهید آیتم‌های داده را فقط برای درخواست بعدی در سشن ذخیره کنید. این کار را می‌توان با استفاده از متد flash انجام داد. داده‌هایی که توسط این متد در سشن ذخیره می‌شود، در طول درخواست HTTP بعدی در دسترس خواهند بود و پس از آن حذف می‌شوند. استفاده از داده‌های flash شده، عمدتاً برای پیام‌های نشانگر وضعیت که عمر کوتاهی دارند، مفید است: $request-&gt;session()-&gt;flash(&#39;status&#39;, &#39;Task was successful!&#39;); اگر بخواهید، اطلاعات flash شده را برای چند درخواست بعدی حفظ کنید، می‌توانید از متد reflash استفاده کنید که تمام داده‌های flash شده را برای درخواست‌های اضافی بعدی حفظ می‌کند. برای حفظ داده‌های flash شده خاص، می‌توان از متد keep استفاده کرد: $request-&gt;session()-&gt;reflash(); $request-&gt;session()-&gt;keep([&#39;username&#39;, &#39;email&#39;]); پاک کردن داده‌ها از session متد forget یک تکه داده را از سشن حذف می‌کند. اگر بخواهید تمام داده‌ها را از سشن حذف کنید، می‌توانید از متد flush استفاده کنید: $request-&gt;session()-&gt;forget(&#39;key&#39;); $request-&gt;session()-&gt;flush(); ایجاد دوباره شناسه session ایجاد دوباره شناسه سشن، اغلب برای جلوگیری از حمله session fixation، توسط کاربران غیر مجاز صورت می‌گیرد. ایجاد دوباره شناسه سشن در لاراول به صورت خودکار در زمان احراز هویت کاربر انجام می‌شود، اگر از LoginController ساخته شده استفاده می‌کنید و نیاز به ایجاد دوباره شناسه سشن به صورت دستی دارید، می‌توانید از متد regenerate استفاده کنید. $request-&gt;session()-&gt;regenerate(); اضافه کردن درایور‌های session به صورت سفارشی پیاده سازی درایور session در لاراول درایور سشن سفارشی باید رابط SessionHandlerInterface را پیاده سازی کند. این رابط شامل چند متد ساده است که ما برای پیاده سازی به آن‌ها نیاز داریم. پیاده سازی MongoDB مانند مثال زیر است: &lt;?php namespace App\\Extensions; class MongoSessionHandler implements \\SessionHandlerInterface { public function open($savePath, $sessionName) {} public function close() {} public function read($sessionId) {} public function write($sessionId, $data) {} public function destroy($sessionId) {} public function gc($lifetime) {} } لاراول دایرکتوری پیش‌فرضی برای قرار دادن موارد اضافی ندارد. می‌توانید آن‌ها را هر جا که بخواهید قرار دهید. در این مثال، ما دایرکتوری Extensions را برای قرار دادن MongoSessionHandler ایجاد کردیم. از آنجا که اهداف از این متدها به راحتی قابل درک نیست، اجازه دهید به صورت خلاصه کارهایی که توسط هر متد انجام می‌شود را بررسی کنیم: The open معمولاً در سیستم‌های file based session store استفاده می‌شود. از آنجا که لاراول درایور سشن file را به صورت پیش‌فرض در خود دارد، نیاز به قرار دادن چیزی در این متد نخواهیم داشت و می‌توانید آن را به عنوان یک تکه کد خالی رها کنید. اما PHP از ما می‌خواهد این متد را پیاده سازی کنیم، می‌توان گفت این یک ضعف آشکار در طراحی رابط در زبان PHP است. The close مانند متد open ، معمولاً می‌تواند نادیده گرفته شود. برای اکثر درایورها، استفاده از آن لازم نیست. The read باید رشته داده‌های سشن مربوط به پارامتر ورودی $sessionId را بر‌گرداند. هنگام بازیابی یا ذخیره داده‌های سشن در درایور نیازی به انجام serialization و یا سایر عملیات رمزگذاری نیست، زیرا لاراول عملیات serialization را برای شما اجرا می‌کند. The write باید رشته $data ورودی مربوط به پارامتر $sessionId را به بعضی از سیستم‌های ذخیره سازی داده دائمی، مانند MongoDB، Dynamo و غیره بنویسد. مجدداً نباید عملیات serialization انجام دهید، لاراول قبلاً این کار را برای شما انجام داده است. The destroy باید داده‌های مربوط به پارامتر $sessionId را از حافظه دائمی حذف کند. The gc باید تمام داده‌های سشنی که قدیمی‌تر از پارامتر $lifetime ورودی هستند را از بین می‌برد که یک برچسب زمانی UNIX است. برای سیستم‌های مستقل مانند Memcached و Redis، این متد می‌تواند خالی باشد. ثبت درایور session زمانی که درایور پیاده سازی شد، می‌توانید آن را در فریم ورک ثبت کنید. برای اضافه کردن درایورهای اضافی به backend سشن در لاراول، می‌توانید از متد extend در fasade مربوط به Session استفاده کنید. باید متد extend را از متد boot در یک service provider فراخوانی کنید. می‌توانید این کار را از AppServiceProvider موجود انجام دهید یا یک provider جدید ایجاد کنید: &lt;?php namespace App\\Providers; use App\\Extensions\\MongoSessionHandler; use Illuminate\\Support\\Facades\\Session; use Illuminate\\Support\\ServiceProvider; class SessionServiceProvider extends ServiceProvider { /** * Perform post-registration booting of services. * * @return void */ public function boot() { Session::extend(&#39;mongo&#39;, function ($app) { // Return implementation of SessionHandlerInterface... return new MongoSessionHandler; }); } /** * Register bindings in the container. * * @return void */ public function register() { // } } زمانی که درایور سشن ثبت شد، می‌توانید از درایور mongo در فایل پیکربندی config/session.php خود استفاده کنید.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="stylesheet" href="/assets/prisma/prism.css">
+    <!-- favicons and rss -->
+    <link rel="alternate" type="application/rss+xml" title="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" href="/feed.xml">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- header -->
+<header class="header" role="banner" aria-label="Header">
+    <button class="hamburger-button" onclick="hamburgerMenu();" role="button" aria-label="Hamburger menu button">
+        <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    </button>
+    <a href="/" class="logo" role="link" aria-label="Home">
+        <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo">
+    </a>
+    <nav class="navigation" role="navigation" aria-label="Navigation">
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item">
+                <a href="/" class="logo" role="menuitem" aria-label="Home">
+                    <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo">
+                </a>
+            </li>
+            
+            <li role="menuitem"><a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a></li>
+            
+            <li role="menuitem"><a href="/contactus" role="menuitem" aria-label="تماس">تماس</a></li>
+            
+        </ul>
+    </nav>
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox">
+        </form>
+    </div>
+</header>
+
+<nav id="hamburger-menu" role="navigation" aria-label="Hamburger menu">
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox">
+        </form>
+    </div>
+    <div class="home-nav" role="navigation" aria-label="Site navigation">
+        <a href="/" role="menuitem" aria-label="Home">صفحه اصلی</a>
+        
+        <a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a>
+        
+        <a href="/contactus" role="menuitem" aria-label="تماس">تماس</a>
+        
+    </div>
+
+    
+    <div class="doc-nav" role="navigation" aria-label="Documentation navigation">
+        <p role="presentation" aria-label="Category name">
+            اصول آموزش Laravel
+        </p>
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/2017/12/18/laravel.html" class="doc-link" role="link" aria-label="استفاده از  Session">مقدمه</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Digging-Deeper/collections" class="doc-link" role="link" aria-label="معرفی collections">معرفی collections</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Database/database" class="doc-link" role="link" aria-label="پایگاه داده ها">پایگاه داده ها</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Database/queries" class="doc-link" role="link" aria-label="آشنایی با Query Builder">آشنایی با Query Builder</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent" class="doc-link" role="link" aria-label="آشنایی با eloquent">آشنایی با eloquent</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-relationships" class="doc-link" role="link" aria-label="eloquent relationships  آموزش">eloquent relationships  آموزش</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-mutators" class="doc-link" role="link" aria-label="آشنایی با eloquent mutators">آشنایی با eloquent mutators</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-collections" class="doc-link" role="link" aria-label="آشنایی با eloquent collections">آشنایی با eloquent collections</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-serialization" class="doc-link" role="link" aria-label="آشنایی با eloquent serialization">آشنایی با eloquent serialization</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Architecture-Concepts/lifecycle" class="doc-link" role="link" aria-label="چرخه ی حیات درخواست (Request Lifecycle)">چرخه ی حیات درخواست (Request Lifecycle)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/routing" class="doc-link" role="link" aria-label="Routing یا مسیریابی در لاراول">Routing یا مسیریابی در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/middleware" class="doc-link" role="link" aria-label="آموزش Middleware">آموزش Middleware</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/csrf" class="doc-link" role="link" aria-label="حفاظت CSRF">حفاظت CSRF</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/controllers" class="doc-link" role="link" aria-label="استفاده از Controller">استفاده از Controller</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/requests" class="doc-link" role="link" aria-label="اصول requests">اصول requests</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/views" class="doc-link" role="link" aria-label="ایجاد view">ایجاد view</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/session" class="doc-link" role="link" aria-label="استفاده از  Session">استفاده از  Session</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/responses" class="doc-link" role="link" aria-label="پاسخ Response">پاسخ Response</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/urls" class="doc-link" role="link" aria-label="تولید URL در لاراول">تولید URL در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/validation" class="doc-link" role="link" aria-label="validation یا اعتبارسنجی در لاراول">validation یا اعتبارسنجی در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/errors" class="doc-link" role="link" aria-label="مدیریت Errors &amp; Logging">مدیریت Errors &amp; Logging</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/blade" class="doc-link" role="link" aria-label="Blade Templates">Blade Templates</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/localization" class="doc-link" role="link" aria-label="اصول localization">اصول localization</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/frontend" class="doc-link" role="link" aria-label="JavaScript &amp; CSS Scaffolding">JavaScript &amp; CSS Scaffolding</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </ul>
+    </div>
+    
+</nav>
+<!-- main content -->
+<main class="container" role="main">
+    <div class="rcdoccontainerimg">
+<div class="rc-DRTVBanner-new rc-DRTVBanner-bigsize">
+    <div style="background: url('/images/original/laravel.png'); " class="blurred_img"></div>
+    <div class="mask"></div>
+    <div class="bot"></div>
+    <div class="over">
+        <div class="container-rc">
+            <img class="image" src="/images/original/laravel.png" alt="استفاده از  Session" height="190">
+            <div class="desktop-banner-container">
+                <h1 class="display-5-text headline">
+                    
+                    
+                    اصول آموزش Laravel
+                    </h1>
+                <!--<div class="tagslist"><ul class='lyda-tag-list'><li class='lyda-tag-list-title'>برچسب ها</li><li><a class="tags" href="/tag/لاراول">#لاراول</a></li><li><a class="tags" href="/tag/لاراول-5-5">#لاراول 5.5</a></li></ul></div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="bread-crumb">-->
+<!--<div class="container   ">-->
+<!--<div class="pull-right ">-->
+<!--<div class="bread-button text-custom b-left">-->
+<!--انتشار : 2 ماه پیش-->
+<!--</div>-->
+<!--<a href="/category/article/" class="bread-button back-to-all b-left hidden-xs">همه مقالات</a>-->
+<!--<div class="cat-lable">-->
+<!--<a href="/category/article/laravel/">-->
+<!--لاراول-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<script>
+    $(window).scroll(function(){
+        var sticky = $('.doc-menu'),
+            scroll = $(window).scrollTop();
+        if (scroll >= 101) {sticky.addClass('doc-header-scroll'); }
+        else {sticky.removeClass('doc-header-scroll'); };
+    });
+</script>
+</div>
+<div class="doc-container">
+
+    <div class="doc-menu">
+    
+    <ul>
+        <li>
+            <a href="/2017/12/18/laravel.html" class="active doc-link" role="link">
+                مقدمه
+            </a>
+        </li>
+        
+        <li>
+            <span class="caret">معماری Laravel</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="چرخه ی حیات درخواست (Request Lifecycle)" href="/documentation/laravel/Architecture-Concepts/lifecycle" class="active doc-link" role="link">
+                چرخه ی حیات درخواست (Request Lifecycle)
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم اساسی</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="Routing یا مسیریابی در لاراول" href="/documentation/laravel/The-Basics/routing" class="active doc-link" role="link">
+                Routing یا مسیریابی در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آموزش Middleware" href="/documentation/laravel/The-Basics/middleware" class="active doc-link" role="link">
+                آموزش Middleware
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="حفاظت CSRF" href="/documentation/laravel/The-Basics/csrf" class="active doc-link" role="link">
+                حفاظت CSRF
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="استفاده از Controller" href="/documentation/laravel/The-Basics/controllers" class="active doc-link" role="link">
+                استفاده از Controller
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول requests" href="/documentation/laravel/The-Basics/requests" class="active doc-link" role="link">
+                اصول requests
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="ایجاد view" href="/documentation/laravel/The-Basics/views" class="active doc-link" role="link">
+                ایجاد view
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="استفاده از  Session" href="/documentation/laravel/The-Basics/session" class="active doc-link" role="link">
+                استفاده از  Session
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="پاسخ Response" href="/documentation/laravel/The-Basics/responses" class="active doc-link" role="link">
+                پاسخ Response
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="تولید URL در لاراول" href="/documentation/laravel/The-Basics/urls" class="active doc-link" role="link">
+                تولید URL در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="validation یا اعتبارسنجی در لاراول" href="/documentation/laravel/The-Basics/validation" class="active doc-link" role="link">
+                validation یا اعتبارسنجی در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="مدیریت Errors &amp; Logging" href="/documentation/laravel/The-Basics/errors" class="active doc-link" role="link">
+                مدیریت Errors &amp; Logging
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">Front End</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="Blade Templates" href="/documentation/laravel/Frontend/blade" class="active doc-link" role="link">
+                Blade Templates
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول localization" href="/documentation/laravel/Frontend/localization" class="active doc-link" role="link">
+                اصول localization
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="JavaScript &amp; CSS Scaffolding" href="/documentation/laravel/Frontend/frontend" class="active doc-link" role="link">
+                JavaScript &amp; CSS Scaffolding
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم پیشرفته تر</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="معرفی collections" href="/documentation/laravel/Digging-Deeper/collections" class="active doc-link" role="link">
+                معرفی collections
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">پایگاه داده ها</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="پایگاه داده ها" href="/documentation/laravel/Database/database" class="active doc-link" role="link">
+                پایگاه داده ها
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با Query Builder" href="/documentation/laravel/Database/queries" class="active doc-link" role="link">
+                آشنایی با Query Builder
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">Eloquent ORM</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent" href="/documentation/laravel/Eloquent-ORM/eloquent" class="active doc-link" role="link">
+                آشنایی با eloquent
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="eloquent relationships  آموزش" href="/documentation/laravel/Eloquent-ORM/eloquent-relationships" class="active doc-link" role="link">
+                eloquent relationships  آموزش
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent mutators" href="/documentation/laravel/Eloquent-ORM/eloquent-mutators" class="active doc-link" role="link">
+                آشنایی با eloquent mutators
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent collections" href="/documentation/laravel/Eloquent-ORM/eloquent-collections" class="active doc-link" role="link">
+                آشنایی با eloquent collections
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent serialization" href="/documentation/laravel/Eloquent-ORM/eloquent-serialization" class="active doc-link" role="link">
+                آشنایی با eloquent serialization
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+    </ul>
+    
+</div>
+
+    <article class="documentation">
+        <header class="doc-header">
+            <div class="time">
+                    تاریخ :      جمعه 20 بهمن 1396
+            </div>
+                
+        </header>
+        <section class="anchored">
+            <p>
+از آنجا که برنامه‌های کاربردی تحت وب HTTP به صورت stateless یا بی ثبات هستند و اطلاعات کاربر را حفظ نمی‌کنند، استفاده از سشن (session) این امکان را فراهم می‌کند که بتوان اطلاعات کاربر را در طول چند درخواست ذخیره کرد. لاراول در حالت پیش‌فرض دارای انواع مختلفی از سشن‌ها به صورت backend است که از طریق یک API ساده و یکپارچه می‌توان به آن‌ها دسترسی داشت. لاراول از backendهای پرطرفدار مثل Memcached و Redis پشتیبانی می‌کند.
+</p>
+
+<p>
+<a name="configuration"></a>
+</p>
+
+<p><br></p>
+<h3>پیکربندی تنظیمات session </h3>
+
+<p>
+فایل پیکربندی سشن در config/session.php قرار دارد. حتماً باید گزینه‌های در دسترس موجود در این فایل را بررسی کنید. به صورت پیش‌فرض پیکربندی تنظیمات لاراول از درایور سشن file استفاده می‌کند که برای بسیاری از برنامه‌ها کارایی لازم را ارائه می‌دهد. در برنامه‌های تولید شده (production)، برای دستیابی به کارایی بهتر و سریعتر می‌توانید از درایور memcached یا redis استفاده کنید.
+</p>
+
+<p>
+گزینه پیکربندی driver سشن مشخص می‌کند که داده‌های سشن برای هر درخواست در کجا ذخیره می‌شوند. لاراول به صورت پیش‌فرض دارای چند درایور بزرگ و مهم است:
+</p>
+
+<div class="content-list">
+<ul>
+<li>
+<code class=" language-php">file</code> - سشن‌ها در آدرس storage/framework/sessions ذخیره می‌شوند..</li>
+<li>
+<code class=" language-php">cookie</code> - سشن‌ها در کوکی‌های امن و رمزگذاری شده ذخیره می‌شوند..</li>
+<li>
+<code class=" language-php">database</code> - سشن‌ها در پایگاه داده‌ مربوط به برنامه کاربردی ذخیره می‌شوند..</li>
+<li>
+<code class=" language-php">memcached</code> / <code class=" language-php">redis</code> - سشن‌ها در یکی از storeهای سریع مبتنی بر کش موجود ذخیره می‌شوند.</li>
+<li>
+<code class=" language-php"><span class="token keyword">array</span></code> - سشن‌ها در آرایه PHP ذخیره می‌شوند و پایدار نخواهند بود.</li>
+</ul>
+</div>
+<blockquote class="has-icon tip">
+از آرایه driver در زمان انجام تست استفاده می‌شود و مانع از ذخیره داده‌ها به صورت دائمی در سشن می‌شود.
+</blockquote>
+
+<p>
+<a name="driver-prerequisites"></a>
+</p>
+
+<p><br></p>
+<h3>پیش نیازهای درایور session در لاراول</h3>
+
+<p><br></p>
+<h3>پایگاه داده</h3>
+
+<p>
+هر زمان که از درایور سشن database استفاده می‌کنید، باید یک جدول ایجاد کنید که حاوی آیتم‌های سشن باشد. در مثال زیر یک نمونه تعریف Schema برای این جدول را مشاهده می‌کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">Schema::create('sessions', function ($table) {
+    $table-&gt;string('id')-&gt;unique();
+    $table-&gt;unsignedInteger('user_id')-&gt;nullable();
+    $table-&gt;string('ip_address', 45)-&gt;nullable();
+    $table-&gt;text('user_agent')-&gt;nullable();
+    $table-&gt;text('payload');
+    $table-&gt;integer('last_activity');
+});
+</code></pre>
+
+<p>
+می‌توان از دستور آرتیسان session:table برای ایجاد این migration استفاده کرد:
+</p>
+
+<pre><code class="language-php  line-numbers">php artisan session:table
+
+php artisan migrate
+</code></pre>
+
+<p><br></p>
+<h3>Redis</h3>
+
+<p>
+قبل از استفاده از سشن‌های Redis در لاراول، باید پکیج predis/predis (~1.0) را با استفاده از Composer نصب کنید. می‌توانید کانکشن‌های Redis را در فایل پیکربندی database پیکربندی کنید. در درون فایل پیکربندی session ، از گزینه connection می‌توان برای مشخص کردن کانکشن Redis مورد استفاده توسط سشن، استفاده کرد.
+</p>
+
+<p>
+<a name="using-the-session"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#using-the-session">بازیابی داده‌ها از session در لاراول</a></h3>
+
+<p>
+دو روش اصلی برای کار با داده‌های سشن در لاراول وجود دارد؛ روش اول استفاده از تابع کمکی session عمومی و روش دوم استفاده از یک نمونه Request است. در ابتدا، دسترسی به سشن از طریق یک نمونه Request را بررسی می‌کنیم که می‌تواند بر روی یک متد کنترلر اعلان نوع یا type-hint شود. توجه کنید که وابستگی‌های متد کنترلر به صورت خودکار از طریق service container لاراول تزریق می‌شوند:
+</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+
+class UserController extends Controller
+{
+    /**
+     * Show the profile for the given user.
+     *
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Response
+     */
+    public function show(Request $request, $id)
+    {
+        $value = $request-&gt;session()-&gt;get('key');
+
+        //
+    }
+}
+</code></pre>
+
+<p>
+در زمان بازیابی یک مقدار از سشن، می‌توان یک مقدار پیش‌فرض را نیز به عنوان آرگومان دوم به متد get انتقال داد. در صورتی که کلید مشخص شده در سشن موجود نباشد، این مقدار پیش‌فرض برگردانده می‌شود. اگر یک Closure را به عنوان مقدار پیش‌فرض به متد get انتقال دهید و کلید درخواست شده موجود نباشد، Closure اجرا شده و نتیجه آن بازگشت داده می‌شود:
+</p>
+
+<pre><code class="language-php  line-numbers">$value = $request-&gt;session()-&gt;get('key', 'default');
+
+$value = $request-&gt;session()-&gt;get('key', function () {
+    return 'default';
+});
+</code></pre>
+
+<p><br></p>
+<h3>استفاده از تابع کمکی session در لاراول</h3>
+
+<p>
+همچنین، می‌توان از تابع PHP عمومی session برای بازیابی و ذخیره داده‌ها در سشن استفاده کرد. زمانی که تابع کمکی session با یک آرگومان رشته‌ای واحد فراخوانی می‌شود، مقدار کلید آن سشن را باز می‌گرداند. زمانی که تابع کمکی با آرایه‌ای از جفت کلید و مقدار فراخوانی می‌شود، این مقادیر در سشن ذخیره می‌شوند:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('home', function () {
+    // Retrieve a piece of data from the session...
+    $value = session('key');
+
+    // Specifying a default value...
+    $value = session('key', 'default');
+
+    // Store a piece of data in the session...
+    session(['key' =&gt; 'value']);
+});
+</code></pre>
+
+<blockquote class="has-icon tip">
+بین کار با سشن از طریق یک HTTP request و از طریق یک تابع کمکی session عمومی، تفاوت اندکی وجود دارد. هر دو روش از طریق متد assertSessionHas که در تمام گزینه‌های تست موجود است، قابل تست کردن هستند.
+</blockquote>
+
+<p><br></p>
+<h3>بازیابی تمام داده‌‌های session</h3>
+
+<p>
+اگر بخواهید تمام داده‌ها را از سشن بازیابی کنید، باید از متد all به صورت زیراستفاده کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">$data = $request-&gt;session()-&gt;all();
+</code></pre>
+
+<p><br></p>
+<h3>تعیین موجود بودن یک آیتم درون session</h3>
+
+<p>
+برای تعیین اینکه آیا یک مقدار در سشن وجود دارد یا خیر، می‌توان از متد has استفاده کرد. اگر مقدار موردنظر موجود باشد، این متد مقدار true را برمی‌گرداند، در غیر این صورت مقدار  null برگشت داده می‌شود:
+</p>
+
+<pre><code class="language-php  line-numbers">if ($request-&gt;session()-&gt;has('users')) {
+    //
+}
+</code></pre>
+
+<p>
+برای تعیین وجود یک مقدار در سشن، حتی اگر مقدار آن null باشد، می‌توانید از متد exists استفاده کنید. اگر مقدار موجود باشد، این متد مقدار true را برمی‌گرداند:
+</p>
+
+<pre><code class="language-php  line-numbers">if ($request-&gt;session()-&gt;exists('users')) {
+    //
+}
+</code></pre>
+
+<p>
+<a name="storing-data"></a>
+</p>
+
+<p><br></p>
+<h3>ذخیره سازی داده‌ها درون session</h3>
+
+<p>
+به منظور ذخیره داده‌ها در سشن، معمولاً می‌توان از متد put یا تابع کمکی session به صورت زیر استفاده کرد:
+</p>
+
+<pre><code class="language-php  line-numbers">// Via a request instance...
+$request-&gt;session()-&gt;put('key', 'value');
+
+// Via the global helper...
+session(['key' =&gt; 'value']);
+</code></pre>
+
+<p><br></p>
+<h3>push کردن مقادیر session آرایه </h3>
+
+<p>
+از متد push می‌توان برای push کردن یک مقدار جدید بر روی مقدار سشنی که در یک آرایه وجود دارد، استفاده کرد. برای مثال، اگر کلید user.teams حاوی آرایه‌ای از نام‌های تیم باشد، می‌توان یک مقدار جدید را بر روی آرایه به صورت مثال زیر push کرد:
+</p>
+
+<pre><code class="language-php  line-numbers">$request-&gt;session()-&gt;push('user.teams', 'developers');
+</code></pre>
+
+<p><br></p>
+<h3>بازیابی و حذف یک مورد از session</h3>
+
+<p>
+با استفاده از متد pull می‌توان یک مورد را از سشن، توسط یک خط کد مانند مثال زیر بازیابی و حذف کرد:
+</p>
+
+<pre><code class="language-php  line-numbers">$value = $request-&gt;session()-&gt;pull('key', 'default');
+</code></pre>
+
+<p>
+<a name="flash-data"></a>
+</p>
+
+<p><br></p>
+<h3>Flash کردن داده‌ها برای درخواست بعدی در session</h3>
+
+<p>
+گاهی اوقات، ممکن است بخواهید آیتم‌های داده را فقط برای درخواست بعدی در سشن ذخیره کنید. این کار را می‌توان با استفاده از متد flash انجام داد. داده‌هایی که توسط این متد در سشن ذخیره می‌شود، در طول درخواست HTTP بعدی در دسترس خواهند بود و پس از آن حذف می‌شوند. استفاده از داده‌های flash شده، عمدتاً برای پیام‌های نشانگر وضعیت که عمر کوتاهی دارند، مفید است:
+</p>
+
+<pre><code class="language-php  line-numbers">$request-&gt;session()-&gt;flash('status', 'Task was successful!');
+</code></pre>
+
+<p>
+اگر بخواهید، اطلاعات flash شده را برای چند درخواست بعدی حفظ کنید، می‌توانید از متد reflash استفاده کنید که تمام داده‌های flash شده را برای درخواست‌های اضافی بعدی حفظ می‌کند. برای حفظ داده‌های flash شده خاص، می‌توان از متد keep استفاده کرد:
+</p>
+
+<pre><code class="language-php  line-numbers">$request-&gt;session()-&gt;reflash();
+
+$request-&gt;session()-&gt;keep(['username', 'email']);
+</code></pre>
+
+<p>
+<a name="deleting-data"></a>
+</p>
+
+<p><br></p>
+<h3>پاک کردن داده‌ها از session</h3>
+
+<p>
+متد forget یک تکه داده را از سشن حذف می‌کند. اگر بخواهید تمام داده‌ها را از سشن حذف کنید، می‌توانید از متد flush استفاده کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">$request-&gt;session()-&gt;forget('key');
+
+$request-&gt;session()-&gt;flush();
+</code></pre>
+
+<p>
+<a name="regenerating-the-session-id"></a>
+</p>
+
+<p><br></p>
+<h3>ایجاد دوباره شناسه session </h3>
+
+<p>
+ایجاد دوباره شناسه سشن، اغلب برای جلوگیری از حمله session fixation، توسط کاربران غیر مجاز صورت می‌گیرد. ایجاد دوباره شناسه سشن در لاراول به صورت خودکار در زمان احراز هویت کاربر انجام می‌شود، اگر از LoginController ساخته شده استفاده می‌کنید و نیاز به ایجاد دوباره شناسه سشن به صورت دستی دارید، می‌توانید از متد regenerate استفاده کنید.
+</p>
+
+<pre><code class="language-php  line-numbers">$request-&gt;session()-&gt;regenerate();
+</code></pre>
+
+<p>
+<a name="adding-custom-session-drivers"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#adding-custom-session-drivers">اضافه کردن درایور‌های session به صورت سفارشی</a></h3>
+
+<p>
+<a name="implementing-the-driver"></a>
+</p>
+
+<p><br></p>
+<h3>پیاده سازی درایور session در لاراول</h3>
+
+<p>
+درایور سشن سفارشی باید رابط SessionHandlerInterface را پیاده سازی کند. این رابط شامل چند متد ساده است که ما برای پیاده سازی به آن‌ها نیاز داریم. پیاده سازی MongoDB مانند مثال زیر است:
+</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+
+namespace App\Extensions;
+
+class MongoSessionHandler implements \SessionHandlerInterface
+{
+    public function open($savePath, $sessionName) {}
+    public function close() {}
+    public function read($sessionId) {}
+    public function write($sessionId, $data) {}
+    public function destroy($sessionId) {}
+    public function gc($lifetime) {}
+}
+</code></pre>
+
+<blockquote class="has-icon tip">
+لاراول دایرکتوری پیش‌فرضی برای قرار دادن موارد اضافی ندارد. می‌توانید آن‌ها را هر جا که بخواهید قرار دهید. در این مثال، ما دایرکتوری Extensions را برای قرار دادن MongoSessionHandler ایجاد کردیم.
+</blockquote>
+
+<p>
+از آنجا که اهداف از این متدها به راحتی قابل درک نیست، اجازه دهید به صورت خلاصه کارهایی که توسط هر متد انجام می‌شود را بررسی کنیم:
+</p>
+
+<div class="content-list">
+<ul>
+<li>The <code class=" language-php">open</code> معمولاً در سیستم‌های file based session store استفاده می‌شود. از آنجا که لاراول درایور سشن file را به صورت پیش‌فرض در خود دارد، نیاز به قرار دادن چیزی در این متد نخواهیم داشت و می‌توانید آن را به عنوان یک تکه کد خالی رها کنید. اما PHP از ما می‌خواهد این متد را پیاده سازی کنیم، می‌توان گفت این یک ضعف آشکار در طراحی رابط در زبان PHP است.</li>
+<li>The <code class=" language-php">close</code>  مانند متد open ، معمولاً می‌تواند نادیده گرفته شود. برای اکثر درایورها، استفاده از آن لازم نیست.</li>
+<li>The <code class=" language-php">read</code> باید رشته داده‌های سشن مربوط به پارامتر ورودی $sessionId را بر‌گرداند. هنگام بازیابی یا ذخیره داده‌های سشن در درایور نیازی به انجام serialization و یا سایر عملیات رمزگذاری نیست، زیرا لاراول عملیات serialization را برای شما اجرا می‌کند.</li>
+<li>The <code class=" language-php">write</code> باید رشته $data ورودی مربوط به پارامتر $sessionId را به بعضی از سیستم‌های ذخیره سازی داده دائمی، مانند MongoDB، Dynamo و غیره بنویسد. مجدداً نباید عملیات serialization انجام دهید، لاراول قبلاً این کار را برای شما انجام داده است.</li>
+<li>The <code class=" language-php">destroy</code> باید داده‌های مربوط به پارامتر $sessionId را از حافظه دائمی حذف کند.</li>
+<li>The <code class=" language-php">gc</code> باید تمام داده‌های سشنی که قدیمی‌تر از پارامتر $lifetime ورودی هستند را از بین می‌برد که یک برچسب زمانی UNIX است. برای سیستم‌های مستقل مانند Memcached و Redis، این متد می‌تواند خالی باشد.</li>
+</ul>
+</div>
+
+<p>
+<a name="registering-the-driver"></a>
+</p>
+
+<p><br></p>
+<h3>ثبت درایور session</h3>
+
+<p>
+زمانی که درایور پیاده سازی شد، می‌توانید آن را در فریم ورک ثبت کنید. برای اضافه کردن درایورهای اضافی به backend سشن در لاراول، می‌توانید از متد extend در fasade مربوط به Session استفاده کنید. باید متد extend را از متد boot در یک service provider فراخوانی کنید. می‌توانید این کار را از AppServiceProvider موجود انجام دهید یا یک provider جدید ایجاد کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">&lt;?php
+
+namespace App\Providers;
+
+use App\Extensions\MongoSessionHandler;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\ServiceProvider;
+
+class SessionServiceProvider extends ServiceProvider
+{
+    /**
+     * Perform post-registration booting of services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        Session::extend('mongo', function ($app) {
+            // Return implementation of SessionHandlerInterface...
+            return new MongoSessionHandler;
+        });
+    }
+
+    /**
+     * Register bindings in the container.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
+    }
+}
+</code></pre>
+
+<p>
+زمانی که درایور سشن ثبت شد، می‌توانید از درایور mongo در فایل پیکربندی config/session.php خود استفاده کنید.
+</p>
+
+        </section>
+        
+<hr>
+<p>
+</p>
+<div>منابع مورد مطالعه جهت جمع آوری این مطلب:</div>
+<div class="refrencehref">
+        https://laravel.com/docs/5.6/session <br> https://www.lydaweb.com/article/courses/laravel-5-5-tutorial/259/آموزش-http-session-در-لاراول
+</div>
+
+
+        <hr>
+        <style>
+    #commentsdiv{
+        background-color: #f5f5f5;
+        border: 1px solid #c5c5c5;
+        border-bottom: 0px !important;
+        padding: 12px;
+    }
+    #commentsborder{
+        background-color: #fff;
+        border: 1px solid #c5c5c5;
+        white-space: normal;
+        padding: 20px;
+    }
+</style>
+
+<div id="commentsdiv">نظرات</div>
+<div id="commentsborder">
+<div id="wpac-comment"></div>
+</div>
+<script type="text/javascript">
+wpac_init = window.wpac_init || [];
+wpac_init.push({widget: 'Comment', id: 7878});
+(function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = 'https://embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+})();
+</script>
+
+    </article>
+</div>
+<script src="/assets/js/anchor.min.js"></script>
+<script>
+    anchors.options = {
+        placement: 'left',
+        visible: 'always',
+//        icon: '#',
+    };
+    anchors.add('.anchored h2,.anchored h3,.anchored h4,.anchored h5,.anchored h6');
+
+    (function($){
+        if(window.location.hash) {
+            var hash = decodeURIComponent(window.location.hash);
+            gotohash($(hash).offset().top);
+        }
+        $('a.anchorjs-link').click(function(){
+			gotohash($(this).offset().top);
+        });
+        $('a.anchorjs').click(function(){
+			var id = '#' + $(this).attr('title');
+			gotohash($(id).offset().top);
+        });		
+        function gotohash(top){
+            var headerHeight = 70; // Get fixed header height
+            $('html,body').animate({
+                scrollTop: top - headerHeight
+            }, 20);
+        }
+    })(jQuery);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+   $(document).ready(function (){
+
+     var scrollPosition = getParameterByName('scroll');
+     if(scrollPosition)
+      $(".doc-menu").scrollTop(scrollPosition);
+
+     $('.doc-link').click(function(){
+        var scrollTop = $(".doc-menu").scrollTop();
+        if(scrollTop > 0)
+          $(this).attr("href",this.href + "?scroll=" + $(".doc-menu").scrollTop());
+     });
+
+     function getParameterByName(name, url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+   });
+</script>
+    <div id="back-to-top" role="button" aria-label="Back to top">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+    </div>
+</main>
+<!-- footer -->
+
+<footer class="footer" role="contentinfo" aria-label="Site footer">
+    <div class="navigation" role="navigation" aria-label="Footer links">
+        <a href="http://localhost:4000" class="avatar" role="link"></a>
+        <ul role="menubar" aria-label="Footer links menubar">
+            <li class="footer-products" role="menuitem" aria-label="Products">
+                تولیدات
+                <ul role="menu" aria-hidden="true" aria-label="Products link">
+                </ul>
+            </li>
+            <li class="footer-blog" role="menuitem" aria-label="Blog">
+                مقالات
+                <ul role="menu" aria-hidden="true" aria-label="Blog link">
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2020/07/03/marriage.html" role="link" aria-label="ازدواج">ازدواج</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2019/10/11/vuejs.html" role="link" aria-label="آموزش vuejs">آموزش vuejs</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/18/laravel.html" role="link" aria-label="آموزش Laravel">آموزش Laravel</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/articles/2017/12/13/laravelcollective.html" role="link" aria-label="معرفی Laravel Collective">معرفی Laravel Collective</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/06/design-patterns.html" role="link" aria-label="معرفی  Design Pattern">معرفی  Design Pattern</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/blog" role="link" aria-label="Read more">Read More</a></li>
+                </ul>
+            </li>
+
+            <li class="footer-connect" role="menuitem" aria-label="Connect">
+                تماس
+                <ul role="menu" aria-hidden="true" aria-label="Connect link">
+                    <li role="listitem" aria-label="Connect link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub">GitHub</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://www.linkedin.com/in/farhad-mirzapour/" target="_blank" role="link" aria-label="Linkedin">Linkedin</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter">Twitter</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="socials" role="navigation" aria-label="Social links">
+        <ul role="menu" aria-hidden="true" aria-label="Social link">
+            <li role="listitem" aria-label="Social link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://www.linkedin.com/in/farhad-mirzapour-0043b862/" target="_blank" role="link" aria-label="Linkedin"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="/feed.xml" role="link" aria-label="RSS"><i class="fa fa-rss-square" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+    <div class="copyright" role="contentinfo" aria-label="Copyright">
+        <p>© <script type="text/javascript">document.write(new Date().getFullYear());</script> Farhad Mirzapour</p>
+    </div>
+</footer>
+
+<!-- scripts -->
+<script src="/assets/js/hamburger-menu.js"></script>
+
+<script src="/assets/js/elevator.min.js"></script>
+<script src="/assets/js/back-to-top.js"></script>
+<script src="/assets/prisma/prism.js"></script>
+<!-- google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108878564-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-108878564-1');
+</script>
+
+</body>
+</html>

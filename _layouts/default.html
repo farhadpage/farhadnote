@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: en }}">
+<!-- head -->
+{% include head.html %}
+<body>
+<!-- header -->
+{% include header.html %}
+<!-- main content -->
+<main class="container" role="main">
+    {{ content }}
+    <div id="back-to-top" role="button" aria-label="Back to top">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+    </div>
+</main>
+<!-- footer -->
+{% include footer.html %}
+<!-- scripts -->
+{% include scripts.html %}
+<!-- google analytics -->
+{% include google-analytics.html %}
+</body>
+</html>

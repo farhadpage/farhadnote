@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="">
+<!-- head -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>چرخه ی حیات درخواست (Request Lifecycle) | مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="چرخه ی حیات درخواست (Request Lifecycle)" />
+<meta name="author" content="Farhad Mirzapour" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="به هنگام استفاده از هر ابزاری در دنیای واقعی، مسلما آشنایی با نحوه ی استفاده از آن اطمینان خاطر بیشتری به شما می دهد. برنامه نویسی هم از این قاعده مستثنی نیست. زمانی که می دانید چگونه ابزار توسعه ی شما کار می کنند قطعا استفاده از آن ها برای شما آسان تر می شود. هدف اصلی این آموزش ارائه ی مرورکلی و سطح بالا بر نحوه ی عملکرد فریم ورک لاراول می باشد. پس از آشنایی با چارچوب کلی این فریم ورک، استفاده از همه چیز نسبتا آسان تر می شود و متعاقبا برنامه ی کاربردی خود را با اعتماد به نفس بیشتری طراحی خواهید کرد. اگر با تمامی اصطلاحات موجود در این برنامه آشنایی ندارید، جای هیچ نگرانی نیست. فقط کافی است دانش ابتدایی از آنچه رخ می دهد بدست آورید. خواهید دید که با خواندن بخش های مختلف این آموزش دانش شما افزایش یافته و درک بهتری از مفاهیم آن پیدا خواهید کرد. مرور کلی بر چرخه ی حیات Entry point (نقطه ی شروع اجرای برنامه) تمامی درخواست ها به اپلیکیشن تحت وب لاراول فایل public/index.php می باشد. تمامی درخواست ها بر اساس پیکربندی سرور مجازی (وب سرور Apache / Nginx) به این فایل هدایت می شوند. فایل index.php حاوی مقدار کد زیادی نیست. در واقع فایل نام برده صرفا یک نقطه ی شروع برای بارگذاری باقی چارچوب نرم افزاری می باشد. فایل index.php تعریف autoloader که توسط Composer تولید شده را بارگذاری می کند و سپس یک نمونه از برنامه ی کاربردی Laravel را از اسکریپتbootstrap/app.php بازیابی می کند. اولین عملیاتی که خود لاراول انجام می دهد ایجاد یک نمونه از برنامه ی کاربردی / Service container می باشد. هسته های console / HTTP سپس درخواست ورودی، بسته به نوع آن، یا به هسته ی HTTP و یا به هسته ی console ارسال می گردد. این دو هسته (kernel) به عنوان یک نقطه ی مرکزی برای تمامی درخواست های ورودی ایفای نقش می کند. بدین معنی که تمامی درخواست ها از این دو هسته عبور می کنند. اجالتا فقط به شرح هسته ی HTTP مقیم در مسیر app/Http/Kernel.php می پردازیم. هسته ی HTTP از کلاس Illuminate\Foundation\Http\Kernel ارث بری می کند. این کلاس آرایه ای از bootstrapper ها تعریف کرده که پیش از اجرای درخواست اجرا می شوند. این bootstrapper ها (خود راه اندازه ها) وظیفه ی پیکربندی مدیریت خطاها، ثبت وقایع (logging)، همچنین تشخیص محیط برنامه و دیگر کارهایی که بایستی پیش از اداره و اجرای (خود) درخواست اجرا شوند را بر عهده دارد. هسته ی HTTP همچنین یک لیست از middleware ها را تعریف می کند که تمامی درخواست ها بایستی پیش از مدیریت شدن توسط برنامه ی کاربردی از آن عبور کنند. این middleware ها وظیفه ی خواندن و نوشتن HTTP session، بررسی اینکه آیا برنامه در حالت تعمیر و نگهداشت قرار دارد یا خیر (maintenance mode) و نیز بررسی توکن CSRF را برعهده دارند (middleware یک سازوکار بهینه برای فیلتر کردن درخواست های HTTP تعبیه می کند. به عنوان مثال می توان به middleware تصدیق هویت برای login و ثبت ورود کاربر اشاره کرد). امضای متد handle، از توابع هسته ی HTTP، بسیار ساده و قابل فهم می باشد: یک Request دریافت کرده و یک Response برگرداند (منظور از امضا یا signature متد همان اسم متد و تعداد پارامترهای ورودی و نیز نوع آن ها می باشد). می توانید به Kernel یا هسته به چشم یک جعبه ی سیاه نگاه کنید که کل برنامه ی شما را تشکیل می دهد (بیانگر کل برنامه ی شما می باشد). درخواست های HTTP را به آن خورانده و در خروجی پاسخ های HTTP را دریافت نمایید. مفهوم Service Provider یکی از مهمترین عملیات (تنظیم و راه اندازی به صورت خودکار) bootstrapping که هسته (kernel) عهده دار آن است، بارگذاری service provider برای اپلیکیشن تحت وب شما می باشد (منظور از bootstrapping ثبت و رجیستر binding و اتصال service container، event listener و middleware و حتی route ها است). تمامی service provider های برنامه در فایل پیکربندی config/app.php متعلق به آرایه یproviders تنظیم می شوند. به این صورت است که ابتدا متد register بر روی تمامی provider ها فراخوانی می شود، بعد از اینکه تمامیprovider ها ثبت و ایجاد شدند، آنگاه متد boot صدا زده می شود. گفتنی است که service provider ها مسئولیت تنظیم و راه اندازی خودکار (bootstrapping) اجزاء مختلف برنامه را بر عهده دارند که از جمله یآن ها می توان به کامپوننت های database، queue، validation و routing اشاره کرد. از آنجایی که service provider ها تمامی ابزار و امکانات ارائه شده توسط فریم ورک لاراول را به صورت خودکار راه اندازی (bootstrap) و پیکربندی می کنند، می توان گفت که (service provider) مهمترین بخش کل فرایند تنظیم و راه اندازی خودکار لاراول محسوب می شوند. ارسال درخواست (Dispatch Request) پس از اینکه برنامه به صورت خودکار راه اندازی (bootstrap) شده و همچنین تمامی service provider ها کاملا ثبت شدند، Request برای ارسال (Dispatch) به router واگذار می شود. router علاوه بر ارسال درخواست به route یا controller، تمامی middleware های مختص بهroute نیز را اجرا می کند. شرح دقیق Service Provider Service provider ها مرکز پیکربندی و انجام تنظیمات پایه ای برنامه می باشند. به این صورت است که ابتدا نمونه ی اپلیکیشن ایجاد می شود و به دنبال آن service provider ها ثبت گردیده و سپس درخواست به اپلیکیشن تنظیم شده (bootstrapped app) فرستاده می شود. به همین راحتی! داشتن فهمی عمیق از چگونگی ساخته شدن برنامه و تنظیم آن توسط service provider بسیار ازشمند می باشد. لازم به ذکر است که providerهای پیش فرض اپلیکیشن در پوشه ی app/Providers نگهداری می شوند. به طور پیش فرض، AppServiceProvider تقریبا تهی می باشد. این provider مکان یا ظرف بسیار مناسبی برای افزودن service container binding ها و نیز فرایند پیکربندی (bootstrapping) اختصاصی برنامه ی تحت وب شما می باشد. لازم به گفتن نیست که برای برنامه های بزرگ بایستی چندین service provider ایجاد کرده و برای هر یک bootstrapping با درجه ی granuality بیشتر درنظر بگیرید (granularity به تعیین سطح جزیئات سیستم اشاره دارد)." />
+<meta property="og:description" content="به هنگام استفاده از هر ابزاری در دنیای واقعی، مسلما آشنایی با نحوه ی استفاده از آن اطمینان خاطر بیشتری به شما می دهد. برنامه نویسی هم از این قاعده مستثنی نیست. زمانی که می دانید چگونه ابزار توسعه ی شما کار می کنند قطعا استفاده از آن ها برای شما آسان تر می شود. هدف اصلی این آموزش ارائه ی مرورکلی و سطح بالا بر نحوه ی عملکرد فریم ورک لاراول می باشد. پس از آشنایی با چارچوب کلی این فریم ورک، استفاده از همه چیز نسبتا آسان تر می شود و متعاقبا برنامه ی کاربردی خود را با اعتماد به نفس بیشتری طراحی خواهید کرد. اگر با تمامی اصطلاحات موجود در این برنامه آشنایی ندارید، جای هیچ نگرانی نیست. فقط کافی است دانش ابتدایی از آنچه رخ می دهد بدست آورید. خواهید دید که با خواندن بخش های مختلف این آموزش دانش شما افزایش یافته و درک بهتری از مفاهیم آن پیدا خواهید کرد. مرور کلی بر چرخه ی حیات Entry point (نقطه ی شروع اجرای برنامه) تمامی درخواست ها به اپلیکیشن تحت وب لاراول فایل public/index.php می باشد. تمامی درخواست ها بر اساس پیکربندی سرور مجازی (وب سرور Apache / Nginx) به این فایل هدایت می شوند. فایل index.php حاوی مقدار کد زیادی نیست. در واقع فایل نام برده صرفا یک نقطه ی شروع برای بارگذاری باقی چارچوب نرم افزاری می باشد. فایل index.php تعریف autoloader که توسط Composer تولید شده را بارگذاری می کند و سپس یک نمونه از برنامه ی کاربردی Laravel را از اسکریپتbootstrap/app.php بازیابی می کند. اولین عملیاتی که خود لاراول انجام می دهد ایجاد یک نمونه از برنامه ی کاربردی / Service container می باشد. هسته های console / HTTP سپس درخواست ورودی، بسته به نوع آن، یا به هسته ی HTTP و یا به هسته ی console ارسال می گردد. این دو هسته (kernel) به عنوان یک نقطه ی مرکزی برای تمامی درخواست های ورودی ایفای نقش می کند. بدین معنی که تمامی درخواست ها از این دو هسته عبور می کنند. اجالتا فقط به شرح هسته ی HTTP مقیم در مسیر app/Http/Kernel.php می پردازیم. هسته ی HTTP از کلاس Illuminate\Foundation\Http\Kernel ارث بری می کند. این کلاس آرایه ای از bootstrapper ها تعریف کرده که پیش از اجرای درخواست اجرا می شوند. این bootstrapper ها (خود راه اندازه ها) وظیفه ی پیکربندی مدیریت خطاها، ثبت وقایع (logging)، همچنین تشخیص محیط برنامه و دیگر کارهایی که بایستی پیش از اداره و اجرای (خود) درخواست اجرا شوند را بر عهده دارد. هسته ی HTTP همچنین یک لیست از middleware ها را تعریف می کند که تمامی درخواست ها بایستی پیش از مدیریت شدن توسط برنامه ی کاربردی از آن عبور کنند. این middleware ها وظیفه ی خواندن و نوشتن HTTP session، بررسی اینکه آیا برنامه در حالت تعمیر و نگهداشت قرار دارد یا خیر (maintenance mode) و نیز بررسی توکن CSRF را برعهده دارند (middleware یک سازوکار بهینه برای فیلتر کردن درخواست های HTTP تعبیه می کند. به عنوان مثال می توان به middleware تصدیق هویت برای login و ثبت ورود کاربر اشاره کرد). امضای متد handle، از توابع هسته ی HTTP، بسیار ساده و قابل فهم می باشد: یک Request دریافت کرده و یک Response برگرداند (منظور از امضا یا signature متد همان اسم متد و تعداد پارامترهای ورودی و نیز نوع آن ها می باشد). می توانید به Kernel یا هسته به چشم یک جعبه ی سیاه نگاه کنید که کل برنامه ی شما را تشکیل می دهد (بیانگر کل برنامه ی شما می باشد). درخواست های HTTP را به آن خورانده و در خروجی پاسخ های HTTP را دریافت نمایید. مفهوم Service Provider یکی از مهمترین عملیات (تنظیم و راه اندازی به صورت خودکار) bootstrapping که هسته (kernel) عهده دار آن است، بارگذاری service provider برای اپلیکیشن تحت وب شما می باشد (منظور از bootstrapping ثبت و رجیستر binding و اتصال service container، event listener و middleware و حتی route ها است). تمامی service provider های برنامه در فایل پیکربندی config/app.php متعلق به آرایه یproviders تنظیم می شوند. به این صورت است که ابتدا متد register بر روی تمامی provider ها فراخوانی می شود، بعد از اینکه تمامیprovider ها ثبت و ایجاد شدند، آنگاه متد boot صدا زده می شود. گفتنی است که service provider ها مسئولیت تنظیم و راه اندازی خودکار (bootstrapping) اجزاء مختلف برنامه را بر عهده دارند که از جمله یآن ها می توان به کامپوننت های database، queue، validation و routing اشاره کرد. از آنجایی که service provider ها تمامی ابزار و امکانات ارائه شده توسط فریم ورک لاراول را به صورت خودکار راه اندازی (bootstrap) و پیکربندی می کنند، می توان گفت که (service provider) مهمترین بخش کل فرایند تنظیم و راه اندازی خودکار لاراول محسوب می شوند. ارسال درخواست (Dispatch Request) پس از اینکه برنامه به صورت خودکار راه اندازی (bootstrap) شده و همچنین تمامی service provider ها کاملا ثبت شدند، Request برای ارسال (Dispatch) به router واگذار می شود. router علاوه بر ارسال درخواست به route یا controller، تمامی middleware های مختص بهroute نیز را اجرا می کند. شرح دقیق Service Provider Service provider ها مرکز پیکربندی و انجام تنظیمات پایه ای برنامه می باشند. به این صورت است که ابتدا نمونه ی اپلیکیشن ایجاد می شود و به دنبال آن service provider ها ثبت گردیده و سپس درخواست به اپلیکیشن تنظیم شده (bootstrapped app) فرستاده می شود. به همین راحتی! داشتن فهمی عمیق از چگونگی ساخته شدن برنامه و تنظیم آن توسط service provider بسیار ازشمند می باشد. لازم به ذکر است که providerهای پیش فرض اپلیکیشن در پوشه ی app/Providers نگهداری می شوند. به طور پیش فرض، AppServiceProvider تقریبا تهی می باشد. این provider مکان یا ظرف بسیار مناسبی برای افزودن service container binding ها و نیز فرایند پیکربندی (bootstrapping) اختصاصی برنامه ی تحت وب شما می باشد. لازم به گفتن نیست که برای برنامه های بزرگ بایستی چندین service provider ایجاد کرده و برای هر یک bootstrapping با درجه ی granuality بیشتر درنظر بگیرید (granularity به تعیین سطح جزیئات سیستم اشاره دارد)." />
+<link rel="canonical" href="http://localhost:4000/documentation/laravel/Architecture-Concepts/lifecycle" />
+<meta property="og:url" content="http://localhost:4000/documentation/laravel/Architecture-Concepts/lifecycle" />
+<meta property="og:site_name" content="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-01-21T23:16:42+03:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="چرخه ی حیات درخواست (Request Lifecycle)" />
+<meta name="twitter:site" content="@farhadmirzapour" />
+<meta name="twitter:creator" content="@Farhad Mirzapour" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"چرخه ی حیات درخواست (Request Lifecycle)","url":"http://localhost:4000/documentation/laravel/Architecture-Concepts/lifecycle","datePublished":"2018-01-21T23:16:42+03:30","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"dateModified":"2018-01-21T23:16:42+03:30","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/documentation/laravel/Architecture-Concepts/lifecycle"},"author":{"@type":"Person","name":"Farhad Mirzapour"},"description":"به هنگام استفاده از هر ابزاری در دنیای واقعی، مسلما آشنایی با نحوه ی استفاده از آن اطمینان خاطر بیشتری به شما می دهد. برنامه نویسی هم از این قاعده مستثنی نیست. زمانی که می دانید چگونه ابزار توسعه ی شما کار می کنند قطعا استفاده از آن ها برای شما آسان تر می شود. هدف اصلی این آموزش ارائه ی مرورکلی و سطح بالا بر نحوه ی عملکرد فریم ورک لاراول می باشد. پس از آشنایی با چارچوب کلی این فریم ورک، استفاده از همه چیز نسبتا آسان تر می شود و متعاقبا برنامه ی کاربردی خود را با اعتماد به نفس بیشتری طراحی خواهید کرد. اگر با تمامی اصطلاحات موجود در این برنامه آشنایی ندارید، جای هیچ نگرانی نیست. فقط کافی است دانش ابتدایی از آنچه رخ می دهد بدست آورید. خواهید دید که با خواندن بخش های مختلف این آموزش دانش شما افزایش یافته و درک بهتری از مفاهیم آن پیدا خواهید کرد. مرور کلی بر چرخه ی حیات Entry point (نقطه ی شروع اجرای برنامه) تمامی درخواست ها به اپلیکیشن تحت وب لاراول فایل public/index.php می باشد. تمامی درخواست ها بر اساس پیکربندی سرور مجازی (وب سرور Apache / Nginx) به این فایل هدایت می شوند. فایل index.php حاوی مقدار کد زیادی نیست. در واقع فایل نام برده صرفا یک نقطه ی شروع برای بارگذاری باقی چارچوب نرم افزاری می باشد. فایل index.php تعریف autoloader که توسط Composer تولید شده را بارگذاری می کند و سپس یک نمونه از برنامه ی کاربردی Laravel را از اسکریپتbootstrap/app.php بازیابی می کند. اولین عملیاتی که خود لاراول انجام می دهد ایجاد یک نمونه از برنامه ی کاربردی / Service container می باشد. هسته های console / HTTP سپس درخواست ورودی، بسته به نوع آن، یا به هسته ی HTTP و یا به هسته ی console ارسال می گردد. این دو هسته (kernel) به عنوان یک نقطه ی مرکزی برای تمامی درخواست های ورودی ایفای نقش می کند. بدین معنی که تمامی درخواست ها از این دو هسته عبور می کنند. اجالتا فقط به شرح هسته ی HTTP مقیم در مسیر app/Http/Kernel.php می پردازیم. هسته ی HTTP از کلاس Illuminate\\Foundation\\Http\\Kernel ارث بری می کند. این کلاس آرایه ای از bootstrapper ها تعریف کرده که پیش از اجرای درخواست اجرا می شوند. این bootstrapper ها (خود راه اندازه ها) وظیفه ی پیکربندی مدیریت خطاها، ثبت وقایع (logging)، همچنین تشخیص محیط برنامه و دیگر کارهایی که بایستی پیش از اداره و اجرای (خود) درخواست اجرا شوند را بر عهده دارد. هسته ی HTTP همچنین یک لیست از middleware ها را تعریف می کند که تمامی درخواست ها بایستی پیش از مدیریت شدن توسط برنامه ی کاربردی از آن عبور کنند. این middleware ها وظیفه ی خواندن و نوشتن HTTP session، بررسی اینکه آیا برنامه در حالت تعمیر و نگهداشت قرار دارد یا خیر (maintenance mode) و نیز بررسی توکن CSRF را برعهده دارند (middleware یک سازوکار بهینه برای فیلتر کردن درخواست های HTTP تعبیه می کند. به عنوان مثال می توان به middleware تصدیق هویت برای login و ثبت ورود کاربر اشاره کرد). امضای متد handle، از توابع هسته ی HTTP، بسیار ساده و قابل فهم می باشد: یک Request دریافت کرده و یک Response برگرداند (منظور از امضا یا signature متد همان اسم متد و تعداد پارامترهای ورودی و نیز نوع آن ها می باشد). می توانید به Kernel یا هسته به چشم یک جعبه ی سیاه نگاه کنید که کل برنامه ی شما را تشکیل می دهد (بیانگر کل برنامه ی شما می باشد). درخواست های HTTP را به آن خورانده و در خروجی پاسخ های HTTP را دریافت نمایید. مفهوم Service Provider یکی از مهمترین عملیات (تنظیم و راه اندازی به صورت خودکار) bootstrapping که هسته (kernel) عهده دار آن است، بارگذاری service provider برای اپلیکیشن تحت وب شما می باشد (منظور از bootstrapping ثبت و رجیستر binding و اتصال service container، event listener و middleware و حتی route ها است). تمامی service provider های برنامه در فایل پیکربندی config/app.php متعلق به آرایه یproviders تنظیم می شوند. به این صورت است که ابتدا متد register بر روی تمامی provider ها فراخوانی می شود، بعد از اینکه تمامیprovider ها ثبت و ایجاد شدند، آنگاه متد boot صدا زده می شود. گفتنی است که service provider ها مسئولیت تنظیم و راه اندازی خودکار (bootstrapping) اجزاء مختلف برنامه را بر عهده دارند که از جمله یآن ها می توان به کامپوننت های database، queue، validation و routing اشاره کرد. از آنجایی که service provider ها تمامی ابزار و امکانات ارائه شده توسط فریم ورک لاراول را به صورت خودکار راه اندازی (bootstrap) و پیکربندی می کنند، می توان گفت که (service provider) مهمترین بخش کل فرایند تنظیم و راه اندازی خودکار لاراول محسوب می شوند. ارسال درخواست (Dispatch Request) پس از اینکه برنامه به صورت خودکار راه اندازی (bootstrap) شده و همچنین تمامی service provider ها کاملا ثبت شدند، Request برای ارسال (Dispatch) به router واگذار می شود. router علاوه بر ارسال درخواست به route یا controller، تمامی middleware های مختص بهroute نیز را اجرا می کند. شرح دقیق Service Provider Service provider ها مرکز پیکربندی و انجام تنظیمات پایه ای برنامه می باشند. به این صورت است که ابتدا نمونه ی اپلیکیشن ایجاد می شود و به دنبال آن service provider ها ثبت گردیده و سپس درخواست به اپلیکیشن تنظیم شده (bootstrapped app) فرستاده می شود. به همین راحتی! داشتن فهمی عمیق از چگونگی ساخته شدن برنامه و تنظیم آن توسط service provider بسیار ازشمند می باشد. لازم به ذکر است که providerهای پیش فرض اپلیکیشن در پوشه ی app/Providers نگهداری می شوند. به طور پیش فرض، AppServiceProvider تقریبا تهی می باشد. این provider مکان یا ظرف بسیار مناسبی برای افزودن service container binding ها و نیز فرایند پیکربندی (bootstrapping) اختصاصی برنامه ی تحت وب شما می باشد. لازم به گفتن نیست که برای برنامه های بزرگ بایستی چندین service provider ایجاد کرده و برای هر یک bootstrapping با درجه ی granuality بیشتر درنظر بگیرید (granularity به تعیین سطح جزیئات سیستم اشاره دارد).","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="stylesheet" href="/assets/prisma/prism.css">
+    <!-- favicons and rss -->
+    <link rel="alternate" type="application/rss+xml" title="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" href="/feed.xml">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- header -->
+<header class="header" role="banner" aria-label="Header">
+    <button class="hamburger-button" onclick="hamburgerMenu();" role="button" aria-label="Hamburger menu button">
+        <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    </button>
+    <a href="/" class="logo" role="link" aria-label="Home">
+        <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo"/>
+    </a>
+    <nav class="navigation" role="navigation" aria-label="Navigation">
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item">
+                <a href="/" class="logo" role="menuitem" aria-label="Home">
+                    <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo"/>
+                </a>
+            </li>
+            
+            <li role="menuitem"><a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a></li>
+            
+            <li role="menuitem"><a href="/contactus" role="menuitem" aria-label="تماس">تماس</a></li>
+            
+        </ul>
+    </nav>
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox"/>
+        </form>
+    </div>
+</header>
+
+<nav id="hamburger-menu" role="navigation" aria-label="Hamburger menu">
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox"/>
+        </form>
+    </div>
+    <div class="home-nav" role="navigation" aria-label="Site navigation">
+        <a href="/" role="menuitem" aria-label="Home">صفحه اصلی</a>
+        
+        <a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a>
+        
+        <a href="/contactus" role="menuitem" aria-label="تماس">تماس</a>
+        
+    </div>
+
+    
+    <div class="doc-nav" role="navigation" aria-label="Documentation navigation">
+        <p role="presentation" aria-label="Category name">
+            اصول آموزش Laravel
+        </p>
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/2017/12/18/laravel.html" class="doc-link" role="link" aria-label="چرخه ی حیات درخواست (Request Lifecycle)">مقدمه</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Digging-Deeper/collections" class="doc-link" role="link" aria-label="معرفی collections">معرفی collections</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Database/database" class="doc-link" role="link" aria-label="پایگاه داده ها">پایگاه داده ها</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Database/queries" class="doc-link" role="link" aria-label="آشنایی با Query Builder">آشنایی با Query Builder</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent" class="doc-link" role="link" aria-label="آشنایی با eloquent">آشنایی با eloquent</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-relationships" class="doc-link" role="link" aria-label="eloquent relationships  آموزش">eloquent relationships  آموزش</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-mutators" class="doc-link" role="link" aria-label="آشنایی با eloquent mutators">آشنایی با eloquent mutators</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-collections" class="doc-link" role="link" aria-label="آشنایی با eloquent collections">آشنایی با eloquent collections</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-serialization" class="doc-link" role="link" aria-label="آشنایی با eloquent serialization">آشنایی با eloquent serialization</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Architecture-Concepts/lifecycle" class="doc-link" role="link" aria-label="چرخه ی حیات درخواست (Request Lifecycle)">چرخه ی حیات درخواست (Request Lifecycle)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/routing" class="doc-link" role="link" aria-label="Routing یا مسیریابی در لاراول">Routing یا مسیریابی در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/middleware" class="doc-link" role="link" aria-label="آموزش Middleware">آموزش Middleware</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/csrf" class="doc-link" role="link" aria-label="حفاظت CSRF">حفاظت CSRF</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/controllers" class="doc-link" role="link" aria-label="استفاده از Controller">استفاده از Controller</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/requests" class="doc-link" role="link" aria-label="اصول requests">اصول requests</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/views" class="doc-link" role="link" aria-label="ایجاد view">ایجاد view</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/session" class="doc-link" role="link" aria-label="استفاده از  Session">استفاده از  Session</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/responses" class="doc-link" role="link" aria-label="پاسخ Response">پاسخ Response</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/urls" class="doc-link" role="link" aria-label="تولید URL در لاراول">تولید URL در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/validation" class="doc-link" role="link" aria-label="validation یا اعتبارسنجی در لاراول">validation یا اعتبارسنجی در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/errors" class="doc-link" role="link" aria-label="مدیریت Errors & Logging">مدیریت Errors & Logging</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/blade" class="doc-link" role="link" aria-label="Blade Templates">Blade Templates</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/localization" class="doc-link" role="link" aria-label="اصول localization">اصول localization</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/frontend" class="doc-link" role="link" aria-label="JavaScript & CSS Scaffolding">JavaScript & CSS Scaffolding</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </ul>
+    </div>
+    
+</nav>
+<!-- main content -->
+<main class="container" role="main">
+    <div class="rcdoccontainerimg">
+<div class="rc-DRTVBanner-new rc-DRTVBanner-bigsize">
+    <div style="background: url('/images/original/laravel.png'); " class="blurred_img"></div>
+    <div class="mask"></div>
+    <div class="bot"></div>
+    <div class="over">
+        <div class="container-rc">
+            <img class="image" src="/images/original/laravel.png" alt="چرخه ی حیات درخواست (Request Lifecycle)" height="190">
+            <div class="desktop-banner-container">
+                <h1 class="display-5-text headline">
+                    
+                    
+                    اصول آموزش Laravel
+                    </h1>
+                <!--<div class="tagslist"><ul class='lyda-tag-list'><li class='lyda-tag-list-title'>برچسب ها</li><li><a class="tags" href="/tag/لاراول">#لاراول</a></li><li><a class="tags" href="/tag/لاراول-5-5">#لاراول 5.5</a></li></ul></div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="bread-crumb">-->
+<!--<div class="container   ">-->
+<!--<div class="pull-right ">-->
+<!--<div class="bread-button text-custom b-left">-->
+<!--انتشار : 2 ماه پیش-->
+<!--</div>-->
+<!--<a href="/category/article/" class="bread-button back-to-all b-left hidden-xs">همه مقالات</a>-->
+<!--<div class="cat-lable">-->
+<!--<a href="/category/article/laravel/">-->
+<!--لاراول-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<script>
+    $(window).scroll(function(){
+        var sticky = $('.doc-menu'),
+            scroll = $(window).scrollTop();
+        if (scroll >= 101) {sticky.addClass('doc-header-scroll'); }
+        else {sticky.removeClass('doc-header-scroll'); };
+    });
+</script>
+</div>
+<div class="doc-container">
+
+    <div class="doc-menu">
+    
+    <ul>
+        <li>
+            <a  href="/2017/12/18/laravel.html" class="active doc-link" role="link">
+                مقدمه
+            </a>
+        </li>
+        
+        <li>
+            <span class="caret">معماری Laravel</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="چرخه ی حیات درخواست (Request Lifecycle)" href="/documentation/laravel/Architecture-Concepts/lifecycle" class="active doc-link" role="link">
+                چرخه ی حیات درخواست (Request Lifecycle)
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم اساسی</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="Routing یا مسیریابی در لاراول" href="/documentation/laravel/The-Basics/routing" class="active doc-link" role="link">
+                Routing یا مسیریابی در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آموزش Middleware" href="/documentation/laravel/The-Basics/middleware" class="active doc-link" role="link">
+                آموزش Middleware
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="حفاظت CSRF" href="/documentation/laravel/The-Basics/csrf" class="active doc-link" role="link">
+                حفاظت CSRF
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="استفاده از Controller" href="/documentation/laravel/The-Basics/controllers" class="active doc-link" role="link">
+                استفاده از Controller
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول requests" href="/documentation/laravel/The-Basics/requests" class="active doc-link" role="link">
+                اصول requests
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="ایجاد view" href="/documentation/laravel/The-Basics/views" class="active doc-link" role="link">
+                ایجاد view
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="استفاده از  Session" href="/documentation/laravel/The-Basics/session" class="active doc-link" role="link">
+                استفاده از  Session
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="پاسخ Response" href="/documentation/laravel/The-Basics/responses" class="active doc-link" role="link">
+                پاسخ Response
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="تولید URL در لاراول" href="/documentation/laravel/The-Basics/urls" class="active doc-link" role="link">
+                تولید URL در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="validation یا اعتبارسنجی در لاراول" href="/documentation/laravel/The-Basics/validation" class="active doc-link" role="link">
+                validation یا اعتبارسنجی در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="مدیریت Errors & Logging" href="/documentation/laravel/The-Basics/errors" class="active doc-link" role="link">
+                مدیریت Errors & Logging
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">Front End</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="Blade Templates" href="/documentation/laravel/Frontend/blade" class="active doc-link" role="link">
+                Blade Templates
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول localization" href="/documentation/laravel/Frontend/localization" class="active doc-link" role="link">
+                اصول localization
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="JavaScript & CSS Scaffolding" href="/documentation/laravel/Frontend/frontend" class="active doc-link" role="link">
+                JavaScript & CSS Scaffolding
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم پیشرفته تر</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="معرفی collections" href="/documentation/laravel/Digging-Deeper/collections" class="active doc-link" role="link">
+                معرفی collections
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">پایگاه داده ها</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="پایگاه داده ها" href="/documentation/laravel/Database/database" class="active doc-link" role="link">
+                پایگاه داده ها
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با Query Builder" href="/documentation/laravel/Database/queries" class="active doc-link" role="link">
+                آشنایی با Query Builder
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">Eloquent ORM</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent" href="/documentation/laravel/Eloquent-ORM/eloquent" class="active doc-link" role="link">
+                آشنایی با eloquent
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="eloquent relationships  آموزش" href="/documentation/laravel/Eloquent-ORM/eloquent-relationships" class="active doc-link" role="link">
+                eloquent relationships  آموزش
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent mutators" href="/documentation/laravel/Eloquent-ORM/eloquent-mutators" class="active doc-link" role="link">
+                آشنایی با eloquent mutators
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent collections" href="/documentation/laravel/Eloquent-ORM/eloquent-collections" class="active doc-link" role="link">
+                آشنایی با eloquent collections
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent serialization" href="/documentation/laravel/Eloquent-ORM/eloquent-serialization" class="active doc-link" role="link">
+                آشنایی با eloquent serialization
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+    </ul>
+    
+</div>
+
+    <article class="documentation">
+        <header class="doc-header">
+            <div class="time">
+                    تاریخ :      یکشنبه 1 بهمن 1396
+            </div>
+                
+        </header>
+        <section class="anchored">
+            <p>
+به هنگام استفاده از هر ابزاری در دنیای واقعی، مسلما آشنایی با نحوه ی استفاده از آن اطمینان خاطر بیشتری به شما می دهد. برنامه نویسی هم از این قاعده مستثنی نیست. زمانی که می دانید چگونه ابزار توسعه ی شما کار می کنند قطعا استفاده از آن ها برای شما آسان تر می شود.
+</p>
+<p>
+هدف اصلی این آموزش ارائه ی مرورکلی و سطح بالا بر نحوه ی عملکرد فریم ورک لاراول می باشد. پس از آشنایی با چارچوب کلی این فریم ورک، استفاده از همه چیز نسبتا آسان تر می شود و متعاقبا برنامه ی کاربردی خود را با اعتماد به نفس بیشتری طراحی خواهید کرد.
+</p>
+<p>
+اگر با تمامی اصطلاحات موجود در این برنامه آشنایی ندارید، جای هیچ نگرانی نیست. فقط کافی است دانش ابتدایی از آنچه رخ می دهد بدست آورید. خواهید دید که با خواندن بخش های مختلف این آموزش دانش شما افزایش یافته و درک بهتری از مفاهیم آن پیدا خواهید کرد.
+</p>
+
+<p><br /></p>
+<h3>مرور کلی بر چرخه ی حیات</h3>
+
+<p>
+Entry point (نقطه ی شروع اجرای برنامه) تمامی درخواست ها به اپلیکیشن تحت وب لاراول فایل public/index.php می باشد. تمامی درخواست ها بر اساس پیکربندی سرور مجازی (وب سرور Apache / Nginx) به این فایل هدایت می شوند. فایل index.php حاوی مقدار کد زیادی نیست. در واقع فایل نام برده صرفا یک نقطه ی شروع برای بارگذاری باقی چارچوب نرم افزاری می باشد.
+</p>
+
+<p>
+فایل index.php تعریف autoloader که توسط Composer تولید شده را بارگذاری می کند و سپس یک نمونه از برنامه ی کاربردی Laravel را از اسکریپتbootstrap/app.php بازیابی می کند. اولین عملیاتی که خود لاراول انجام می دهد ایجاد یک نمونه از برنامه ی کاربردی / Service container می باشد.
+</p>
+
+<p><br /></p>
+<h3>هسته های console / HTTP</h3>
+
+<p>
+سپس درخواست ورودی، بسته به نوع آن، یا به هسته ی HTTP و یا به هسته ی console ارسال می گردد. این دو هسته (kernel) به عنوان یک نقطه ی مرکزی برای تمامی درخواست های ورودی ایفای نقش می کند. بدین معنی که تمامی درخواست ها از این دو هسته عبور می کنند. اجالتا فقط به شرح هسته ی HTTP مقیم در مسیر app/Http/Kernel.php می پردازیم.
+</p>
+
+<p>
+هسته ی HTTP از کلاس Illuminate\Foundation\Http\Kernel ارث بری می کند. این کلاس آرایه ای از bootstrapper ها تعریف کرده که پیش از اجرای درخواست اجرا می شوند. این bootstrapper ها (خود راه اندازه ها) وظیفه ی پیکربندی مدیریت خطاها، ثبت وقایع (logging)، همچنین تشخیص محیط برنامه و دیگر کارهایی که بایستی پیش از اداره و اجرای (خود) درخواست اجرا شوند را بر عهده دارد.
+</p>
+
+<p>
+هسته ی HTTP همچنین یک لیست از middleware ها را تعریف می کند که تمامی درخواست ها بایستی پیش از مدیریت شدن توسط برنامه ی کاربردی از آن عبور کنند. این middleware ها وظیفه ی خواندن و نوشتن HTTP session، بررسی اینکه آیا برنامه در حالت تعمیر و نگهداشت قرار دارد یا خیر (maintenance mode) و نیز بررسی توکن CSRF را برعهده دارند (middleware یک سازوکار بهینه برای فیلتر کردن درخواست های HTTP تعبیه می کند. به عنوان مثال می توان به middleware تصدیق هویت برای login و ثبت ورود کاربر اشاره کرد).
+</p>
+
+<p>
+امضای متد handle، از توابع هسته ی HTTP، بسیار ساده و قابل فهم می باشد: یک Request دریافت کرده و یک Response برگرداند (منظور از امضا یا signature متد همان اسم متد و تعداد پارامترهای ورودی و نیز نوع آن ها می باشد). می توانید به Kernel یا هسته به چشم یک جعبه ی سیاه نگاه کنید که کل برنامه ی شما را تشکیل می دهد (بیانگر کل برنامه ی شما می باشد). درخواست های HTTP را به آن خورانده و در خروجی پاسخ های HTTP را دریافت نمایید.
+</p>
+
+<div align="center">
+<img src="/images/post/bootstrap1.jpg" alt="چرخه ی حیات درخواست (Request Lifecycle)" />
+</div>
+
+<p><br /></p>
+<h3>مفهوم Service Provider</h3>
+<p>
+یکی از مهمترین عملیات (تنظیم و راه اندازی به صورت خودکار) bootstrapping که هسته (kernel) عهده دار آن است، بارگذاری service provider برای اپلیکیشن تحت وب شما می باشد (منظور از bootstrapping ثبت و رجیستر binding و اتصال service container، event listener و middleware و حتی route ها است). تمامی service provider های برنامه در فایل پیکربندی config/app.php متعلق به آرایه یproviders تنظیم می شوند. به این صورت است که ابتدا متد register بر روی تمامی provider ها فراخوانی می شود، بعد از اینکه تمامیprovider ها ثبت و ایجاد شدند، آنگاه متد boot صدا زده می شود.
+</p>
+
+<p>
+گفتنی است که service provider ها مسئولیت تنظیم و راه اندازی خودکار (bootstrapping) اجزاء مختلف برنامه را بر عهده دارند که از جمله یآن ها می توان به کامپوننت های database، queue، validation و routing اشاره کرد. از آنجایی که service provider ها تمامی ابزار و امکانات ارائه شده توسط فریم ورک لاراول را به صورت خودکار راه اندازی (bootstrap) و پیکربندی می کنند، می توان گفت که (service provider) مهمترین بخش کل فرایند تنظیم و راه اندازی خودکار لاراول محسوب می شوند.
+</p>
+
+<div align="center">
+<img src="/images/post/bootstrap2.jpg" alt="چرخه ی حیات درخواست (Request Lifecycle)" />
+</div>
+
+<p><br /></p>
+<h3>ارسال درخواست (Dispatch Request)</h3>
+
+<p>
+پس از اینکه برنامه به صورت خودکار راه اندازی (bootstrap) شده و همچنین تمامی service provider ها کاملا ثبت شدند، Request برای ارسال (Dispatch) به router واگذار می شود. router علاوه بر ارسال درخواست به route یا controller، تمامی middleware های مختص بهroute نیز را اجرا می کند.
+</p>
+
+<p><br /></p>
+
+<h3>شرح دقیق Service Provider</h3>
+<p>
+Service provider ها مرکز پیکربندی و انجام تنظیمات پایه ای برنامه می باشند. به این صورت است که ابتدا نمونه ی اپلیکیشن ایجاد می شود و به دنبال آن service provider ها ثبت گردیده و سپس درخواست به اپلیکیشن تنظیم شده (bootstrapped app) فرستاده می شود. به همین راحتی!
+</p>
+
+<p>
+داشتن فهمی عمیق از چگونگی ساخته شدن برنامه و تنظیم آن توسط service provider بسیار ازشمند می باشد. لازم به ذکر است که providerهای پیش فرض اپلیکیشن در پوشه ی app/Providers نگهداری می شوند.
+</p>
+
+<p>
+به طور پیش فرض، AppServiceProvider تقریبا تهی می باشد. این provider مکان یا ظرف بسیار مناسبی برای افزودن service container binding ها و نیز فرایند پیکربندی (bootstrapping) اختصاصی برنامه ی تحت وب شما می باشد. لازم به گفتن نیست که برای برنامه های بزرگ بایستی چندین service provider ایجاد کرده و برای هر یک bootstrapping با درجه ی granuality بیشتر درنظر بگیرید (granularity به تعیین سطح جزیئات سیستم اشاره دارد).
+</p>
+
+        </section>
+        
+<hr>
+<p>
+<div>منابع مورد مطالعه جهت جمع آوری این مطلب:</div>
+<div  class="refrencehref">
+        https://laravel.com/docs/5.5/lifecycle <br> www.tahlildadeh.com/ArticleDetails/آموزش-چرخه-حیات-درخواست-در-لاراول <br> www.lydaweb.com/article/courses/laravel-5-5-tutorial/160/service-container-لاراول
+</div>
+</p>
+
+        <hr>
+        <style>
+    #commentsdiv{
+        background-color: #f5f5f5;
+        border: 1px solid #c5c5c5;
+        border-bottom: 0px !important;
+        padding: 12px;
+    }
+    #commentsborder{
+        background-color: #fff;
+        border: 1px solid #c5c5c5;
+        white-space: normal;
+        padding: 20px;
+    }
+</style>
+
+<div id="commentsdiv">نظرات</div>
+<div id="commentsborder">
+<div id="wpac-comment"></div>
+</div>
+<script type="text/javascript">
+wpac_init = window.wpac_init || [];
+wpac_init.push({widget: 'Comment', id: 7878});
+(function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = 'https://embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+})();
+</script>
+
+    </article>
+</div>
+<script src="/assets/js/anchor.min.js"></script>
+<script>
+    anchors.options = {
+        placement: 'left',
+        visible: 'always',
+//        icon: '#',
+    };
+    anchors.add('.anchored h2,.anchored h3,.anchored h4,.anchored h5,.anchored h6');
+
+    (function($){
+        if(window.location.hash) {
+            var hash = decodeURIComponent(window.location.hash);
+            gotohash($(hash).offset().top);
+        }
+        $('a.anchorjs-link').click(function(){
+			gotohash($(this).offset().top);
+        });
+        $('a.anchorjs').click(function(){
+			var id = '#' + $(this).attr('title');
+			gotohash($(id).offset().top);
+        });		
+        function gotohash(top){
+            var headerHeight = 70; // Get fixed header height
+            $('html,body').animate({
+                scrollTop: top - headerHeight
+            }, 20);
+        }
+    })(jQuery);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+   $(document).ready(function (){
+
+     var scrollPosition = getParameterByName('scroll');
+     if(scrollPosition)
+      $(".doc-menu").scrollTop(scrollPosition);
+
+     $('.doc-link').click(function(){
+        var scrollTop = $(".doc-menu").scrollTop();
+        if(scrollTop > 0)
+          $(this).attr("href",this.href + "?scroll=" + $(".doc-menu").scrollTop());
+     });
+
+     function getParameterByName(name, url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+   });
+</script>
+    <div id="back-to-top" role="button" aria-label="Back to top">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+    </div>
+</main>
+<!-- footer -->
+
+<footer class="footer" role="contentinfo" aria-label="Site footer">
+    <div class="navigation" role="navigation" aria-label="Footer links">
+        <a href="http://localhost:4000" class="avatar" role="link" ></a>
+        <ul role="menubar" aria-label="Footer links menubar">
+            <li class="footer-products" role="menuitem" aria-label="Products">
+                تولیدات
+                <ul role="menu" aria-hidden="true" aria-label="Products link">
+                </ul>
+            </li>
+            <li class="footer-blog" role="menuitem" aria-label="Blog">
+                مقالات
+                <ul role="menu" aria-hidden="true" aria-label="Blog link">
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2020/07/03/marriage.html" role="link" aria-label="ازدواج">ازدواج</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2019/10/11/vuejs.html" role="link" aria-label="آموزش vuejs">آموزش vuejs</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/18/laravel.html" role="link" aria-label="آموزش Laravel">آموزش Laravel</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/articles/2017/12/13/laravelcollective.html" role="link" aria-label="معرفی Laravel Collective">معرفی Laravel Collective</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/06/design-patterns.html" role="link" aria-label="معرفی  Design Pattern">معرفی  Design Pattern</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/blog" role="link" aria-label="Read more">Read More</a></li>
+                </ul>
+            </li>
+
+            <li class="footer-connect" role="menuitem" aria-label="Connect">
+                تماس
+                <ul role="menu" aria-hidden="true" aria-label="Connect link">
+                    <li role="listitem" aria-label="Connect link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub">GitHub</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://www.linkedin.com/in/farhad-mirzapour/" target="_blank" role="link" aria-label="Linkedin">Linkedin</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter">Twitter</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="socials"  role="navigation" aria-label="Social links">
+        <ul role="menu" aria-hidden="true" aria-label="Social link">
+            <li role="listitem" aria-label="Social link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://www.linkedin.com/in/farhad-mirzapour-0043b862/" target="_blank" role="link" aria-label="Linkedin"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="/feed.xml" role="link" aria-label="RSS"><i class="fa fa-rss-square" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+    <div class="copyright" role="contentinfo" aria-label="Copyright">
+        <p>&copy; <script type="text/javascript">document.write(new Date().getFullYear());</script> Farhad Mirzapour</p>
+    </div>
+</footer>
+
+<!-- scripts -->
+<script src="/assets/js/hamburger-menu.js"></script>
+
+<script src="/assets/js/elevator.min.js"></script>
+<script src="/assets/js/back-to-top.js"></script>
+<script src="/assets/prisma/prism.js"></script>
+<!-- google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108878564-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-108878564-1');
+</script>
+
+</body>
+</html>

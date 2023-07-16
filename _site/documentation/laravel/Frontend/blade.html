@@ -1,0 +1,2284 @@
+<!DOCTYPE html>
+<html lang="">
+<!-- head -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Blade Templates | مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Blade Templates" />
+<meta name="author" content="Farhad Mirzapour" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Blade یک موتور قالب بندی ساده و کارآمد است که به همراه لاراول ارائه می‌شود. بر خلاف دیگر موتورهای محبوب قالب بندی PHP، موتور قالب بندی Blade محدودیتی برای شما در استفاده از کدهای ساده PHP در view ایجاد نمی‌کند. در واقع، تمام ویوهای Blade به کد PHP ساده تبدیل شده و تا زمانی که تغییر نکرده‌اند در حافظه کش ذخیره می‌شوند؛ در این حالت می‌توان گفت که Blade هیچ سرباری به برنامه شما اضافه نمی‌کند. فایل‌های ویوی Blade از پسوند فایل .blade.php استفاده می‌کنند و معمولاً در دایرکتوری resources/views ذخیره می‌شوند. ارث بری قالب view در لاراول تعریف یک Layout دو مزیت اصلی استفاده از Blade، ارث بری قالب و بخش‌ها است. برای شروع کار، یک مثال ساده را در نظر می‌گیریم؛ در ابتدا، یک صفحه master را در نظر می‌گیریم. از آنجایی که اکثر برنامه‌های کاربردی وب از یک layout کلی برای صفحات مختلف استفاده می‌کنند، برای راحتی کار می‌توان این layout را به عنوان یک ویو Blade به صورت زیر تعریف کرد: &lt;!-- Stored in resources/views/layouts/app.blade.php --&gt; &lt;html&gt; &lt;head&gt; &lt;title&gt;App Name - @yield(&#39;title&#39;)&lt;/title&gt; &lt;/head&gt; &lt;body&gt; @section(&#39;sidebar&#39;) This is the master sidebar. @show &lt;div class=&quot;container&quot;&gt; @yield(&#39;content&#39;) &lt;/div&gt; &lt;/body&gt; &lt;/html&gt; همانطور که مشاهده می‌کنید، این فایل شامل عبارت‌های HTML است. با این حال، به دستورات @section و @yield توجه داشته باشید. دستورالعمل @section ، همانطور که از نامش پیداست، قسمتی از محتوا را تعریف می‌کند، در حالی که دستورالعمل @yield جهت نمایش محتوای یک بخش خاص استفاده می‌شود. پس از اینکه یک layout برای برنامه ایجاد کردیم، اجازه دهید یک صفحه فرزند که از layout ارث بری می‌کند، ایجاد کنیم. ارث بری از یک Layout در لاراول در زمان تعریف یک ویو فرزند، جهت تعیین اینکه ویو فرزند از کدام layout ارث بری کند، می‌توانیم از دستور @extends استفاده کنیم. ویوهایی که از layout Blade ارث بری می‌کنند، می‌توانند با استفاده از دستور @section محتوای خاصی را به قسمت‌های مختلف layout تزریق کنند. توجه داشته باشید، همان طور که در مثال بالا مشاهده کردید، می‌توان با استفاده از دستور @yield محتویات این قسمت‌ها را در layout نمایش داد: &lt;!-- Stored in resources/views/child.blade.php --&gt; @extends(&#39;layouts.app&#39;) @section(&#39;title&#39;, &#39;Page Title&#39;) @section(&#39;sidebar&#39;) @parent &lt;p&gt;This is appended to the master sidebar.&lt;/p&gt; @endsection @section(&#39;content&#39;) &lt;p&gt;This is my body content.&lt;/p&gt; @endsection در این مثال، قسمت sidebar از دستور @parent برای افزودن محتوا (به جای بازنویسی) به قسمت sidebar در layout استفاده می‌کند. زمانی که ویو نمایش داده می‌شود، دستورالعمل @parent با محتوای layout کلی جایگزین می‌شود. برخلاف مثال قبلی، در این مثال sidebar به جای show@ با endsection@ به پایان می‌رسد. دستور endsection@ فقط یک بخش را تعریف می‌کند در حالی که دستور show@ یک بخش را تعریف کرده و بلافاصله اجرا می‌کند. ویوهای blade می‌توانند توسط تابع کمکی view عمومی به صورت زیر از مسیرها بازگردانده شوند: Route::get(&#39;blade&#39;, function () { return view(&#39;child&#39;); }); کامپوننت ‌ها و اسلات ‌ها در view لاراول کامپوننت‌ها و اسلات‌ها روش‌ مناسبی برای تعریف بخش‌ها و layoutها ارائه می‌دهند؛ شاید برای برخی افراد درک ذهنی کامپوننت‌ها و اسلات‌ها ساده‌تر باشد. در ابتدا، اجازه دهید یک کامپوننت «alert» را در نظر بگیریم که قصد داریم توسط برنامه از آن استفاده مجدد کنیم: &lt;!-- /resources/views/alert.blade.php --&gt; &lt;div class=&quot;alert alert-danger&quot;&gt; {{ $slot }} &lt;/div&gt; متغیر {{ $slot }} دارای محتوایی است که می‌خواهید به کامپوننت تزریق کنید. می‌توان از دستور @component برای ساختن این کامپوننت استفاده کرد: @component(&#39;alert&#39;) &lt;strong&gt;Whoops!&lt;/strong&gt; Something went wrong! @endcomponent گاهی اوقات، تعریف چند اسلات برای یک کامپوننت می‌تواند مفید باشد. اجازه دهید ماژول alert را تغییر دهیم تا امکان تزریق «title» را نیز داشته باشیم. اسلات‌های نامگذاری شده ممکن است با متغیری که با نام آن مطابقت دارد نمایش داده شوند: &lt;!-- /resources/views/alert.blade.php --&gt; &lt;div class=&quot;alert alert-danger&quot;&gt; &lt;div class=&quot;alert-title&quot;&gt; {{ $title }} &lt;/div&gt; {{ $slot }} &lt;/div&gt; اکنون می‌توانیم محتوا را به اسلات نامگذاری شده با استفاده از دستور @slot تزریق کنیم. هر محتوایی که در دستور @slot نیست، در درون متغیر $slot به کامپوننت منتقل می‌شود: @component(&#39;alert&#39;) @slot(&#39;title&#39;) Forbidden @endslot You are not allowed to access this resource! @endcomponent انتقال داده های اضافی به کامپوننت‌های view در لاراول گاهی اوقات، ممکن است بخواهید داده‌های اضافی دیگری را به یک کامپوننت انتقال دهید. به همین دلیل، می‌توانید آرایه‌ای از داده‌ها را به عنوان آرگومان دوم به دستور @component منتقل کنید. تمام داده‌های آرایه به عنوان متغیر در قالب کامپوننت در دسترس خواهند بود: @component(&#39;alert&#39;, [&#39;foo&#39; =&gt; &#39;bar&#39;]) ... @endcomponent Aliasing Components If your Blade components are stored in a sub-directory, you may wish to alias them for easier access. For example, imagine a Blade component that is stored at resources/views/components/alert.blade.php. You may use the component method to alias the component from components.alert to alert. Typically, this should be done in the boot method of your AppServiceProvider: use Illuminate\Support\Facades\Blade; Blade::component(&#39;components.alert&#39;, &#39;alert&#39;); Once the component has been aliased, you may render it using its alias: @alert(&#39;alert&#39;, [&#39;type&#39; =&gt; &#39;danger&#39;]) You are not allowed to access this resource! @endalert Or, if the component has no additional slots, you may use the component&#39;s name as a Blade directive: @alert You are not allowed to access this resource! @endalert نمایش داده‌ها در view لاراول برای نمایش داده‌های منتقل شده به ویوهای Blade می‌توان متغیر را در درون {{ }} قرار داد. برای مثال، به مسیر زیر توجه کنید: Route::get(&#39;greeting&#39;, function () { return view(&#39;welcome&#39;, [&#39;name&#39; =&gt; &#39;Samantha&#39;]); }); می‌توان محتویات متغیر name را به صورت زیر نمایش داد: Hello, {{ $name }} . البته، کار شما تنها به نمایش محتویات متغیرهای منتقل شده به ویو محدود نمی‌شود؛ بلکه، می‌توانید نتیجه حاصل از هر تابع PHP را نیز نمایش دهید. می‌توانید هر کد PHP را که بخواهید درون یک عبارت Blade echo قرار دهید: The current UNIX timestamp is {{ time() }} . عبارت‌های {{ }} Blade، جهت جلوگیری از حملات XSS به صورت خودکار توسط تابع پی اچ پی htmlspecialchars ارسال می‌شوند. نمایش داده های unescaped در view به صورت پیش‌فرض، عبارت‌های {{ }} Blade، جهت جلوگیری از حملات XSS به صورت خودکار توسط تابع پی اچ پی htmlspecialchars ارسال می‌شوند. اگر نخواهید داده‌هایتان را escaped کنید، می‌توانید از سینتکس زیر استفاده کنید: Hello, {!! $name !!}. در هنگام بازخوانی محتوا که توسط کاربران برنامه ارائه شده‌اند، بسیار دقت کنید. جهت جلوگیری از حملات XSS هنگام نمایش داده‌های ارائه شده توسط کاربران از {{ }} استفاده کنید. نمایش JSON گاهی اوقات، می‌توانید یک آرایه را به ویو خود انتقال دهید تا بتوانید آن را به عنوان یک JSON ارائه دهید و به عنوان یک متغیر جاوا اسکریپت از آن استفاده کنید. برای مثال: &lt;script&gt; var app = &lt;?php echo json_encode($array); ?&gt;; &lt;/script&gt; با این حال، به جای اینکه به صورت دستی json_encode را فراخوانی کنید، می‌توانید از دستور @json استفاده کنید: &lt;script&gt; var app = @json($array); &lt;/script&gt; HTML Entity Encoding ddd namespace App\Providers; use Illuminate\Support\Facades\Blade; use Illuminate\Support\ServiceProvider; class AppServiceProvider extends ServiceProvider { /** * Bootstrap any application services. * * @return void */ public function boot() { Blade::withoutDoubleEncoding(); } } Blade و فریم ورک های جاوا اسکریپت در لاراول از آنجایی که بسیاری از فریم ورک‌های جاوا اسکریپت نیز از {{ }} برای نمایش یک عبارت در مرورگر استفاده می‌کنند، می‌توانید از نماد @ استفاده کنید تا به موتور رندر Blade اعلان کنید که عبارت داخل آن را تفسیر نکند. برای مثال: &lt;h1&gt;Laravel&lt;/h1&gt; Hello, @ {{ name }} . در این مثال، نماد @ توسط Blade حذف می‌شود؛ با این حال، عبارت {{ name }} توسط موتور Blade تفسیر نمی‌شود و این کار مستقیماً توسط فریم ورک جاوا اسکریپت انجام می‌شود. The دستور @verbatim در Blade لاراول اگر متغیرهای جاوا اسکریپت را در بخش بزرگی از قالب خود نمایش می‌دهید، می‌توانید عبارت‌های HTML را در دستور @verbatim قرار دهید، بنابراین لازم نیست که پیش از هر عبارت Blade echo علامت @ قرار دهید: @verbatim &lt;div class=&quot;container&quot;&gt; Hello, {{ name }} . &lt;/div&gt; @endverbatim استفاده از ساختارهای کنترلی در Blade لاراول علاوه بر ارث بری قالب‌ها و نمایش داده‌ها در ویو، Blade لاراول میانبرهای مناسبی را نیز ارائه می‌دهد که می‌توان از آن‌ها جهت ایجاد ساختارهای کنترلی رایج PHP مانند دستورات شرطی و حلقه‌ها در ویوهای Blade استفاده کرد. این میانبرها یک روش بسیار ساده و کارآمد برای کار با ساختارهای کنترلی PHP ارائه می‌دهند، در حالی که همچنان، شباهت خود را با معادل‌های PHP حفظ می‌کنند. استفاده از عبارات If در Blade لاراول برای ساخت عبارات if در یک ویوی Blade، می‌توانید از دستوالعمل‌های @if و @elseif و @else و @endif استفاده کنید. این دستورالعمل‌ها بسیار شبیه به معادل‌های PHP خود عمل می‌کنند: @if (count($records) === 1) I have one record! @elseif (count($records) &gt; 1) I have multiple records! @else I don&#39;t have any records! @endif برای راحتی کار، Blade یک دستورالعمل @unless نیز ارائه می‌دهد: @unless (Auth::check()) You are not signed in. @endunless علاوه بر دستورالعمل‌های شرطی که اشاره شد، دستورالعمل‌های @isset و @empty نیز ممکن است به عنوان میانبرهای مناسب برای توابع PHP مربوط به آن‌ها در یک ویوی Blade مورد استفاده قرار گیرند: @isset($records) // $records is defined and is not null... @endisset @empty($records) // $records is &quot;empty&quot;... @endempty دستورالعمل‌های احراز هویت (authentication) در Blade لاراول جهت تعیین فوری اینکه کاربر جاری یک کاربر تایید شده است یا یک کاربر مهمان، می‌توان از دستورالعمل‌های احراز هویت @auth و @guest به صورت زیر استفاده کرد: @auth // The user is authenticated... @endauth @guest // The user is not authenticated... @endguest در صورت لزوم، می‌توانید مسئول احراز هویت را به عنوان پارامتر مشخص کنید که در زمان استفاده از دستورات @auth و @guest جهت تعیین اینکه کاربر از طریق مسئول احراز هویت وارد سیستم شده است، بررسی می‌شود: @auth(&#39;admin&#39;) // The user is authenticated... @endauth @guest(&#39;admin&#39;) // The user is not authenticated... @endguest استفاده از دستورالعمل‌های section در Blade لاراول می‌توانید محتوای یک section را با استفاده از دستور @hasSection بررسی نمایید: @hasSection(&#39;navigation&#39;) &lt;div class=&quot;pull-right&quot;&gt; @yield(&#39;navigation&#39;) &lt;/div&gt; &lt;div class=&quot;clearfix&quot;&gt;&lt;/div&gt; @endif استفاده از عبارت‌های switch در Blade لاراول عبارات switch می‌توانند با استفاده از دستورالعمل‌های @switch و @case و @default و @endswitch ایجاد شوند: @switch($i) @case(1) First case... @break @case(2) Second case... @break @default Default case... @endswitch استفاده از دستورات حلقه‌ در Blade لاراول علاوه بر دستورات شرطی، Blade دستورالعمل‌های ساده‌ای را نیز برای کار با ساختارهای حلقه‌ای زبان PHP ارائه می‌دهد. در این مورد هم، هر کدام از این دستورات مشابه معادل‌های خود در زبان PHP عمل می‌کنند: @for ($i = 0; $i &lt; 10; $i++) The current value is {{ $i }} @endfor @foreach ($users as $user) &lt;p&gt;This is user {{ $user-&gt;id }} &lt;/p&gt; @endforeach @forelse ($users as $user) &lt;li&gt; {{ $user-&gt;name }} &lt;/li&gt; @empty &lt;p&gt;No users&lt;/p&gt; @endforelse @while (true) &lt;p&gt;I&#39;m looping forever.&lt;/p&gt; @endwhile در زمان کار با حلقه‌ها، می‌توانید از متغیر حلقه برای بدست آوردن اطلاعات مهم در مورد حلقه موردنظر استفاده کنید، اطلاعاتی مانند اینکه در اولین یا آخرین گام تکرار حلقه قرار دارید. همچنین، هنگام استفاده از حلقه‌ها می‌توانید حلقه را پایان دهید یا گام تکرار فعلی را حفظ کنید: @foreach ($users as $user) @if ($user-&gt;type == 1) @continue @endif &lt;li&gt; {{ $user-&gt;name }} &lt;/li&gt; @if ($user-&gt;number == 5) @break @endif @endforeach همچنین، می‌توانید شرط اجرای حلقه را با اعلان دستور حلقه در یک خط کد قرار دهید: @foreach ($users as $user) @continue($user-&gt;type == 1) &lt;li&gt; {{ $user-&gt;name }} &lt;/li&gt; @break($user-&gt;number == 5) @endforeach متغیر حلقه در Blade لاراول هنگام استفاده از حلقه‌ها، یک متغیر $loop در داخل حلقه در دسترس است که این متغیر اطلاعات مهمی مانند گام تکرار فعلی و اینکه آیا در اولین یا آخرین گام تکرار حلقه قرار دارید را مشخص می‌کند: @foreach ($users as $user) @if ($loop-&gt;first) This is the first iteration. @endif @if ($loop-&gt;last) This is the last iteration. @endif &lt;p&gt;This is user {{ $user-&gt;id }} &lt;/p&gt; @endforeach اگر در یک حلقه تکرار تو در تو باشید، می‌توانید به متغیر $loop حلقه والد از طریق خصوصیت parent دسترسی داشته باشید: @foreach ($users as $user) @foreach ($user-&gt;posts as $post) @if ($loop-&gt;parent-&gt;first) This is first iteration of the parent loop. @endif @endforeach @endforeach همچنین، متغیر $loop خصوصیت‌های مفید دیگری را نیز شامل می‌شود که در جدول زیر لیست شده اند: Property Description $loop-&gt;index The index of the current loop iteration (starts at 0). $loop-&gt;iteration The current loop iteration (starts at 1). $loop-&gt;remaining The iteration remaining in the loop. $loop-&gt;count The total number of items in the array being iterated. $loop-&gt;first Whether this is the first iteration through the loop. $loop-&gt;last Whether this is the last iteration through the loop. $loop-&gt;depth The nesting level of the current loop. $loop-&gt;parent When in a nested loop, the parent&#39;s loop variable. نحوه ثبت کامنت‌ در ‌Blade لاراول Blade این امکان را می‌دهد که بتوانید در ویوهای خود کامنت‌ها را تعریف کنید. با این حال، بر خلاف کامنت‌های HTML، کامنت‌های Blade در ساختار HTML که توسط برنامه برگردانده می‌شود، قرار نمی‌‌گیرند: {{-- This comment will not be present in the rendered HTML --}} PHP استفاده از کد در برخی موارد، لازم است که از کد PHP در ویوهای ‌Blade خود استفاده کنید. برای این کار، می‌توانید از دستورالعمل @php برای اجرای یک بلوک ساده از کد PHP در قالب ویو خود استفاده کنید: @php // @endphp در حالی که Blade امکان استفاده از این ویژگی را فراهم کرده است ولی با این حال استفاده از این ویژگی می‌تواند نشان دهنده این باشد که شما در گنجاندن منطق در قالب ویو خود زیاده روی کرده‌اید. sub-view نحوه استفاده از دستور @include این امکان را می‌دهد که بتوانید یک ویو Blade را در داخل یک ویو دیگر اضافه کنید. تمام متغیرهایی که در ویو والد موجود هستند در ویو فرزند نیز قابل دسترس خواهند بود: &lt;div&gt; @include(&#39;shared.errors&#39;) &lt;form&gt; &lt;!-- Form Contents --&gt; &lt;/form&gt; &lt;/div&gt; با اینکه ویو فرزند تمام داده‌های موجود در ویو والد را به ارث می‌برد؛ با این حال، می‌توانید یک آرایه شامل داده‌های اضافی را به این ویو انتقال دهید: @include(&#39;view.name&#39;, [&#39;some&#39; =&gt; &#39;data&#39;]) البته، اگر سعی در اضافه کردن یک ویو با دستور @include داشته باشید که موجود نیست، لاراول یک خطا صادر می‌کند. اگر بخواهید یک ویو را با احتمال موجود بودن یا موجود نبودن آن اضافه کنید، بایستی از دستور @includeIf به صورت زیر استفاده کنید: @includeIf(&#39;view.name&#39;, [&#39;some&#39; =&gt; &#39;data&#39;]) اگر بخواهید یک sub-view را براساس یک عبارت شرطی بولین با دستور @include اضافه کنید، می‌توانید از دستورالعمل @includeWhen به صورت زیر استفاده کنید: @includeWhen($boolean, &#39;view.name&#39;, [&#39;some&#39; =&gt; &#39;data&#39;]) جهت اضافه کردن اولین ویو موجود در آرایه‌ای از ویو‌ها، می‌توانید از دستورالعمل includeFirst به صورت زیر استفاده کنید: @includeFirst([&#39;custom.admin&#39;, &#39;admin&#39;], [&#39;some&#39; =&gt; &#39;data&#39;]) از بکار بردن ثابت‌های __DIR__ و __FILE__ در ویوهای Blade خود اجتناب کنید، زیرا به مکان ویو کامپایل شده و کش شده اشاره می‌کنند. رندر کردن view با مجموعه‌‌ها در Blade می‌توانید حلقه‌ها و includeها را با دستورالعمل @each در یک خط کد ترکیب کنید: @each(&#39;view.name&#39;, $jobs, &#39;job&#39;) اولین آرگومان، view partial جهت رندر کردن هر آیتم موجود در آرایه یا مجموعه است. آرگومان دوم، آرایه یا مجموعه‌ای است که می‌خواهید آن را تکرار کنید. سومین آرگومان، نام متغیری است که به گام تکرار فعلی در ویو نسبت داده می‌شود. برای مثال، اگر درون یک آرایه از jobها از حلقه استفاده می‌کنید، ممکن است به هر job به عنوان یک متغیر job در view partial خود دسترسی داشته باشید. کلید گام تکرار فعلی به عنوان متغیر key در ویو در دسترس خواهد بود. همچنین، می‌توانید چهارمین آرگومان را نیز به دستور @each انتقال دهید. در صورتی که آرایه داده شده خالی بود، این آرگومان مشخص می‌کند که کدام ویو نمایش داده شود: @each(&#39;view.name&#39;, $jobs, &#39;job&#39;, &#39;view.empty&#39;) ویوهای نمایش داده شده از طریق دستور each@ متغیرها را از ویو والد به ارث نمی‌برند. اگر ویو فرزند به این متغیرها نیاز داشته باشد، می‌توانید به جای آن از دستور foreach@ و include@ استفاده کنید. پشته Stacks ‌Blade این امکان را می‌دهد تا پشته‌های نامگذاری شده را push کنید که در جایی دیگر در داخل یک ویو یا layout رندر شود. این موضوع می‌تواند جهت تعیین کتابخانه جاوا اسکریپت موردنیاز ویوهای فرزند مفید باشد. @push(&#39;scripts&#39;) &lt;script src=&quot;/example.js&quot;&gt;&lt;/script&gt; @endpush می‌توانید یک پشته موردنیاز را چندین مرتبه push کنید. برای ارائه کامل محتویات پشته، نام پشته را به دستور @stack انتقال دهید: &lt;head&gt; &lt;!-- Head Contents --&gt; @stack(&#39;scripts&#39;) &lt;/head&gt; تزریق خدمات یا service Injection در Blade خروجی دستور @inject می‌تواند برای بازیابی یک سرویس از service container لاراول مورد استفاده قرار گیرد. اولین آرگومان ارسالی به @inject ، نام متغیری است که سرویس در آن قرار داده می‌شود؛ در حالی که، دومین آرگومان نام کلاس یا رابط سرویسی است که قصد دارید آن را resolve کنید. @inject(&#39;metrics&#39;, &#39;App\Services\MetricsService&#39;) &lt;div&gt; Monthly Revenue: {{ $metrics-&gt;monthlyRevenue() }} . &lt;/div&gt; گسترش دستورالعمل‌های Blade در لاراول Blade این امکان را می‌دهد که بتوانید دستورالعمل‌های سفارشی خود را با استفاده از متد directive تعریف کنید. زمانی که کامپایلر Blade با دستورالعمل سفارشی مواجه می‌شود، تابع callback ارائه شده را با پارامترهای آن فراخوانی می‌کند. مثال زیر یک دستور @datetime($var) ایجاد می‌کند که یک متغیر $var را فرمت دهی می‌کند که باید یک نمونه از DateTime باشد: namespace App\Providers; use Illuminate\Support\Facades\Blade; use Illuminate\Support\ServiceProvider; class AppServiceProvider extends ServiceProvider { /** * Perform post-registration booting of services. * * @return void */ public function boot() { Blade::directive(&#39;datetime&#39;, function ($expression) { return &quot;format(&#39;m/d/Y H:i&#39;); ?&gt;&quot;; }); } /** * Register bindings in the container. * * @return void */ public function register() { // } } همانطور که مشاهده می‌کنید، ما متد format را بر روی هر عبارت به ترتیبی که در دستورالعمل قرار دارد، اعمال می‌کنیم. بنابراین، در این مثال کد PHP تولید شده توسط این دستور به این صورت خواهد بود: format(&#39;m/d/Y H:i&#39;); ?&gt; پس از بروز رسانی منطق یک دستورالعمل Blade، باید تمام ویوهای Blade کش شده را حذف کنید. می‌توانید با استفاده از دستور آرتیسان view:clear ویوهای Blade کش شده را پاک کنید. عبارات if سفارشی در Blade برنامه نویسی یک دستورالعمل سفارشی، پیچیده‌تر از تعیین عبارات شرطی ساده به صورت سفارشی است. به همین دلیل Blade متد Blade::if را ارائه می‌دهد که توسط آن می‌توانید به سرعت دستورات شرطی سفارشی خود را با استفاده از Closure تعریف کنید. برای مثال، اجازه دهید یک دستور شرطی سفارشی را تعریف کنیم که محیط برنامه فعلی را بررسی می‌کند. می‌توانیم این کار را در متد boot از AppServiceProvider خود انجام دهیم: use Illuminate\Support\Facades\Blade; /** * Perform post-registration booting of services. * * @return void */ public function boot() { Blade::if(&#39;env&#39;, function ($environment) { return app()-&gt;environment($environment); }); } زمانی که دستور شرطی سفارشی ایجاد شد، می‌توانیم به راحتی از آن در قالب‌های ویو خود استفاده کنیم: @env(&#39;local&#39;) // The application is in the local environment... @elseenv(&#39;testing&#39;) // The application is in the testing environment... @else // The application is not in the local or testing environment... @endenv" />
+<meta property="og:description" content="Blade یک موتور قالب بندی ساده و کارآمد است که به همراه لاراول ارائه می‌شود. بر خلاف دیگر موتورهای محبوب قالب بندی PHP، موتور قالب بندی Blade محدودیتی برای شما در استفاده از کدهای ساده PHP در view ایجاد نمی‌کند. در واقع، تمام ویوهای Blade به کد PHP ساده تبدیل شده و تا زمانی که تغییر نکرده‌اند در حافظه کش ذخیره می‌شوند؛ در این حالت می‌توان گفت که Blade هیچ سرباری به برنامه شما اضافه نمی‌کند. فایل‌های ویوی Blade از پسوند فایل .blade.php استفاده می‌کنند و معمولاً در دایرکتوری resources/views ذخیره می‌شوند. ارث بری قالب view در لاراول تعریف یک Layout دو مزیت اصلی استفاده از Blade، ارث بری قالب و بخش‌ها است. برای شروع کار، یک مثال ساده را در نظر می‌گیریم؛ در ابتدا، یک صفحه master را در نظر می‌گیریم. از آنجایی که اکثر برنامه‌های کاربردی وب از یک layout کلی برای صفحات مختلف استفاده می‌کنند، برای راحتی کار می‌توان این layout را به عنوان یک ویو Blade به صورت زیر تعریف کرد: &lt;!-- Stored in resources/views/layouts/app.blade.php --&gt; &lt;html&gt; &lt;head&gt; &lt;title&gt;App Name - @yield(&#39;title&#39;)&lt;/title&gt; &lt;/head&gt; &lt;body&gt; @section(&#39;sidebar&#39;) This is the master sidebar. @show &lt;div class=&quot;container&quot;&gt; @yield(&#39;content&#39;) &lt;/div&gt; &lt;/body&gt; &lt;/html&gt; همانطور که مشاهده می‌کنید، این فایل شامل عبارت‌های HTML است. با این حال، به دستورات @section و @yield توجه داشته باشید. دستورالعمل @section ، همانطور که از نامش پیداست، قسمتی از محتوا را تعریف می‌کند، در حالی که دستورالعمل @yield جهت نمایش محتوای یک بخش خاص استفاده می‌شود. پس از اینکه یک layout برای برنامه ایجاد کردیم، اجازه دهید یک صفحه فرزند که از layout ارث بری می‌کند، ایجاد کنیم. ارث بری از یک Layout در لاراول در زمان تعریف یک ویو فرزند، جهت تعیین اینکه ویو فرزند از کدام layout ارث بری کند، می‌توانیم از دستور @extends استفاده کنیم. ویوهایی که از layout Blade ارث بری می‌کنند، می‌توانند با استفاده از دستور @section محتوای خاصی را به قسمت‌های مختلف layout تزریق کنند. توجه داشته باشید، همان طور که در مثال بالا مشاهده کردید، می‌توان با استفاده از دستور @yield محتویات این قسمت‌ها را در layout نمایش داد: &lt;!-- Stored in resources/views/child.blade.php --&gt; @extends(&#39;layouts.app&#39;) @section(&#39;title&#39;, &#39;Page Title&#39;) @section(&#39;sidebar&#39;) @parent &lt;p&gt;This is appended to the master sidebar.&lt;/p&gt; @endsection @section(&#39;content&#39;) &lt;p&gt;This is my body content.&lt;/p&gt; @endsection در این مثال، قسمت sidebar از دستور @parent برای افزودن محتوا (به جای بازنویسی) به قسمت sidebar در layout استفاده می‌کند. زمانی که ویو نمایش داده می‌شود، دستورالعمل @parent با محتوای layout کلی جایگزین می‌شود. برخلاف مثال قبلی، در این مثال sidebar به جای show@ با endsection@ به پایان می‌رسد. دستور endsection@ فقط یک بخش را تعریف می‌کند در حالی که دستور show@ یک بخش را تعریف کرده و بلافاصله اجرا می‌کند. ویوهای blade می‌توانند توسط تابع کمکی view عمومی به صورت زیر از مسیرها بازگردانده شوند: Route::get(&#39;blade&#39;, function () { return view(&#39;child&#39;); }); کامپوننت ‌ها و اسلات ‌ها در view لاراول کامپوننت‌ها و اسلات‌ها روش‌ مناسبی برای تعریف بخش‌ها و layoutها ارائه می‌دهند؛ شاید برای برخی افراد درک ذهنی کامپوننت‌ها و اسلات‌ها ساده‌تر باشد. در ابتدا، اجازه دهید یک کامپوننت «alert» را در نظر بگیریم که قصد داریم توسط برنامه از آن استفاده مجدد کنیم: &lt;!-- /resources/views/alert.blade.php --&gt; &lt;div class=&quot;alert alert-danger&quot;&gt; {{ $slot }} &lt;/div&gt; متغیر {{ $slot }} دارای محتوایی است که می‌خواهید به کامپوننت تزریق کنید. می‌توان از دستور @component برای ساختن این کامپوننت استفاده کرد: @component(&#39;alert&#39;) &lt;strong&gt;Whoops!&lt;/strong&gt; Something went wrong! @endcomponent گاهی اوقات، تعریف چند اسلات برای یک کامپوننت می‌تواند مفید باشد. اجازه دهید ماژول alert را تغییر دهیم تا امکان تزریق «title» را نیز داشته باشیم. اسلات‌های نامگذاری شده ممکن است با متغیری که با نام آن مطابقت دارد نمایش داده شوند: &lt;!-- /resources/views/alert.blade.php --&gt; &lt;div class=&quot;alert alert-danger&quot;&gt; &lt;div class=&quot;alert-title&quot;&gt; {{ $title }} &lt;/div&gt; {{ $slot }} &lt;/div&gt; اکنون می‌توانیم محتوا را به اسلات نامگذاری شده با استفاده از دستور @slot تزریق کنیم. هر محتوایی که در دستور @slot نیست، در درون متغیر $slot به کامپوننت منتقل می‌شود: @component(&#39;alert&#39;) @slot(&#39;title&#39;) Forbidden @endslot You are not allowed to access this resource! @endcomponent انتقال داده های اضافی به کامپوننت‌های view در لاراول گاهی اوقات، ممکن است بخواهید داده‌های اضافی دیگری را به یک کامپوننت انتقال دهید. به همین دلیل، می‌توانید آرایه‌ای از داده‌ها را به عنوان آرگومان دوم به دستور @component منتقل کنید. تمام داده‌های آرایه به عنوان متغیر در قالب کامپوننت در دسترس خواهند بود: @component(&#39;alert&#39;, [&#39;foo&#39; =&gt; &#39;bar&#39;]) ... @endcomponent Aliasing Components If your Blade components are stored in a sub-directory, you may wish to alias them for easier access. For example, imagine a Blade component that is stored at resources/views/components/alert.blade.php. You may use the component method to alias the component from components.alert to alert. Typically, this should be done in the boot method of your AppServiceProvider: use Illuminate\Support\Facades\Blade; Blade::component(&#39;components.alert&#39;, &#39;alert&#39;); Once the component has been aliased, you may render it using its alias: @alert(&#39;alert&#39;, [&#39;type&#39; =&gt; &#39;danger&#39;]) You are not allowed to access this resource! @endalert Or, if the component has no additional slots, you may use the component&#39;s name as a Blade directive: @alert You are not allowed to access this resource! @endalert نمایش داده‌ها در view لاراول برای نمایش داده‌های منتقل شده به ویوهای Blade می‌توان متغیر را در درون {{ }} قرار داد. برای مثال، به مسیر زیر توجه کنید: Route::get(&#39;greeting&#39;, function () { return view(&#39;welcome&#39;, [&#39;name&#39; =&gt; &#39;Samantha&#39;]); }); می‌توان محتویات متغیر name را به صورت زیر نمایش داد: Hello, {{ $name }} . البته، کار شما تنها به نمایش محتویات متغیرهای منتقل شده به ویو محدود نمی‌شود؛ بلکه، می‌توانید نتیجه حاصل از هر تابع PHP را نیز نمایش دهید. می‌توانید هر کد PHP را که بخواهید درون یک عبارت Blade echo قرار دهید: The current UNIX timestamp is {{ time() }} . عبارت‌های {{ }} Blade، جهت جلوگیری از حملات XSS به صورت خودکار توسط تابع پی اچ پی htmlspecialchars ارسال می‌شوند. نمایش داده های unescaped در view به صورت پیش‌فرض، عبارت‌های {{ }} Blade، جهت جلوگیری از حملات XSS به صورت خودکار توسط تابع پی اچ پی htmlspecialchars ارسال می‌شوند. اگر نخواهید داده‌هایتان را escaped کنید، می‌توانید از سینتکس زیر استفاده کنید: Hello, {!! $name !!}. در هنگام بازخوانی محتوا که توسط کاربران برنامه ارائه شده‌اند، بسیار دقت کنید. جهت جلوگیری از حملات XSS هنگام نمایش داده‌های ارائه شده توسط کاربران از {{ }} استفاده کنید. نمایش JSON گاهی اوقات، می‌توانید یک آرایه را به ویو خود انتقال دهید تا بتوانید آن را به عنوان یک JSON ارائه دهید و به عنوان یک متغیر جاوا اسکریپت از آن استفاده کنید. برای مثال: &lt;script&gt; var app = &lt;?php echo json_encode($array); ?&gt;; &lt;/script&gt; با این حال، به جای اینکه به صورت دستی json_encode را فراخوانی کنید، می‌توانید از دستور @json استفاده کنید: &lt;script&gt; var app = @json($array); &lt;/script&gt; HTML Entity Encoding ddd namespace App\Providers; use Illuminate\Support\Facades\Blade; use Illuminate\Support\ServiceProvider; class AppServiceProvider extends ServiceProvider { /** * Bootstrap any application services. * * @return void */ public function boot() { Blade::withoutDoubleEncoding(); } } Blade و فریم ورک های جاوا اسکریپت در لاراول از آنجایی که بسیاری از فریم ورک‌های جاوا اسکریپت نیز از {{ }} برای نمایش یک عبارت در مرورگر استفاده می‌کنند، می‌توانید از نماد @ استفاده کنید تا به موتور رندر Blade اعلان کنید که عبارت داخل آن را تفسیر نکند. برای مثال: &lt;h1&gt;Laravel&lt;/h1&gt; Hello, @ {{ name }} . در این مثال، نماد @ توسط Blade حذف می‌شود؛ با این حال، عبارت {{ name }} توسط موتور Blade تفسیر نمی‌شود و این کار مستقیماً توسط فریم ورک جاوا اسکریپت انجام می‌شود. The دستور @verbatim در Blade لاراول اگر متغیرهای جاوا اسکریپت را در بخش بزرگی از قالب خود نمایش می‌دهید، می‌توانید عبارت‌های HTML را در دستور @verbatim قرار دهید، بنابراین لازم نیست که پیش از هر عبارت Blade echo علامت @ قرار دهید: @verbatim &lt;div class=&quot;container&quot;&gt; Hello, {{ name }} . &lt;/div&gt; @endverbatim استفاده از ساختارهای کنترلی در Blade لاراول علاوه بر ارث بری قالب‌ها و نمایش داده‌ها در ویو، Blade لاراول میانبرهای مناسبی را نیز ارائه می‌دهد که می‌توان از آن‌ها جهت ایجاد ساختارهای کنترلی رایج PHP مانند دستورات شرطی و حلقه‌ها در ویوهای Blade استفاده کرد. این میانبرها یک روش بسیار ساده و کارآمد برای کار با ساختارهای کنترلی PHP ارائه می‌دهند، در حالی که همچنان، شباهت خود را با معادل‌های PHP حفظ می‌کنند. استفاده از عبارات If در Blade لاراول برای ساخت عبارات if در یک ویوی Blade، می‌توانید از دستوالعمل‌های @if و @elseif و @else و @endif استفاده کنید. این دستورالعمل‌ها بسیار شبیه به معادل‌های PHP خود عمل می‌کنند: @if (count($records) === 1) I have one record! @elseif (count($records) &gt; 1) I have multiple records! @else I don&#39;t have any records! @endif برای راحتی کار، Blade یک دستورالعمل @unless نیز ارائه می‌دهد: @unless (Auth::check()) You are not signed in. @endunless علاوه بر دستورالعمل‌های شرطی که اشاره شد، دستورالعمل‌های @isset و @empty نیز ممکن است به عنوان میانبرهای مناسب برای توابع PHP مربوط به آن‌ها در یک ویوی Blade مورد استفاده قرار گیرند: @isset($records) // $records is defined and is not null... @endisset @empty($records) // $records is &quot;empty&quot;... @endempty دستورالعمل‌های احراز هویت (authentication) در Blade لاراول جهت تعیین فوری اینکه کاربر جاری یک کاربر تایید شده است یا یک کاربر مهمان، می‌توان از دستورالعمل‌های احراز هویت @auth و @guest به صورت زیر استفاده کرد: @auth // The user is authenticated... @endauth @guest // The user is not authenticated... @endguest در صورت لزوم، می‌توانید مسئول احراز هویت را به عنوان پارامتر مشخص کنید که در زمان استفاده از دستورات @auth و @guest جهت تعیین اینکه کاربر از طریق مسئول احراز هویت وارد سیستم شده است، بررسی می‌شود: @auth(&#39;admin&#39;) // The user is authenticated... @endauth @guest(&#39;admin&#39;) // The user is not authenticated... @endguest استفاده از دستورالعمل‌های section در Blade لاراول می‌توانید محتوای یک section را با استفاده از دستور @hasSection بررسی نمایید: @hasSection(&#39;navigation&#39;) &lt;div class=&quot;pull-right&quot;&gt; @yield(&#39;navigation&#39;) &lt;/div&gt; &lt;div class=&quot;clearfix&quot;&gt;&lt;/div&gt; @endif استفاده از عبارت‌های switch در Blade لاراول عبارات switch می‌توانند با استفاده از دستورالعمل‌های @switch و @case و @default و @endswitch ایجاد شوند: @switch($i) @case(1) First case... @break @case(2) Second case... @break @default Default case... @endswitch استفاده از دستورات حلقه‌ در Blade لاراول علاوه بر دستورات شرطی، Blade دستورالعمل‌های ساده‌ای را نیز برای کار با ساختارهای حلقه‌ای زبان PHP ارائه می‌دهد. در این مورد هم، هر کدام از این دستورات مشابه معادل‌های خود در زبان PHP عمل می‌کنند: @for ($i = 0; $i &lt; 10; $i++) The current value is {{ $i }} @endfor @foreach ($users as $user) &lt;p&gt;This is user {{ $user-&gt;id }} &lt;/p&gt; @endforeach @forelse ($users as $user) &lt;li&gt; {{ $user-&gt;name }} &lt;/li&gt; @empty &lt;p&gt;No users&lt;/p&gt; @endforelse @while (true) &lt;p&gt;I&#39;m looping forever.&lt;/p&gt; @endwhile در زمان کار با حلقه‌ها، می‌توانید از متغیر حلقه برای بدست آوردن اطلاعات مهم در مورد حلقه موردنظر استفاده کنید، اطلاعاتی مانند اینکه در اولین یا آخرین گام تکرار حلقه قرار دارید. همچنین، هنگام استفاده از حلقه‌ها می‌توانید حلقه را پایان دهید یا گام تکرار فعلی را حفظ کنید: @foreach ($users as $user) @if ($user-&gt;type == 1) @continue @endif &lt;li&gt; {{ $user-&gt;name }} &lt;/li&gt; @if ($user-&gt;number == 5) @break @endif @endforeach همچنین، می‌توانید شرط اجرای حلقه را با اعلان دستور حلقه در یک خط کد قرار دهید: @foreach ($users as $user) @continue($user-&gt;type == 1) &lt;li&gt; {{ $user-&gt;name }} &lt;/li&gt; @break($user-&gt;number == 5) @endforeach متغیر حلقه در Blade لاراول هنگام استفاده از حلقه‌ها، یک متغیر $loop در داخل حلقه در دسترس است که این متغیر اطلاعات مهمی مانند گام تکرار فعلی و اینکه آیا در اولین یا آخرین گام تکرار حلقه قرار دارید را مشخص می‌کند: @foreach ($users as $user) @if ($loop-&gt;first) This is the first iteration. @endif @if ($loop-&gt;last) This is the last iteration. @endif &lt;p&gt;This is user {{ $user-&gt;id }} &lt;/p&gt; @endforeach اگر در یک حلقه تکرار تو در تو باشید، می‌توانید به متغیر $loop حلقه والد از طریق خصوصیت parent دسترسی داشته باشید: @foreach ($users as $user) @foreach ($user-&gt;posts as $post) @if ($loop-&gt;parent-&gt;first) This is first iteration of the parent loop. @endif @endforeach @endforeach همچنین، متغیر $loop خصوصیت‌های مفید دیگری را نیز شامل می‌شود که در جدول زیر لیست شده اند: Property Description $loop-&gt;index The index of the current loop iteration (starts at 0). $loop-&gt;iteration The current loop iteration (starts at 1). $loop-&gt;remaining The iteration remaining in the loop. $loop-&gt;count The total number of items in the array being iterated. $loop-&gt;first Whether this is the first iteration through the loop. $loop-&gt;last Whether this is the last iteration through the loop. $loop-&gt;depth The nesting level of the current loop. $loop-&gt;parent When in a nested loop, the parent&#39;s loop variable. نحوه ثبت کامنت‌ در ‌Blade لاراول Blade این امکان را می‌دهد که بتوانید در ویوهای خود کامنت‌ها را تعریف کنید. با این حال، بر خلاف کامنت‌های HTML، کامنت‌های Blade در ساختار HTML که توسط برنامه برگردانده می‌شود، قرار نمی‌‌گیرند: {{-- This comment will not be present in the rendered HTML --}} PHP استفاده از کد در برخی موارد، لازم است که از کد PHP در ویوهای ‌Blade خود استفاده کنید. برای این کار، می‌توانید از دستورالعمل @php برای اجرای یک بلوک ساده از کد PHP در قالب ویو خود استفاده کنید: @php // @endphp در حالی که Blade امکان استفاده از این ویژگی را فراهم کرده است ولی با این حال استفاده از این ویژگی می‌تواند نشان دهنده این باشد که شما در گنجاندن منطق در قالب ویو خود زیاده روی کرده‌اید. sub-view نحوه استفاده از دستور @include این امکان را می‌دهد که بتوانید یک ویو Blade را در داخل یک ویو دیگر اضافه کنید. تمام متغیرهایی که در ویو والد موجود هستند در ویو فرزند نیز قابل دسترس خواهند بود: &lt;div&gt; @include(&#39;shared.errors&#39;) &lt;form&gt; &lt;!-- Form Contents --&gt; &lt;/form&gt; &lt;/div&gt; با اینکه ویو فرزند تمام داده‌های موجود در ویو والد را به ارث می‌برد؛ با این حال، می‌توانید یک آرایه شامل داده‌های اضافی را به این ویو انتقال دهید: @include(&#39;view.name&#39;, [&#39;some&#39; =&gt; &#39;data&#39;]) البته، اگر سعی در اضافه کردن یک ویو با دستور @include داشته باشید که موجود نیست، لاراول یک خطا صادر می‌کند. اگر بخواهید یک ویو را با احتمال موجود بودن یا موجود نبودن آن اضافه کنید، بایستی از دستور @includeIf به صورت زیر استفاده کنید: @includeIf(&#39;view.name&#39;, [&#39;some&#39; =&gt; &#39;data&#39;]) اگر بخواهید یک sub-view را براساس یک عبارت شرطی بولین با دستور @include اضافه کنید، می‌توانید از دستورالعمل @includeWhen به صورت زیر استفاده کنید: @includeWhen($boolean, &#39;view.name&#39;, [&#39;some&#39; =&gt; &#39;data&#39;]) جهت اضافه کردن اولین ویو موجود در آرایه‌ای از ویو‌ها، می‌توانید از دستورالعمل includeFirst به صورت زیر استفاده کنید: @includeFirst([&#39;custom.admin&#39;, &#39;admin&#39;], [&#39;some&#39; =&gt; &#39;data&#39;]) از بکار بردن ثابت‌های __DIR__ و __FILE__ در ویوهای Blade خود اجتناب کنید، زیرا به مکان ویو کامپایل شده و کش شده اشاره می‌کنند. رندر کردن view با مجموعه‌‌ها در Blade می‌توانید حلقه‌ها و includeها را با دستورالعمل @each در یک خط کد ترکیب کنید: @each(&#39;view.name&#39;, $jobs, &#39;job&#39;) اولین آرگومان، view partial جهت رندر کردن هر آیتم موجود در آرایه یا مجموعه است. آرگومان دوم، آرایه یا مجموعه‌ای است که می‌خواهید آن را تکرار کنید. سومین آرگومان، نام متغیری است که به گام تکرار فعلی در ویو نسبت داده می‌شود. برای مثال، اگر درون یک آرایه از jobها از حلقه استفاده می‌کنید، ممکن است به هر job به عنوان یک متغیر job در view partial خود دسترسی داشته باشید. کلید گام تکرار فعلی به عنوان متغیر key در ویو در دسترس خواهد بود. همچنین، می‌توانید چهارمین آرگومان را نیز به دستور @each انتقال دهید. در صورتی که آرایه داده شده خالی بود، این آرگومان مشخص می‌کند که کدام ویو نمایش داده شود: @each(&#39;view.name&#39;, $jobs, &#39;job&#39;, &#39;view.empty&#39;) ویوهای نمایش داده شده از طریق دستور each@ متغیرها را از ویو والد به ارث نمی‌برند. اگر ویو فرزند به این متغیرها نیاز داشته باشد، می‌توانید به جای آن از دستور foreach@ و include@ استفاده کنید. پشته Stacks ‌Blade این امکان را می‌دهد تا پشته‌های نامگذاری شده را push کنید که در جایی دیگر در داخل یک ویو یا layout رندر شود. این موضوع می‌تواند جهت تعیین کتابخانه جاوا اسکریپت موردنیاز ویوهای فرزند مفید باشد. @push(&#39;scripts&#39;) &lt;script src=&quot;/example.js&quot;&gt;&lt;/script&gt; @endpush می‌توانید یک پشته موردنیاز را چندین مرتبه push کنید. برای ارائه کامل محتویات پشته، نام پشته را به دستور @stack انتقال دهید: &lt;head&gt; &lt;!-- Head Contents --&gt; @stack(&#39;scripts&#39;) &lt;/head&gt; تزریق خدمات یا service Injection در Blade خروجی دستور @inject می‌تواند برای بازیابی یک سرویس از service container لاراول مورد استفاده قرار گیرد. اولین آرگومان ارسالی به @inject ، نام متغیری است که سرویس در آن قرار داده می‌شود؛ در حالی که، دومین آرگومان نام کلاس یا رابط سرویسی است که قصد دارید آن را resolve کنید. @inject(&#39;metrics&#39;, &#39;App\Services\MetricsService&#39;) &lt;div&gt; Monthly Revenue: {{ $metrics-&gt;monthlyRevenue() }} . &lt;/div&gt; گسترش دستورالعمل‌های Blade در لاراول Blade این امکان را می‌دهد که بتوانید دستورالعمل‌های سفارشی خود را با استفاده از متد directive تعریف کنید. زمانی که کامپایلر Blade با دستورالعمل سفارشی مواجه می‌شود، تابع callback ارائه شده را با پارامترهای آن فراخوانی می‌کند. مثال زیر یک دستور @datetime($var) ایجاد می‌کند که یک متغیر $var را فرمت دهی می‌کند که باید یک نمونه از DateTime باشد: namespace App\Providers; use Illuminate\Support\Facades\Blade; use Illuminate\Support\ServiceProvider; class AppServiceProvider extends ServiceProvider { /** * Perform post-registration booting of services. * * @return void */ public function boot() { Blade::directive(&#39;datetime&#39;, function ($expression) { return &quot;format(&#39;m/d/Y H:i&#39;); ?&gt;&quot;; }); } /** * Register bindings in the container. * * @return void */ public function register() { // } } همانطور که مشاهده می‌کنید، ما متد format را بر روی هر عبارت به ترتیبی که در دستورالعمل قرار دارد، اعمال می‌کنیم. بنابراین، در این مثال کد PHP تولید شده توسط این دستور به این صورت خواهد بود: format(&#39;m/d/Y H:i&#39;); ?&gt; پس از بروز رسانی منطق یک دستورالعمل Blade، باید تمام ویوهای Blade کش شده را حذف کنید. می‌توانید با استفاده از دستور آرتیسان view:clear ویوهای Blade کش شده را پاک کنید. عبارات if سفارشی در Blade برنامه نویسی یک دستورالعمل سفارشی، پیچیده‌تر از تعیین عبارات شرطی ساده به صورت سفارشی است. به همین دلیل Blade متد Blade::if را ارائه می‌دهد که توسط آن می‌توانید به سرعت دستورات شرطی سفارشی خود را با استفاده از Closure تعریف کنید. برای مثال، اجازه دهید یک دستور شرطی سفارشی را تعریف کنیم که محیط برنامه فعلی را بررسی می‌کند. می‌توانیم این کار را در متد boot از AppServiceProvider خود انجام دهیم: use Illuminate\Support\Facades\Blade; /** * Perform post-registration booting of services. * * @return void */ public function boot() { Blade::if(&#39;env&#39;, function ($environment) { return app()-&gt;environment($environment); }); } زمانی که دستور شرطی سفارشی ایجاد شد، می‌توانیم به راحتی از آن در قالب‌های ویو خود استفاده کنیم: @env(&#39;local&#39;) // The application is in the local environment... @elseenv(&#39;testing&#39;) // The application is in the testing environment... @else // The application is not in the local or testing environment... @endenv" />
+<link rel="canonical" href="http://localhost:4000/documentation/laravel/Frontend/blade" />
+<meta property="og:url" content="http://localhost:4000/documentation/laravel/Frontend/blade" />
+<meta property="og:site_name" content="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-02-13T19:50:42+03:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Blade Templates" />
+<meta name="twitter:site" content="@farhadmirzapour" />
+<meta name="twitter:creator" content="@Farhad Mirzapour" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"Blade Templates","url":"http://localhost:4000/documentation/laravel/Frontend/blade","datePublished":"2018-02-13T19:50:42+03:30","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"dateModified":"2018-02-13T19:50:42+03:30","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/documentation/laravel/Frontend/blade"},"author":{"@type":"Person","name":"Farhad Mirzapour"},"description":"Blade یک موتور قالب بندی ساده و کارآمد است که به همراه لاراول ارائه می‌شود. بر خلاف دیگر موتورهای محبوب قالب بندی PHP، موتور قالب بندی Blade محدودیتی برای شما در استفاده از کدهای ساده PHP در view ایجاد نمی‌کند. در واقع، تمام ویوهای Blade به کد PHP ساده تبدیل شده و تا زمانی که تغییر نکرده‌اند در حافظه کش ذخیره می‌شوند؛ در این حالت می‌توان گفت که Blade هیچ سرباری به برنامه شما اضافه نمی‌کند. فایل‌های ویوی Blade از پسوند فایل .blade.php استفاده می‌کنند و معمولاً در دایرکتوری resources/views ذخیره می‌شوند. ارث بری قالب view در لاراول تعریف یک Layout دو مزیت اصلی استفاده از Blade، ارث بری قالب و بخش‌ها است. برای شروع کار، یک مثال ساده را در نظر می‌گیریم؛ در ابتدا، یک صفحه master را در نظر می‌گیریم. از آنجایی که اکثر برنامه‌های کاربردی وب از یک layout کلی برای صفحات مختلف استفاده می‌کنند، برای راحتی کار می‌توان این layout را به عنوان یک ویو Blade به صورت زیر تعریف کرد: &lt;!-- Stored in resources/views/layouts/app.blade.php --&gt; &lt;html&gt; &lt;head&gt; &lt;title&gt;App Name - @yield(&#39;title&#39;)&lt;/title&gt; &lt;/head&gt; &lt;body&gt; @section(&#39;sidebar&#39;) This is the master sidebar. @show &lt;div class=&quot;container&quot;&gt; @yield(&#39;content&#39;) &lt;/div&gt; &lt;/body&gt; &lt;/html&gt; همانطور که مشاهده می‌کنید، این فایل شامل عبارت‌های HTML است. با این حال، به دستورات @section و @yield توجه داشته باشید. دستورالعمل @section ، همانطور که از نامش پیداست، قسمتی از محتوا را تعریف می‌کند، در حالی که دستورالعمل @yield جهت نمایش محتوای یک بخش خاص استفاده می‌شود. پس از اینکه یک layout برای برنامه ایجاد کردیم، اجازه دهید یک صفحه فرزند که از layout ارث بری می‌کند، ایجاد کنیم. ارث بری از یک Layout در لاراول در زمان تعریف یک ویو فرزند، جهت تعیین اینکه ویو فرزند از کدام layout ارث بری کند، می‌توانیم از دستور @extends استفاده کنیم. ویوهایی که از layout Blade ارث بری می‌کنند، می‌توانند با استفاده از دستور @section محتوای خاصی را به قسمت‌های مختلف layout تزریق کنند. توجه داشته باشید، همان طور که در مثال بالا مشاهده کردید، می‌توان با استفاده از دستور @yield محتویات این قسمت‌ها را در layout نمایش داد: &lt;!-- Stored in resources/views/child.blade.php --&gt; @extends(&#39;layouts.app&#39;) @section(&#39;title&#39;, &#39;Page Title&#39;) @section(&#39;sidebar&#39;) @parent &lt;p&gt;This is appended to the master sidebar.&lt;/p&gt; @endsection @section(&#39;content&#39;) &lt;p&gt;This is my body content.&lt;/p&gt; @endsection در این مثال، قسمت sidebar از دستور @parent برای افزودن محتوا (به جای بازنویسی) به قسمت sidebar در layout استفاده می‌کند. زمانی که ویو نمایش داده می‌شود، دستورالعمل @parent با محتوای layout کلی جایگزین می‌شود. برخلاف مثال قبلی، در این مثال sidebar به جای show@ با endsection@ به پایان می‌رسد. دستور endsection@ فقط یک بخش را تعریف می‌کند در حالی که دستور show@ یک بخش را تعریف کرده و بلافاصله اجرا می‌کند. ویوهای blade می‌توانند توسط تابع کمکی view عمومی به صورت زیر از مسیرها بازگردانده شوند: Route::get(&#39;blade&#39;, function () { return view(&#39;child&#39;); }); کامپوننت ‌ها و اسلات ‌ها در view لاراول کامپوننت‌ها و اسلات‌ها روش‌ مناسبی برای تعریف بخش‌ها و layoutها ارائه می‌دهند؛ شاید برای برخی افراد درک ذهنی کامپوننت‌ها و اسلات‌ها ساده‌تر باشد. در ابتدا، اجازه دهید یک کامپوننت «alert» را در نظر بگیریم که قصد داریم توسط برنامه از آن استفاده مجدد کنیم: &lt;!-- /resources/views/alert.blade.php --&gt; &lt;div class=&quot;alert alert-danger&quot;&gt; {{ $slot }} &lt;/div&gt; متغیر {{ $slot }} دارای محتوایی است که می‌خواهید به کامپوننت تزریق کنید. می‌توان از دستور @component برای ساختن این کامپوننت استفاده کرد: @component(&#39;alert&#39;) &lt;strong&gt;Whoops!&lt;/strong&gt; Something went wrong! @endcomponent گاهی اوقات، تعریف چند اسلات برای یک کامپوننت می‌تواند مفید باشد. اجازه دهید ماژول alert را تغییر دهیم تا امکان تزریق «title» را نیز داشته باشیم. اسلات‌های نامگذاری شده ممکن است با متغیری که با نام آن مطابقت دارد نمایش داده شوند: &lt;!-- /resources/views/alert.blade.php --&gt; &lt;div class=&quot;alert alert-danger&quot;&gt; &lt;div class=&quot;alert-title&quot;&gt; {{ $title }} &lt;/div&gt; {{ $slot }} &lt;/div&gt; اکنون می‌توانیم محتوا را به اسلات نامگذاری شده با استفاده از دستور @slot تزریق کنیم. هر محتوایی که در دستور @slot نیست، در درون متغیر $slot به کامپوننت منتقل می‌شود: @component(&#39;alert&#39;) @slot(&#39;title&#39;) Forbidden @endslot You are not allowed to access this resource! @endcomponent انتقال داده های اضافی به کامپوننت‌های view در لاراول گاهی اوقات، ممکن است بخواهید داده‌های اضافی دیگری را به یک کامپوننت انتقال دهید. به همین دلیل، می‌توانید آرایه‌ای از داده‌ها را به عنوان آرگومان دوم به دستور @component منتقل کنید. تمام داده‌های آرایه به عنوان متغیر در قالب کامپوننت در دسترس خواهند بود: @component(&#39;alert&#39;, [&#39;foo&#39; =&gt; &#39;bar&#39;]) ... @endcomponent Aliasing Components If your Blade components are stored in a sub-directory, you may wish to alias them for easier access. For example, imagine a Blade component that is stored at resources/views/components/alert.blade.php. You may use the component method to alias the component from components.alert to alert. Typically, this should be done in the boot method of your AppServiceProvider: use Illuminate\\Support\\Facades\\Blade; Blade::component(&#39;components.alert&#39;, &#39;alert&#39;); Once the component has been aliased, you may render it using its alias: @alert(&#39;alert&#39;, [&#39;type&#39; =&gt; &#39;danger&#39;]) You are not allowed to access this resource! @endalert Or, if the component has no additional slots, you may use the component&#39;s name as a Blade directive: @alert You are not allowed to access this resource! @endalert نمایش داده‌ها در view لاراول برای نمایش داده‌های منتقل شده به ویوهای Blade می‌توان متغیر را در درون {{ }} قرار داد. برای مثال، به مسیر زیر توجه کنید: Route::get(&#39;greeting&#39;, function () { return view(&#39;welcome&#39;, [&#39;name&#39; =&gt; &#39;Samantha&#39;]); }); می‌توان محتویات متغیر name را به صورت زیر نمایش داد: Hello, {{ $name }} . البته، کار شما تنها به نمایش محتویات متغیرهای منتقل شده به ویو محدود نمی‌شود؛ بلکه، می‌توانید نتیجه حاصل از هر تابع PHP را نیز نمایش دهید. می‌توانید هر کد PHP را که بخواهید درون یک عبارت Blade echo قرار دهید: The current UNIX timestamp is {{ time() }} . عبارت‌های {{ }} Blade، جهت جلوگیری از حملات XSS به صورت خودکار توسط تابع پی اچ پی htmlspecialchars ارسال می‌شوند. نمایش داده های unescaped در view به صورت پیش‌فرض، عبارت‌های {{ }} Blade، جهت جلوگیری از حملات XSS به صورت خودکار توسط تابع پی اچ پی htmlspecialchars ارسال می‌شوند. اگر نخواهید داده‌هایتان را escaped کنید، می‌توانید از سینتکس زیر استفاده کنید: Hello, {!! $name !!}. در هنگام بازخوانی محتوا که توسط کاربران برنامه ارائه شده‌اند، بسیار دقت کنید. جهت جلوگیری از حملات XSS هنگام نمایش داده‌های ارائه شده توسط کاربران از {{ }} استفاده کنید. نمایش JSON گاهی اوقات، می‌توانید یک آرایه را به ویو خود انتقال دهید تا بتوانید آن را به عنوان یک JSON ارائه دهید و به عنوان یک متغیر جاوا اسکریپت از آن استفاده کنید. برای مثال: &lt;script&gt; var app = &lt;?php echo json_encode($array); ?&gt;; &lt;/script&gt; با این حال، به جای اینکه به صورت دستی json_encode را فراخوانی کنید، می‌توانید از دستور @json استفاده کنید: &lt;script&gt; var app = @json($array); &lt;/script&gt; HTML Entity Encoding ddd namespace App\\Providers; use Illuminate\\Support\\Facades\\Blade; use Illuminate\\Support\\ServiceProvider; class AppServiceProvider extends ServiceProvider { /** * Bootstrap any application services. * * @return void */ public function boot() { Blade::withoutDoubleEncoding(); } } Blade و فریم ورک های جاوا اسکریپت در لاراول از آنجایی که بسیاری از فریم ورک‌های جاوا اسکریپت نیز از {{ }} برای نمایش یک عبارت در مرورگر استفاده می‌کنند، می‌توانید از نماد @ استفاده کنید تا به موتور رندر Blade اعلان کنید که عبارت داخل آن را تفسیر نکند. برای مثال: &lt;h1&gt;Laravel&lt;/h1&gt; Hello, @ {{ name }} . در این مثال، نماد @ توسط Blade حذف می‌شود؛ با این حال، عبارت {{ name }} توسط موتور Blade تفسیر نمی‌شود و این کار مستقیماً توسط فریم ورک جاوا اسکریپت انجام می‌شود. The دستور @verbatim در Blade لاراول اگر متغیرهای جاوا اسکریپت را در بخش بزرگی از قالب خود نمایش می‌دهید، می‌توانید عبارت‌های HTML را در دستور @verbatim قرار دهید، بنابراین لازم نیست که پیش از هر عبارت Blade echo علامت @ قرار دهید: @verbatim &lt;div class=&quot;container&quot;&gt; Hello, {{ name }} . &lt;/div&gt; @endverbatim استفاده از ساختارهای کنترلی در Blade لاراول علاوه بر ارث بری قالب‌ها و نمایش داده‌ها در ویو، Blade لاراول میانبرهای مناسبی را نیز ارائه می‌دهد که می‌توان از آن‌ها جهت ایجاد ساختارهای کنترلی رایج PHP مانند دستورات شرطی و حلقه‌ها در ویوهای Blade استفاده کرد. این میانبرها یک روش بسیار ساده و کارآمد برای کار با ساختارهای کنترلی PHP ارائه می‌دهند، در حالی که همچنان، شباهت خود را با معادل‌های PHP حفظ می‌کنند. استفاده از عبارات If در Blade لاراول برای ساخت عبارات if در یک ویوی Blade، می‌توانید از دستوالعمل‌های @if و @elseif و @else و @endif استفاده کنید. این دستورالعمل‌ها بسیار شبیه به معادل‌های PHP خود عمل می‌کنند: @if (count($records) === 1) I have one record! @elseif (count($records) &gt; 1) I have multiple records! @else I don&#39;t have any records! @endif برای راحتی کار، Blade یک دستورالعمل @unless نیز ارائه می‌دهد: @unless (Auth::check()) You are not signed in. @endunless علاوه بر دستورالعمل‌های شرطی که اشاره شد، دستورالعمل‌های @isset و @empty نیز ممکن است به عنوان میانبرهای مناسب برای توابع PHP مربوط به آن‌ها در یک ویوی Blade مورد استفاده قرار گیرند: @isset($records) // $records is defined and is not null... @endisset @empty($records) // $records is &quot;empty&quot;... @endempty دستورالعمل‌های احراز هویت (authentication) در Blade لاراول جهت تعیین فوری اینکه کاربر جاری یک کاربر تایید شده است یا یک کاربر مهمان، می‌توان از دستورالعمل‌های احراز هویت @auth و @guest به صورت زیر استفاده کرد: @auth // The user is authenticated... @endauth @guest // The user is not authenticated... @endguest در صورت لزوم، می‌توانید مسئول احراز هویت را به عنوان پارامتر مشخص کنید که در زمان استفاده از دستورات @auth و @guest جهت تعیین اینکه کاربر از طریق مسئول احراز هویت وارد سیستم شده است، بررسی می‌شود: @auth(&#39;admin&#39;) // The user is authenticated... @endauth @guest(&#39;admin&#39;) // The user is not authenticated... @endguest استفاده از دستورالعمل‌های section در Blade لاراول می‌توانید محتوای یک section را با استفاده از دستور @hasSection بررسی نمایید: @hasSection(&#39;navigation&#39;) &lt;div class=&quot;pull-right&quot;&gt; @yield(&#39;navigation&#39;) &lt;/div&gt; &lt;div class=&quot;clearfix&quot;&gt;&lt;/div&gt; @endif استفاده از عبارت‌های switch در Blade لاراول عبارات switch می‌توانند با استفاده از دستورالعمل‌های @switch و @case و @default و @endswitch ایجاد شوند: @switch($i) @case(1) First case... @break @case(2) Second case... @break @default Default case... @endswitch استفاده از دستورات حلقه‌ در Blade لاراول علاوه بر دستورات شرطی، Blade دستورالعمل‌های ساده‌ای را نیز برای کار با ساختارهای حلقه‌ای زبان PHP ارائه می‌دهد. در این مورد هم، هر کدام از این دستورات مشابه معادل‌های خود در زبان PHP عمل می‌کنند: @for ($i = 0; $i &lt; 10; $i++) The current value is {{ $i }} @endfor @foreach ($users as $user) &lt;p&gt;This is user {{ $user-&gt;id }} &lt;/p&gt; @endforeach @forelse ($users as $user) &lt;li&gt; {{ $user-&gt;name }} &lt;/li&gt; @empty &lt;p&gt;No users&lt;/p&gt; @endforelse @while (true) &lt;p&gt;I&#39;m looping forever.&lt;/p&gt; @endwhile در زمان کار با حلقه‌ها، می‌توانید از متغیر حلقه برای بدست آوردن اطلاعات مهم در مورد حلقه موردنظر استفاده کنید، اطلاعاتی مانند اینکه در اولین یا آخرین گام تکرار حلقه قرار دارید. همچنین، هنگام استفاده از حلقه‌ها می‌توانید حلقه را پایان دهید یا گام تکرار فعلی را حفظ کنید: @foreach ($users as $user) @if ($user-&gt;type == 1) @continue @endif &lt;li&gt; {{ $user-&gt;name }} &lt;/li&gt; @if ($user-&gt;number == 5) @break @endif @endforeach همچنین، می‌توانید شرط اجرای حلقه را با اعلان دستور حلقه در یک خط کد قرار دهید: @foreach ($users as $user) @continue($user-&gt;type == 1) &lt;li&gt; {{ $user-&gt;name }} &lt;/li&gt; @break($user-&gt;number == 5) @endforeach متغیر حلقه در Blade لاراول هنگام استفاده از حلقه‌ها، یک متغیر $loop در داخل حلقه در دسترس است که این متغیر اطلاعات مهمی مانند گام تکرار فعلی و اینکه آیا در اولین یا آخرین گام تکرار حلقه قرار دارید را مشخص می‌کند: @foreach ($users as $user) @if ($loop-&gt;first) This is the first iteration. @endif @if ($loop-&gt;last) This is the last iteration. @endif &lt;p&gt;This is user {{ $user-&gt;id }} &lt;/p&gt; @endforeach اگر در یک حلقه تکرار تو در تو باشید، می‌توانید به متغیر $loop حلقه والد از طریق خصوصیت parent دسترسی داشته باشید: @foreach ($users as $user) @foreach ($user-&gt;posts as $post) @if ($loop-&gt;parent-&gt;first) This is first iteration of the parent loop. @endif @endforeach @endforeach همچنین، متغیر $loop خصوصیت‌های مفید دیگری را نیز شامل می‌شود که در جدول زیر لیست شده اند: Property Description $loop-&gt;index The index of the current loop iteration (starts at 0). $loop-&gt;iteration The current loop iteration (starts at 1). $loop-&gt;remaining The iteration remaining in the loop. $loop-&gt;count The total number of items in the array being iterated. $loop-&gt;first Whether this is the first iteration through the loop. $loop-&gt;last Whether this is the last iteration through the loop. $loop-&gt;depth The nesting level of the current loop. $loop-&gt;parent When in a nested loop, the parent&#39;s loop variable. نحوه ثبت کامنت‌ در ‌Blade لاراول Blade این امکان را می‌دهد که بتوانید در ویوهای خود کامنت‌ها را تعریف کنید. با این حال، بر خلاف کامنت‌های HTML، کامنت‌های Blade در ساختار HTML که توسط برنامه برگردانده می‌شود، قرار نمی‌‌گیرند: {{-- This comment will not be present in the rendered HTML --}} PHP استفاده از کد در برخی موارد، لازم است که از کد PHP در ویوهای ‌Blade خود استفاده کنید. برای این کار، می‌توانید از دستورالعمل @php برای اجرای یک بلوک ساده از کد PHP در قالب ویو خود استفاده کنید: @php // @endphp در حالی که Blade امکان استفاده از این ویژگی را فراهم کرده است ولی با این حال استفاده از این ویژگی می‌تواند نشان دهنده این باشد که شما در گنجاندن منطق در قالب ویو خود زیاده روی کرده‌اید. sub-view نحوه استفاده از دستور @include این امکان را می‌دهد که بتوانید یک ویو Blade را در داخل یک ویو دیگر اضافه کنید. تمام متغیرهایی که در ویو والد موجود هستند در ویو فرزند نیز قابل دسترس خواهند بود: &lt;div&gt; @include(&#39;shared.errors&#39;) &lt;form&gt; &lt;!-- Form Contents --&gt; &lt;/form&gt; &lt;/div&gt; با اینکه ویو فرزند تمام داده‌های موجود در ویو والد را به ارث می‌برد؛ با این حال، می‌توانید یک آرایه شامل داده‌های اضافی را به این ویو انتقال دهید: @include(&#39;view.name&#39;, [&#39;some&#39; =&gt; &#39;data&#39;]) البته، اگر سعی در اضافه کردن یک ویو با دستور @include داشته باشید که موجود نیست، لاراول یک خطا صادر می‌کند. اگر بخواهید یک ویو را با احتمال موجود بودن یا موجود نبودن آن اضافه کنید، بایستی از دستور @includeIf به صورت زیر استفاده کنید: @includeIf(&#39;view.name&#39;, [&#39;some&#39; =&gt; &#39;data&#39;]) اگر بخواهید یک sub-view را براساس یک عبارت شرطی بولین با دستور @include اضافه کنید، می‌توانید از دستورالعمل @includeWhen به صورت زیر استفاده کنید: @includeWhen($boolean, &#39;view.name&#39;, [&#39;some&#39; =&gt; &#39;data&#39;]) جهت اضافه کردن اولین ویو موجود در آرایه‌ای از ویو‌ها، می‌توانید از دستورالعمل includeFirst به صورت زیر استفاده کنید: @includeFirst([&#39;custom.admin&#39;, &#39;admin&#39;], [&#39;some&#39; =&gt; &#39;data&#39;]) از بکار بردن ثابت‌های __DIR__ و __FILE__ در ویوهای Blade خود اجتناب کنید، زیرا به مکان ویو کامپایل شده و کش شده اشاره می‌کنند. رندر کردن view با مجموعه‌‌ها در Blade می‌توانید حلقه‌ها و includeها را با دستورالعمل @each در یک خط کد ترکیب کنید: @each(&#39;view.name&#39;, $jobs, &#39;job&#39;) اولین آرگومان، view partial جهت رندر کردن هر آیتم موجود در آرایه یا مجموعه است. آرگومان دوم، آرایه یا مجموعه‌ای است که می‌خواهید آن را تکرار کنید. سومین آرگومان، نام متغیری است که به گام تکرار فعلی در ویو نسبت داده می‌شود. برای مثال، اگر درون یک آرایه از jobها از حلقه استفاده می‌کنید، ممکن است به هر job به عنوان یک متغیر job در view partial خود دسترسی داشته باشید. کلید گام تکرار فعلی به عنوان متغیر key در ویو در دسترس خواهد بود. همچنین، می‌توانید چهارمین آرگومان را نیز به دستور @each انتقال دهید. در صورتی که آرایه داده شده خالی بود، این آرگومان مشخص می‌کند که کدام ویو نمایش داده شود: @each(&#39;view.name&#39;, $jobs, &#39;job&#39;, &#39;view.empty&#39;) ویوهای نمایش داده شده از طریق دستور each@ متغیرها را از ویو والد به ارث نمی‌برند. اگر ویو فرزند به این متغیرها نیاز داشته باشد، می‌توانید به جای آن از دستور foreach@ و include@ استفاده کنید. پشته Stacks ‌Blade این امکان را می‌دهد تا پشته‌های نامگذاری شده را push کنید که در جایی دیگر در داخل یک ویو یا layout رندر شود. این موضوع می‌تواند جهت تعیین کتابخانه جاوا اسکریپت موردنیاز ویوهای فرزند مفید باشد. @push(&#39;scripts&#39;) &lt;script src=&quot;/example.js&quot;&gt;&lt;/script&gt; @endpush می‌توانید یک پشته موردنیاز را چندین مرتبه push کنید. برای ارائه کامل محتویات پشته، نام پشته را به دستور @stack انتقال دهید: &lt;head&gt; &lt;!-- Head Contents --&gt; @stack(&#39;scripts&#39;) &lt;/head&gt; تزریق خدمات یا service Injection در Blade خروجی دستور @inject می‌تواند برای بازیابی یک سرویس از service container لاراول مورد استفاده قرار گیرد. اولین آرگومان ارسالی به @inject ، نام متغیری است که سرویس در آن قرار داده می‌شود؛ در حالی که، دومین آرگومان نام کلاس یا رابط سرویسی است که قصد دارید آن را resolve کنید. @inject(&#39;metrics&#39;, &#39;App\\Services\\MetricsService&#39;) &lt;div&gt; Monthly Revenue: {{ $metrics-&gt;monthlyRevenue() }} . &lt;/div&gt; گسترش دستورالعمل‌های Blade در لاراول Blade این امکان را می‌دهد که بتوانید دستورالعمل‌های سفارشی خود را با استفاده از متد directive تعریف کنید. زمانی که کامپایلر Blade با دستورالعمل سفارشی مواجه می‌شود، تابع callback ارائه شده را با پارامترهای آن فراخوانی می‌کند. مثال زیر یک دستور @datetime($var) ایجاد می‌کند که یک متغیر $var را فرمت دهی می‌کند که باید یک نمونه از DateTime باشد: namespace App\\Providers; use Illuminate\\Support\\Facades\\Blade; use Illuminate\\Support\\ServiceProvider; class AppServiceProvider extends ServiceProvider { /** * Perform post-registration booting of services. * * @return void */ public function boot() { Blade::directive(&#39;datetime&#39;, function ($expression) { return &quot;format(&#39;m/d/Y H:i&#39;); ?&gt;&quot;; }); } /** * Register bindings in the container. * * @return void */ public function register() { // } } همانطور که مشاهده می‌کنید، ما متد format را بر روی هر عبارت به ترتیبی که در دستورالعمل قرار دارد، اعمال می‌کنیم. بنابراین، در این مثال کد PHP تولید شده توسط این دستور به این صورت خواهد بود: format(&#39;m/d/Y H:i&#39;); ?&gt; پس از بروز رسانی منطق یک دستورالعمل Blade، باید تمام ویوهای Blade کش شده را حذف کنید. می‌توانید با استفاده از دستور آرتیسان view:clear ویوهای Blade کش شده را پاک کنید. عبارات if سفارشی در Blade برنامه نویسی یک دستورالعمل سفارشی، پیچیده‌تر از تعیین عبارات شرطی ساده به صورت سفارشی است. به همین دلیل Blade متد Blade::if را ارائه می‌دهد که توسط آن می‌توانید به سرعت دستورات شرطی سفارشی خود را با استفاده از Closure تعریف کنید. برای مثال، اجازه دهید یک دستور شرطی سفارشی را تعریف کنیم که محیط برنامه فعلی را بررسی می‌کند. می‌توانیم این کار را در متد boot از AppServiceProvider خود انجام دهیم: use Illuminate\\Support\\Facades\\Blade; /** * Perform post-registration booting of services. * * @return void */ public function boot() { Blade::if(&#39;env&#39;, function ($environment) { return app()-&gt;environment($environment); }); } زمانی که دستور شرطی سفارشی ایجاد شد، می‌توانیم به راحتی از آن در قالب‌های ویو خود استفاده کنیم: @env(&#39;local&#39;) // The application is in the local environment... @elseenv(&#39;testing&#39;) // The application is in the testing environment... @else // The application is not in the local or testing environment... @endenv","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="stylesheet" href="/assets/prisma/prism.css">
+    <!-- favicons and rss -->
+    <link rel="alternate" type="application/rss+xml" title="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" href="/feed.xml">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- header -->
+<header class="header" role="banner" aria-label="Header">
+    <button class="hamburger-button" onclick="hamburgerMenu();" role="button" aria-label="Hamburger menu button">
+        <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    </button>
+    <a href="/" class="logo" role="link" aria-label="Home">
+        <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo">
+    </a>
+    <nav class="navigation" role="navigation" aria-label="Navigation">
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item">
+                <a href="/" class="logo" role="menuitem" aria-label="Home">
+                    <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo">
+                </a>
+            </li>
+            
+            <li role="menuitem"><a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a></li>
+            
+            <li role="menuitem"><a href="/contactus" role="menuitem" aria-label="تماس">تماس</a></li>
+            
+        </ul>
+    </nav>
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox">
+        </form>
+    </div>
+</header>
+
+<nav id="hamburger-menu" role="navigation" aria-label="Hamburger menu">
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox">
+        </form>
+    </div>
+    <div class="home-nav" role="navigation" aria-label="Site navigation">
+        <a href="/" role="menuitem" aria-label="Home">صفحه اصلی</a>
+        
+        <a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a>
+        
+        <a href="/contactus" role="menuitem" aria-label="تماس">تماس</a>
+        
+    </div>
+
+    
+    <div class="doc-nav" role="navigation" aria-label="Documentation navigation">
+        <p role="presentation" aria-label="Category name">
+            اصول آموزش Laravel
+        </p>
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/2017/12/18/laravel.html" class="doc-link" role="link" aria-label="Blade Templates">مقدمه</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Digging-Deeper/collections" class="doc-link" role="link" aria-label="معرفی collections">معرفی collections</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Database/database" class="doc-link" role="link" aria-label="پایگاه داده ها">پایگاه داده ها</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Database/queries" class="doc-link" role="link" aria-label="آشنایی با Query Builder">آشنایی با Query Builder</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent" class="doc-link" role="link" aria-label="آشنایی با eloquent">آشنایی با eloquent</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-relationships" class="doc-link" role="link" aria-label="eloquent relationships  آموزش">eloquent relationships  آموزش</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-mutators" class="doc-link" role="link" aria-label="آشنایی با eloquent mutators">آشنایی با eloquent mutators</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-collections" class="doc-link" role="link" aria-label="آشنایی با eloquent collections">آشنایی با eloquent collections</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Eloquent-ORM/eloquent-serialization" class="doc-link" role="link" aria-label="آشنایی با eloquent serialization">آشنایی با eloquent serialization</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Architecture-Concepts/lifecycle" class="doc-link" role="link" aria-label="چرخه ی حیات درخواست (Request Lifecycle)">چرخه ی حیات درخواست (Request Lifecycle)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/routing" class="doc-link" role="link" aria-label="Routing یا مسیریابی در لاراول">Routing یا مسیریابی در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/middleware" class="doc-link" role="link" aria-label="آموزش Middleware">آموزش Middleware</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/csrf" class="doc-link" role="link" aria-label="حفاظت CSRF">حفاظت CSRF</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/controllers" class="doc-link" role="link" aria-label="استفاده از Controller">استفاده از Controller</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/requests" class="doc-link" role="link" aria-label="اصول requests">اصول requests</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/views" class="doc-link" role="link" aria-label="ایجاد view">ایجاد view</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/session" class="doc-link" role="link" aria-label="استفاده از  Session">استفاده از  Session</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/responses" class="doc-link" role="link" aria-label="پاسخ Response">پاسخ Response</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/urls" class="doc-link" role="link" aria-label="تولید URL در لاراول">تولید URL در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/validation" class="doc-link" role="link" aria-label="validation یا اعتبارسنجی در لاراول">validation یا اعتبارسنجی در لاراول</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/The-Basics/errors" class="doc-link" role="link" aria-label="مدیریت Errors &amp; Logging">مدیریت Errors &amp; Logging</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/blade" class="doc-link" role="link" aria-label="Blade Templates">Blade Templates</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/localization" class="doc-link" role="link" aria-label="اصول localization">اصول localization</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/laravel/Frontend/frontend" class="doc-link" role="link" aria-label="JavaScript &amp; CSS Scaffolding">JavaScript &amp; CSS Scaffolding</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </ul>
+    </div>
+    
+</nav>
+<!-- main content -->
+<main class="container" role="main">
+    <div class="rcdoccontainerimg">
+<div class="rc-DRTVBanner-new rc-DRTVBanner-bigsize">
+    <div style="background: url('/images/original/laravel.png'); " class="blurred_img"></div>
+    <div class="mask"></div>
+    <div class="bot"></div>
+    <div class="over">
+        <div class="container-rc">
+            <img class="image" src="/images/original/laravel.png" alt="Blade Templates" height="190">
+            <div class="desktop-banner-container">
+                <h1 class="display-5-text headline">
+                    
+                    
+                    اصول آموزش Laravel
+                    </h1>
+                <!--<div class="tagslist"><ul class='lyda-tag-list'><li class='lyda-tag-list-title'>برچسب ها</li><li><a class="tags" href="/tag/لاراول">#لاراول</a></li><li><a class="tags" href="/tag/لاراول-5-5">#لاراول 5.5</a></li></ul></div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="bread-crumb">-->
+<!--<div class="container   ">-->
+<!--<div class="pull-right ">-->
+<!--<div class="bread-button text-custom b-left">-->
+<!--انتشار : 2 ماه پیش-->
+<!--</div>-->
+<!--<a href="/category/article/" class="bread-button back-to-all b-left hidden-xs">همه مقالات</a>-->
+<!--<div class="cat-lable">-->
+<!--<a href="/category/article/laravel/">-->
+<!--لاراول-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<script>
+    $(window).scroll(function(){
+        var sticky = $('.doc-menu'),
+            scroll = $(window).scrollTop();
+        if (scroll >= 101) {sticky.addClass('doc-header-scroll'); }
+        else {sticky.removeClass('doc-header-scroll'); };
+    });
+</script>
+</div>
+<div class="doc-container">
+
+    <div class="doc-menu">
+    
+    <ul>
+        <li>
+            <a href="/2017/12/18/laravel.html" class="active doc-link" role="link">
+                مقدمه
+            </a>
+        </li>
+        
+        <li>
+            <span class="caret">معماری Laravel</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="چرخه ی حیات درخواست (Request Lifecycle)" href="/documentation/laravel/Architecture-Concepts/lifecycle" class="active doc-link" role="link">
+                چرخه ی حیات درخواست (Request Lifecycle)
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم اساسی</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="Routing یا مسیریابی در لاراول" href="/documentation/laravel/The-Basics/routing" class="active doc-link" role="link">
+                Routing یا مسیریابی در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آموزش Middleware" href="/documentation/laravel/The-Basics/middleware" class="active doc-link" role="link">
+                آموزش Middleware
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="حفاظت CSRF" href="/documentation/laravel/The-Basics/csrf" class="active doc-link" role="link">
+                حفاظت CSRF
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="استفاده از Controller" href="/documentation/laravel/The-Basics/controllers" class="active doc-link" role="link">
+                استفاده از Controller
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول requests" href="/documentation/laravel/The-Basics/requests" class="active doc-link" role="link">
+                اصول requests
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="ایجاد view" href="/documentation/laravel/The-Basics/views" class="active doc-link" role="link">
+                ایجاد view
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="استفاده از  Session" href="/documentation/laravel/The-Basics/session" class="active doc-link" role="link">
+                استفاده از  Session
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="پاسخ Response" href="/documentation/laravel/The-Basics/responses" class="active doc-link" role="link">
+                پاسخ Response
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="تولید URL در لاراول" href="/documentation/laravel/The-Basics/urls" class="active doc-link" role="link">
+                تولید URL در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="validation یا اعتبارسنجی در لاراول" href="/documentation/laravel/The-Basics/validation" class="active doc-link" role="link">
+                validation یا اعتبارسنجی در لاراول
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="مدیریت Errors &amp; Logging" href="/documentation/laravel/The-Basics/errors" class="active doc-link" role="link">
+                مدیریت Errors &amp; Logging
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">Front End</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="Blade Templates" href="/documentation/laravel/Frontend/blade" class="active doc-link" role="link">
+                Blade Templates
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول localization" href="/documentation/laravel/Frontend/localization" class="active doc-link" role="link">
+                اصول localization
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="JavaScript &amp; CSS Scaffolding" href="/documentation/laravel/Frontend/frontend" class="active doc-link" role="link">
+                JavaScript &amp; CSS Scaffolding
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم پیشرفته تر</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="معرفی collections" href="/documentation/laravel/Digging-Deeper/collections" class="active doc-link" role="link">
+                معرفی collections
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">پایگاه داده ها</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="پایگاه داده ها" href="/documentation/laravel/Database/database" class="active doc-link" role="link">
+                پایگاه داده ها
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با Query Builder" href="/documentation/laravel/Database/queries" class="active doc-link" role="link">
+                آشنایی با Query Builder
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">Eloquent ORM</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent" href="/documentation/laravel/Eloquent-ORM/eloquent" class="active doc-link" role="link">
+                آشنایی با eloquent
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="eloquent relationships  آموزش" href="/documentation/laravel/Eloquent-ORM/eloquent-relationships" class="active doc-link" role="link">
+                eloquent relationships  آموزش
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent mutators" href="/documentation/laravel/Eloquent-ORM/eloquent-mutators" class="active doc-link" role="link">
+                آشنایی با eloquent mutators
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent collections" href="/documentation/laravel/Eloquent-ORM/eloquent-collections" class="active doc-link" role="link">
+                آشنایی با eloquent collections
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="آشنایی با eloquent serialization" href="/documentation/laravel/Eloquent-ORM/eloquent-serialization" class="active doc-link" role="link">
+                آشنایی با eloquent serialization
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+    </ul>
+    
+</div>
+
+    <article class="documentation">
+        <header class="doc-header">
+            <div class="time">
+                    تاریخ :      سه شنبه 24 بهمن 1396
+            </div>
+                
+        </header>
+        <section class="anchored">
+            <p>
+Blade یک موتور قالب بندی ساده و کارآمد است که به همراه لاراول ارائه می‌شود. بر خلاف دیگر موتورهای محبوب قالب بندی PHP،  موتور قالب بندی Blade محدودیتی برای شما در استفاده از کدهای ساده PHP در view ایجاد نمی‌کند. در واقع، تمام ویوهای Blade به کد PHP ساده تبدیل شده و تا زمانی که تغییر نکرده‌اند در حافظه کش ذخیره می‌شوند؛ در این حالت می‌توان گفت که Blade هیچ سرباری به برنامه شما اضافه نمی‌کند. فایل‌های ویوی Blade از پسوند فایل .blade.php استفاده می‌کنند و معمولاً در دایرکتوری resources/views ذخیره می‌شوند.
+</p>
+
+<p>
+<a name="template-inheritance"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#template-inheritance">ارث بری قالب view در لاراول</a></h3>
+<p>
+<a name="defining-a-layout"></a>
+</p>
+
+<p><br></p>
+<h3>تعریف یک Layout</h3>
+<p>
+دو مزیت اصلی استفاده از Blade، ارث بری قالب و بخش‌ها است. برای شروع کار، یک مثال ساده را در نظر می‌گیریم؛ در ابتدا، یک صفحه master را در نظر می‌گیریم. از آنجایی که اکثر برنامه‌های کاربردی وب از یک layout کلی برای صفحات مختلف استفاده می‌کنند، برای راحتی کار می‌توان این layout را به عنوان یک ویو Blade به صورت زیر تعریف کرد:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- Stored in resources/views/layouts/app.blade.php --&gt;</span>
+
+<span class="nt">&lt;html&gt;</span>
+    <span class="nt">&lt;head&gt;</span>
+        <span class="nt">&lt;title&gt;</span>App Name - @yield('title')<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;/head&gt;</span>
+    <span class="nt">&lt;body&gt;</span>
+        @section('sidebar')
+            This is the master sidebar.
+        @show
+
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
+            @yield('content')
+        <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<p>
+همانطور که مشاهده می‌کنید، این فایل شامل عبارت‌های HTML است. با این حال، به دستورات <a href="https://github.com/section" class="user-mention">@section</a> و <a href="https://github.com/yield" class="user-mention">@yield</a> توجه داشته باشید. دستورالعمل <a href="https://github.com/section" class="user-mention">@section</a> ، همانطور که از نامش پیداست، قسمتی از محتوا را تعریف می‌کند، در حالی که دستورالعمل <a href="https://github.com/yield" class="user-mention">@yield</a> جهت نمایش محتوای یک بخش خاص استفاده می‌شود.
+</p>
+
+<p>
+پس از اینکه یک layout برای برنامه ایجاد کردیم، اجازه دهید یک صفحه فرزند که از layout ارث بری می‌کند، ایجاد کنیم.
+</p>
+
+<p>
+<a name="extending-a-layout"></a>
+</p>
+
+<p><br></p>
+<h3>ارث بری از یک Layout در لاراول</h3>
+<p>
+در زمان تعریف یک ویو فرزند، جهت تعیین اینکه ویو فرزند از کدام layout ارث بری کند، می‌توانیم از دستور <a href="https://github.com/extends" class="user-mention">@extends</a> استفاده کنیم. ویوهایی که از layout Blade ارث بری می‌کنند، می‌توانند با استفاده از دستور <a href="https://github.com/section" class="user-mention">@section</a> محتوای خاصی را به قسمت‌های مختلف layout تزریق کنند. توجه داشته باشید، همان طور که در مثال بالا مشاهده کردید، می‌توان با استفاده از دستور <a href="https://github.com/yield" class="user-mention">@yield</a> محتویات این قسمت‌ها را در layout نمایش داد:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- Stored in resources/views/child.blade.php --&gt;</span>
+
+@extends('layouts.app')
+
+@section('title', 'Page Title')
+
+@section('sidebar')
+    @parent
+
+    <span class="nt">&lt;p&gt;</span>This is appended to the master sidebar.<span class="nt">&lt;/p&gt;</span>
+@endsection
+
+@section('content')
+    <span class="nt">&lt;p&gt;</span>This is my body content.<span class="nt">&lt;/p&gt;</span>
+@endsection
+</code></pre></div></div>
+
+<p>
+در این مثال، قسمت sidebar از دستور <a href="https://github.com/parent" class="user-mention">@parent</a> برای افزودن محتوا (به جای بازنویسی) به قسمت sidebar در layout استفاده می‌کند. زمانی که ویو نمایش داده می‌شود، دستورالعمل <a href="https://github.com/parent" class="user-mention">@parent</a> با محتوای layout کلی جایگزین می‌شود.
+</p>
+<blockquote class="has-icon tip">
+برخلاف مثال قبلی، در این مثال sidebar به جای show@ با endsection@ به پایان می‌رسد. دستور endsection@ فقط یک بخش را تعریف می‌کند در حالی که دستور show@ یک بخش را تعریف کرده و بلافاصله اجرا می‌کند.
+</blockquote>
+<p>
+ویوهای blade می‌توانند توسط تابع کمکی view عمومی به صورت زیر از مسیرها بازگردانده شوند:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('blade', function () {
+    return view('child');
+});
+</code></pre>
+
+<p>
+<a name="components-and-slots"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#components-and-slots">کامپوننت ‌ها و اسلات ‌ها در view لاراول</a></h3>
+<p>
+کامپوننت‌ها و اسلات‌ها روش‌ مناسبی برای تعریف بخش‌ها و layoutها ارائه می‌دهند؛ شاید برای برخی افراد درک ذهنی کامپوننت‌ها و اسلات‌ها ساده‌تر باشد. در ابتدا، اجازه دهید یک کامپوننت «alert» را در نظر بگیریم که قصد داریم توسط برنامه از آن استفاده مجدد کنیم:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- /resources/views/alert.blade.php --&gt;</span>
+
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"alert alert-danger"</span><span class="nt">&gt;</span>
+    {{ $slot }}
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+
+<p>
+متغیر <code class=" language-php"><span class="token punctuation">{</span><span class="token punctuation">{</span> <span class="token variable">$slot</span> <span class="token punctuation">}</span><span class="token punctuation">}</span></code> دارای محتوایی است که می‌خواهید به کامپوننت تزریق کنید. می‌توان از دستور <a href="https://github.com/component" class="user-mention">@component</a> برای ساختن این کامپوننت استفاده کرد:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@component('alert')
+    <span class="nt">&lt;strong&gt;</span>Whoops!<span class="nt">&lt;/strong&gt;</span> Something went wrong!
+@endcomponent
+</code></pre></div></div>
+
+<p>
+گاهی اوقات، تعریف چند اسلات برای یک کامپوننت می‌تواند مفید باشد. اجازه دهید ماژول alert را تغییر دهیم تا امکان تزریق «title» را نیز داشته باشیم. اسلات‌های نامگذاری شده ممکن است با متغیری که با نام آن مطابقت دارد نمایش داده شوند:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- /resources/views/alert.blade.php --&gt;</span>
+
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"alert alert-danger"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"alert-title"</span><span class="nt">&gt;</span> {{ $title }}  <span class="nt">&lt;/div&gt;</span>
+
+    {{ $slot }}  
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+
+<p>
+اکنون می‌توانیم محتوا را به اسلات نامگذاری شده با استفاده از دستور <a href="https://github.com/slot" class="user-mention">@slot</a> تزریق کنیم. هر محتوایی که در دستور <a href="https://github.com/slot" class="user-mention">@slot</a> نیست، در درون متغیر $slot به کامپوننت منتقل می‌شود:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@component('alert')
+    @slot('title')
+        Forbidden
+    @endslot
+
+    You are not allowed to access this resource!
+@endcomponent
+</code></pre></div></div>
+
+<p><br></p>
+<h3>انتقال داده های اضافی به کامپوننت‌های view در لاراول</h3>
+<p>
+گاهی اوقات، ممکن است بخواهید داده‌های اضافی دیگری را به یک کامپوننت انتقال دهید. به همین دلیل، می‌توانید آرایه‌ای از داده‌ها را به عنوان آرگومان دوم به دستور <a href="https://github.com/component" class="user-mention">@component</a> منتقل کنید. تمام داده‌های آرایه به عنوان متغیر در قالب کامپوننت در دسترس خواهند بود:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@component('alert', ['foo' =&gt; 'bar'])
+    ...
+@endcomponent
+</code></pre></div></div>
+
+<p><br></p>
+<h3>Aliasing Components</h3>
+<p>
+If your Blade components are stored in a sub-directory, you may wish to alias them for easier access. For example, imagine a Blade component that is stored at <code class=" language-php">resources<span class="token operator">/</span>views<span class="token operator">/</span>components<span class="token operator">/</span>alert<span class="token punctuation">.</span>blade<span class="token punctuation">.</span>php</code>. You may use the <code class=" language-php">component</code> method to alias the component from <code class=" language-php">components<span class="token punctuation">.</span>alert</code> to <code class=" language-php">alert</code>. Typically, this should be done in the <code class=" language-php">boot</code> method of your <code class=" language-php">AppServiceProvider</code>:
+</p>
+
+<pre><code class="language-php  line-numbers">use Illuminate\Support\Facades\Blade;
+
+Blade::component('components.alert', 'alert');
+</code></pre>
+
+<p>
+Once the component has been aliased, you may render it using its alias:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@alert('alert', ['type' =&gt; 'danger'])
+    You are not allowed to access this resource!
+@endalert
+</code></pre></div></div>
+
+<p>
+Or, if the component has no additional slots, you may use the component's name as a Blade directive:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@alert
+    You are not allowed to access this resource!
+@endalert
+</code></pre></div></div>
+
+<p>
+<a name="displaying-data"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#displaying-data">نمایش داده‌ها در view لاراول</a></h3>
+
+<p>
+برای نمایش داده‌های منتقل شده به ویوهای Blade می‌توان متغیر را در درون {{ }} قرار داد. برای مثال، به مسیر زیر توجه کنید:
+</p>
+
+<pre><code class="language-php  line-numbers">Route::get('greeting', function () {
+    return view('welcome', ['name' =&gt; 'Samantha']);
+});
+</code></pre>
+
+<p>
+می‌توان محتویات متغیر name را به صورت زیر نمایش داد:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hello, {{ $name }}  .
+</code></pre></div></div>
+
+<p>
+البته، کار شما تنها به نمایش محتویات متغیرهای منتقل شده به ویو محدود نمی‌شود؛ بلکه، می‌توانید نتیجه حاصل از هر تابع PHP را نیز نمایش دهید. می‌توانید هر کد PHP را که بخواهید درون یک عبارت Blade echo قرار دهید:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The current UNIX timestamp is  {{ time() }}  .
+</code></pre></div></div>
+<blockquote class="has-icon tip">
+عبارت‌های {{ }} Blade، جهت جلوگیری از حملات XSS به صورت خودکار توسط تابع پی اچ پی htmlspecialchars ارسال می‌شوند.
+</blockquote>
+<p><br></p>
+<h3>نمایش داده های unescaped در view</h3>
+<p>
+به صورت پیش‌فرض، عبارت‌های {{ }} Blade، جهت جلوگیری از حملات XSS به صورت خودکار توسط تابع پی اچ پی htmlspecialchars ارسال می‌شوند. اگر نخواهید داده‌هایتان را escaped کنید، می‌توانید از سینتکس زیر استفاده کنید:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hello, {!! $name !!}.
+</code></pre></div></div>
+<blockquote class="has-icon note">
+در هنگام بازخوانی محتوا که توسط کاربران برنامه ارائه شده‌اند، بسیار دقت کنید. جهت جلوگیری از حملات XSS هنگام نمایش داده‌های ارائه شده توسط کاربران از {{ }}  استفاده کنید.
+</blockquote>
+<p><br></p>
+<h3>نمایش JSON</h3>
+<p>
+گاهی اوقات، می‌توانید یک آرایه را به ویو خود انتقال دهید تا بتوانید آن را به عنوان یک JSON ارائه دهید و به عنوان یک متغیر جاوا اسکریپت از آن استفاده کنید. برای مثال:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;script&gt;</span>
+    <span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="o">&lt;</span><span class="p">?</span><span class="nx">php</span> <span class="nx">echo</span> <span class="nx">json_encode</span><span class="p">(</span><span class="nx">$array</span><span class="p">);</span> <span class="p">?</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div></div>
+
+<p>
+با این حال، به جای اینکه به صورت دستی json_encode را فراخوانی کنید، می‌توانید از دستور <a href="https://github.com/json" class="user-mention">@json</a> استفاده کنید:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;script&gt;</span>
+    <span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="p">@</span><span class="nd">json</span><span class="p">(</span><span class="nx">$array</span><span class="p">);</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre></div></div>
+
+<p><br></p>
+<h3>HTML Entity Encoding</h3>
+<p>ddd</p>
+
+<pre><code class="language-php  line-numbers">
+
+namespace App\Providers;
+
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        Blade::withoutDoubleEncoding();
+    }
+}
+</code></pre>
+
+<p>
+<a name="blade-and-javascript-frameworks"></a>
+</p>
+
+<p><br></p>
+<h3>Blade و فریم ورک های جاوا اسکریپت در لاراول</h3>
+<p>
+از آنجایی که بسیاری از فریم ورک‌های جاوا اسکریپت نیز از {{ }} برای نمایش یک عبارت در مرورگر استفاده می‌کنند، می‌توانید از نماد @  استفاده کنید تا به موتور رندر Blade اعلان کنید که عبارت داخل آن را تفسیر نکند. برای مثال:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;h1&gt;</span>Laravel<span class="nt">&lt;/h1&gt;</span>
+
+Hello, @ {{ name }}  .
+</code></pre></div></div>
+
+<p>
+در این مثال، نماد @ توسط Blade حذف می‌شود؛ با این حال، عبارت {{ name }} توسط موتور Blade تفسیر نمی‌شود و این کار مستقیماً توسط فریم ورک جاوا اسکریپت انجام می‌شود.
+</p>
+
+<p><br></p>
+<h3>The دستور <a href="https://github.com/verbatim" class="user-mention">@verbatim</a> در Blade لاراول</h3>
+<p>
+اگر متغیرهای جاوا اسکریپت را در بخش بزرگی از قالب خود نمایش می‌دهید، می‌توانید عبارت‌های HTML را در دستور <a href="https://github.com/verbatim" class="user-mention">@verbatim</a> قرار دهید، بنابراین لازم نیست که پیش از هر عبارت Blade echo علامت @ قرار دهید:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@verbatim
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
+        Hello, {{ name }}  .
+    <span class="nt">&lt;/div&gt;</span>
+@endverbatim
+</code></pre></div></div>
+
+<p>
+<a name="control-structures"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#control-structures">استفاده از ساختارهای کنترلی در Blade لاراول</a></h3>
+<p>
+علاوه بر ارث بری قالب‌ها و نمایش داده‌ها در ویو، Blade لاراول میانبرهای مناسبی را نیز ارائه می‌دهد که می‌توان از آن‌ها جهت ایجاد ساختارهای کنترلی رایج PHP مانند دستورات شرطی و حلقه‌ها در ویوهای Blade استفاده کرد. این میانبرها یک روش بسیار ساده و کارآمد برای کار با ساختارهای کنترلی PHP ارائه می‌دهند، در حالی که همچنان، شباهت خود را با معادل‌های PHP حفظ می‌کنند.
+</p>
+
+<p>
+<a name="if-statements"></a>
+</p>
+
+<p><br></p>
+<h3>استفاده از عبارات If در Blade لاراول</h3>
+<p>
+برای ساخت عبارات if در یک ویوی Blade، می‌توانید از دستوالعمل‌های <a href="https://github.com/if" class="user-mention">@if</a> و <a href="https://github.com/elseif" class="user-mention">@elseif</a> و <a href="https://github.com/else" class="user-mention">@else</a> و <a href="https://github.com/endif" class="user-mention">@endif</a> استفاده کنید. این دستورالعمل‌ها بسیار شبیه به معادل‌های PHP خود عمل می‌کنند:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@if (count($records) === 1)
+    I have one record!
+@elseif (count($records) &gt; 1)
+    I have multiple records!
+@else
+    I don't have any records!
+@endif
+</code></pre></div></div>
+
+<p>
+برای راحتی کار، Blade یک دستورالعمل <a href="https://github.com/unless" class="user-mention">@unless</a> نیز ارائه می‌دهد:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@unless (Auth::check())
+    You are not signed in.
+@endunless
+</code></pre></div></div>
+
+<p>
+علاوه بر دستورالعمل‌های شرطی که اشاره شد، دستورالعمل‌های <a href="https://github.com/isset" class="user-mention">@isset</a> و <a href="https://github.com/empty" class="user-mention">@empty</a> نیز ممکن است به عنوان میانبرهای مناسب برای توابع PHP مربوط به آن‌ها در یک ویوی Blade مورد استفاده قرار گیرند:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@isset($records)
+    // $records is defined and is not null...
+@endisset
+
+@empty($records)
+    // $records is "empty"...
+@endempty
+</code></pre></div></div>
+
+<p><br></p>
+<h3>دستورالعمل‌های احراز هویت (authentication) در Blade لاراول</h3>
+<p>
+جهت تعیین فوری اینکه کاربر جاری یک کاربر تایید شده است یا یک کاربر مهمان، می‌توان از دستورالعمل‌های احراز هویت <a href="https://github.com/auth" class="user-mention">@auth</a> و <a href="https://github.com/guest" class="user-mention">@guest</a> به صورت زیر استفاده کرد:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@auth
+    // The user is authenticated...
+@endauth
+
+@guest
+    // The user is not authenticated...
+@endguest
+</code></pre></div></div>
+
+<p>
+در صورت لزوم، می‌توانید مسئول احراز هویت را به عنوان پارامتر مشخص کنید که در زمان استفاده از دستورات <a href="https://github.com/auth" class="user-mention">@auth</a> و <a href="https://github.com/guest" class="user-mention">@guest</a> جهت تعیین اینکه کاربر از طریق مسئول احراز هویت وارد سیستم شده است، بررسی می‌شود:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@auth('admin')
+    // The user is authenticated...
+@endauth
+
+@guest('admin')
+    // The user is not authenticated...
+@endguest
+</code></pre></div></div>
+
+<p><br></p>
+<h3>استفاده از دستورالعمل‌های section در Blade لاراول</h3>
+<p>
+می‌توانید محتوای یک section را با استفاده از دستور <a href="https://github.com/hasSection" class="user-mention">@hasSection</a> بررسی نمایید:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@hasSection('navigation')
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"pull-right"</span><span class="nt">&gt;</span>
+        @yield('navigation')
+    <span class="nt">&lt;/div&gt;</span>
+
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"clearfix"</span><span class="nt">&gt;&lt;/div&gt;</span>
+@endif
+</code></pre></div></div>
+
+<p>
+<a name="switch-statements"></a>
+</p>
+
+<p><br></p>
+<h3>استفاده از عبارت‌های switch در Blade لاراول</h3>
+<p>
+عبارات switch می‌توانند با استفاده از دستورالعمل‌های <a href="https://github.com/switch" class="user-mention">@switch</a> و <a href="https://github.com/case" class="user-mention">@case</a> و <a href="https://github.com/default" class="user-mention">@default</a> و <a href="https://github.com/endswitch" class="user-mention">@endswitch</a> ایجاد شوند:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@switch($i)
+    @case(1)
+        First case...
+        @break
+
+    @case(2)
+        Second case...
+        @break
+
+    @default
+        Default case...
+@endswitch
+</code></pre></div></div>
+
+<p>
+<a name="loops"></a>
+</p>
+
+<p><br></p>
+<h3>استفاده از دستورات حلقه‌ در Blade لاراول</h3>
+<p>
+علاوه بر دستورات شرطی، Blade دستورالعمل‌های ساده‌ای را نیز برای کار با ساختارهای حلقه‌ای زبان PHP ارائه می‌دهد. در این مورد هم، هر کدام از این دستورات مشابه معادل‌های خود در زبان PHP عمل می‌کنند:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@for ($i = 0; $i <span class="nt">&lt;</span> <span class="err">10;</span> <span class="err">$</span><span class="na">i</span><span class="err">++)</span>
+    <span class="na">The</span> <span class="na">current</span> <span class="na">value</span> <span class="na">is</span>  <span class="err">{{</span> <span class="err">$</span><span class="na">i</span> <span class="err">}}</span>  
+<span class="err">@</span><span class="na">endfor</span>
+
+<span class="err">@</span><span class="na">foreach</span> <span class="err">($</span><span class="na">users</span> <span class="na">as</span> <span class="err">$</span><span class="na">user</span><span class="err">)</span>
+    <span class="err">&lt;</span><span class="na">p</span><span class="nt">&gt;</span>This is user  {{ $user-&gt;id }}  <span class="nt">&lt;/p&gt;</span>
+@endforeach
+
+@forelse ($users as $user)
+    <span class="nt">&lt;li&gt;</span> {{ $user-&gt;name }}  <span class="nt">&lt;/li&gt;</span>
+@empty
+    <span class="nt">&lt;p&gt;</span>No users<span class="nt">&lt;/p&gt;</span>
+@endforelse
+
+@while (true)
+    <span class="nt">&lt;p&gt;</span>I'm looping forever.<span class="nt">&lt;/p&gt;</span>
+@endwhile
+</code></pre></div></div>
+<blockquote class="has-icon tip">
+در زمان کار با حلقه‌ها، می‌توانید از متغیر حلقه برای بدست آوردن اطلاعات مهم در مورد حلقه موردنظر استفاده کنید، اطلاعاتی مانند اینکه در اولین یا آخرین گام تکرار حلقه قرار دارید.
+</blockquote>
+<p>
+همچنین، هنگام استفاده از حلقه‌ها می‌توانید حلقه را پایان دهید یا گام تکرار فعلی را حفظ کنید:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@foreach ($users as $user)
+    @if ($user-&gt;type == 1)
+        @continue
+    @endif
+
+    <span class="nt">&lt;li&gt;</span> {{ $user-&gt;name }}  <span class="nt">&lt;/li&gt;</span>
+
+    @if ($user-&gt;number == 5)
+        @break
+    @endif
+@endforeach
+</code></pre></div></div>
+
+<p>
+همچنین، می‌توانید شرط اجرای حلقه را با اعلان دستور حلقه در یک خط کد قرار دهید:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@foreach ($users as $user)
+    @continue($user-&gt;type == 1)
+
+    <span class="nt">&lt;li&gt;</span> {{ $user-&gt;name }}  <span class="nt">&lt;/li&gt;</span>
+
+    @break($user-&gt;number == 5)
+@endforeach
+</code></pre></div></div>
+
+<p>
+<a name="the-loop-variable"></a>
+</p>
+
+<p><br></p>
+<h3>متغیر حلقه در Blade لاراول</h3>
+<p>
+هنگام استفاده از حلقه‌ها، یک متغیر $loop در داخل حلقه در دسترس است که این متغیر اطلاعات مهمی مانند گام تکرار فعلی و اینکه آیا در اولین یا آخرین گام تکرار حلقه قرار دارید را مشخص می‌کند:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@foreach ($users as $user)
+    @if ($loop-&gt;first)
+        This is the first iteration.
+    @endif
+
+    @if ($loop-&gt;last)
+        This is the last iteration.
+    @endif
+
+    <span class="nt">&lt;p&gt;</span>This is user  {{ $user-&gt;id }}  <span class="nt">&lt;/p&gt;</span>
+@endforeach
+</code></pre></div></div>
+
+<p>
+اگر در یک حلقه تکرار تو در تو باشید، می‌توانید به متغیر $loop حلقه والد از طریق خصوصیت parent دسترسی داشته باشید:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@foreach ($users as $user)
+    @foreach ($user-&gt;posts as $post)
+        @if ($loop-&gt;parent-&gt;first)
+            This is first iteration of the parent loop.
+        @endif
+    @endforeach
+@endforeach
+</code></pre></div></div>
+
+<p>
+همچنین، متغیر $loop خصوصیت‌های مفید دیگری را نیز شامل می‌شود که در جدول زیر لیست شده اند:
+</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class=" language-php"><span class="token variable">$loop</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token property">index</span></code></td>
+<td>The index of the current loop iteration (starts at 0).</td>
+</tr>
+<tr>
+<td><code class=" language-php"><span class="token variable">$loop</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token property">iteration</span></code></td>
+<td>The current loop iteration (starts at 1).</td>
+</tr>
+<tr>
+<td><code class=" language-php"><span class="token variable">$loop</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token property">remaining</span></code></td>
+<td>The iteration remaining in the loop.</td>
+</tr>
+<tr>
+<td><code class=" language-php"><span class="token variable">$loop</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token property">count</span></code></td>
+<td>The total number of items in the array being iterated.</td>
+</tr>
+<tr>
+<td><code class=" language-php"><span class="token variable">$loop</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token property">first</span></code></td>
+<td>Whether this is the first iteration through the loop.</td>
+</tr>
+<tr>
+<td><code class=" language-php"><span class="token variable">$loop</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token property">last</span></code></td>
+<td>Whether this is the last iteration through the loop.</td>
+</tr>
+<tr>
+<td><code class=" language-php"><span class="token variable">$loop</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token property">depth</span></code></td>
+<td>The nesting level of the current loop.</td>
+</tr>
+<tr>
+<td><code class=" language-php"><span class="token variable">$loop</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token keyword">parent</span></code></td>
+<td>When in a nested loop, the parent's loop variable.</td>
+</tr>
+</tbody>
+</table>
+<p>
+<a name="comments"></a>
+</p>
+
+<p><br></p>
+<h3>نحوه ثبت کامنت‌ در ‌Blade لاراول</h3>
+<p>
+Blade این امکان را می‌دهد که بتوانید در ویوهای خود کامنت‌ها را تعریف کنید. با این حال، بر خلاف کامنت‌های HTML، کامنت‌های Blade در ساختار HTML که توسط برنامه برگردانده می‌شود، قرار نمی‌‌گیرند:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code> {{-- This comment will not be present in the rendered HTML --}}  
+</code></pre></div></div>
+
+<p>
+<a name="php"></a>
+</p>
+
+<p><br></p>
+<h3>PHP استفاده از کد</h3>
+<p>
+در برخی موارد، لازم است که از کد PHP در ویوهای ‌Blade خود استفاده کنید. برای این کار، می‌توانید از دستورالعمل <a href="https://github.com/php" class="user-mention">@php</a> برای اجرای یک بلوک ساده از کد PHP در قالب ویو خود استفاده کنید:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@php
+    //
+@endphp
+</code></pre></div></div>
+<blockquote class="has-icon tip">
+در حالی که Blade امکان استفاده از این ویژگی را فراهم کرده است ولی با این حال استفاده از این ویژگی می‌تواند نشان دهنده این باشد که شما در گنجاندن منطق در قالب ویو خود زیاده روی کرده‌اید.
+</blockquote>
+<p>
+<a name="including-sub-views"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#including-sub-views">sub-view نحوه استفاده از</a></h3>
+<p>
+دستور <a href="https://github.com/include" class="user-mention">@include</a> این امکان را می‌دهد که بتوانید یک ویو Blade را در داخل یک ویو دیگر اضافه کنید. تمام متغیرهایی که در ویو والد موجود هستند در ویو فرزند نیز قابل دسترس خواهند بود:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;div&gt;</span>
+    @include('shared.errors')
+
+    <span class="nt">&lt;form&gt;</span>
+        <span class="c">&lt;!-- Form Contents --&gt;</span>
+    <span class="nt">&lt;/form&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+
+<p>
+با اینکه ویو فرزند تمام داده‌های موجود در ویو والد را به ارث می‌برد؛ با این حال، می‌توانید یک آرایه شامل داده‌های اضافی را به این ویو انتقال دهید:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@include('view.name', ['some' =&gt; 'data'])
+</code></pre></div></div>
+
+<p>
+البته، اگر سعی در اضافه کردن یک ویو با دستور <a href="https://github.com/include" class="user-mention">@include</a> داشته باشید که موجود نیست، لاراول یک خطا صادر می‌کند. اگر بخواهید یک ویو را با احتمال موجود بودن یا موجود نبودن آن اضافه کنید، بایستی از دستور <a href="https://github.com/includeIf" class="user-mention">@includeIf</a> به صورت زیر استفاده کنید:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@includeIf('view.name', ['some' =&gt; 'data'])
+</code></pre></div></div>
+
+<p>
+اگر بخواهید یک sub-view را براساس یک عبارت شرطی بولین با دستور <a href="https://github.com/include" class="user-mention">@include</a> اضافه کنید، می‌توانید از دستورالعمل <a href="https://github.com/includeWhen" class="user-mention">@includeWhen</a> به صورت زیر استفاده کنید:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@includeWhen($boolean, 'view.name', ['some' =&gt; 'data'])
+</code></pre></div></div>
+
+<p>
+جهت اضافه کردن اولین ویو موجود در آرایه‌ای از ویو‌ها، می‌توانید از دستورالعمل includeFirst به صورت زیر استفاده کنید:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@includeFirst(['custom.admin', 'admin'], ['some' =&gt; 'data'])
+</code></pre></div></div>
+<blockquote class="has-icon note">
+از بکار بردن ثابت‌های __DIR__ و __FILE__ در ویوهای Blade خود اجتناب کنید، زیرا به مکان ویو کامپایل شده و کش شده اشاره می‌کنند.
+</blockquote>
+<p>
+<a name="rendering-views-for-collections"></a>
+</p>
+
+<p><br></p>
+<h3>رندر کردن view با مجموعه‌‌ها در Blade</h3>
+<p>
+می‌توانید حلقه‌ها و includeها را با دستورالعمل <a href="https://github.com/each" class="user-mention">@each</a> در یک خط کد ترکیب کنید:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@each('view.name', $jobs, 'job')
+</code></pre></div></div>
+
+<p>
+اولین آرگومان، view partial جهت رندر کردن هر آیتم موجود در آرایه یا مجموعه است. آرگومان دوم، آرایه یا مجموعه‌ای است که می‌خواهید آن را تکرار کنید. سومین آرگومان، نام متغیری است که به گام تکرار فعلی در ویو نسبت داده می‌شود. برای مثال، اگر درون یک آرایه از jobها از حلقه استفاده می‌کنید، ممکن است به هر job به عنوان یک متغیر job در view partial خود دسترسی داشته باشید. کلید گام تکرار فعلی به عنوان متغیر key  در ویو در دسترس خواهد بود.
+</p>
+
+<p>
+همچنین، می‌توانید چهارمین آرگومان را نیز به دستور <a href="https://github.com/each" class="user-mention">@each</a> انتقال دهید. در صورتی که آرایه داده شده خالی بود، این آرگومان مشخص می‌کند که کدام ویو نمایش داده شود:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@each('view.name', $jobs, 'job', 'view.empty')
+</code></pre></div></div>
+<blockquote class="has-icon note">
+ویوهای نمایش داده شده از طریق دستور each@ متغیرها را از ویو والد به ارث نمی‌برند. اگر ویو فرزند به این متغیرها نیاز داشته باشد، می‌توانید به جای آن از دستور foreach@ و include@ استفاده کنید.
+</blockquote>
+<p>
+<a name="stacks"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#stacks">پشته Stacks</a></h3>
+<p>
+‌Blade این امکان را می‌دهد تا پشته‌های نامگذاری شده را push کنید که در جایی دیگر در داخل یک ویو یا layout رندر شود. این موضوع می‌تواند جهت تعیین کتابخانه جاوا اسکریپت موردنیاز ویوهای فرزند مفید باشد.
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@push('scripts')
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/example.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+@endpush
+</code></pre></div></div>
+
+<p>
+می‌توانید یک پشته موردنیاز را چندین مرتبه push کنید. برای ارائه کامل محتویات پشته، نام پشته را به دستور <a href="https://github.com/stack" class="user-mention">@stack</a> انتقال دهید:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;head&gt;</span>
+    <span class="c">&lt;!-- Head Contents --&gt;</span>
+
+    @stack('scripts')
+<span class="nt">&lt;/head&gt;</span>
+</code></pre></div></div>
+
+<p>
+<a name="service-injection"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#service-injection">تزریق خدمات یا service Injection در Blade</a></h3>
+<p>
+خروجی دستور <a href="https://github.com/inject" class="user-mention">@inject</a> می‌تواند برای بازیابی یک سرویس از service container لاراول مورد استفاده قرار گیرد. اولین آرگومان ارسالی به <a href="https://github.com/inject" class="user-mention">@inject</a> ، نام متغیری است که سرویس در آن قرار داده می‌شود؛ در حالی که، دومین آرگومان نام کلاس یا رابط سرویسی است که قصد دارید آن را resolve کنید.
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@inject('metrics', 'App\Services\MetricsService')
+
+<span class="nt">&lt;div&gt;</span>
+    Monthly Revenue:  {{ $metrics-&gt;monthlyRevenue() }}  .
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+
+<p>
+<a name="extending-blade"></a>
+</p>
+
+<p><br></p>
+<h3><a href="#extending-blade">گسترش دستورالعمل‌های Blade در لاراول</a></h3>
+<p>
+Blade این امکان را می‌دهد که بتوانید دستورالعمل‌های سفارشی خود را با استفاده از متد directive تعریف کنید. زمانی که کامپایلر Blade با دستورالعمل سفارشی مواجه می‌شود، تابع callback ارائه شده را با پارامترهای آن فراخوانی می‌کند.
+</p>
+
+<p>
+مثال زیر یک دستور <a href="https://github.com/datetime" class="user-mention">@datetime</a>($var) ایجاد می‌کند که یک متغیر $var را فرمت دهی می‌کند که باید یک نمونه از DateTime باشد:
+</p>
+
+<pre><code class="language-php  line-numbers">namespace App\Providers;
+
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Perform post-registration booting of services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        Blade::directive('datetime', function ($expression) {
+            return "<?php echo ($expression)->format('m/d/Y H:i'); ?&gt;";
+        });
+    }
+
+    /**
+     * Register bindings in the container.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
+    }
+}
+</code></pre>
+
+<p>
+همانطور که مشاهده می‌کنید، ما متد format  را بر روی هر عبارت به ترتیبی که در دستورالعمل قرار دارد، اعمال می‌کنیم. بنابراین، در این مثال کد PHP تولید شده توسط این دستور به این صورت خواهد بود:
+</p>
+
+<pre><code class="language-php  line-numbers"><?php echo ($var)->format('m/d/Y H:i'); ?&gt;
+</code></pre>
+<blockquote class="has-icon note">
+پس از بروز رسانی منطق یک دستورالعمل Blade، باید تمام ویوهای Blade کش شده را حذف کنید. می‌توانید با استفاده از دستور آرتیسان view:clear ویوهای Blade کش شده را پاک کنید.
+</blockquote>
+<p>
+<a name="custom-if-statements"></a>
+</p>
+
+<p><br></p>
+<h3>عبارات if سفارشی در Blade</h3>
+<p>
+برنامه نویسی یک دستورالعمل سفارشی، پیچیده‌تر از تعیین عبارات شرطی ساده به صورت سفارشی است. به همین دلیل Blade متد Blade::if را ارائه می‌دهد که توسط آن می‌توانید به سرعت دستورات شرطی سفارشی خود را با استفاده از Closure تعریف کنید. برای مثال، اجازه دهید یک دستور شرطی سفارشی را تعریف کنیم که محیط برنامه فعلی را بررسی می‌کند. می‌توانیم این کار را در متد boot از AppServiceProvider خود انجام دهیم:
+</p>
+
+<pre><code class="language-php  line-numbers">use Illuminate\Support\Facades\Blade;
+
+/**
+ * Perform post-registration booting of services.
+ *
+ * @return void
+ */
+public function boot()
+{
+    Blade::if('env', function ($environment) {
+        return app()-&gt;environment($environment);
+    });
+}
+</code></pre>
+
+<p>
+زمانی که دستور شرطی سفارشی ایجاد شد، می‌توانیم به راحتی از آن در قالب‌های ویو خود استفاده کنیم:
+</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@env('local')
+    // The application is in the local environment...
+@elseenv('testing')
+    // The application is in the testing environment...
+@else
+    // The application is not in the local or testing environment...
+@endenv
+</code></pre></div></div>
+
+        </section>
+        
+<hr>
+<p>
+</p>
+<div>منابع مورد مطالعه جهت جمع آوری این مطلب:</div>
+<div class="refrencehref">
+        https://laravel.com/docs/5.6/blade <br> https://www.lydaweb.com/article/courses/laravel-5-5-tutorial/288/blade-template-لاراول-5-5
+</div>
+
+
+        <hr>
+        <style>
+    #commentsdiv{
+        background-color: #f5f5f5;
+        border: 1px solid #c5c5c5;
+        border-bottom: 0px !important;
+        padding: 12px;
+    }
+    #commentsborder{
+        background-color: #fff;
+        border: 1px solid #c5c5c5;
+        white-space: normal;
+        padding: 20px;
+    }
+</style>
+
+<div id="commentsdiv">نظرات</div>
+<div id="commentsborder">
+<div id="wpac-comment"></div>
+</div>
+<script type="text/javascript">
+wpac_init = window.wpac_init || [];
+wpac_init.push({widget: 'Comment', id: 7878});
+(function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = 'https://embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+})();
+</script>
+
+    </article>
+</div>
+<script src="/assets/js/anchor.min.js"></script>
+<script>
+    anchors.options = {
+        placement: 'left',
+        visible: 'always',
+//        icon: '#',
+    };
+    anchors.add('.anchored h2,.anchored h3,.anchored h4,.anchored h5,.anchored h6');
+
+    (function($){
+        if(window.location.hash) {
+            var hash = decodeURIComponent(window.location.hash);
+            gotohash($(hash).offset().top);
+        }
+        $('a.anchorjs-link').click(function(){
+			gotohash($(this).offset().top);
+        });
+        $('a.anchorjs').click(function(){
+			var id = '#' + $(this).attr('title');
+			gotohash($(id).offset().top);
+        });		
+        function gotohash(top){
+            var headerHeight = 70; // Get fixed header height
+            $('html,body').animate({
+                scrollTop: top - headerHeight
+            }, 20);
+        }
+    })(jQuery);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+   $(document).ready(function (){
+
+     var scrollPosition = getParameterByName('scroll');
+     if(scrollPosition)
+      $(".doc-menu").scrollTop(scrollPosition);
+
+     $('.doc-link').click(function(){
+        var scrollTop = $(".doc-menu").scrollTop();
+        if(scrollTop > 0)
+          $(this).attr("href",this.href + "?scroll=" + $(".doc-menu").scrollTop());
+     });
+
+     function getParameterByName(name, url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+   });
+</script>
+    <div id="back-to-top" role="button" aria-label="Back to top">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+    </div>
+</main>
+<!-- footer -->
+
+<footer class="footer" role="contentinfo" aria-label="Site footer">
+    <div class="navigation" role="navigation" aria-label="Footer links">
+        <a href="http://localhost:4000" class="avatar" role="link"></a>
+        <ul role="menubar" aria-label="Footer links menubar">
+            <li class="footer-products" role="menuitem" aria-label="Products">
+                تولیدات
+                <ul role="menu" aria-hidden="true" aria-label="Products link">
+                </ul>
+            </li>
+            <li class="footer-blog" role="menuitem" aria-label="Blog">
+                مقالات
+                <ul role="menu" aria-hidden="true" aria-label="Blog link">
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2020/07/03/marriage.html" role="link" aria-label="ازدواج">ازدواج</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2019/10/11/vuejs.html" role="link" aria-label="آموزش vuejs">آموزش vuejs</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/18/laravel.html" role="link" aria-label="آموزش Laravel">آموزش Laravel</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/articles/2017/12/13/laravelcollective.html" role="link" aria-label="معرفی Laravel Collective">معرفی Laravel Collective</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/06/design-patterns.html" role="link" aria-label="معرفی  Design Pattern">معرفی  Design Pattern</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/blog" role="link" aria-label="Read more">Read More</a></li>
+                </ul>
+            </li>
+
+            <li class="footer-connect" role="menuitem" aria-label="Connect">
+                تماس
+                <ul role="menu" aria-hidden="true" aria-label="Connect link">
+                    <li role="listitem" aria-label="Connect link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub">GitHub</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://www.linkedin.com/in/farhad-mirzapour/" target="_blank" role="link" aria-label="Linkedin">Linkedin</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter">Twitter</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="socials" role="navigation" aria-label="Social links">
+        <ul role="menu" aria-hidden="true" aria-label="Social link">
+            <li role="listitem" aria-label="Social link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://www.linkedin.com/in/farhad-mirzapour-0043b862/" target="_blank" role="link" aria-label="Linkedin"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="/feed.xml" role="link" aria-label="RSS"><i class="fa fa-rss-square" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+    <div class="copyright" role="contentinfo" aria-label="Copyright">
+        <p>© <script type="text/javascript">document.write(new Date().getFullYear());</script> Farhad Mirzapour</p>
+    </div>
+</footer>
+
+<!-- scripts -->
+<script src="/assets/js/hamburger-menu.js"></script>
+
+<script src="/assets/js/elevator.min.js"></script>
+<script src="/assets/js/back-to-top.js"></script>
+<script src="/assets/prisma/prism.js"></script>
+<!-- google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108878564-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-108878564-1');
+</script>
+
+</body>
+</html>

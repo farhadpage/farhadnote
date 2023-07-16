@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="">
+<!-- head -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>اصول قالب در Vue | مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="اصول قالب در Vue" />
+<meta name="author" content="Farhad Mirzapour" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="ایجاد نمونه (Creating a Vue Instance) Vue.js از نحو قالب مبتنی بر HTML استفاده می کند که به شما امکان می دهد DOM رندر شده را به داده های نمونه ایجاد شده Vue متصل کنید. همه قالب های Vue.js دارای HTML معتبری هستند که می تواند توسط مرورگرهای خاص و سازگار با آن تجزیه و تحلیل شود. Vue قالبها را به توابع DOM مجازی کامپایل می کند. همراه با سیستم واکنش پذیری ، Vue قادر است هوشمندانه به حداقل تعداد کامپوننت ها جهت رندر مجدد و اعمال حداقل دستکاری DOM هنگام تغییر وضعیت برنامه ، پی برد. متن (Text) معمول ترین شکل اتصال داده ها استفاده از نحو Mustache (دابل براکت) می باشد : &amp;#x3C;span&amp;#x3E;Message: &#123;&#123; msg &#125;&#125;&amp;#x3C;/span&amp;#x3E; متن Mustache با مقدار ویژگی msg در شی داده مربوطه جایگزین می شود. همچنین هرگاه مقدار ویژگی خاصیت داده شی تغییر کند متن آن نیز بروزرسانی می شود. شما همچنین می توانید عمل جایگذاری را یک بار انجام دهید که با استفاده از دستورالعمل v-once داده ها بیش از یکبار بروزرسانی نمی شود ، اما در نظر داشته باشید که این امر می تواند بر روی اتصال داده در سایر گره ها (node) نیز تأثیرگذار باشد: &amp;#x3C;span v-once&amp;#x3E;This will never change: &#123;&#123; msg &#125;&#125;&amp;#x3C;/span&amp;#x3E; داده نوع (Raw HTML) استفاده از نحو (mustaches) برای داده های متنی کاربرد دارد. جهت داده های HTML شما می توانید از دایرکتیو v-html استفاده نمایید : &amp;#x3C;div id=&amp;#x22;app-1&amp;#x22;&amp;#x3E; &amp;#x3C;p&amp;#x3E;Using mustaches: &#123;&#123; rawHtml &#125;&#125;&amp;#x3C;/p&amp;#x3E; &amp;#x3C;p&amp;#x3E;Using v-html directive: &amp;#x3C;span v-html=&amp;#x22;rawHtml&amp;#x22;&amp;#x3E;&amp;#x3C;/span&amp;#x3E;&amp;#x3C;/p&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var app1 = new Vue({ el: &#39;#app-1&#39;, data: { rawHtml: &#39;&amp;#x3C;span style=&amp;#x22;color: red&amp;#x22;&amp;#x3E;This should be red.&amp;#x3C;/span&amp;#x3E;&#39; } }) Using mustaches: &#123;&#123; rawHtml &#125;&#125; Using v-html directive: رندر داینامیکی HTML دلخواه در وب سایت شما می تواند بسیار خطرناک باشد زیرا به راحتی می تواند منجر به آسیب پذیری XSS شود. فقط از جایگذاری HTML بر روی محتوای قابل اعتماد استفاده شود و هرگز در محتوای ارائه شده توسط کاربر استفاده نکنید. صفات (Attributes) نحو(Mustaches) را نمی توان در صفات HTML استفاده کرد. در عوض می توانید از دستورالعمل v-bind استفاده نمایید: &amp;#x3C;div v-bind:id=&amp;#x22;dynamicId&amp;#x22;&amp;#x3E;&amp;#x3C;/div&amp;#x3E; در مورد صفات boolean ، جایی که شرط آنها منتهی بر true می شود ، v-bind کمی متفاوت عمل می کند. در این مثال: &amp;#x3C;button v-bind:disabled=&amp;#x22;isButtonDisabled&amp;#x22;&amp;#x3E;Button&amp;#x3C;/button&amp;#x3E; اگر isButtonDisabled مقدار null، undefined یا false داشته باشد ، ویژگی disabled حتی در عنصر &amp;#x3C;button&amp;#x3E; نیز درج نخواهد شد. استفاداه از عبارات جاوااسکریپت(Using JavaScript Expressions) Vue.js از تمام عبارات جاوا اسکریپت در کلیه اتصالات داده پشتیبانی می کند: &#123;&#123; number + 1 &#125;&#125; &#123;&#123; ok ? &amp;#x27;YES&amp;#x27; : &amp;#x27;NO&amp;#x27; &#125;&#125; &#123;&#123; message.split(&amp;#x27;&amp;#x27;).reverse().join(&amp;#x27;&amp;#x27;) &#125;&#125; &amp;#x3C;div v-bind:id=&amp;#x22;&amp;#x27;list-&amp;#x27; + id&amp;#x22;&amp;#x3E;&amp;#x3C;/div&amp;#x3E; یک محدودیت این است که هر اتصال فقط می تواند یک عبارت واحد داشته باشد ، بنابراین موارد زیر کار نمی کند: &amp;#x3C;!-- this is a statement, not an expression: --&amp;#x3E; &#123;&#123; var a = 1 &#125;&#125; &amp;#x3C;!-- flow control won&amp;#x27;t work either, use ternary expressions --&amp;#x3E; &#123;&#123; if (ok) { return message } &#125;&#125; عبارات قالب فقط به لیست سفید از توابع مانند Math و Date دسترسی دارند و شما نباید سعی کنید در عبارات به توابع تعریف شده توسط کاربر دسترسی داشته باشید استفاداه از دایرکتیو(Directives) دایرکتیوها ویژگی های خاصی با پیشوند -v هستند و مقدار آن، یک عبارت جاوا اسکریپت واحد می باشد(به استثنای v-for ، که بعداً مورد بحث قرار خواهد گرفت). کار یک دایرکتیو این است که وقتی مقدار یک عبارت تغییر کرد ، تاثیر آن را روی DOM اعمال نماید. بیایید مثالی را که در مقدمه دیدیم مرور کنیم: &amp;#x3C;p v-if=&amp;#x22;seen&amp;#x22;&amp;#x3E;Now you see me&amp;#x3C;/p&amp;#x3E; در اینجا ، دستورالعمل v-if عنصر &amp;#x3C;p&amp;#x3E; را براساس نتیجه عبارتی که دیده می شود ، حذف یا درج می کند. آرگومان ها در دایرکتیو(Arguments) برخی از دایرکتیوها می توانند یک آرگومان دریافت کنند ، که پس از نام دایرکتیو توسط کاراکتر : مشخص شده اند. به عنوان مثال ، دستورالعمل v-bind برای به روزرسانی واکنشی یک ویژگی HTML استفاده می شود: &amp;#x3C;a v-bind:href=&amp;#x22;url&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; در اینجا href آرگومانی است که به دایرکتیو v-bind می گوید ویژگی href عنصر را به مقدار عبارت url متصل کند. مثال دیگر دایرکتیو v-on است که به رویدادهای DOM گوش می دهد: &amp;#x3C;a v-on:click=&amp;#x22;doSomething&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; در اینجا آرگومان، نام رویدادی جهت گوش دادن به است. ما در مورد جزئیات رویدادها نیز با جزئیات بیشتری صحبت خواهیم کرد. آرگومان های داینامیک(Dynamic Arguments) از نسخه 2.6.0 ، همچنین می توانید از یک عبارات جاوا اسکریپت به عنوان یک آرگومان دایرکتیو در درون [] استفاده نمایید: &amp;#x3C;!-- Note that there are some constraints to the argument expression, as explained in the &amp;#x22;Dynamic Argument Expression Constraints&amp;#x22; section below. --&amp;#x3E; &amp;#x3C;a v-bind:[attributeName]=&amp;#x22;url&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; var vm = new Vue({ el: &#39;#app&#39;, data: { attributename : &#39;href&#39;, url : &#39;http://farhadnote.ir&#39; } }) در اینجا attributeName به صورت پویا به عنوان یک عبارت جاوا اسکریپت ارزیابی می شود و از مقدار ارزیابی شده آن به عنوان مقدار نهایی برای آرگومان استفاده می شود. به عنوان مثال ، اگر نمونه Vue شما دارای ویژگی داده attributename باشد و مقدار آن برابر &quot;href&quot; است ، این معادل است با v-bind: href. به طور مشابه ، می توانید از آرگومان های پویا برای پیوند دادن یک کنترل کننده به نام یک رویداد پویا استفاده کنید: &amp;#x3C;a v-on:[eventName]=&amp;#x22;doSomething&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; var vm = new Vue({ el: &#39;#app&#39;, data: { eventname : &#39;click&#39; }, methods: { doSomething : function(){ alert(&#39;hello world&#39;); } } }) در این مثال، زمانیکه مقدار eventname برابر &quot;click&quot; باشد آنگاه v-on:[eventName] معادل v-on:click خواهد شد. محدودیت های مقدار (Dynamic Argument Value Constraints) انتظار می رود آرگومان های پویا ، یک رشته را به استثنای null ارزیابی کنند. از مقدار ویژه null می توان جهت حذف صریح اتصال استفاده کرد. هر مقدار غیر رشته ای دیگر باعث ایجاد اخطار می گردد. محدودیت های عبارات (Dynamic Argument Expression Constraints) عبارات آرگومان پویا محدودیت های نحوی دارند زیرا برخی از کاراکترها ها مانند فضاها و نقل قول ها در نام های ویژگی های HTML نامعتبر هستند. به عنوان مثال موارد زیر نامعتبر است: &amp;#x3C;!-- This will trigger a compiler warning. --&amp;#x3E; &amp;#x3C;a v-bind:[&amp;#x27;foo&amp;#x27; + bar]=&amp;#x22;value&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; راه حل این است که یا از عبارات بدون فاصله یا نقل قول استفاده کنید ، یا عبارت پیچیده را با یک ویژگی computed جایگزین کنید. هنگام استفاده از قالب ها در DOM (قالب هایی که مستقیماً در یک فایل HTML نوشته شده اند) ، باید از نامگذاری کلیدها با کاراکترهای بزرگ خودداری کنید ، زیرا مرورگرها اسم ویژگی ها را به حروف کوچک محدود می کنند: &amp;#x3C;!-- This will be converted to v-bind:[someattr] in in-DOM templates. Unless you have a &amp;#x22;someattr&amp;#x22; property in your instance, your code won&amp;#x27;t work. --&amp;#x3E; &amp;#x3C;a v-bind:[someAttr]=&amp;#x22;value&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; اصلاح کننده ها(Modifiers) Modifiers (اصلاح کننده) پسوندهای خاصی هستند که با یک نقطه مشخص می شوند و بیانگر این است که یک دایرکتیو باید به روشی خاص محدود شود. به عنوان مثال ، اصلاح کننده prevent به دایرکتیو v-on می گوید تابع ()preventDefault را در هنگام آغاز رویداد فراخوانی کند: &amp;#x3C;form v-on:submit.prevent=&amp;#x22;onSubmit&amp;#x22;&amp;#x3E; ... &amp;#x3C;/form&amp;#x3E; در آینده این ویژگیها را بررسی کرده و نمونه های دیگری از اصلاح کننده ها را برای مدل v-on و v-model مشاهده خواهید کرد. مختصرنویسی(Shorthands) پیشوند -v به عنوان یک نشانه بصری برای شناسایی ویژگی های خاص Vue در قالب های شما استفاده می شود. این زمانی مفید است که از Vue.js برای اعمال رفتار پویا در برخی از نشانه های(markup) موجود استفاده می کنید ، اما می تواند موجب طولانی شدن برای برخی از دایرکتیوهایی که اغلب استفاده می شود گردد. در عین حال نیاز به پیشوند v-، هنگام ساختن SPA ، جایی که Vue هر الگویی را مدیریت می کند اهمیت کمتری می یابد. بنابراین ، Vue برای دو مورد از دایرکتیوهای متداول ، v-bind و v-on اصلاحات ویژه ای را ارائه می دهد: اختصار v-bind &amp;#x3C;!-- full syntax --&amp;#x3E; &amp;#x3C;a v-bind:href=&amp;#x22;url&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; &amp;#x3C;!-- shorthand --&amp;#x3E; &amp;#x3C;a :href=&amp;#x22;url&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; &amp;#x3C;!-- shorthand with dynamic argument (2.6.0+) --&amp;#x3E; &amp;#x3C;a :[key]=&amp;#x22;url&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; اختصار v-on &amp;#x3C;!-- full syntax --&amp;#x3E; &amp;#x3C;a v-on:click=&amp;#x22;doSomething&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; &amp;#x3C;!-- shorthand --&amp;#x3E; &amp;#x3C;a @click=&amp;#x22;doSomething&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; &amp;#x3C;!-- shorthand with dynamic argument (2.6.0+) --&amp;#x3E; &amp;#x3C;a @[event]=&amp;#x22;doSomething&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; آنها ممکن است کمی متفاوت از HTML نرمال به نظر برسند ، اما: و @ کاراکترهای برای نام ویژگی ها هستند و همه مرورگرهای دارای پشتیبانی Vue می توانند آن را به درستی تجزیه کنند. علاوه بر این ، آنها در مارک نهایی رندر شده ظاهر نمی شوند. نحو shorthand کاملاً اختیاری است." />
+<meta property="og:description" content="ایجاد نمونه (Creating a Vue Instance) Vue.js از نحو قالب مبتنی بر HTML استفاده می کند که به شما امکان می دهد DOM رندر شده را به داده های نمونه ایجاد شده Vue متصل کنید. همه قالب های Vue.js دارای HTML معتبری هستند که می تواند توسط مرورگرهای خاص و سازگار با آن تجزیه و تحلیل شود. Vue قالبها را به توابع DOM مجازی کامپایل می کند. همراه با سیستم واکنش پذیری ، Vue قادر است هوشمندانه به حداقل تعداد کامپوننت ها جهت رندر مجدد و اعمال حداقل دستکاری DOM هنگام تغییر وضعیت برنامه ، پی برد. متن (Text) معمول ترین شکل اتصال داده ها استفاده از نحو Mustache (دابل براکت) می باشد : &amp;#x3C;span&amp;#x3E;Message: &#123;&#123; msg &#125;&#125;&amp;#x3C;/span&amp;#x3E; متن Mustache با مقدار ویژگی msg در شی داده مربوطه جایگزین می شود. همچنین هرگاه مقدار ویژگی خاصیت داده شی تغییر کند متن آن نیز بروزرسانی می شود. شما همچنین می توانید عمل جایگذاری را یک بار انجام دهید که با استفاده از دستورالعمل v-once داده ها بیش از یکبار بروزرسانی نمی شود ، اما در نظر داشته باشید که این امر می تواند بر روی اتصال داده در سایر گره ها (node) نیز تأثیرگذار باشد: &amp;#x3C;span v-once&amp;#x3E;This will never change: &#123;&#123; msg &#125;&#125;&amp;#x3C;/span&amp;#x3E; داده نوع (Raw HTML) استفاده از نحو (mustaches) برای داده های متنی کاربرد دارد. جهت داده های HTML شما می توانید از دایرکتیو v-html استفاده نمایید : &amp;#x3C;div id=&amp;#x22;app-1&amp;#x22;&amp;#x3E; &amp;#x3C;p&amp;#x3E;Using mustaches: &#123;&#123; rawHtml &#125;&#125;&amp;#x3C;/p&amp;#x3E; &amp;#x3C;p&amp;#x3E;Using v-html directive: &amp;#x3C;span v-html=&amp;#x22;rawHtml&amp;#x22;&amp;#x3E;&amp;#x3C;/span&amp;#x3E;&amp;#x3C;/p&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var app1 = new Vue({ el: &#39;#app-1&#39;, data: { rawHtml: &#39;&amp;#x3C;span style=&amp;#x22;color: red&amp;#x22;&amp;#x3E;This should be red.&amp;#x3C;/span&amp;#x3E;&#39; } }) Using mustaches: &#123;&#123; rawHtml &#125;&#125; Using v-html directive: رندر داینامیکی HTML دلخواه در وب سایت شما می تواند بسیار خطرناک باشد زیرا به راحتی می تواند منجر به آسیب پذیری XSS شود. فقط از جایگذاری HTML بر روی محتوای قابل اعتماد استفاده شود و هرگز در محتوای ارائه شده توسط کاربر استفاده نکنید. صفات (Attributes) نحو(Mustaches) را نمی توان در صفات HTML استفاده کرد. در عوض می توانید از دستورالعمل v-bind استفاده نمایید: &amp;#x3C;div v-bind:id=&amp;#x22;dynamicId&amp;#x22;&amp;#x3E;&amp;#x3C;/div&amp;#x3E; در مورد صفات boolean ، جایی که شرط آنها منتهی بر true می شود ، v-bind کمی متفاوت عمل می کند. در این مثال: &amp;#x3C;button v-bind:disabled=&amp;#x22;isButtonDisabled&amp;#x22;&amp;#x3E;Button&amp;#x3C;/button&amp;#x3E; اگر isButtonDisabled مقدار null، undefined یا false داشته باشد ، ویژگی disabled حتی در عنصر &amp;#x3C;button&amp;#x3E; نیز درج نخواهد شد. استفاداه از عبارات جاوااسکریپت(Using JavaScript Expressions) Vue.js از تمام عبارات جاوا اسکریپت در کلیه اتصالات داده پشتیبانی می کند: &#123;&#123; number + 1 &#125;&#125; &#123;&#123; ok ? &amp;#x27;YES&amp;#x27; : &amp;#x27;NO&amp;#x27; &#125;&#125; &#123;&#123; message.split(&amp;#x27;&amp;#x27;).reverse().join(&amp;#x27;&amp;#x27;) &#125;&#125; &amp;#x3C;div v-bind:id=&amp;#x22;&amp;#x27;list-&amp;#x27; + id&amp;#x22;&amp;#x3E;&amp;#x3C;/div&amp;#x3E; یک محدودیت این است که هر اتصال فقط می تواند یک عبارت واحد داشته باشد ، بنابراین موارد زیر کار نمی کند: &amp;#x3C;!-- this is a statement, not an expression: --&amp;#x3E; &#123;&#123; var a = 1 &#125;&#125; &amp;#x3C;!-- flow control won&amp;#x27;t work either, use ternary expressions --&amp;#x3E; &#123;&#123; if (ok) { return message } &#125;&#125; عبارات قالب فقط به لیست سفید از توابع مانند Math و Date دسترسی دارند و شما نباید سعی کنید در عبارات به توابع تعریف شده توسط کاربر دسترسی داشته باشید استفاداه از دایرکتیو(Directives) دایرکتیوها ویژگی های خاصی با پیشوند -v هستند و مقدار آن، یک عبارت جاوا اسکریپت واحد می باشد(به استثنای v-for ، که بعداً مورد بحث قرار خواهد گرفت). کار یک دایرکتیو این است که وقتی مقدار یک عبارت تغییر کرد ، تاثیر آن را روی DOM اعمال نماید. بیایید مثالی را که در مقدمه دیدیم مرور کنیم: &amp;#x3C;p v-if=&amp;#x22;seen&amp;#x22;&amp;#x3E;Now you see me&amp;#x3C;/p&amp;#x3E; در اینجا ، دستورالعمل v-if عنصر &amp;#x3C;p&amp;#x3E; را براساس نتیجه عبارتی که دیده می شود ، حذف یا درج می کند. آرگومان ها در دایرکتیو(Arguments) برخی از دایرکتیوها می توانند یک آرگومان دریافت کنند ، که پس از نام دایرکتیو توسط کاراکتر : مشخص شده اند. به عنوان مثال ، دستورالعمل v-bind برای به روزرسانی واکنشی یک ویژگی HTML استفاده می شود: &amp;#x3C;a v-bind:href=&amp;#x22;url&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; در اینجا href آرگومانی است که به دایرکتیو v-bind می گوید ویژگی href عنصر را به مقدار عبارت url متصل کند. مثال دیگر دایرکتیو v-on است که به رویدادهای DOM گوش می دهد: &amp;#x3C;a v-on:click=&amp;#x22;doSomething&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; در اینجا آرگومان، نام رویدادی جهت گوش دادن به است. ما در مورد جزئیات رویدادها نیز با جزئیات بیشتری صحبت خواهیم کرد. آرگومان های داینامیک(Dynamic Arguments) از نسخه 2.6.0 ، همچنین می توانید از یک عبارات جاوا اسکریپت به عنوان یک آرگومان دایرکتیو در درون [] استفاده نمایید: &amp;#x3C;!-- Note that there are some constraints to the argument expression, as explained in the &amp;#x22;Dynamic Argument Expression Constraints&amp;#x22; section below. --&amp;#x3E; &amp;#x3C;a v-bind:[attributeName]=&amp;#x22;url&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; var vm = new Vue({ el: &#39;#app&#39;, data: { attributename : &#39;href&#39;, url : &#39;http://farhadnote.ir&#39; } }) در اینجا attributeName به صورت پویا به عنوان یک عبارت جاوا اسکریپت ارزیابی می شود و از مقدار ارزیابی شده آن به عنوان مقدار نهایی برای آرگومان استفاده می شود. به عنوان مثال ، اگر نمونه Vue شما دارای ویژگی داده attributename باشد و مقدار آن برابر &quot;href&quot; است ، این معادل است با v-bind: href. به طور مشابه ، می توانید از آرگومان های پویا برای پیوند دادن یک کنترل کننده به نام یک رویداد پویا استفاده کنید: &amp;#x3C;a v-on:[eventName]=&amp;#x22;doSomething&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; var vm = new Vue({ el: &#39;#app&#39;, data: { eventname : &#39;click&#39; }, methods: { doSomething : function(){ alert(&#39;hello world&#39;); } } }) در این مثال، زمانیکه مقدار eventname برابر &quot;click&quot; باشد آنگاه v-on:[eventName] معادل v-on:click خواهد شد. محدودیت های مقدار (Dynamic Argument Value Constraints) انتظار می رود آرگومان های پویا ، یک رشته را به استثنای null ارزیابی کنند. از مقدار ویژه null می توان جهت حذف صریح اتصال استفاده کرد. هر مقدار غیر رشته ای دیگر باعث ایجاد اخطار می گردد. محدودیت های عبارات (Dynamic Argument Expression Constraints) عبارات آرگومان پویا محدودیت های نحوی دارند زیرا برخی از کاراکترها ها مانند فضاها و نقل قول ها در نام های ویژگی های HTML نامعتبر هستند. به عنوان مثال موارد زیر نامعتبر است: &amp;#x3C;!-- This will trigger a compiler warning. --&amp;#x3E; &amp;#x3C;a v-bind:[&amp;#x27;foo&amp;#x27; + bar]=&amp;#x22;value&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; راه حل این است که یا از عبارات بدون فاصله یا نقل قول استفاده کنید ، یا عبارت پیچیده را با یک ویژگی computed جایگزین کنید. هنگام استفاده از قالب ها در DOM (قالب هایی که مستقیماً در یک فایل HTML نوشته شده اند) ، باید از نامگذاری کلیدها با کاراکترهای بزرگ خودداری کنید ، زیرا مرورگرها اسم ویژگی ها را به حروف کوچک محدود می کنند: &amp;#x3C;!-- This will be converted to v-bind:[someattr] in in-DOM templates. Unless you have a &amp;#x22;someattr&amp;#x22; property in your instance, your code won&amp;#x27;t work. --&amp;#x3E; &amp;#x3C;a v-bind:[someAttr]=&amp;#x22;value&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; اصلاح کننده ها(Modifiers) Modifiers (اصلاح کننده) پسوندهای خاصی هستند که با یک نقطه مشخص می شوند و بیانگر این است که یک دایرکتیو باید به روشی خاص محدود شود. به عنوان مثال ، اصلاح کننده prevent به دایرکتیو v-on می گوید تابع ()preventDefault را در هنگام آغاز رویداد فراخوانی کند: &amp;#x3C;form v-on:submit.prevent=&amp;#x22;onSubmit&amp;#x22;&amp;#x3E; ... &amp;#x3C;/form&amp;#x3E; در آینده این ویژگیها را بررسی کرده و نمونه های دیگری از اصلاح کننده ها را برای مدل v-on و v-model مشاهده خواهید کرد. مختصرنویسی(Shorthands) پیشوند -v به عنوان یک نشانه بصری برای شناسایی ویژگی های خاص Vue در قالب های شما استفاده می شود. این زمانی مفید است که از Vue.js برای اعمال رفتار پویا در برخی از نشانه های(markup) موجود استفاده می کنید ، اما می تواند موجب طولانی شدن برای برخی از دایرکتیوهایی که اغلب استفاده می شود گردد. در عین حال نیاز به پیشوند v-، هنگام ساختن SPA ، جایی که Vue هر الگویی را مدیریت می کند اهمیت کمتری می یابد. بنابراین ، Vue برای دو مورد از دایرکتیوهای متداول ، v-bind و v-on اصلاحات ویژه ای را ارائه می دهد: اختصار v-bind &amp;#x3C;!-- full syntax --&amp;#x3E; &amp;#x3C;a v-bind:href=&amp;#x22;url&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; &amp;#x3C;!-- shorthand --&amp;#x3E; &amp;#x3C;a :href=&amp;#x22;url&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; &amp;#x3C;!-- shorthand with dynamic argument (2.6.0+) --&amp;#x3E; &amp;#x3C;a :[key]=&amp;#x22;url&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; اختصار v-on &amp;#x3C;!-- full syntax --&amp;#x3E; &amp;#x3C;a v-on:click=&amp;#x22;doSomething&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; &amp;#x3C;!-- shorthand --&amp;#x3E; &amp;#x3C;a @click=&amp;#x22;doSomething&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; &amp;#x3C;!-- shorthand with dynamic argument (2.6.0+) --&amp;#x3E; &amp;#x3C;a @[event]=&amp;#x22;doSomething&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; آنها ممکن است کمی متفاوت از HTML نرمال به نظر برسند ، اما: و @ کاراکترهای برای نام ویژگی ها هستند و همه مرورگرهای دارای پشتیبانی Vue می توانند آن را به درستی تجزیه کنند. علاوه بر این ، آنها در مارک نهایی رندر شده ظاهر نمی شوند. نحو shorthand کاملاً اختیاری است." />
+<link rel="canonical" href="http://localhost:4000/documentation/vuejs/Essentials/Template-Syntax" />
+<meta property="og:url" content="http://localhost:4000/documentation/vuejs/Essentials/Template-Syntax" />
+<meta property="og:site_name" content="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-09-28T21:16:42+03:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="اصول قالب در Vue" />
+<meta name="twitter:site" content="@farhadmirzapour" />
+<meta name="twitter:creator" content="@Farhad Mirzapour" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"اصول قالب در Vue","url":"http://localhost:4000/documentation/vuejs/Essentials/Template-Syntax","datePublished":"2019-09-28T21:16:42+03:30","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"dateModified":"2019-09-28T21:16:42+03:30","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/documentation/vuejs/Essentials/Template-Syntax"},"author":{"@type":"Person","name":"Farhad Mirzapour"},"description":"ایجاد نمونه (Creating a Vue Instance) Vue.js از نحو قالب مبتنی بر HTML استفاده می کند که به شما امکان می دهد DOM رندر شده را به داده های نمونه ایجاد شده Vue متصل کنید. همه قالب های Vue.js دارای HTML معتبری هستند که می تواند توسط مرورگرهای خاص و سازگار با آن تجزیه و تحلیل شود. Vue قالبها را به توابع DOM مجازی کامپایل می کند. همراه با سیستم واکنش پذیری ، Vue قادر است هوشمندانه به حداقل تعداد کامپوننت ها جهت رندر مجدد و اعمال حداقل دستکاری DOM هنگام تغییر وضعیت برنامه ، پی برد. متن (Text) معمول ترین شکل اتصال داده ها استفاده از نحو Mustache (دابل براکت) می باشد : &amp;#x3C;span&amp;#x3E;Message: &#123;&#123; msg &#125;&#125;&amp;#x3C;/span&amp;#x3E; متن Mustache با مقدار ویژگی msg در شی داده مربوطه جایگزین می شود. همچنین هرگاه مقدار ویژگی خاصیت داده شی تغییر کند متن آن نیز بروزرسانی می شود. شما همچنین می توانید عمل جایگذاری را یک بار انجام دهید که با استفاده از دستورالعمل v-once داده ها بیش از یکبار بروزرسانی نمی شود ، اما در نظر داشته باشید که این امر می تواند بر روی اتصال داده در سایر گره ها (node) نیز تأثیرگذار باشد: &amp;#x3C;span v-once&amp;#x3E;This will never change: &#123;&#123; msg &#125;&#125;&amp;#x3C;/span&amp;#x3E; داده نوع (Raw HTML) استفاده از نحو (mustaches) برای داده های متنی کاربرد دارد. جهت داده های HTML شما می توانید از دایرکتیو v-html استفاده نمایید : &amp;#x3C;div id=&amp;#x22;app-1&amp;#x22;&amp;#x3E; &amp;#x3C;p&amp;#x3E;Using mustaches: &#123;&#123; rawHtml &#125;&#125;&amp;#x3C;/p&amp;#x3E; &amp;#x3C;p&amp;#x3E;Using v-html directive: &amp;#x3C;span v-html=&amp;#x22;rawHtml&amp;#x22;&amp;#x3E;&amp;#x3C;/span&amp;#x3E;&amp;#x3C;/p&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var app1 = new Vue({ el: &#39;#app-1&#39;, data: { rawHtml: &#39;&amp;#x3C;span style=&amp;#x22;color: red&amp;#x22;&amp;#x3E;This should be red.&amp;#x3C;/span&amp;#x3E;&#39; } }) Using mustaches: &#123;&#123; rawHtml &#125;&#125; Using v-html directive: رندر داینامیکی HTML دلخواه در وب سایت شما می تواند بسیار خطرناک باشد زیرا به راحتی می تواند منجر به آسیب پذیری XSS شود. فقط از جایگذاری HTML بر روی محتوای قابل اعتماد استفاده شود و هرگز در محتوای ارائه شده توسط کاربر استفاده نکنید. صفات (Attributes) نحو(Mustaches) را نمی توان در صفات HTML استفاده کرد. در عوض می توانید از دستورالعمل v-bind استفاده نمایید: &amp;#x3C;div v-bind:id=&amp;#x22;dynamicId&amp;#x22;&amp;#x3E;&amp;#x3C;/div&amp;#x3E; در مورد صفات boolean ، جایی که شرط آنها منتهی بر true می شود ، v-bind کمی متفاوت عمل می کند. در این مثال: &amp;#x3C;button v-bind:disabled=&amp;#x22;isButtonDisabled&amp;#x22;&amp;#x3E;Button&amp;#x3C;/button&amp;#x3E; اگر isButtonDisabled مقدار null، undefined یا false داشته باشد ، ویژگی disabled حتی در عنصر &amp;#x3C;button&amp;#x3E; نیز درج نخواهد شد. استفاداه از عبارات جاوااسکریپت(Using JavaScript Expressions) Vue.js از تمام عبارات جاوا اسکریپت در کلیه اتصالات داده پشتیبانی می کند: &#123;&#123; number + 1 &#125;&#125; &#123;&#123; ok ? &amp;#x27;YES&amp;#x27; : &amp;#x27;NO&amp;#x27; &#125;&#125; &#123;&#123; message.split(&amp;#x27;&amp;#x27;).reverse().join(&amp;#x27;&amp;#x27;) &#125;&#125; &amp;#x3C;div v-bind:id=&amp;#x22;&amp;#x27;list-&amp;#x27; + id&amp;#x22;&amp;#x3E;&amp;#x3C;/div&amp;#x3E; یک محدودیت این است که هر اتصال فقط می تواند یک عبارت واحد داشته باشد ، بنابراین موارد زیر کار نمی کند: &amp;#x3C;!-- this is a statement, not an expression: --&amp;#x3E; &#123;&#123; var a = 1 &#125;&#125; &amp;#x3C;!-- flow control won&amp;#x27;t work either, use ternary expressions --&amp;#x3E; &#123;&#123; if (ok) { return message } &#125;&#125; عبارات قالب فقط به لیست سفید از توابع مانند Math و Date دسترسی دارند و شما نباید سعی کنید در عبارات به توابع تعریف شده توسط کاربر دسترسی داشته باشید استفاداه از دایرکتیو(Directives) دایرکتیوها ویژگی های خاصی با پیشوند -v هستند و مقدار آن، یک عبارت جاوا اسکریپت واحد می باشد(به استثنای v-for ، که بعداً مورد بحث قرار خواهد گرفت). کار یک دایرکتیو این است که وقتی مقدار یک عبارت تغییر کرد ، تاثیر آن را روی DOM اعمال نماید. بیایید مثالی را که در مقدمه دیدیم مرور کنیم: &amp;#x3C;p v-if=&amp;#x22;seen&amp;#x22;&amp;#x3E;Now you see me&amp;#x3C;/p&amp;#x3E; در اینجا ، دستورالعمل v-if عنصر &amp;#x3C;p&amp;#x3E; را براساس نتیجه عبارتی که دیده می شود ، حذف یا درج می کند. آرگومان ها در دایرکتیو(Arguments) برخی از دایرکتیوها می توانند یک آرگومان دریافت کنند ، که پس از نام دایرکتیو توسط کاراکتر : مشخص شده اند. به عنوان مثال ، دستورالعمل v-bind برای به روزرسانی واکنشی یک ویژگی HTML استفاده می شود: &amp;#x3C;a v-bind:href=&amp;#x22;url&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; در اینجا href آرگومانی است که به دایرکتیو v-bind می گوید ویژگی href عنصر را به مقدار عبارت url متصل کند. مثال دیگر دایرکتیو v-on است که به رویدادهای DOM گوش می دهد: &amp;#x3C;a v-on:click=&amp;#x22;doSomething&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; در اینجا آرگومان، نام رویدادی جهت گوش دادن به است. ما در مورد جزئیات رویدادها نیز با جزئیات بیشتری صحبت خواهیم کرد. آرگومان های داینامیک(Dynamic Arguments) از نسخه 2.6.0 ، همچنین می توانید از یک عبارات جاوا اسکریپت به عنوان یک آرگومان دایرکتیو در درون [] استفاده نمایید: &amp;#x3C;!-- Note that there are some constraints to the argument expression, as explained in the &amp;#x22;Dynamic Argument Expression Constraints&amp;#x22; section below. --&amp;#x3E; &amp;#x3C;a v-bind:[attributeName]=&amp;#x22;url&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; var vm = new Vue({ el: &#39;#app&#39;, data: { attributename : &#39;href&#39;, url : &#39;http://farhadnote.ir&#39; } }) در اینجا attributeName به صورت پویا به عنوان یک عبارت جاوا اسکریپت ارزیابی می شود و از مقدار ارزیابی شده آن به عنوان مقدار نهایی برای آرگومان استفاده می شود. به عنوان مثال ، اگر نمونه Vue شما دارای ویژگی داده attributename باشد و مقدار آن برابر &quot;href&quot; است ، این معادل است با v-bind: href. به طور مشابه ، می توانید از آرگومان های پویا برای پیوند دادن یک کنترل کننده به نام یک رویداد پویا استفاده کنید: &amp;#x3C;a v-on:[eventName]=&amp;#x22;doSomething&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; var vm = new Vue({ el: &#39;#app&#39;, data: { eventname : &#39;click&#39; }, methods: { doSomething : function(){ alert(&#39;hello world&#39;); } } }) در این مثال، زمانیکه مقدار eventname برابر &quot;click&quot; باشد آنگاه v-on:[eventName] معادل v-on:click خواهد شد. محدودیت های مقدار (Dynamic Argument Value Constraints) انتظار می رود آرگومان های پویا ، یک رشته را به استثنای null ارزیابی کنند. از مقدار ویژه null می توان جهت حذف صریح اتصال استفاده کرد. هر مقدار غیر رشته ای دیگر باعث ایجاد اخطار می گردد. محدودیت های عبارات (Dynamic Argument Expression Constraints) عبارات آرگومان پویا محدودیت های نحوی دارند زیرا برخی از کاراکترها ها مانند فضاها و نقل قول ها در نام های ویژگی های HTML نامعتبر هستند. به عنوان مثال موارد زیر نامعتبر است: &amp;#x3C;!-- This will trigger a compiler warning. --&amp;#x3E; &amp;#x3C;a v-bind:[&amp;#x27;foo&amp;#x27; + bar]=&amp;#x22;value&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; راه حل این است که یا از عبارات بدون فاصله یا نقل قول استفاده کنید ، یا عبارت پیچیده را با یک ویژگی computed جایگزین کنید. هنگام استفاده از قالب ها در DOM (قالب هایی که مستقیماً در یک فایل HTML نوشته شده اند) ، باید از نامگذاری کلیدها با کاراکترهای بزرگ خودداری کنید ، زیرا مرورگرها اسم ویژگی ها را به حروف کوچک محدود می کنند: &amp;#x3C;!-- This will be converted to v-bind:[someattr] in in-DOM templates. Unless you have a &amp;#x22;someattr&amp;#x22; property in your instance, your code won&amp;#x27;t work. --&amp;#x3E; &amp;#x3C;a v-bind:[someAttr]=&amp;#x22;value&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; اصلاح کننده ها(Modifiers) Modifiers (اصلاح کننده) پسوندهای خاصی هستند که با یک نقطه مشخص می شوند و بیانگر این است که یک دایرکتیو باید به روشی خاص محدود شود. به عنوان مثال ، اصلاح کننده prevent به دایرکتیو v-on می گوید تابع ()preventDefault را در هنگام آغاز رویداد فراخوانی کند: &amp;#x3C;form v-on:submit.prevent=&amp;#x22;onSubmit&amp;#x22;&amp;#x3E; ... &amp;#x3C;/form&amp;#x3E; در آینده این ویژگیها را بررسی کرده و نمونه های دیگری از اصلاح کننده ها را برای مدل v-on و v-model مشاهده خواهید کرد. مختصرنویسی(Shorthands) پیشوند -v به عنوان یک نشانه بصری برای شناسایی ویژگی های خاص Vue در قالب های شما استفاده می شود. این زمانی مفید است که از Vue.js برای اعمال رفتار پویا در برخی از نشانه های(markup) موجود استفاده می کنید ، اما می تواند موجب طولانی شدن برای برخی از دایرکتیوهایی که اغلب استفاده می شود گردد. در عین حال نیاز به پیشوند v-، هنگام ساختن SPA ، جایی که Vue هر الگویی را مدیریت می کند اهمیت کمتری می یابد. بنابراین ، Vue برای دو مورد از دایرکتیوهای متداول ، v-bind و v-on اصلاحات ویژه ای را ارائه می دهد: اختصار v-bind &amp;#x3C;!-- full syntax --&amp;#x3E; &amp;#x3C;a v-bind:href=&amp;#x22;url&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; &amp;#x3C;!-- shorthand --&amp;#x3E; &amp;#x3C;a :href=&amp;#x22;url&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; &amp;#x3C;!-- shorthand with dynamic argument (2.6.0+) --&amp;#x3E; &amp;#x3C;a :[key]=&amp;#x22;url&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; اختصار v-on &amp;#x3C;!-- full syntax --&amp;#x3E; &amp;#x3C;a v-on:click=&amp;#x22;doSomething&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; &amp;#x3C;!-- shorthand --&amp;#x3E; &amp;#x3C;a @click=&amp;#x22;doSomething&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; &amp;#x3C;!-- shorthand with dynamic argument (2.6.0+) --&amp;#x3E; &amp;#x3C;a @[event]=&amp;#x22;doSomething&amp;#x22;&amp;#x3E; ... &amp;#x3C;/a&amp;#x3E; آنها ممکن است کمی متفاوت از HTML نرمال به نظر برسند ، اما: و @ کاراکترهای برای نام ویژگی ها هستند و همه مرورگرهای دارای پشتیبانی Vue می توانند آن را به درستی تجزیه کنند. علاوه بر این ، آنها در مارک نهایی رندر شده ظاهر نمی شوند. نحو shorthand کاملاً اختیاری است.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="stylesheet" href="/assets/prisma/prism.css">
+    <!-- favicons and rss -->
+    <link rel="alternate" type="application/rss+xml" title="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" href="/feed.xml">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- header -->
+<header class="header" role="banner" aria-label="Header">
+    <button class="hamburger-button" onclick="hamburgerMenu();" role="button" aria-label="Hamburger menu button">
+        <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    </button>
+    <a href="/" class="logo" role="link" aria-label="Home">
+        <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo">
+    </a>
+    <nav class="navigation" role="navigation" aria-label="Navigation">
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item">
+                <a href="/" class="logo" role="menuitem" aria-label="Home">
+                    <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo">
+                </a>
+            </li>
+            
+            <li role="menuitem"><a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a></li>
+            
+            <li role="menuitem"><a href="/contactus" role="menuitem" aria-label="تماس">تماس</a></li>
+            
+        </ul>
+    </nav>
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox">
+        </form>
+    </div>
+</header>
+
+<nav id="hamburger-menu" role="navigation" aria-label="Hamburger menu">
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox">
+        </form>
+    </div>
+    <div class="home-nav" role="navigation" aria-label="Site navigation">
+        <a href="/" role="menuitem" aria-label="Home">صفحه اصلی</a>
+        
+        <a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a>
+        
+        <a href="/contactus" role="menuitem" aria-label="تماس">تماس</a>
+        
+    </div>
+
+    
+    <div class="doc-nav" role="navigation" aria-label="Documentation navigation">
+        <p role="presentation" aria-label="Category name">
+            اصول آموزش vuejs
+        </p>
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/2019/10/11/vuejs.html" class="doc-link" role="link" aria-label="اصول قالب در Vue">مقدمه</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/The-Vue-Instance" class="doc-link" role="link" aria-label="ایجاد نمونه Vue">ایجاد نمونه Vue</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Template-Syntax" class="doc-link" role="link" aria-label="اصول قالب در Vue">اصول قالب در Vue</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Computed-Properties-and-Watchers" class="doc-link" role="link" aria-label="خاصیت Computed و Watchers">خاصیت Computed و Watchers</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Class-and-Style-Bindings" class="doc-link" role="link" aria-label="اتصال Class و Style">اتصال Class و Style</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Conditional-Rendering" class="doc-link" role="link" aria-label="رندرینگ شرطی  (Conditional Rendering)">رندرینگ شرطی  (Conditional Rendering)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/List-Rendering" class="doc-link" role="link" aria-label="رندر List (List Rendering)">رندر List (List Rendering)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Event-Handling" class="doc-link" role="link" aria-label="کار با رویدادها(Event Handling)">کار با رویدادها(Event Handling)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Form-Input-Bindings" class="doc-link" role="link" aria-label="اتصال داده به ورودی فرم (Form Input Bindings)">اتصال داده به ورودی فرم (Form Input Bindings)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Components-Basics" class="doc-link" role="link" aria-label="اصول پایه Component">اصول پایه Component</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Components-In-Depth/Component-Registration" class="doc-link" role="link" aria-label="ثبت Component">ثبت Component</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Components-In-Depth/components-props" class="doc-link" role="link" aria-label="props">props</a></li>
+            
+            
+        </ul>
+    </div>
+    
+</nav>
+<!-- main content -->
+<main class="container" role="main">
+    <div class="rcdoccontainerimg">
+<div class="rc-DRTVBanner-new rc-DRTVBanner-bigsize">
+    <div style="background: url('/images/original/vuejs.jpg'); " class="blurred_img"></div>
+    <div class="mask"></div>
+    <div class="bot"></div>
+    <div class="over">
+        <div class="container-rc">
+            <img class="image" src="/images/original/vuejs.jpg" alt="اصول قالب در Vue" height="190">
+            <div class="desktop-banner-container">
+                <h1 class="display-5-text headline">
+                    
+                    
+                    اصول آموزش vuejs
+                    </h1>
+                <!--<div class="tagslist"><ul class='lyda-tag-list'><li class='lyda-tag-list-title'>برچسب ها</li><li><a class="tags" href="/tag/لاراول">#لاراول</a></li><li><a class="tags" href="/tag/لاراول-5-5">#لاراول 5.5</a></li></ul></div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="bread-crumb">-->
+<!--<div class="container   ">-->
+<!--<div class="pull-right ">-->
+<!--<div class="bread-button text-custom b-left">-->
+<!--انتشار : 2 ماه پیش-->
+<!--</div>-->
+<!--<a href="/category/article/" class="bread-button back-to-all b-left hidden-xs">همه مقالات</a>-->
+<!--<div class="cat-lable">-->
+<!--<a href="/category/article/laravel/">-->
+<!--لاراول-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<script>
+    $(window).scroll(function(){
+        var sticky = $('.doc-menu'),
+            scroll = $(window).scrollTop();
+        if (scroll >= 101) {sticky.addClass('doc-header-scroll'); }
+        else {sticky.removeClass('doc-header-scroll'); };
+    });
+</script>
+</div>
+<div class="doc-container">
+
+    <div class="doc-menu">
+    
+    <ul>
+        <li>
+            <a href="/2019/10/11/vuejs.html" class="active doc-link" role="link">
+                مقدمه
+            </a>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم اساسی</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="ایجاد نمونه Vue" href="/documentation/vuejs/Essentials/The-Vue-Instance" class="active doc-link" role="link">
+                ایجاد نمونه Vue
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول قالب در Vue" href="/documentation/vuejs/Essentials/Template-Syntax" class="active doc-link" role="link">
+                اصول قالب در Vue
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="خاصیت Computed و Watchers" href="/documentation/vuejs/Essentials/Computed-Properties-and-Watchers" class="active doc-link" role="link">
+                خاصیت Computed و Watchers
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اتصال Class و Style" href="/documentation/vuejs/Essentials/Class-and-Style-Bindings" class="active doc-link" role="link">
+                اتصال Class و Style
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="رندرینگ شرطی  (Conditional Rendering)" href="/documentation/vuejs/Essentials/Conditional-Rendering" class="active doc-link" role="link">
+                رندرینگ شرطی  (Conditional Rendering)
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="رندر List (List Rendering)" href="/documentation/vuejs/Essentials/List-Rendering" class="active doc-link" role="link">
+                رندر List (List Rendering)
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="کار با رویدادها(Event Handling)" href="/documentation/vuejs/Essentials/Event-Handling" class="active doc-link" role="link">
+                کار با رویدادها(Event Handling)
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اتصال داده به ورودی فرم (Form Input Bindings)" href="/documentation/vuejs/Essentials/Form-Input-Bindings" class="active doc-link" role="link">
+                اتصال داده به ورودی فرم (Form Input Bindings)
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول پایه Component" href="/documentation/vuejs/Essentials/Components-Basics" class="active doc-link" role="link">
+                اصول پایه Component
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">کامپوننت ها</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="ثبت Component" href="/documentation/vuejs/Components-In-Depth/Component-Registration" class="active doc-link" role="link">
+                ثبت Component
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="props" href="/documentation/vuejs/Components-In-Depth/components-props" class="active doc-link" role="link">
+                props
+            </a>
+        </li>
+        
+        
+            </ul>
+        </li>
+        
+    </ul>
+    
+</div>
+
+    <article class="documentation">
+        <header class="doc-header">
+            <div class="time">
+                    تاریخ :      سه شنبه 02 مهر 1398
+            </div>
+                
+        </header>
+        <section class="anchored">
+            <h3>  ایجاد نمونه  (Creating a Vue Instance)</h3>
+<p>
+Vue.js از نحو قالب مبتنی بر HTML استفاده می کند که به شما امکان می دهد DOM رندر شده را به داده های نمونه ایجاد شده Vue  متصل کنید. همه قالب های Vue.js دارای HTML معتبری هستند که می تواند توسط مرورگرهای خاص و سازگار با آن تجزیه و تحلیل شود.
+</p>
+
+<p>
+Vue قالبها را به توابع DOM مجازی کامپایل می کند. همراه با سیستم واکنش پذیری ، Vue قادر است هوشمندانه به حداقل تعداد کامپوننت ها جهت رندر مجدد و اعمال حداقل دستکاری DOM هنگام تغییر وضعیت برنامه ، پی برد.
+</p>
+<p><br></p>
+
+<h3>  متن (Text)</h3>
+
+<p>
+معمول ترین شکل اتصال داده ها استفاده از نحو Mustache (دابل براکت) می باشد :
+</p>
+
+<pre><code class="language-html  line-numbers">&lt;span&gt;Message: {{ msg }}&lt;/span&gt;
+</code></pre>
+
+<p>
+متن Mustache با مقدار ویژگی msg در شی داده مربوطه جایگزین می شود. همچنین هرگاه مقدار ویژگی خاصیت داده شی تغییر کند متن آن نیز بروزرسانی می شود.
+</p>
+
+<p>
+شما همچنین می توانید عمل جایگذاری را یک بار انجام دهید که با استفاده از دستورالعمل v-once داده ها بیش از یکبار بروزرسانی نمی شود ، اما در نظر داشته باشید که این امر می تواند بر روی اتصال داده در سایر گره ها (node) نیز تأثیرگذار باشد:
+</p>
+
+<pre><code class="language-html  line-numbers">&lt;span v-once&gt;This will never change: {{ msg }}&lt;/span&gt;
+</code></pre>
+
+<p><br></p>
+
+<h3> داده نوع (Raw HTML)</h3>
+
+<p>
+استفاده از نحو (mustaches) برای داده های متنی کاربرد دارد. جهت داده های HTML شما می توانید از دایرکتیو v-html استفاده نمایید :
+</p>
+
+<pre><code class="language-html  line-numbers">&lt;div id="app-1"&gt;
+&lt;p&gt;Using mustaches: {{ rawHtml }}&lt;/p&gt;
+&lt;p&gt;Using v-html directive: &lt;span v-html="rawHtml"&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+
+<pre><code class="language-javascript  line-numbers"> var app1 = new Vue({
+    el: '#app-1',
+    data: {
+    rawHtml: '&lt;span style="color: red"&gt;This should be red.&lt;/span&gt;'
+    }
+ })
+</code></pre>
+
+<div id="app-1" class="result-example">
+   <p>Using mustaches: {{ rawHtml }}</p>
+   <p>Using v-html directive: <span v-html="rawHtml"></span></p>
+</div>
+
+<blockquote class="has-icon tip">
+رندر داینامیکی HTML دلخواه در وب سایت شما می تواند بسیار خطرناک باشد زیرا به راحتی می تواند منجر به آسیب پذیری XSS شود. فقط از جایگذاری HTML بر روی محتوای قابل اعتماد استفاده شود و هرگز در محتوای ارائه شده توسط کاربر استفاده نکنید.
+</blockquote>
+<p><br></p>
+
+<h3>   صفات (Attributes)</h3>
+<p>
+نحو(Mustaches) را نمی توان در صفات HTML استفاده کرد. در عوض می توانید از دستورالعمل v-bind استفاده نمایید:
+</p>
+<pre><code class="language-html  line-numbers">&lt;div v-bind:id="dynamicId"&gt;&lt;/div&gt;
+</code></pre>
+
+<p>
+در مورد صفات boolean ، جایی که شرط  آنها منتهی بر true  می شود ، v-bind کمی متفاوت عمل می کند. در این مثال:
+</p>
+
+<pre><code class="language-html  line-numbers">&lt;button v-bind:disabled="isButtonDisabled"&gt;Button&lt;/button&gt;
+</code></pre>
+
+<p>
+اگر isButtonDisabled مقدار null،  undefined یا false داشته باشد ، ویژگی disabled حتی در عنصر &lt;button&gt;  نیز درج نخواهد شد.
+</p>
+
+<p><br></p>
+
+<h3>    استفاداه از عبارات جاوااسکریپت(Using JavaScript Expressions)</h3>
+<p>
+Vue.js  از تمام عبارات جاوا اسکریپت در کلیه اتصالات داده پشتیبانی می کند:
+ </p>
+
+<pre><code class="language-html  line-numbers"> {{ number + 1 }}
+ 
+ {{ ok ? 'YES' : 'NO' }}
+ 
+ {{ message.split('').reverse().join('') }}
+ 
+ &lt;div v-bind:id="'list-' + id"&gt;&lt;/div&gt;
+
+ </code></pre>
+
+<p>
+ یک محدودیت این است که هر اتصال فقط می تواند یک عبارت واحد داشته باشد ، بنابراین موارد زیر کار نمی کند:
+ </p>
+
+<pre><code class="language-html  line-numbers">  &lt;!-- this is a statement, not an expression: --&gt;
+  {{ var a = 1 }}
+  
+  &lt;!-- flow control won't work either, use ternary expressions --&gt;
+  {{ if (ok) { return message } }}
+  </code></pre>
+
+<blockquote class="has-icon tip">
+  عبارات قالب  فقط به لیست سفید از توابع مانند Math و Date دسترسی دارند و شما نباید سعی کنید در عبارات به توابع  تعریف شده توسط کاربر دسترسی داشته باشید
+  </blockquote>
+
+<p><br></p>
+
+<h3>    استفاداه از دایرکتیو(Directives)</h3>
+<p>
+  دایرکتیوها  ویژگی های خاصی با پیشوند -v هستند و مقدار آن،  یک عبارت جاوا اسکریپت واحد  می باشد(به استثنای v-for ، که بعداً مورد بحث قرار خواهد گرفت).  کار یک دایرکتیو این است که وقتی مقدار یک عبارت تغییر کرد ، تاثیر آن را روی DOM اعمال نماید. بیایید مثالی را که در مقدمه دیدیم مرور کنیم:
+  </p>
+
+<pre><code class="language-html  line-numbers">&lt;p v-if="seen"&gt;Now you see me&lt;/p&gt;
+  </code></pre>
+
+<p>
+  در اینجا ، دستورالعمل v-if عنصر &lt;p&gt; را براساس نتیجه عبارتی که دیده می شود ، حذف یا درج می کند.
+  </p>
+<p><br></p>
+
+<h3>    آرگومان ها در دایرکتیو(Arguments)</h3>
+<p>
+  برخی از دایرکتیوها می توانند یک آرگومان دریافت کنند ، که پس از نام دایرکتیو توسط کاراکتر :  مشخص شده اند. به عنوان مثال ، دستورالعمل v-bind برای به روزرسانی واکنشی یک ویژگی HTML استفاده می شود:
+  </p>
+
+<pre><code class="language-html  line-numbers">&lt;a v-bind:href="url"&gt; ... &lt;/a&gt;
+   </code></pre>
+
+<p>
+   در اینجا href آرگومانی است که به دایرکتیو v-bind می گوید ویژگی href عنصر را به مقدار عبارت url متصل کند.
+   </p>
+
+<p>
+   مثال دیگر دایرکتیو v-on است که به رویدادهای DOM گوش می دهد:
+   </p>
+
+<pre><code class="language-html  line-numbers">&lt;a v-on:click="doSomething"&gt; ... &lt;/a&gt;
+   </code></pre>
+
+<p>
+   در اینجا آرگومان، نام رویدادی جهت گوش دادن به است. ما در مورد جزئیات رویدادها نیز با جزئیات بیشتری صحبت خواهیم کرد.
+   </p>
+
+<p><br></p>
+
+<h3>    آرگومان های داینامیک(Dynamic Arguments)</h3>
+<p>
+ از نسخه 2.6.0 ، همچنین می توانید از یک عبارات جاوا اسکریپت  به عنوان یک آرگومان دایرکتیو  در درون [] استفاده نمایید:
+   </p>
+
+<pre><code class="language-html  line-numbers">&lt;!--
+  Note that there are some constraints to the argument expression, as explained
+  in the "Dynamic Argument Expression Constraints" section below.
+  --&gt;
+  &lt;a v-bind:[attributeName]="url"&gt; ... &lt;/a&gt;
+  </code></pre>
+
+<pre><code class="language-javascript  line-numbers">var vm = new Vue({
+     el: '#app',
+     data: {
+         attributename : 'href',
+         url : 'http://farhadnote.ir'
+     }
+ })
+</code></pre>
+
+<p>
+  در اینجا  attributeName به صورت پویا به عنوان یک عبارت جاوا اسکریپت ارزیابی می شود و از مقدار ارزیابی شده آن به عنوان مقدار نهایی برای آرگومان استفاده می شود. به عنوان مثال ، اگر نمونه Vue شما دارای ویژگی داده attributename باشد و مقدار آن برابر "href" است ، این معادل است با v-bind: href.
+  </p>
+
+<p>
+  به طور مشابه ، می توانید از آرگومان های پویا برای پیوند دادن یک کنترل کننده به نام یک رویداد پویا استفاده کنید:
+  </p>
+
+<pre><code class="language-html  line-numbers">&lt;a v-on:[eventName]="doSomething"&gt; ... &lt;/a&gt;
+  </code></pre>
+<pre><code class="language-javascript  line-numbers">var vm = new Vue({
+     el: '#app',
+     data: {
+         eventname : 'click'
+     },
+     methods: {
+         doSomething : function(){
+             alert('hello world');
+         }
+     }
+ })
+</code></pre>
+
+<p>
+  در این مثال، زمانیکه مقدار eventname برابر "click" باشد آنگاه v-on:[eventName]  معادل v-on:click خواهد شد.
+  </p>
+<p><br></p>
+
+<h4>محدودیت های مقدار  (Dynamic Argument Value Constraints)  </h4>
+<p>
+  انتظار می رود آرگومان های پویا ، یک رشته را به استثنای null ارزیابی کنند. از مقدار ویژه  null می توان جهت حذف صریح اتصال استفاده کرد. هر مقدار غیر رشته ای دیگر باعث ایجاد اخطار می گردد.
+  </p>
+
+<h4>محدودیت های عبارات  (Dynamic Argument Expression Constraints)  </h4>
+<p>
+  عبارات آرگومان پویا محدودیت های نحوی دارند زیرا برخی از کاراکترها ها مانند فضاها و نقل قول ها در نام های ویژگی های HTML نامعتبر هستند. به عنوان مثال موارد زیر نامعتبر است:
+  </p>
+
+<pre><code class="language-html  line-numbers">&lt;!-- This will trigger a compiler warning. --&gt;
+   &lt;a v-bind:['foo' + bar]="value"&gt; ... &lt;/a&gt;
+   </code></pre>
+<p>
+  راه حل این است که یا از عبارات بدون فاصله یا نقل قول استفاده کنید ، یا عبارت پیچیده را با یک ویژگی computed جایگزین کنید.
+  </p>
+<p>
+  هنگام استفاده از قالب ها در DOM (قالب هایی که مستقیماً در یک فایل HTML نوشته شده اند) ، باید از نامگذاری کلیدها با کاراکترهای بزرگ خودداری کنید ، زیرا مرورگرها اسم ویژگی ها را به حروف کوچک محدود می کنند:
+  </p>
+
+<pre><code class="language-html  line-numbers">&lt;!--
+ This will be converted to v-bind:[someattr] in in-DOM templates.
+ Unless you have a "someattr" property in your instance, your code won't work.
+ --&gt;
+ &lt;a v-bind:[someAttr]="value"&gt; ... &lt;/a&gt;   
+    </code></pre>
+
+<p><br></p>
+<h3> اصلاح کننده ها(Modifiers)</h3>
+<p>
+Modifiers (اصلاح کننده) پسوندهای خاصی هستند که با یک نقطه مشخص می شوند  و  بیانگر این است که یک دایرکتیو باید به روشی خاص محدود شود. به عنوان مثال ، اصلاح کننده prevent به دایرکتیو v-on می گوید  تابع ()preventDefault را در هنگام  آغاز رویداد فراخوانی کند:
+   </p>
+
+<pre><code class="language-html  line-numbers">&lt;form v-on:submit.prevent="onSubmit"&gt; ... &lt;/form&gt;
+   </code></pre>
+
+<p>
+   در آینده  این ویژگیها را بررسی کرده و نمونه های دیگری از اصلاح کننده ها را برای مدل v-on و v-model مشاهده خواهید کرد.
+   </p>
+
+<p><br></p>
+
+<h3>    مختصرنویسی(Shorthands)</h3>
+<p>
+پیشوند -v به عنوان یک نشانه بصری برای شناسایی ویژگی های خاص Vue در قالب های شما استفاده می شود. این زمانی مفید است که از Vue.js برای اعمال رفتار پویا در برخی از نشانه های(markup) موجود استفاده می کنید ، اما می تواند موجب طولانی شدن  برای برخی از دایرکتیوهایی که اغلب استفاده می شود  گردد. در عین حال نیاز به پیشوند v-، هنگام ساختن SPA ، جایی که Vue هر الگویی را مدیریت می کند اهمیت کمتری می یابد. بنابراین ، Vue برای دو مورد از دایرکتیوهای متداول ، v-bind و v-on اصلاحات ویژه ای را ارائه می دهد:
+   </p>
+
+<p><br></p>
+<h3> اختصار v-bind</h3>
+
+<pre><code class="language-html  line-numbers">&lt;!-- full syntax --&gt;
+   &lt;a v-bind:href="url"&gt; ... &lt;/a&gt;
+   
+   &lt;!-- shorthand --&gt;
+   &lt;a :href="url"&gt; ... &lt;/a&gt;
+   
+   &lt;!-- shorthand with dynamic argument (2.6.0+) --&gt;
+   &lt;a :[key]="url"&gt; ... &lt;/a&gt;
+   </code></pre>
+
+<p><br></p>
+<h3> اختصار v-on</h3>
+
+<pre><code class="language-html  line-numbers">&lt;!-- full syntax --&gt;
+&lt;a v-on:click="doSomething"&gt; ... &lt;/a&gt;
+
+&lt;!-- shorthand --&gt;
+&lt;a @click="doSomething"&gt; ... &lt;/a&gt;
+
+&lt;!-- shorthand with dynamic argument (2.6.0+) --&gt;
+&lt;a @[event]="doSomething"&gt; ... &lt;/a&gt;
+   </code></pre>
+
+<p>
+آنها ممکن است کمی متفاوت از HTML نرمال به نظر برسند ، اما: و @ کاراکترهای برای نام ویژگی ها هستند و همه مرورگرهای دارای پشتیبانی Vue می توانند آن را به درستی تجزیه کنند. علاوه بر این ، آنها در مارک نهایی رندر شده ظاهر نمی شوند. نحو shorthand کاملاً اختیاری است.
+</p>
+
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+<script>
+ var app1 = new Vue({
+    el: '#app-1',
+    data: {
+    rawHtml: '<span style="color: red">This should be red.</span>'
+    }
+ })
+ </script>
+
+
+        </section>
+        
+<hr>
+<p>
+</p>
+<div>منابع مورد مطالعه جهت جمع آوری این مطلب:</div>
+<div class="refrencehref">
+        https://vuejs.org/v2/guide/syntax.html
+</div>
+
+
+        <hr>
+        <style>
+    #commentsdiv{
+        background-color: #f5f5f5;
+        border: 1px solid #c5c5c5;
+        border-bottom: 0px !important;
+        padding: 12px;
+    }
+    #commentsborder{
+        background-color: #fff;
+        border: 1px solid #c5c5c5;
+        white-space: normal;
+        padding: 20px;
+    }
+</style>
+
+<div id="commentsdiv">نظرات</div>
+<div id="commentsborder">
+<div id="wpac-comment"></div>
+</div>
+<script type="text/javascript">
+wpac_init = window.wpac_init || [];
+wpac_init.push({widget: 'Comment', id: 7878});
+(function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = 'https://embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+})();
+</script>
+
+    </article>
+</div>
+<script src="/assets/js/anchor.min.js"></script>
+<script>
+    anchors.options = {
+        placement: 'left',
+        visible: 'always',
+//        icon: '#',
+    };
+    anchors.add('.anchored h2,.anchored h3,.anchored h4,.anchored h5,.anchored h6');
+
+    (function($){
+        if(window.location.hash) {
+            var hash = decodeURIComponent(window.location.hash);
+            gotohash($(hash).offset().top);
+        }
+        $('a.anchorjs-link').click(function(){
+			gotohash($(this).offset().top);
+        });
+        $('a.anchorjs').click(function(){
+			var id = '#' + $(this).attr('title');
+			gotohash($(id).offset().top);
+        });		
+        function gotohash(top){
+            var headerHeight = 70; // Get fixed header height
+            $('html,body').animate({
+                scrollTop: top - headerHeight
+            }, 20);
+        }
+    })(jQuery);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+   $(document).ready(function (){
+
+     var scrollPosition = getParameterByName('scroll');
+     if(scrollPosition)
+      $(".doc-menu").scrollTop(scrollPosition);
+
+     $('.doc-link').click(function(){
+        var scrollTop = $(".doc-menu").scrollTop();
+        if(scrollTop > 0)
+          $(this).attr("href",this.href + "?scroll=" + $(".doc-menu").scrollTop());
+     });
+
+     function getParameterByName(name, url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+   });
+</script>
+    <div id="back-to-top" role="button" aria-label="Back to top">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+    </div>
+</main>
+<!-- footer -->
+
+<footer class="footer" role="contentinfo" aria-label="Site footer">
+    <div class="navigation" role="navigation" aria-label="Footer links">
+        <a href="http://localhost:4000" class="avatar" role="link"></a>
+        <ul role="menubar" aria-label="Footer links menubar">
+            <li class="footer-products" role="menuitem" aria-label="Products">
+                تولیدات
+                <ul role="menu" aria-hidden="true" aria-label="Products link">
+                </ul>
+            </li>
+            <li class="footer-blog" role="menuitem" aria-label="Blog">
+                مقالات
+                <ul role="menu" aria-hidden="true" aria-label="Blog link">
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2020/07/03/marriage.html" role="link" aria-label="ازدواج">ازدواج</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2019/10/11/vuejs.html" role="link" aria-label="آموزش vuejs">آموزش vuejs</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/18/laravel.html" role="link" aria-label="آموزش Laravel">آموزش Laravel</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/articles/2017/12/13/laravelcollective.html" role="link" aria-label="معرفی Laravel Collective">معرفی Laravel Collective</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/06/design-patterns.html" role="link" aria-label="معرفی  Design Pattern">معرفی  Design Pattern</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/blog" role="link" aria-label="Read more">Read More</a></li>
+                </ul>
+            </li>
+
+            <li class="footer-connect" role="menuitem" aria-label="Connect">
+                تماس
+                <ul role="menu" aria-hidden="true" aria-label="Connect link">
+                    <li role="listitem" aria-label="Connect link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub">GitHub</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://www.linkedin.com/in/farhad-mirzapour/" target="_blank" role="link" aria-label="Linkedin">Linkedin</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter">Twitter</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="socials" role="navigation" aria-label="Social links">
+        <ul role="menu" aria-hidden="true" aria-label="Social link">
+            <li role="listitem" aria-label="Social link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://www.linkedin.com/in/farhad-mirzapour-0043b862/" target="_blank" role="link" aria-label="Linkedin"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="/feed.xml" role="link" aria-label="RSS"><i class="fa fa-rss-square" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+    <div class="copyright" role="contentinfo" aria-label="Copyright">
+        <p>© <script type="text/javascript">document.write(new Date().getFullYear());</script> Farhad Mirzapour</p>
+    </div>
+</footer>
+
+<!-- scripts -->
+<script src="/assets/js/hamburger-menu.js"></script>
+
+<script src="/assets/js/elevator.min.js"></script>
+<script src="/assets/js/back-to-top.js"></script>
+<script src="/assets/prisma/prism.js"></script>
+<!-- google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108878564-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-108878564-1');
+</script>
+
+</body>
+</html>

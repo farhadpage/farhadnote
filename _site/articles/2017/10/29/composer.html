@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="">
+<!-- head -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>ابزار Composer جهت مدیریت پکیج ها در php | مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="ابزار Composer جهت مدیریت پکیج ها در php" />
+<meta name="author" content="Farhad Mirzapour" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="ابزار composer یک dependency managemer برای برنامه های نوشته شده به زبان php است. این ابزار کمکی به شما اجازه می دهد تا کتابخانه های و پلاگین های مورد نیاز پروژه اتان را تعریف و آن ها را در پروژه اتان نصب کنید. Composer تمام بسته های مورد نیاز برای پروژه شما را مدیریت می کند. به این معنی که کامپوزر تمام کتابخانه های مورد نیاز را دانلود و آنها را در یک محل ذخیره و مدیریت می کند. این نوع از مدیریت برای وابستگی ها در پروژه مفهوم جدیدی نیست، در واقع، ایده ساخت کامپوزر از NPM که یک پکیج منیجر برای Node.js و Bundler برای Ruby آمده است. شما همچنین ممکن است با PEAR کار کرده باشید. PEAR یک پکیج منیجر برای PHP است که برای چندین سال وجود داشته است که توسط توسعه دهندگان پی اچ پی برای تعدادی از دلایلی رها شده است. در مرحله اول بسیاری از کدهای PEAR به روز رسانی نشده اند و می شود گفت که تاریخ انقضای آنها تمام شده است. بنابراین کاری که Composer انجام می دهد این است که روشی برای استفاده مجدد هر نوع کد را فراهم می کند. به جای اینکه مجبور باشیم کدهای زیاد و اضافی بنویسیم، می توانید با این ابزار سریعا پکیج های محبوب و مورد نیاز را دانلود کنید. مفهوم Dependency management در واقع composer یک ابزار مدیریت کننده ی پکیج ها نیست. هر چند پکیج های زیادی را در خود دارد اما مفهومی فراتر را دنبال می کند. composer علاوه بر دارا بودن تعداد زیادی پکیج های مورد استفاده در پروژه ی شما، آنها را با یک دستور در پوشه ی vendor واقع در لیست پوشه های شما ایجاد میکند. همچنین به طور پیش فرض هیچ چیز را global نصب نمی کند. مفهوم composer در واقع مفهوم جدیدی در برنامه نویسی وب نیست و قبل از آن هم ابزارهای اینچنینی در وب وجود داشته اند. مانند npm یا node package manager که مخصوص پلت فرم NodeJS هستند یا همچنین ابزار bundler برای Ruby. در واقع فقط برای PHP تا به حال همچنین مفهوم و ابزاری وجود نداشت بلکه قبلا برای زبان های دیگر وجود داشته بود. در واقع کار اصلی که composer انجام می دهد اینست که کتابخان های مورد نیاز پروژه اتان را برایتان نصب می کند. همچنین اگر این کتابخانه ها خود به کتابخانه های دیگری نیز نیاز داشته باشند آنها را هم نصب می کند. تعریف وابستگی (Dependency) بیایید با ذکر یک مثال این داستان را شفاف تر کنیم. فرض کنیم که شما در پروژه اتان به یک کتابخانه ی کوچک جهت عمل log in دارید و برای این کار کتابخانه ی monolog را انتخاب می کنید. برای اینکه این کتابخانه را به پروژه اضافه کنیم لازم است که در فایل composer.json که در ریشه ی پروژه اتان است دستور زیر را وارد کنید: { &quot;require&quot;: { &quot;monolog/monolog&quot;: &quot;1.2.*&quot; } } به این راحتی مشخص کردیم که پروژه ی ما نیاز به کتابخانه ی monolog دارد. دقت داشته باشید که فایل composer.json تنها یک تعریف را انجام می دهدو شما برای دانلود کتابخانه و دریافت آن باید composer را اجرا کنید." />
+<meta property="og:description" content="ابزار composer یک dependency managemer برای برنامه های نوشته شده به زبان php است. این ابزار کمکی به شما اجازه می دهد تا کتابخانه های و پلاگین های مورد نیاز پروژه اتان را تعریف و آن ها را در پروژه اتان نصب کنید. Composer تمام بسته های مورد نیاز برای پروژه شما را مدیریت می کند. به این معنی که کامپوزر تمام کتابخانه های مورد نیاز را دانلود و آنها را در یک محل ذخیره و مدیریت می کند. این نوع از مدیریت برای وابستگی ها در پروژه مفهوم جدیدی نیست، در واقع، ایده ساخت کامپوزر از NPM که یک پکیج منیجر برای Node.js و Bundler برای Ruby آمده است. شما همچنین ممکن است با PEAR کار کرده باشید. PEAR یک پکیج منیجر برای PHP است که برای چندین سال وجود داشته است که توسط توسعه دهندگان پی اچ پی برای تعدادی از دلایلی رها شده است. در مرحله اول بسیاری از کدهای PEAR به روز رسانی نشده اند و می شود گفت که تاریخ انقضای آنها تمام شده است. بنابراین کاری که Composer انجام می دهد این است که روشی برای استفاده مجدد هر نوع کد را فراهم می کند. به جای اینکه مجبور باشیم کدهای زیاد و اضافی بنویسیم، می توانید با این ابزار سریعا پکیج های محبوب و مورد نیاز را دانلود کنید. مفهوم Dependency management در واقع composer یک ابزار مدیریت کننده ی پکیج ها نیست. هر چند پکیج های زیادی را در خود دارد اما مفهومی فراتر را دنبال می کند. composer علاوه بر دارا بودن تعداد زیادی پکیج های مورد استفاده در پروژه ی شما، آنها را با یک دستور در پوشه ی vendor واقع در لیست پوشه های شما ایجاد میکند. همچنین به طور پیش فرض هیچ چیز را global نصب نمی کند. مفهوم composer در واقع مفهوم جدیدی در برنامه نویسی وب نیست و قبل از آن هم ابزارهای اینچنینی در وب وجود داشته اند. مانند npm یا node package manager که مخصوص پلت فرم NodeJS هستند یا همچنین ابزار bundler برای Ruby. در واقع فقط برای PHP تا به حال همچنین مفهوم و ابزاری وجود نداشت بلکه قبلا برای زبان های دیگر وجود داشته بود. در واقع کار اصلی که composer انجام می دهد اینست که کتابخان های مورد نیاز پروژه اتان را برایتان نصب می کند. همچنین اگر این کتابخانه ها خود به کتابخانه های دیگری نیز نیاز داشته باشند آنها را هم نصب می کند. تعریف وابستگی (Dependency) بیایید با ذکر یک مثال این داستان را شفاف تر کنیم. فرض کنیم که شما در پروژه اتان به یک کتابخانه ی کوچک جهت عمل log in دارید و برای این کار کتابخانه ی monolog را انتخاب می کنید. برای اینکه این کتابخانه را به پروژه اضافه کنیم لازم است که در فایل composer.json که در ریشه ی پروژه اتان است دستور زیر را وارد کنید: { &quot;require&quot;: { &quot;monolog/monolog&quot;: &quot;1.2.*&quot; } } به این راحتی مشخص کردیم که پروژه ی ما نیاز به کتابخانه ی monolog دارد. دقت داشته باشید که فایل composer.json تنها یک تعریف را انجام می دهدو شما برای دانلود کتابخانه و دریافت آن باید composer را اجرا کنید." />
+<link rel="canonical" href="http://localhost:4000/articles/2017/10/29/composer.html" />
+<meta property="og:url" content="http://localhost:4000/articles/2017/10/29/composer.html" />
+<meta property="og:site_name" content="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-10-29T20:01:42+03:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="ابزار Composer جهت مدیریت پکیج ها در php" />
+<meta name="twitter:site" content="@farhadmirzapour" />
+<meta name="twitter:creator" content="@Farhad Mirzapour" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"ابزار Composer جهت مدیریت پکیج ها در php","url":"http://localhost:4000/articles/2017/10/29/composer.html","datePublished":"2017-10-29T20:01:42+03:30","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"dateModified":"2017-10-29T20:01:42+03:30","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/articles/2017/10/29/composer.html"},"author":{"@type":"Person","name":"Farhad Mirzapour"},"description":"ابزار composer یک dependency managemer برای برنامه های نوشته شده به زبان php است. این ابزار کمکی به شما اجازه می دهد تا کتابخانه های و پلاگین های مورد نیاز پروژه اتان را تعریف و آن ها را در پروژه اتان نصب کنید. Composer تمام بسته های مورد نیاز برای پروژه شما را مدیریت می کند. به این معنی که کامپوزر تمام کتابخانه های مورد نیاز را دانلود و آنها را در یک محل ذخیره و مدیریت می کند. این نوع از مدیریت برای وابستگی ها در پروژه مفهوم جدیدی نیست، در واقع، ایده ساخت کامپوزر از NPM که یک پکیج منیجر برای Node.js و Bundler برای Ruby آمده است. شما همچنین ممکن است با PEAR کار کرده باشید. PEAR یک پکیج منیجر برای PHP است که برای چندین سال وجود داشته است که توسط توسعه دهندگان پی اچ پی برای تعدادی از دلایلی رها شده است. در مرحله اول بسیاری از کدهای PEAR به روز رسانی نشده اند و می شود گفت که تاریخ انقضای آنها تمام شده است. بنابراین کاری که Composer انجام می دهد این است که روشی برای استفاده مجدد هر نوع کد را فراهم می کند. به جای اینکه مجبور باشیم کدهای زیاد و اضافی بنویسیم، می توانید با این ابزار سریعا پکیج های محبوب و مورد نیاز را دانلود کنید. مفهوم Dependency management در واقع composer یک ابزار مدیریت کننده ی پکیج ها نیست. هر چند پکیج های زیادی را در خود دارد اما مفهومی فراتر را دنبال می کند. composer علاوه بر دارا بودن تعداد زیادی پکیج های مورد استفاده در پروژه ی شما، آنها را با یک دستور در پوشه ی vendor واقع در لیست پوشه های شما ایجاد میکند. همچنین به طور پیش فرض هیچ چیز را global نصب نمی کند. مفهوم composer در واقع مفهوم جدیدی در برنامه نویسی وب نیست و قبل از آن هم ابزارهای اینچنینی در وب وجود داشته اند. مانند npm یا node package manager که مخصوص پلت فرم NodeJS هستند یا همچنین ابزار bundler برای Ruby. در واقع فقط برای PHP تا به حال همچنین مفهوم و ابزاری وجود نداشت بلکه قبلا برای زبان های دیگر وجود داشته بود. در واقع کار اصلی که composer انجام می دهد اینست که کتابخان های مورد نیاز پروژه اتان را برایتان نصب می کند. همچنین اگر این کتابخانه ها خود به کتابخانه های دیگری نیز نیاز داشته باشند آنها را هم نصب می کند. تعریف وابستگی (Dependency) بیایید با ذکر یک مثال این داستان را شفاف تر کنیم. فرض کنیم که شما در پروژه اتان به یک کتابخانه ی کوچک جهت عمل log in دارید و برای این کار کتابخانه ی monolog را انتخاب می کنید. برای اینکه این کتابخانه را به پروژه اضافه کنیم لازم است که در فایل composer.json که در ریشه ی پروژه اتان است دستور زیر را وارد کنید: { &quot;require&quot;: { &quot;monolog/monolog&quot;: &quot;1.2.*&quot; } } به این راحتی مشخص کردیم که پروژه ی ما نیاز به کتابخانه ی monolog دارد. دقت داشته باشید که فایل composer.json تنها یک تعریف را انجام می دهدو شما برای دانلود کتابخانه و دریافت آن باید composer را اجرا کنید.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="stylesheet" href="/assets/prisma/prism.css">
+    <!-- favicons and rss -->
+    <link rel="alternate" type="application/rss+xml" title="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" href="/feed.xml">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- header -->
+<header class="header" role="banner" aria-label="Header">
+    <button class="hamburger-button" onclick="hamburgerMenu();" role="button" aria-label="Hamburger menu button">
+        <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    </button>
+    <a href="/" class="logo" role="link" aria-label="Home">
+        <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo"/>
+    </a>
+    <nav class="navigation" role="navigation" aria-label="Navigation">
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item">
+                <a href="/" class="logo" role="menuitem" aria-label="Home">
+                    <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo"/>
+                </a>
+            </li>
+            
+            <li role="menuitem"><a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a></li>
+            
+            <li role="menuitem"><a href="/contactus" role="menuitem" aria-label="تماس">تماس</a></li>
+            
+        </ul>
+    </nav>
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox"/>
+        </form>
+    </div>
+</header>
+
+<nav id="hamburger-menu" role="navigation" aria-label="Hamburger menu">
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox"/>
+        </form>
+    </div>
+    <div class="home-nav" role="navigation" aria-label="Site navigation">
+        <a href="/" role="menuitem" aria-label="Home">صفحه اصلی</a>
+        
+        <a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a>
+        
+        <a href="/contactus" role="menuitem" aria-label="تماس">تماس</a>
+        
+    </div>
+
+    
+</nav>
+<!-- main content -->
+<main class="container" role="main">
+    <div class="rcpostcontainerimg">
+<div class="rc-DRTVBanner-new rc-DRTVBanner-bigsize">
+    <div style="background: url('/images/original/logo-composer.png'); " class="blurred_img"></div>
+    <div class="mask"></div>
+    <div class="bot"></div>
+    <div class="over">
+        <div class="container-rc">
+            <img class="image" src="/images/original/logo-composer.png" alt="ابزار Composer جهت مدیریت پکیج ها در php" height="190">
+            <div class="desktop-banner-container">
+                <h1 class="display-5-text headline">
+                    
+                    ابزار Composer جهت مدیریت پکیج ها در php
+                    
+                    </h1>
+                <!--<div class="tagslist"><ul class='lyda-tag-list'><li class='lyda-tag-list-title'>برچسب ها</li><li><a class="tags" href="/tag/لاراول">#لاراول</a></li><li><a class="tags" href="/tag/لاراول-5-5">#لاراول 5.5</a></li></ul></div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="bread-crumb">-->
+<!--<div class="container   ">-->
+<!--<div class="pull-right ">-->
+<!--<div class="bread-button text-custom b-left">-->
+<!--انتشار : 2 ماه پیش-->
+<!--</div>-->
+<!--<a href="/category/article/" class="bread-button back-to-all b-left hidden-xs">همه مقالات</a>-->
+<!--<div class="cat-lable">-->
+<!--<a href="/category/article/laravel/">-->
+<!--لاراول-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<script>
+    $(window).scroll(function(){
+        var sticky = $('.doc-menu'),
+            scroll = $(window).scrollTop();
+        if (scroll >= 101) {sticky.addClass('doc-header-scroll'); }
+        else {sticky.removeClass('doc-header-scroll'); };
+    });
+</script>
+</div>
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="time">
+    یکشنبه 7 آبان 1396
+  </div>
+  <div class="post-content anchored" itemprop="articleBody">
+    <p dir="rtl">ابزار composer یک dependency managemer برای برنامه های نوشته شده به زبان php است. این ابزار کمکی به شما اجازه می دهد تا کتابخانه های و پلاگین های مورد نیاز پروژه اتان را تعریف و آن ها را در پروژه اتان نصب کنید.</p>
+<p dir="rtl">Composer   تمام بسته های مورد نیاز برای پروژه شما را مدیریت می کند. به این معنی که کامپوزر تمام کتابخانه های مورد نیاز را دانلود و آنها را در یک محل ذخیره و مدیریت می کند.</p>
+<p dir="rtl"> این نوع از مدیریت برای وابستگی ها در پروژه مفهوم جدیدی نیست، در واقع، ایده ساخت کامپوزر از NPM که یک پکیج منیجر برای Node.js و Bundler برای Ruby آمده است.</p>
+<p dir="rtl"> شما همچنین ممکن است با PEAR کار کرده باشید. PEAR یک پکیج منیجر برای PHP است که برای چندین سال وجود داشته است که توسط توسعه دهندگان پی اچ پی برای تعدادی از دلایلی رها شده است. در مرحله اول بسیاری از کدهای PEAR به روز رسانی نشده اند و می شود گفت که تاریخ انقضای آنها تمام شده است. بنابراین کاری که Composer انجام می دهد این است که روشی برای استفاده مجدد هر نوع کد را فراهم می کند. به جای اینکه مجبور باشیم کدهای زیاد و اضافی بنویسیم، می توانید با این ابزار سریعا پکیج های محبوب و مورد نیاز را دانلود کنید.
+</p>
+
+<h3>مفهوم Dependency management</h3>
+<p dir="rtl">در واقع composer یک ابزار مدیریت کننده ی پکیج ها نیست. هر چند پکیج های زیادی را در خود دارد اما مفهومی فراتر را دنبال می کند. composer علاوه بر دارا بودن تعداد زیادی پکیج های مورد استفاده در پروژه ی شما، آنها را با یک دستور در پوشه ی vendor واقع در لیست پوشه های شما ایجاد میکند. همچنین به طور پیش فرض هیچ چیز را global نصب نمی کند.</p>
+<p dir="rtl">مفهوم composer در واقع مفهوم جدیدی در برنامه نویسی وب نیست و قبل از آن هم ابزارهای اینچنینی در وب وجود داشته اند. مانند npm یا node package manager که مخصوص پلت فرم NodeJS هستند یا همچنین ابزار bundler برای Ruby. در واقع فقط برای PHP تا به حال همچنین مفهوم و ابزاری وجود نداشت بلکه قبلا برای زبان های دیگر وجود داشته بود.</p>
+<p dir="rtl">در واقع کار اصلی که composer انجام می دهد اینست که کتابخان های مورد نیاز پروژه اتان را برایتان نصب می کند. همچنین اگر این کتابخانه ها خود به کتابخانه های دیگری نیز نیاز داشته باشند آنها را هم نصب می کند.
+</p>
+
+<div align="center">
+<img src="/images/post/iudex.png" alt="ابزار Composer جهت مدیریت پکیج ها در php" />
+</div>
+
+<h3>تعریف وابستگی (Dependency)</h3>
+<p>بیایید با ذکر یک مثال این داستان را شفاف تر کنیم. فرض کنیم که شما در پروژه اتان به یک کتابخانه ی کوچک جهت عمل log in دارید و برای این کار کتابخانه ی monolog را انتخاب می کنید. برای اینکه این کتابخانه را به پروژه اضافه کنیم لازم است که در فایل composer.json که در ریشه ی پروژه اتان است دستور زیر را وارد کنید:</p>
+<pre><code class="language-php line-numbers">
+{
+    "require": {
+
+        "monolog/monolog": "1.2.*"
+    }
+}
+</code></pre>
+<p>
+به این راحتی مشخص کردیم که پروژه ی ما نیاز به کتابخانه ی monolog دارد. دقت داشته باشید که فایل composer.json تنها یک تعریف را انجام می دهدو شما برای دانلود کتابخانه و دریافت آن باید composer را اجرا کنید.
+</p>
+
+  </div>
+    
+<hr>
+<p>
+<div>منابع مورد مطالعه جهت جمع آوری این مطلب:</div>
+<div  class="refrencehref">
+        https://roocket.ir/articles/composer-package-management-tools-and-plugins-in-php
+</div>
+</p>
+
+  <hr>
+  <style>
+    #commentsdiv{
+        background-color: #f5f5f5;
+        border: 1px solid #c5c5c5;
+        border-bottom: 0px !important;
+        padding: 12px;
+    }
+    #commentsborder{
+        background-color: #fff;
+        border: 1px solid #c5c5c5;
+        white-space: normal;
+        padding: 20px;
+    }
+</style>
+
+<div id="commentsdiv">نظرات</div>
+<div id="commentsborder">
+<div id="wpac-comment"></div>
+</div>
+<script type="text/javascript">
+wpac_init = window.wpac_init || [];
+wpac_init.push({widget: 'Comment', id: 7878});
+(function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = 'https://embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+})();
+</script>
+
+</article>
+<script src="/assets/js/anchor.min.js"></script>
+<script>
+    anchors.options = {
+        placement: 'left',
+        visible: 'always',
+//        icon: '#',
+    };
+    anchors.add('.anchored h2,.anchored h3,.anchored h4,.anchored h5,.anchored h6');
+
+    (function($){
+        if(window.location.hash) {
+            var hash = decodeURIComponent(window.location.hash);
+            gotohash($(hash).offset().top);
+        }
+        $('a.anchorjs-link').click(function(){
+			gotohash($(this).offset().top);
+        });
+        $('a.anchorjs').click(function(){
+			var id = '#' + $(this).attr('title');
+			gotohash($(id).offset().top);
+        });		
+        function gotohash(top){
+            var headerHeight = 70; // Get fixed header height
+            $('html,body').animate({
+                scrollTop: top - headerHeight
+            }, 20);
+        }
+    })(jQuery);
+</script>
+
+
+
+
+
+    <div id="back-to-top" role="button" aria-label="Back to top">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+    </div>
+</main>
+<!-- footer -->
+
+<footer class="footer" role="contentinfo" aria-label="Site footer">
+    <div class="navigation" role="navigation" aria-label="Footer links">
+        <a href="http://localhost:4000" class="avatar" role="link" ></a>
+        <ul role="menubar" aria-label="Footer links menubar">
+            <li class="footer-products" role="menuitem" aria-label="Products">
+                تولیدات
+                <ul role="menu" aria-hidden="true" aria-label="Products link">
+                </ul>
+            </li>
+            <li class="footer-blog" role="menuitem" aria-label="Blog">
+                مقالات
+                <ul role="menu" aria-hidden="true" aria-label="Blog link">
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2020/07/03/marriage.html" role="link" aria-label="ازدواج">ازدواج</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2019/10/11/vuejs.html" role="link" aria-label="آموزش vuejs">آموزش vuejs</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/18/laravel.html" role="link" aria-label="آموزش Laravel">آموزش Laravel</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/articles/2017/12/13/laravelcollective.html" role="link" aria-label="معرفی Laravel Collective">معرفی Laravel Collective</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/06/design-patterns.html" role="link" aria-label="معرفی  Design Pattern">معرفی  Design Pattern</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/blog" role="link" aria-label="Read more">Read More</a></li>
+                </ul>
+            </li>
+
+            <li class="footer-connect" role="menuitem" aria-label="Connect">
+                تماس
+                <ul role="menu" aria-hidden="true" aria-label="Connect link">
+                    <li role="listitem" aria-label="Connect link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub">GitHub</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://www.linkedin.com/in/farhad-mirzapour/" target="_blank" role="link" aria-label="Linkedin">Linkedin</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter">Twitter</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="socials"  role="navigation" aria-label="Social links">
+        <ul role="menu" aria-hidden="true" aria-label="Social link">
+            <li role="listitem" aria-label="Social link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://www.linkedin.com/in/farhad-mirzapour-0043b862/" target="_blank" role="link" aria-label="Linkedin"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="/feed.xml" role="link" aria-label="RSS"><i class="fa fa-rss-square" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+    <div class="copyright" role="contentinfo" aria-label="Copyright">
+        <p>&copy; <script type="text/javascript">document.write(new Date().getFullYear());</script> Farhad Mirzapour</p>
+    </div>
+</footer>
+
+<!-- scripts -->
+<script src="/assets/js/hamburger-menu.js"></script>
+
+<script src="/assets/js/elevator.min.js"></script>
+<script src="/assets/js/back-to-top.js"></script>
+<script src="/assets/prisma/prism.js"></script>
+<!-- google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108878564-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-108878564-1');
+</script>
+
+</body>
+</html>

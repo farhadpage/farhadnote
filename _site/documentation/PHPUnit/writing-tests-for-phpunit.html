@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="">
+<!-- head -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>تست نویسی در PHPUnit | مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="تست نویسی در PHPUnit" />
+<meta name="author" content="Farhad Mirzapour" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="ساختار و نام فایل تست در PHP Unit تمامی فایل های تست حتما باید با کلمه Test به پایان برسد. همچنین جهت آشکار سازی فایل تست که متعلق به کدام قسمت از برنامه است بهتر است فایل ها و مسیرهای همنام در دایرکتوری تست ایجاد گردند. برای مثال چنانچه در پروژه داشته باشیم : foo.php bar.php Controller/baz.php نام و مسیر فایل های تست ما بدینگونه خواهد بود : fooTest.php barTest.php Controller/bazTest.php نام کلاس درون فایل تست بهتر است همنام با نام فایل باشد. نام آزمون حتما باید با کلمه test بصورت حروف کوچک آغاز گردد. اسامی آزمون ها باید توصیفی از عملی باشد که مورد آزمایش قرار می گیرد و بهتر است بصورت اختصار و کوتاه نباشد تا بیانگر آزمایشی باشد که انجام می دهد. برای مثال چنانچه تابعی به نام ()verifyAccount داشته باشیم که عمل مطابقت رمز عبور را برای یک حساب کاربری انجام می دهد آنگاه می توانیم نام آزمون را اینطور انتخاب کنیم : ()testVerifyAccountMatchesPasswordGiven سطح دسترسی متدهای آزمون باید از نوع public باشند. کلاس آزمون باید گسترش یافته از PHPUnit\Framework\TestCase و یا هرکلاس دیگری که این وظیفه را برعهده دارد باشد. در کد زیر نمونه ای از یک آزمون را مشاهده می کنید : &lt;?php namespace Test; use PHPUnit\Framework\TestCase; class StackTest extends TestCase { public function testVerifyAccountMatchesPasswordGiven() { } } در کد بالا آزمونی ایجاد کرده ایم که با توجه به نام آن به راحتی می توان فهمید که قرار است آزمونی درخصوص بررسی صحت درستی عملکرد متدی که تعداد حروف خاصی را در یک رشته شمارش می نماید را انجام دهد. مثال 1: تست عملیات آرایه با PHPUnit &lt;?php namespace Test; use PHPUnit\Framework\TestCase; class StackTest extends TestCase { public function testPushAndPop() { $stack = []; $this-&gt;assertEquals(0, count($stack)); array_push($stack, &#39;foo&#39;); $this-&gt;assertEquals(&#39;foo&#39;, $stack[count($stack)-1]); $this-&gt;assertEquals(1, count($stack)); $this-&gt;assertEquals(&#39;foo&#39;, array_pop($stack)); $this-&gt;assertEquals(0, count($stack)); } } نوشتن Test Dependencies (آزمون های وابسته به یکدیگر) آزمایشات واحد عمدتا به عنوان یک تمرین خوب برای کمک به توسعه دهندگان جهت شناسایی و رفع اشکالات، اصلاح کد و به عنوان مستند سازی برای یک واحد نرم افزار تحت آزمون نوشته می شود. برای دستیابی به این مزایا، تست واحد به طور ایده آل باید تمام مسیرهای ممکن در یک برنامه را پوشش دهد. اغلب وابستگی های ضمنی بین روش های تست وجود دارد، که در سناریوی اجرای آزمون مخفی شده است. مثال 2.2 نشان می دهد که چگونه از استفاده از متن @depends تعریف می کند تا وابستگی بین روش های تست را بیان کند. مثال 2 : استفاده از depends@ در حاشیه نویسی جهت بیان وابستگی ها &lt;?php namespace Test; use PHPUnit\Framework\TestCase; class Examples extends TestCase { public function testEmpty() { $stack = []; $this-&gt;assertEmpty($stack); return $stack; } /** * @depends testEmpty */ public function testPush(array $stack) { array_push($stack, &#39;foo&#39;); $this-&gt;assertEquals(&#39;foo&#39;, $stack[count($stack)-1]); $this-&gt;assertNotEmpty($stack); return $stack; } /** * @depends testPush */ public function testPop(array $stack) { $this-&gt;assertEquals(&#39;foo&#39;, array_pop($stack)); $this-&gt;assertEmpty($stack); } } در مثال بالا، اولین تست، ()testEmpty یک آرایه جدید ایجاد می کند و با استفاده از متد assertEmpty اظهار می کند که آن خالی است و سپس به عنوان نتیجه آن را برگرداند. تست دوم، ()testPush به ()testEmpty بستگی دارد و نتیجه آن آزمون وابسته را به عنوان آرگومان دریافت می کند. همچنین در نهایت ()testPop به ()testPush وابستگی دارد. مثال 3: بهره گیری از وابستگی بین آزمایش ها &lt;?php namespace Test; use PHPUnit\Framework\TestCase; class DependencyFailureTest extends TestCase { public function testOne() { $this-&gt;assertTrue(false); } /** * @depends testOne */ public function testTwo() { } } نتیجه خروجی : phpunit --verbose DependencyFailureTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. Time: 0 seconds, Memory: 5.00Mb There was 1 failure: 1) DependencyFailureTest::testOne Failed asserting that false is true. /home/sb/DependencyFailureTest.php:6 There was 1 skipped test: 1) DependencyFailureTest::testTwo This test depends on &quot;DependencyFailureTest::testOne&quot; to pass. FAILURES! Tests: 1, Assertions: 1, Failures: 1, Skipped: 1. مثال 4: تست با چندین وابستگی &lt;?php namespace Test; use PHPUnit\Framework\TestCase; class Examples extends TestCase { public function testProducerFirst() { $this-&gt;assertTrue(true); return &#39;first&#39;; } public function testProducerSecond() { $this-&gt;assertTrue(true); return &#39;second&#39;; } /** * @depends testProducerFirst * @depends testProducerSecond */ public function testConsumer() { $this-&gt;assertEquals( [&#39;first&#39;, &#39;second&#39;], func_get_args() ); } } نتیجه خروجی : phpunit --verbose MultipleDependenciesTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. ... Time: 0 seconds, Memory: 3.25Mb OK (3 tests, 3 assertions) مفهوم Data Providers یک روش آزمون می تواند آرگومان های دلخواه را قبول کند. این آرگومان ها توسط dataProvider با استفاده از حاشیه نویسی dataProvider@ مشخص می شود. مثال 5: با استفاده از یک dataProvider که آرایه ای از آرایه ها را باز می گرداند &lt;?php namespace Test; use PHPUnit\Framework\TestCase; class Examples extends TestCase { /** * @dataProvider additionProvider */ public function testAdd($a, $b, $expected) { $this-&gt;assertEquals($expected, $a + $b); } public function additionProvider() { return [ [0, 0, 0], [0, 1, 1], [1, 0, 1], [1, 1, 2] ]; } } نتیجه خروجی : phpunit DataTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. ...F Time: 0 seconds, Memory: 5.75Mb There was 1 failure: 1) DataTest::testAdd with data set #3 (1, 1, 3) Failed asserting that 2 matches expected 3. /home/sb/DataTest.php:9 FAILURES! Tests: 4, Assertions: 4, Failures: 1. هنگام استفاده از تعداد زیادی از مجموعه داده ها مفید است که هر یک را با کلید رشته به جای پیش فرض عددی نامگذاری کنید. مثال 6: استفاده از dataProvider با مجموعه داده های نامگذاری شده &lt;?php namespace Test; use PHPUnit\Framework\TestCase; class Examples extends TestCase { /** * @dataProvider additionProvider */ public function testAdd($a, $b, $expected) { $this-&gt;assertEquals($expected, $a + $b); } public function additionProvider() { return [ &#39;adding zeros&#39; =&gt; [0, 0, 0], &#39;zero plus one&#39; =&gt; [0, 1, 1], &#39;one plus zero&#39; =&gt; [1, 0, 1], &#39;one plus one&#39; =&gt; [1, 1, 3] ]; } } نتیجه خروجی : phpunit DataTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. ...F Time: 0 seconds, Memory: 5.75Mb There was 1 failure: 1) DataTest::testAdd with data set &quot;one plus one&quot; (1, 1, 3) Failed asserting that 2 matches expected 3. /home/sb/DataTest.php:9 FAILURES! Tests: 4, Assertions: 4, Failures: 1. مثال 7: ترکیب depends وdataProvider در تست &lt;?php namespace Test; use PHPUnit\Framework\TestCase; class Examples extends TestCase { public function provider() { return [[&#39;provider1&#39;], [&#39;provider2&#39;]]; } public function testProducerFirst() { $this-&gt;assertTrue(true); return &#39;first&#39;; } public function testProducerSecond() { $this-&gt;assertTrue(true); return &#39;second&#39;; } /** * @depends testProducerFirst * @depends testProducerSecond * @dataProvider provider */ public function testConsumer() { $this-&gt;assertEquals( [&#39;provider1&#39;, &#39;first&#39;, &#39;second&#39;], func_get_args() ); } } نتیجه خروجی : phpunit --verbose DependencyAndDataProviderComboTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. ...F Time: 0 seconds, Memory: 3.50Mb There was 1 failure: 1) DependencyAndDataProviderComboTest::testConsumer with data set #1 (&#39;provider2&#39;) Failed asserting that two arrays are equal. --- Expected +++ Actual @@ @@ Array ( - 0 =&gt; &#39;provider1&#39; + 0 =&gt; &#39;provider2&#39; 1 =&gt; &#39;first&#39; 2 =&gt; &#39;second&#39; ) /home/sb/DependencyAndDataProviderComboTest.php:31 FAILURES! Tests: 4, Assertions: 4, Failures: 1. تست Testing Exceptions مثال زیر نشان می دهد که چگونه از ()expectException در تست برای اینکه کدام استثنا رخ داده است استفاده می شود. مثال 8: نحوه استفاده از متد expectException &lt;?php use PHPUnit\Framework\TestCase; class ExceptionTest extends TestCase { public function testException() { $this-&gt;expectException(InvalidArgumentException::class); } } نتیجه خروجی : phpunit ExceptionTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. F Time: 0 seconds, Memory: 4.75Mb There was 1 failure: 1) ExceptionTest::testException Expected exception InvalidArgumentException FAILURES! Tests: 1, Assertions: 1, Failures: 1. در ادامه متد ()expectException، متدهای ()expectExceptionCode و ()expectExceptionMessage و ()expectExceptionMessageRegExp نیز جهت بررسی استثنائات مطرح شده توسط کد تحت آزمون مورد استفاده قرار می گیرند. مثال 9: نحوه استفاده از حاشیه نویسی expectException@ &lt;?php /** * @expectedException InvalidArgumentException */ public function testException() { } نتیجه خروجی : phpunit ExceptionTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. F Time: 0 seconds, Memory: 4.75Mb There was 1 failure: 1) ExceptionTest::testException Expected exception InvalidArgumentException FAILURES! Tests: 1, Assertions: 1, Failures: 1. تست PHP Errors به طور پیش فرض، PHPUnit اعلان های errors, warnings, notices که در هنگام اجرای یک آزمون ایجاد می شوند را به به یک استثنا تبدیل می کند. مثال 10:انتظار برای نمایش PHP error با استفاده از expectedException@ &lt;?php use PHPUnit\Framework\TestCase; class ExpectedErrorTest extends TestCase { /** * @expectedException PHPUnit\Framework\Error */ public function testFailingInclude() { include &#39;not_existing_file.php&#39;; } } نتیجه خروجی : phpunit -d error_reporting=2 ExpectedErrorTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. . Time: 0 seconds, Memory: 5.25Mb OK (1 test, 1 assertion) مثال 11:تست مقدار بازگشتی کد که از خطاهای PHP استفاده می کند &lt;?php namespace Test; use PHPUnit\Framework\TestCase; class Examples extends TestCase { public function testFileWriting() { $writer = new FileWriter; $this-&gt;assertFalse(@$writer-&gt;write(&#39;/is-not-writeable/file&#39;, &#39;stuff&#39;)); } } class FileWriter { public function write($file, $content) { $file = fopen($file, &#39;w&#39;); if($file == false) { return false; } // ... } } نتیجه خروجی : phpunit ErrorSuppressionTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. . Time: 1 seconds, Memory: 5.25Mb OK (1 test, 1 assertion) تست Output گاهی اوقات شما می خواهید صحت اجرای یک روش، به عنوان مثال، یک خروجی مورد انتظار را بررسی کنید (به عنوان مثال از طریق echo یا print) مثال 12:تست خروجی یک تابع یا متد &lt;?php namespace Test; use PHPUnit\Framework\TestCase; class Examples extends TestCase { public function testExpectFooActualFoo() { $this-&gt;expectOutputString(&#39;foo&#39;); print &#39;foo&#39;; } public function testExpectBarActualBaz() { $this-&gt;expectOutputString(&#39;bar&#39;); print &#39;baz&#39;; } } نتیجه خروجی : phpunit OutputTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. .F Time: 0 seconds, Memory: 5.75Mb There was 1 failure: 1) OutputTest::testExpectBarActualBaz Failed asserting that two strings are equal. --- Expected +++ Actual @@ @@ -&#39;bar&#39; +&#39;baz&#39; FAILURES! Tests: 2, Assertions: 2, Failures: 1. جدول زیر لیست متدهای برای تست خروجی را نمایش می دهد: Method Meaning void expectOutputRegex(string $regularExpression)Set up the expectation that the output matches a $regularExpression.void expectOutputString(string $expectedString)Set up the expectation that the output is equal to an $expectedString.bool setOutputCallback(callable $callback)Sets up a callback that is used to, for instance, normalize the actual output. string getActualOutput()Get the actual output." />
+<meta property="og:description" content="ساختار و نام فایل تست در PHP Unit تمامی فایل های تست حتما باید با کلمه Test به پایان برسد. همچنین جهت آشکار سازی فایل تست که متعلق به کدام قسمت از برنامه است بهتر است فایل ها و مسیرهای همنام در دایرکتوری تست ایجاد گردند. برای مثال چنانچه در پروژه داشته باشیم : foo.php bar.php Controller/baz.php نام و مسیر فایل های تست ما بدینگونه خواهد بود : fooTest.php barTest.php Controller/bazTest.php نام کلاس درون فایل تست بهتر است همنام با نام فایل باشد. نام آزمون حتما باید با کلمه test بصورت حروف کوچک آغاز گردد. اسامی آزمون ها باید توصیفی از عملی باشد که مورد آزمایش قرار می گیرد و بهتر است بصورت اختصار و کوتاه نباشد تا بیانگر آزمایشی باشد که انجام می دهد. برای مثال چنانچه تابعی به نام ()verifyAccount داشته باشیم که عمل مطابقت رمز عبور را برای یک حساب کاربری انجام می دهد آنگاه می توانیم نام آزمون را اینطور انتخاب کنیم : ()testVerifyAccountMatchesPasswordGiven سطح دسترسی متدهای آزمون باید از نوع public باشند. کلاس آزمون باید گسترش یافته از PHPUnit\Framework\TestCase و یا هرکلاس دیگری که این وظیفه را برعهده دارد باشد. در کد زیر نمونه ای از یک آزمون را مشاهده می کنید : &lt;?php namespace Test; use PHPUnit\Framework\TestCase; class StackTest extends TestCase { public function testVerifyAccountMatchesPasswordGiven() { } } در کد بالا آزمونی ایجاد کرده ایم که با توجه به نام آن به راحتی می توان فهمید که قرار است آزمونی درخصوص بررسی صحت درستی عملکرد متدی که تعداد حروف خاصی را در یک رشته شمارش می نماید را انجام دهد. مثال 1: تست عملیات آرایه با PHPUnit &lt;?php namespace Test; use PHPUnit\Framework\TestCase; class StackTest extends TestCase { public function testPushAndPop() { $stack = []; $this-&gt;assertEquals(0, count($stack)); array_push($stack, &#39;foo&#39;); $this-&gt;assertEquals(&#39;foo&#39;, $stack[count($stack)-1]); $this-&gt;assertEquals(1, count($stack)); $this-&gt;assertEquals(&#39;foo&#39;, array_pop($stack)); $this-&gt;assertEquals(0, count($stack)); } } نوشتن Test Dependencies (آزمون های وابسته به یکدیگر) آزمایشات واحد عمدتا به عنوان یک تمرین خوب برای کمک به توسعه دهندگان جهت شناسایی و رفع اشکالات، اصلاح کد و به عنوان مستند سازی برای یک واحد نرم افزار تحت آزمون نوشته می شود. برای دستیابی به این مزایا، تست واحد به طور ایده آل باید تمام مسیرهای ممکن در یک برنامه را پوشش دهد. اغلب وابستگی های ضمنی بین روش های تست وجود دارد، که در سناریوی اجرای آزمون مخفی شده است. مثال 2.2 نشان می دهد که چگونه از استفاده از متن @depends تعریف می کند تا وابستگی بین روش های تست را بیان کند. مثال 2 : استفاده از depends@ در حاشیه نویسی جهت بیان وابستگی ها &lt;?php namespace Test; use PHPUnit\Framework\TestCase; class Examples extends TestCase { public function testEmpty() { $stack = []; $this-&gt;assertEmpty($stack); return $stack; } /** * @depends testEmpty */ public function testPush(array $stack) { array_push($stack, &#39;foo&#39;); $this-&gt;assertEquals(&#39;foo&#39;, $stack[count($stack)-1]); $this-&gt;assertNotEmpty($stack); return $stack; } /** * @depends testPush */ public function testPop(array $stack) { $this-&gt;assertEquals(&#39;foo&#39;, array_pop($stack)); $this-&gt;assertEmpty($stack); } } در مثال بالا، اولین تست، ()testEmpty یک آرایه جدید ایجاد می کند و با استفاده از متد assertEmpty اظهار می کند که آن خالی است و سپس به عنوان نتیجه آن را برگرداند. تست دوم، ()testPush به ()testEmpty بستگی دارد و نتیجه آن آزمون وابسته را به عنوان آرگومان دریافت می کند. همچنین در نهایت ()testPop به ()testPush وابستگی دارد. مثال 3: بهره گیری از وابستگی بین آزمایش ها &lt;?php namespace Test; use PHPUnit\Framework\TestCase; class DependencyFailureTest extends TestCase { public function testOne() { $this-&gt;assertTrue(false); } /** * @depends testOne */ public function testTwo() { } } نتیجه خروجی : phpunit --verbose DependencyFailureTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. Time: 0 seconds, Memory: 5.00Mb There was 1 failure: 1) DependencyFailureTest::testOne Failed asserting that false is true. /home/sb/DependencyFailureTest.php:6 There was 1 skipped test: 1) DependencyFailureTest::testTwo This test depends on &quot;DependencyFailureTest::testOne&quot; to pass. FAILURES! Tests: 1, Assertions: 1, Failures: 1, Skipped: 1. مثال 4: تست با چندین وابستگی &lt;?php namespace Test; use PHPUnit\Framework\TestCase; class Examples extends TestCase { public function testProducerFirst() { $this-&gt;assertTrue(true); return &#39;first&#39;; } public function testProducerSecond() { $this-&gt;assertTrue(true); return &#39;second&#39;; } /** * @depends testProducerFirst * @depends testProducerSecond */ public function testConsumer() { $this-&gt;assertEquals( [&#39;first&#39;, &#39;second&#39;], func_get_args() ); } } نتیجه خروجی : phpunit --verbose MultipleDependenciesTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. ... Time: 0 seconds, Memory: 3.25Mb OK (3 tests, 3 assertions) مفهوم Data Providers یک روش آزمون می تواند آرگومان های دلخواه را قبول کند. این آرگومان ها توسط dataProvider با استفاده از حاشیه نویسی dataProvider@ مشخص می شود. مثال 5: با استفاده از یک dataProvider که آرایه ای از آرایه ها را باز می گرداند &lt;?php namespace Test; use PHPUnit\Framework\TestCase; class Examples extends TestCase { /** * @dataProvider additionProvider */ public function testAdd($a, $b, $expected) { $this-&gt;assertEquals($expected, $a + $b); } public function additionProvider() { return [ [0, 0, 0], [0, 1, 1], [1, 0, 1], [1, 1, 2] ]; } } نتیجه خروجی : phpunit DataTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. ...F Time: 0 seconds, Memory: 5.75Mb There was 1 failure: 1) DataTest::testAdd with data set #3 (1, 1, 3) Failed asserting that 2 matches expected 3. /home/sb/DataTest.php:9 FAILURES! Tests: 4, Assertions: 4, Failures: 1. هنگام استفاده از تعداد زیادی از مجموعه داده ها مفید است که هر یک را با کلید رشته به جای پیش فرض عددی نامگذاری کنید. مثال 6: استفاده از dataProvider با مجموعه داده های نامگذاری شده &lt;?php namespace Test; use PHPUnit\Framework\TestCase; class Examples extends TestCase { /** * @dataProvider additionProvider */ public function testAdd($a, $b, $expected) { $this-&gt;assertEquals($expected, $a + $b); } public function additionProvider() { return [ &#39;adding zeros&#39; =&gt; [0, 0, 0], &#39;zero plus one&#39; =&gt; [0, 1, 1], &#39;one plus zero&#39; =&gt; [1, 0, 1], &#39;one plus one&#39; =&gt; [1, 1, 3] ]; } } نتیجه خروجی : phpunit DataTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. ...F Time: 0 seconds, Memory: 5.75Mb There was 1 failure: 1) DataTest::testAdd with data set &quot;one plus one&quot; (1, 1, 3) Failed asserting that 2 matches expected 3. /home/sb/DataTest.php:9 FAILURES! Tests: 4, Assertions: 4, Failures: 1. مثال 7: ترکیب depends وdataProvider در تست &lt;?php namespace Test; use PHPUnit\Framework\TestCase; class Examples extends TestCase { public function provider() { return [[&#39;provider1&#39;], [&#39;provider2&#39;]]; } public function testProducerFirst() { $this-&gt;assertTrue(true); return &#39;first&#39;; } public function testProducerSecond() { $this-&gt;assertTrue(true); return &#39;second&#39;; } /** * @depends testProducerFirst * @depends testProducerSecond * @dataProvider provider */ public function testConsumer() { $this-&gt;assertEquals( [&#39;provider1&#39;, &#39;first&#39;, &#39;second&#39;], func_get_args() ); } } نتیجه خروجی : phpunit --verbose DependencyAndDataProviderComboTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. ...F Time: 0 seconds, Memory: 3.50Mb There was 1 failure: 1) DependencyAndDataProviderComboTest::testConsumer with data set #1 (&#39;provider2&#39;) Failed asserting that two arrays are equal. --- Expected +++ Actual @@ @@ Array ( - 0 =&gt; &#39;provider1&#39; + 0 =&gt; &#39;provider2&#39; 1 =&gt; &#39;first&#39; 2 =&gt; &#39;second&#39; ) /home/sb/DependencyAndDataProviderComboTest.php:31 FAILURES! Tests: 4, Assertions: 4, Failures: 1. تست Testing Exceptions مثال زیر نشان می دهد که چگونه از ()expectException در تست برای اینکه کدام استثنا رخ داده است استفاده می شود. مثال 8: نحوه استفاده از متد expectException &lt;?php use PHPUnit\Framework\TestCase; class ExceptionTest extends TestCase { public function testException() { $this-&gt;expectException(InvalidArgumentException::class); } } نتیجه خروجی : phpunit ExceptionTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. F Time: 0 seconds, Memory: 4.75Mb There was 1 failure: 1) ExceptionTest::testException Expected exception InvalidArgumentException FAILURES! Tests: 1, Assertions: 1, Failures: 1. در ادامه متد ()expectException، متدهای ()expectExceptionCode و ()expectExceptionMessage و ()expectExceptionMessageRegExp نیز جهت بررسی استثنائات مطرح شده توسط کد تحت آزمون مورد استفاده قرار می گیرند. مثال 9: نحوه استفاده از حاشیه نویسی expectException@ &lt;?php /** * @expectedException InvalidArgumentException */ public function testException() { } نتیجه خروجی : phpunit ExceptionTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. F Time: 0 seconds, Memory: 4.75Mb There was 1 failure: 1) ExceptionTest::testException Expected exception InvalidArgumentException FAILURES! Tests: 1, Assertions: 1, Failures: 1. تست PHP Errors به طور پیش فرض، PHPUnit اعلان های errors, warnings, notices که در هنگام اجرای یک آزمون ایجاد می شوند را به به یک استثنا تبدیل می کند. مثال 10:انتظار برای نمایش PHP error با استفاده از expectedException@ &lt;?php use PHPUnit\Framework\TestCase; class ExpectedErrorTest extends TestCase { /** * @expectedException PHPUnit\Framework\Error */ public function testFailingInclude() { include &#39;not_existing_file.php&#39;; } } نتیجه خروجی : phpunit -d error_reporting=2 ExpectedErrorTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. . Time: 0 seconds, Memory: 5.25Mb OK (1 test, 1 assertion) مثال 11:تست مقدار بازگشتی کد که از خطاهای PHP استفاده می کند &lt;?php namespace Test; use PHPUnit\Framework\TestCase; class Examples extends TestCase { public function testFileWriting() { $writer = new FileWriter; $this-&gt;assertFalse(@$writer-&gt;write(&#39;/is-not-writeable/file&#39;, &#39;stuff&#39;)); } } class FileWriter { public function write($file, $content) { $file = fopen($file, &#39;w&#39;); if($file == false) { return false; } // ... } } نتیجه خروجی : phpunit ErrorSuppressionTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. . Time: 1 seconds, Memory: 5.25Mb OK (1 test, 1 assertion) تست Output گاهی اوقات شما می خواهید صحت اجرای یک روش، به عنوان مثال، یک خروجی مورد انتظار را بررسی کنید (به عنوان مثال از طریق echo یا print) مثال 12:تست خروجی یک تابع یا متد &lt;?php namespace Test; use PHPUnit\Framework\TestCase; class Examples extends TestCase { public function testExpectFooActualFoo() { $this-&gt;expectOutputString(&#39;foo&#39;); print &#39;foo&#39;; } public function testExpectBarActualBaz() { $this-&gt;expectOutputString(&#39;bar&#39;); print &#39;baz&#39;; } } نتیجه خروجی : phpunit OutputTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. .F Time: 0 seconds, Memory: 5.75Mb There was 1 failure: 1) OutputTest::testExpectBarActualBaz Failed asserting that two strings are equal. --- Expected +++ Actual @@ @@ -&#39;bar&#39; +&#39;baz&#39; FAILURES! Tests: 2, Assertions: 2, Failures: 1. جدول زیر لیست متدهای برای تست خروجی را نمایش می دهد: Method Meaning void expectOutputRegex(string $regularExpression)Set up the expectation that the output matches a $regularExpression.void expectOutputString(string $expectedString)Set up the expectation that the output is equal to an $expectedString.bool setOutputCallback(callable $callback)Sets up a callback that is used to, for instance, normalize the actual output. string getActualOutput()Get the actual output." />
+<link rel="canonical" href="http://localhost:4000/documentation/PHPUnit/writing-tests-for-phpunit" />
+<meta property="og:url" content="http://localhost:4000/documentation/PHPUnit/writing-tests-for-phpunit" />
+<meta property="og:site_name" content="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-12-03T10:57:42+03:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="تست نویسی در PHPUnit" />
+<meta name="twitter:site" content="@farhadmirzapour" />
+<meta name="twitter:creator" content="@Farhad Mirzapour" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"تست نویسی در PHPUnit","url":"http://localhost:4000/documentation/PHPUnit/writing-tests-for-phpunit","datePublished":"2017-12-03T10:57:42+03:30","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"dateModified":"2017-12-03T10:57:42+03:30","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/documentation/PHPUnit/writing-tests-for-phpunit"},"author":{"@type":"Person","name":"Farhad Mirzapour"},"description":"ساختار و نام فایل تست در PHP Unit تمامی فایل های تست حتما باید با کلمه Test به پایان برسد. همچنین جهت آشکار سازی فایل تست که متعلق به کدام قسمت از برنامه است بهتر است فایل ها و مسیرهای همنام در دایرکتوری تست ایجاد گردند. برای مثال چنانچه در پروژه داشته باشیم : foo.php bar.php Controller/baz.php نام و مسیر فایل های تست ما بدینگونه خواهد بود : fooTest.php barTest.php Controller/bazTest.php نام کلاس درون فایل تست بهتر است همنام با نام فایل باشد. نام آزمون حتما باید با کلمه test بصورت حروف کوچک آغاز گردد. اسامی آزمون ها باید توصیفی از عملی باشد که مورد آزمایش قرار می گیرد و بهتر است بصورت اختصار و کوتاه نباشد تا بیانگر آزمایشی باشد که انجام می دهد. برای مثال چنانچه تابعی به نام ()verifyAccount داشته باشیم که عمل مطابقت رمز عبور را برای یک حساب کاربری انجام می دهد آنگاه می توانیم نام آزمون را اینطور انتخاب کنیم : ()testVerifyAccountMatchesPasswordGiven سطح دسترسی متدهای آزمون باید از نوع public باشند. کلاس آزمون باید گسترش یافته از PHPUnit\\Framework\\TestCase و یا هرکلاس دیگری که این وظیفه را برعهده دارد باشد. در کد زیر نمونه ای از یک آزمون را مشاهده می کنید : &lt;?php namespace Test; use PHPUnit\\Framework\\TestCase; class StackTest extends TestCase { public function testVerifyAccountMatchesPasswordGiven() { } } در کد بالا آزمونی ایجاد کرده ایم که با توجه به نام آن به راحتی می توان فهمید که قرار است آزمونی درخصوص بررسی صحت درستی عملکرد متدی که تعداد حروف خاصی را در یک رشته شمارش می نماید را انجام دهد. مثال 1: تست عملیات آرایه با PHPUnit &lt;?php namespace Test; use PHPUnit\\Framework\\TestCase; class StackTest extends TestCase { public function testPushAndPop() { $stack = []; $this-&gt;assertEquals(0, count($stack)); array_push($stack, &#39;foo&#39;); $this-&gt;assertEquals(&#39;foo&#39;, $stack[count($stack)-1]); $this-&gt;assertEquals(1, count($stack)); $this-&gt;assertEquals(&#39;foo&#39;, array_pop($stack)); $this-&gt;assertEquals(0, count($stack)); } } نوشتن Test Dependencies (آزمون های وابسته به یکدیگر) آزمایشات واحد عمدتا به عنوان یک تمرین خوب برای کمک به توسعه دهندگان جهت شناسایی و رفع اشکالات، اصلاح کد و به عنوان مستند سازی برای یک واحد نرم افزار تحت آزمون نوشته می شود. برای دستیابی به این مزایا، تست واحد به طور ایده آل باید تمام مسیرهای ممکن در یک برنامه را پوشش دهد. اغلب وابستگی های ضمنی بین روش های تست وجود دارد، که در سناریوی اجرای آزمون مخفی شده است. مثال 2.2 نشان می دهد که چگونه از استفاده از متن @depends تعریف می کند تا وابستگی بین روش های تست را بیان کند. مثال 2 : استفاده از depends@ در حاشیه نویسی جهت بیان وابستگی ها &lt;?php namespace Test; use PHPUnit\\Framework\\TestCase; class Examples extends TestCase { public function testEmpty() { $stack = []; $this-&gt;assertEmpty($stack); return $stack; } /** * @depends testEmpty */ public function testPush(array $stack) { array_push($stack, &#39;foo&#39;); $this-&gt;assertEquals(&#39;foo&#39;, $stack[count($stack)-1]); $this-&gt;assertNotEmpty($stack); return $stack; } /** * @depends testPush */ public function testPop(array $stack) { $this-&gt;assertEquals(&#39;foo&#39;, array_pop($stack)); $this-&gt;assertEmpty($stack); } } در مثال بالا، اولین تست، ()testEmpty یک آرایه جدید ایجاد می کند و با استفاده از متد assertEmpty اظهار می کند که آن خالی است و سپس به عنوان نتیجه آن را برگرداند. تست دوم، ()testPush به ()testEmpty بستگی دارد و نتیجه آن آزمون وابسته را به عنوان آرگومان دریافت می کند. همچنین در نهایت ()testPop به ()testPush وابستگی دارد. مثال 3: بهره گیری از وابستگی بین آزمایش ها &lt;?php namespace Test; use PHPUnit\\Framework\\TestCase; class DependencyFailureTest extends TestCase { public function testOne() { $this-&gt;assertTrue(false); } /** * @depends testOne */ public function testTwo() { } } نتیجه خروجی : phpunit --verbose DependencyFailureTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. Time: 0 seconds, Memory: 5.00Mb There was 1 failure: 1) DependencyFailureTest::testOne Failed asserting that false is true. /home/sb/DependencyFailureTest.php:6 There was 1 skipped test: 1) DependencyFailureTest::testTwo This test depends on &quot;DependencyFailureTest::testOne&quot; to pass. FAILURES! Tests: 1, Assertions: 1, Failures: 1, Skipped: 1. مثال 4: تست با چندین وابستگی &lt;?php namespace Test; use PHPUnit\\Framework\\TestCase; class Examples extends TestCase { public function testProducerFirst() { $this-&gt;assertTrue(true); return &#39;first&#39;; } public function testProducerSecond() { $this-&gt;assertTrue(true); return &#39;second&#39;; } /** * @depends testProducerFirst * @depends testProducerSecond */ public function testConsumer() { $this-&gt;assertEquals( [&#39;first&#39;, &#39;second&#39;], func_get_args() ); } } نتیجه خروجی : phpunit --verbose MultipleDependenciesTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. ... Time: 0 seconds, Memory: 3.25Mb OK (3 tests, 3 assertions) مفهوم Data Providers یک روش آزمون می تواند آرگومان های دلخواه را قبول کند. این آرگومان ها توسط dataProvider با استفاده از حاشیه نویسی dataProvider@ مشخص می شود. مثال 5: با استفاده از یک dataProvider که آرایه ای از آرایه ها را باز می گرداند &lt;?php namespace Test; use PHPUnit\\Framework\\TestCase; class Examples extends TestCase { /** * @dataProvider additionProvider */ public function testAdd($a, $b, $expected) { $this-&gt;assertEquals($expected, $a + $b); } public function additionProvider() { return [ [0, 0, 0], [0, 1, 1], [1, 0, 1], [1, 1, 2] ]; } } نتیجه خروجی : phpunit DataTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. ...F Time: 0 seconds, Memory: 5.75Mb There was 1 failure: 1) DataTest::testAdd with data set #3 (1, 1, 3) Failed asserting that 2 matches expected 3. /home/sb/DataTest.php:9 FAILURES! Tests: 4, Assertions: 4, Failures: 1. هنگام استفاده از تعداد زیادی از مجموعه داده ها مفید است که هر یک را با کلید رشته به جای پیش فرض عددی نامگذاری کنید. مثال 6: استفاده از dataProvider با مجموعه داده های نامگذاری شده &lt;?php namespace Test; use PHPUnit\\Framework\\TestCase; class Examples extends TestCase { /** * @dataProvider additionProvider */ public function testAdd($a, $b, $expected) { $this-&gt;assertEquals($expected, $a + $b); } public function additionProvider() { return [ &#39;adding zeros&#39; =&gt; [0, 0, 0], &#39;zero plus one&#39; =&gt; [0, 1, 1], &#39;one plus zero&#39; =&gt; [1, 0, 1], &#39;one plus one&#39; =&gt; [1, 1, 3] ]; } } نتیجه خروجی : phpunit DataTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. ...F Time: 0 seconds, Memory: 5.75Mb There was 1 failure: 1) DataTest::testAdd with data set &quot;one plus one&quot; (1, 1, 3) Failed asserting that 2 matches expected 3. /home/sb/DataTest.php:9 FAILURES! Tests: 4, Assertions: 4, Failures: 1. مثال 7: ترکیب depends وdataProvider در تست &lt;?php namespace Test; use PHPUnit\\Framework\\TestCase; class Examples extends TestCase { public function provider() { return [[&#39;provider1&#39;], [&#39;provider2&#39;]]; } public function testProducerFirst() { $this-&gt;assertTrue(true); return &#39;first&#39;; } public function testProducerSecond() { $this-&gt;assertTrue(true); return &#39;second&#39;; } /** * @depends testProducerFirst * @depends testProducerSecond * @dataProvider provider */ public function testConsumer() { $this-&gt;assertEquals( [&#39;provider1&#39;, &#39;first&#39;, &#39;second&#39;], func_get_args() ); } } نتیجه خروجی : phpunit --verbose DependencyAndDataProviderComboTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. ...F Time: 0 seconds, Memory: 3.50Mb There was 1 failure: 1) DependencyAndDataProviderComboTest::testConsumer with data set #1 (&#39;provider2&#39;) Failed asserting that two arrays are equal. --- Expected +++ Actual @@ @@ Array ( - 0 =&gt; &#39;provider1&#39; + 0 =&gt; &#39;provider2&#39; 1 =&gt; &#39;first&#39; 2 =&gt; &#39;second&#39; ) /home/sb/DependencyAndDataProviderComboTest.php:31 FAILURES! Tests: 4, Assertions: 4, Failures: 1. تست Testing Exceptions مثال زیر نشان می دهد که چگونه از ()expectException در تست برای اینکه کدام استثنا رخ داده است استفاده می شود. مثال 8: نحوه استفاده از متد expectException &lt;?php use PHPUnit\\Framework\\TestCase; class ExceptionTest extends TestCase { public function testException() { $this-&gt;expectException(InvalidArgumentException::class); } } نتیجه خروجی : phpunit ExceptionTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. F Time: 0 seconds, Memory: 4.75Mb There was 1 failure: 1) ExceptionTest::testException Expected exception InvalidArgumentException FAILURES! Tests: 1, Assertions: 1, Failures: 1. در ادامه متد ()expectException، متدهای ()expectExceptionCode و ()expectExceptionMessage و ()expectExceptionMessageRegExp نیز جهت بررسی استثنائات مطرح شده توسط کد تحت آزمون مورد استفاده قرار می گیرند. مثال 9: نحوه استفاده از حاشیه نویسی expectException@ &lt;?php /** * @expectedException InvalidArgumentException */ public function testException() { } نتیجه خروجی : phpunit ExceptionTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. F Time: 0 seconds, Memory: 4.75Mb There was 1 failure: 1) ExceptionTest::testException Expected exception InvalidArgumentException FAILURES! Tests: 1, Assertions: 1, Failures: 1. تست PHP Errors به طور پیش فرض، PHPUnit اعلان های errors, warnings, notices که در هنگام اجرای یک آزمون ایجاد می شوند را به به یک استثنا تبدیل می کند. مثال 10:انتظار برای نمایش PHP error با استفاده از expectedException@ &lt;?php use PHPUnit\\Framework\\TestCase; class ExpectedErrorTest extends TestCase { /** * @expectedException PHPUnit\\Framework\\Error */ public function testFailingInclude() { include &#39;not_existing_file.php&#39;; } } نتیجه خروجی : phpunit -d error_reporting=2 ExpectedErrorTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. . Time: 0 seconds, Memory: 5.25Mb OK (1 test, 1 assertion) مثال 11:تست مقدار بازگشتی کد که از خطاهای PHP استفاده می کند &lt;?php namespace Test; use PHPUnit\\Framework\\TestCase; class Examples extends TestCase { public function testFileWriting() { $writer = new FileWriter; $this-&gt;assertFalse(@$writer-&gt;write(&#39;/is-not-writeable/file&#39;, &#39;stuff&#39;)); } } class FileWriter { public function write($file, $content) { $file = fopen($file, &#39;w&#39;); if($file == false) { return false; } // ... } } نتیجه خروجی : phpunit ErrorSuppressionTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. . Time: 1 seconds, Memory: 5.25Mb OK (1 test, 1 assertion) تست Output گاهی اوقات شما می خواهید صحت اجرای یک روش، به عنوان مثال، یک خروجی مورد انتظار را بررسی کنید (به عنوان مثال از طریق echo یا print) مثال 12:تست خروجی یک تابع یا متد &lt;?php namespace Test; use PHPUnit\\Framework\\TestCase; class Examples extends TestCase { public function testExpectFooActualFoo() { $this-&gt;expectOutputString(&#39;foo&#39;); print &#39;foo&#39;; } public function testExpectBarActualBaz() { $this-&gt;expectOutputString(&#39;bar&#39;); print &#39;baz&#39;; } } نتیجه خروجی : phpunit OutputTest PHPUnit 6.5.0 by Sebastian Bergmann and contributors. .F Time: 0 seconds, Memory: 5.75Mb There was 1 failure: 1) OutputTest::testExpectBarActualBaz Failed asserting that two strings are equal. --- Expected +++ Actual @@ @@ -&#39;bar&#39; +&#39;baz&#39; FAILURES! Tests: 2, Assertions: 2, Failures: 1. جدول زیر لیست متدهای برای تست خروجی را نمایش می دهد: Method Meaning void expectOutputRegex(string $regularExpression)Set up the expectation that the output matches a $regularExpression.void expectOutputString(string $expectedString)Set up the expectation that the output is equal to an $expectedString.bool setOutputCallback(callable $callback)Sets up a callback that is used to, for instance, normalize the actual output. string getActualOutput()Get the actual output.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="stylesheet" href="/assets/prisma/prism.css">
+    <!-- favicons and rss -->
+    <link rel="alternate" type="application/rss+xml" title="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" href="/feed.xml">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- header -->
+<header class="header" role="banner" aria-label="Header">
+    <button class="hamburger-button" onclick="hamburgerMenu();" role="button" aria-label="Hamburger menu button">
+        <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    </button>
+    <a href="/" class="logo" role="link" aria-label="Home">
+        <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo">
+    </a>
+    <nav class="navigation" role="navigation" aria-label="Navigation">
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item">
+                <a href="/" class="logo" role="menuitem" aria-label="Home">
+                    <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo">
+                </a>
+            </li>
+            
+            <li role="menuitem"><a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a></li>
+            
+            <li role="menuitem"><a href="/contactus" role="menuitem" aria-label="تماس">تماس</a></li>
+            
+        </ul>
+    </nav>
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox">
+        </form>
+    </div>
+</header>
+
+<nav id="hamburger-menu" role="navigation" aria-label="Hamburger menu">
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox">
+        </form>
+    </div>
+    <div class="home-nav" role="navigation" aria-label="Site navigation">
+        <a href="/" role="menuitem" aria-label="Home">صفحه اصلی</a>
+        
+        <a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a>
+        
+        <a href="/contactus" role="menuitem" aria-label="تماس">تماس</a>
+        
+    </div>
+
+    
+    <div class="doc-nav" role="navigation" aria-label="Documentation navigation">
+        <p role="presentation" aria-label="Category name">
+            آموزش PHPUnit
+        </p>
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/2017/11/27/php-unit.html" class="doc-link" role="link" aria-label="تست نویسی در PHPUnit">مقدمه</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/PHPUnit/writing-tests-for-phpunit" class="doc-link" role="link" aria-label="تست نویسی در PHPUnit">تست نویسی در PHPUnit</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </ul>
+    </div>
+    
+</nav>
+<!-- main content -->
+<main class="container" role="main">
+    <div class="rcdoccontainerimg">
+    <div class="rc-DRTVBanner-new rc-DRTVBanner-bigsize">
+    <div style="background: url('/images/original/phpunit-compressor.jpg'); " class="blurred_img"></div>
+    <div class="mask"></div>
+    <div class="bot"></div>
+    <div class="over">
+        <div class="container-rc">
+            <img class="image" src="/images/original/phpunit-compressor.jpg" alt="تست نویسی در PHPUnit" height="190">
+            <div class="desktop-banner-container">
+                <h1 class="display-5-text headline">
+                    
+                    
+                    آموزش PHPUnit
+                    </h1>
+                <!--<div class="tagslist"><ul class='lyda-tag-list'><li class='lyda-tag-list-title'>برچسب ها</li><li><a class="tags" href="/tag/لاراول">#لاراول</a></li><li><a class="tags" href="/tag/لاراول-5-5">#لاراول 5.5</a></li></ul></div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="bread-crumb">-->
+<!--<div class="container   ">-->
+<!--<div class="pull-right ">-->
+<!--<div class="bread-button text-custom b-left">-->
+<!--انتشار : 2 ماه پیش-->
+<!--</div>-->
+<!--<a href="/category/article/" class="bread-button back-to-all b-left hidden-xs">همه مقالات</a>-->
+<!--<div class="cat-lable">-->
+<!--<a href="/category/article/laravel/">-->
+<!--لاراول-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<script>
+    $(window).scroll(function(){
+        var sticky = $('.doc-menu'),
+            scroll = $(window).scrollTop();
+        if (scroll >= 101) {sticky.addClass('doc-header-scroll'); }
+        else {sticky.removeClass('doc-header-scroll'); };
+    });
+</script>
+</div>
+<div class="doc-container">
+
+    <div class="doc-menu">
+        
+        <ul>
+            <li>
+                <a href="/2017/11/27/php-unit.html" class="active doc-link" role="link">
+                    مقدمه
+                </a>
+            </li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li>
+                <a title="تست نویسی در PHPUnit" href="/documentation/PHPUnit/writing-tests-for-phpunit" class="active doc-link" role="link">
+                    تست نویسی در PHPUnit
+                </a>
+            </li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </ul>
+        
+    </div>
+
+    <article class="documentation">
+        <header class="doc-header">
+            <div class="time">
+                تاریخ :      یکشنبه 12 آذر 1396
+            </div>
+            
+        </header>
+        <section class="anchored">
+            <h3>ساختار و نام فایل تست در PHP Unit</h3>
+
+<ul>
+<li>
+<p>
+تمامی فایل های تست حتما باید با کلمه <b>Test</b>  به پایان برسد. همچنین جهت آشکار سازی فایل تست که متعلق به کدام قسمت از برنامه است بهتر است فایل ها و مسیرهای همنام در دایرکتوری تست ایجاد گردند. برای مثال چنانچه در پروژه داشته باشیم :
+</p>
+
+
+<blockquote>
+<p align="left">
+foo.php
+<br>
+bar.php
+<br>
+Controller/baz.php
+</p>
+</blockquote>
+
+<p>
+نام و مسیر فایل های تست ما بدینگونه خواهد بود :
+</p>
+
+<blockquote>
+<p align="left">
+fooTest.php
+<br>
+barTest.php
+<br>
+Controller/bazTest.php
+</p>
+</blockquote>
+</li>
+
+<li>
+نام کلاس درون فایل تست بهتر است همنام با نام فایل باشد.
+</li>
+
+<li>
+نام آزمون حتما باید با کلمه test بصورت حروف کوچک آغاز گردد.
+</li>
+
+<li>
+<p>
+اسامی آزمون ها باید توصیفی از عملی باشد که مورد آزمایش قرار می گیرد و بهتر است بصورت اختصار و کوتاه نباشد تا بیانگر آزمایشی باشد که انجام می دهد.
+</p>
+<p>
+ برای مثال چنانچه تابعی به نام ()verifyAccount داشته باشیم که عمل مطابقت رمز عبور را برای یک حساب کاربری انجام می دهد آنگاه می توانیم نام آزمون را اینطور انتخاب کنیم :
+</p>
+
+<blockquote>
+<p align="left" style="direction:left">
+()testVerifyAccountMatchesPasswordGiven
+</p>
+</blockquote>
+
+</li>
+
+<li>
+سطح دسترسی متدهای آزمون باید از نوع public  باشند.
+</li>
+
+<li>
+کلاس آزمون باید گسترش یافته از PHPUnit\Framework\TestCase و یا هرکلاس دیگری که این وظیفه را برعهده دارد باشد.
+</li>
+</ul>
+
+<p>
+در کد زیر نمونه ای از یک آزمون را مشاهده می کنید :
+</p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+namespace Test;
+
+use PHPUnit\Framework\TestCase;
+
+class StackTest extends TestCase
+{
+    public function testVerifyAccountMatchesPasswordGiven()
+    {
+
+    }
+}
+</code></pre>
+
+<p>
+در کد بالا  آزمونی ایجاد کرده ایم که با توجه به نام آن به راحتی می توان فهمید که قرار است آزمونی درخصوص بررسی صحت درستی عملکرد متدی که تعداد حروف خاصی را در یک رشته شمارش می نماید را انجام دهد.
+</p>
+
+<p><br>
+<strong>
+مثال 1: تست عملیات آرایه با PHPUnit
+ </strong></p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+namespace Test;
+
+use PHPUnit\Framework\TestCase;
+
+class StackTest extends TestCase
+{
+    public function testPushAndPop()
+    {
+        $stack = [];
+        $this-&gt;assertEquals(0, count($stack));
+
+        array_push($stack, 'foo');
+        $this-&gt;assertEquals('foo', $stack[count($stack)-1]);
+        $this-&gt;assertEquals(1, count($stack));
+
+        $this-&gt;assertEquals('foo', array_pop($stack));
+        $this-&gt;assertEquals(0, count($stack));
+    }
+}
+</code></pre>
+
+<p><br></p>
+<h3>نوشتن Test Dependencies (آزمون های وابسته به یکدیگر)</h3>
+
+<p>
+آزمایشات واحد عمدتا به عنوان یک تمرین خوب برای کمک به توسعه دهندگان جهت شناسایی و رفع اشکالات، اصلاح کد و به عنوان مستند سازی برای یک واحد نرم افزار تحت آزمون نوشته می شود. برای دستیابی به این مزایا، تست واحد به طور ایده آل باید تمام مسیرهای ممکن در یک برنامه را پوشش دهد. اغلب وابستگی های ضمنی بین روش های تست وجود دارد، که در سناریوی اجرای آزمون مخفی شده است.
+</p>
+
+<p>
+مثال 2.2 نشان می دهد که چگونه از استفاده از متن <a href="https://github.com/depends" class="user-mention">@depends</a> تعریف می کند تا وابستگی بین روش های تست را بیان کند.
+</p>
+
+<p><br>
+<strong>
+مثال 2 : استفاده از <span class="redbold">depends@</span> در حاشیه نویسی جهت بیان وابستگی ها
+</strong></p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+namespace Test;
+
+use PHPUnit\Framework\TestCase;
+
+class Examples extends TestCase
+{
+    public function testEmpty()
+    {
+        $stack = [];
+        $this-&gt;assertEmpty($stack);
+
+        return $stack;
+    }
+
+    /**
+     * @depends testEmpty
+     */
+    public function testPush(array $stack)
+    {
+        array_push($stack, 'foo');
+        $this-&gt;assertEquals('foo', $stack[count($stack)-1]);
+        $this-&gt;assertNotEmpty($stack);
+
+        return $stack;
+    }
+
+    /**
+     * @depends testPush
+     */
+    public function testPop(array $stack)
+    {
+        $this-&gt;assertEquals('foo', array_pop($stack));
+        $this-&gt;assertEmpty($stack);
+    }
+}
+</code></pre>
+
+<p>
+در مثال بالا، اولین تست، ()testEmpty یک آرایه جدید ایجاد می کند و با استفاده از متد assertEmpty اظهار می کند که آن خالی است و سپس به عنوان نتیجه آن را برگرداند. تست دوم، ()testPush به ()testEmpty بستگی دارد و نتیجه آن آزمون وابسته را به عنوان آرگومان دریافت می کند. همچنین در نهایت ()testPop به ()testPush وابستگی دارد.
+</p>
+
+<p><br>
+<strong>
+مثال 3: بهره گیری از وابستگی بین آزمایش ها
+ </strong></p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+namespace Test;
+
+use PHPUnit\Framework\TestCase;
+
+class DependencyFailureTest extends TestCase
+{
+    public function testOne()
+    {
+        $this-&gt;assertTrue(false);
+    }
+
+    /**
+     * @depends testOne
+     */
+    public function testTwo()
+    {
+    }
+}
+</code></pre>
+
+<p>
+نتیجه خروجی :
+</p>
+
+<pre><code class="language-bash">
+phpunit --verbose DependencyFailureTest
+PHPUnit 6.5.0 by Sebastian Bergmann and contributors.
+
+Time: 0 seconds, Memory: 5.00Mb
+
+There was 1 failure:
+
+1) DependencyFailureTest::testOne
+Failed asserting that false is true.
+
+/home/sb/DependencyFailureTest.php:6
+There was 1 skipped test:
+
+1) DependencyFailureTest::testTwo
+This test depends on "DependencyFailureTest::testOne" to pass.
+
+
+FAILURES!
+Tests: 1, Assertions: 1, Failures: 1, Skipped: 1.
+</code></pre>
+
+<p><br>
+<strong>
+مثال 4: تست با چندین وابستگی
+ </strong></p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+namespace Test;
+
+use PHPUnit\Framework\TestCase;
+
+class Examples extends TestCase
+{
+    public function testProducerFirst()
+    {
+        $this-&gt;assertTrue(true);
+        return 'first';
+    }
+
+    public function testProducerSecond()
+    {
+        $this-&gt;assertTrue(true);
+        return 'second';
+    }
+
+    /**
+     * @depends testProducerFirst
+     * @depends testProducerSecond
+     */
+    public function testConsumer()
+    {
+        $this-&gt;assertEquals(
+            ['first', 'second'],
+            func_get_args()
+        );
+    }
+}
+</code></pre>
+<p>
+نتیجه خروجی :
+</p>
+
+<pre><code class="language-bash">
+phpunit --verbose MultipleDependenciesTest
+PHPUnit 6.5.0 by Sebastian Bergmann and contributors.
+
+...
+
+Time: 0 seconds, Memory: 3.25Mb
+
+OK (3 tests, 3 assertions)
+</code></pre>
+
+<p><br></p>
+<h3>
+مفهوم Data Providers
+</h3>
+<p>
+یک روش آزمون می تواند آرگومان های دلخواه را قبول کند. این آرگومان ها توسط dataProvider با استفاده از حاشیه نویسی <span class="redbold">dataProvider@</span> مشخص می شود.
+</p>
+
+<p><br>
+<strong>
+مثال 5: با استفاده از یک dataProvider که آرایه ای از آرایه ها را باز می گرداند
+</strong></p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+namespace Test;
+
+use PHPUnit\Framework\TestCase;
+
+class Examples extends TestCase
+{
+    /**
+     * @dataProvider additionProvider
+     */
+    public function testAdd($a, $b, $expected)
+    {
+        $this-&gt;assertEquals($expected, $a + $b);
+    }
+
+    public function additionProvider()
+    {
+        return [
+            [0, 0, 0],
+            [0, 1, 1],
+            [1, 0, 1],
+            [1, 1, 2]
+        ];
+    }
+}
+</code></pre>
+
+<p>
+نتیجه خروجی :
+</p>
+
+<pre><code class="language-bash">
+phpunit DataTest
+PHPUnit 6.5.0 by Sebastian Bergmann and contributors.
+
+...F
+
+Time: 0 seconds, Memory: 5.75Mb
+
+There was 1 failure:
+
+1) DataTest::testAdd with data set #3 (1, 1, 3)
+Failed asserting that 2 matches expected 3.
+
+/home/sb/DataTest.php:9
+
+FAILURES!
+Tests: 4, Assertions: 4, Failures: 1.
+</code></pre>
+
+<p>
+هنگام استفاده از تعداد زیادی از مجموعه داده ها مفید است که هر یک را با کلید رشته به جای پیش فرض عددی نامگذاری کنید.
+</p>
+
+<p><br>
+<strong>
+مثال 6: استفاده از dataProvider با مجموعه داده های نامگذاری شده
+</strong></p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+namespace Test;
+
+use PHPUnit\Framework\TestCase;
+
+class Examples extends TestCase
+{
+    /**
+     * @dataProvider additionProvider
+     */
+    public function testAdd($a, $b, $expected)
+    {
+        $this-&gt;assertEquals($expected, $a + $b);
+    }
+
+    public function additionProvider()
+    {
+        return [
+            'adding zeros'  =&gt; [0, 0, 0],
+            'zero plus one' =&gt; [0, 1, 1],
+            'one plus zero' =&gt; [1, 0, 1],
+            'one plus one'  =&gt; [1, 1, 3]
+        ];
+    }
+}
+</code></pre>
+
+<p>
+نتیجه خروجی :
+</p>
+
+<pre><code class="language-bash">
+phpunit DataTest
+PHPUnit 6.5.0 by Sebastian Bergmann and contributors.
+
+...F
+
+Time: 0 seconds, Memory: 5.75Mb
+
+There was 1 failure:
+
+1) DataTest::testAdd with data set "one plus one" (1, 1, 3)
+Failed asserting that 2 matches expected 3.
+
+/home/sb/DataTest.php:9
+
+FAILURES!
+Tests: 4, Assertions: 4, Failures: 1.
+</code></pre>
+
+<p><br>
+<strong>
+مثال 7: ترکیب depends وdataProvider در تست
+</strong></p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+namespace Test;
+
+use PHPUnit\Framework\TestCase;
+
+class Examples extends TestCase
+{
+    public function provider()
+    {
+        return [['provider1'], ['provider2']];
+    }
+
+    public function testProducerFirst()
+    {
+        $this-&gt;assertTrue(true);
+        return 'first';
+    }
+
+    public function testProducerSecond()
+    {
+        $this-&gt;assertTrue(true);
+        return 'second';
+    }
+
+    /**
+     * @depends testProducerFirst
+     * @depends testProducerSecond
+     * @dataProvider provider
+     */
+    public function testConsumer()
+    {
+        $this-&gt;assertEquals(
+            ['provider1', 'first', 'second'],
+            func_get_args()
+        );
+    }
+}
+</code></pre>
+
+<p>
+نتیجه خروجی :
+</p>
+
+<pre><code class="language-bash">
+phpunit --verbose DependencyAndDataProviderComboTest
+PHPUnit 6.5.0 by Sebastian Bergmann and contributors.
+
+...F
+
+Time: 0 seconds, Memory: 3.50Mb
+
+There was 1 failure:
+
+1) DependencyAndDataProviderComboTest::testConsumer with data set #1 ('provider2')
+Failed asserting that two arrays are equal.
+--- Expected
++++ Actual
+@@ @@
+Array (
+-    0 =&gt; 'provider1'
++    0 =&gt; 'provider2'
+1 =&gt; 'first'
+2 =&gt; 'second'
+)
+
+/home/sb/DependencyAndDataProviderComboTest.php:31
+
+FAILURES!
+Tests: 4, Assertions: 4, Failures: 1.
+</code></pre>
+
+<p><br></p>
+<h3>تست Testing Exceptions</h3>
+
+<p>
+مثال زیر نشان می دهد که چگونه از <span class="redbold">()expectException</span> در تست برای اینکه کدام استثنا رخ داده است استفاده می شود.
+</p>
+
+<p><br>
+<strong>
+مثال 8: نحوه استفاده از متد expectException
+</strong></p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+use PHPUnit\Framework\TestCase;
+
+class ExceptionTest extends TestCase
+{
+    public function testException()
+    {
+        $this-&gt;expectException(InvalidArgumentException::class);
+    }
+}
+</code></pre>
+
+<p>
+نتیجه خروجی :
+</p>
+
+<pre><code class="language-bash">
+phpunit ExceptionTest
+PHPUnit 6.5.0 by Sebastian Bergmann and contributors.
+
+F
+
+Time: 0 seconds, Memory: 4.75Mb
+
+There was 1 failure:
+
+1) ExceptionTest::testException
+Expected exception InvalidArgumentException
+
+FAILURES!
+Tests: 1, Assertions: 1, Failures: 1.
+</code></pre>
+
+<p>
+در ادامه متد <span class="redbold">()expectException</span>، متدهای <span class="redbold">()expectExceptionCode</span> و <span class="redbold">()expectExceptionMessage</span> و  <span class="redbold">()expectExceptionMessageRegExp</span> نیز جهت بررسی استثنائات مطرح شده توسط کد تحت آزمون مورد استفاده قرار می گیرند.
+</p>
+
+<p><br>
+<strong>
+مثال 9: نحوه استفاده از حاشیه نویسی  <span class="redbold">expectException@</span>
+</strong></p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testException()
+    {
+    }
+</code></pre>
+
+<p>
+نتیجه خروجی :
+</p>
+
+<pre><code class="language-bash">
+phpunit ExceptionTest
+PHPUnit 6.5.0 by Sebastian Bergmann and contributors.
+
+F
+
+Time: 0 seconds, Memory: 4.75Mb
+
+There was 1 failure:
+
+1) ExceptionTest::testException
+Expected exception InvalidArgumentException
+
+FAILURES!
+Tests: 1, Assertions: 1, Failures: 1.
+</code></pre>
+
+<p><br></p>
+<h3>
+ تست PHP Errors
+</h3>
+<p>
+به طور پیش فرض، PHPUnit اعلان های  errors, warnings,  notices که در هنگام اجرای یک آزمون ایجاد می شوند را به به یک استثنا تبدیل می کند.
+</p>
+
+<p><br>
+<strong>
+مثال 10:انتظار برای نمایش PHP error با استفاده از <span class="redbold">expectedException@</span>
+</strong></p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+use PHPUnit\Framework\TestCase;
+
+class ExpectedErrorTest extends TestCase
+{
+    /**
+     * @expectedException PHPUnit\Framework\Error
+     */
+    public function testFailingInclude()
+    {
+        include 'not_existing_file.php';
+    }
+}
+</code></pre>
+
+<p>
+نتیجه خروجی :
+</p>
+
+<pre><code class="language-bash">
+phpunit -d error_reporting=2 ExpectedErrorTest
+PHPUnit 6.5.0 by Sebastian Bergmann and contributors.
+
+.
+
+Time: 0 seconds, Memory: 5.25Mb
+
+OK (1 test, 1 assertion)
+</code></pre>
+
+<p><br>
+<strong>
+مثال 11:تست مقدار بازگشتی کد که از خطاهای PHP استفاده می کند
+</strong></p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+namespace Test;
+
+use PHPUnit\Framework\TestCase;
+
+class Examples extends TestCase
+{
+    public function testFileWriting() {
+        $writer = new FileWriter;
+        $this-&gt;assertFalse(@$writer-&gt;write('/is-not-writeable/file', 'stuff'));
+    }
+}
+
+class FileWriter
+{
+    public function write($file, $content) {
+        $file = fopen($file, 'w');
+        if($file == false) {
+            return false;
+        }
+        // ...
+    }
+}
+</code></pre>
+
+<p>
+نتیجه خروجی :
+</p>
+
+<pre><code class="language-bash">
+phpunit ErrorSuppressionTest
+PHPUnit 6.5.0 by Sebastian Bergmann and contributors.
+
+.
+
+Time: 1 seconds, Memory: 5.25Mb
+
+OK (1 test, 1 assertion)
+</code></pre>
+
+<p><br></p>
+<h3>تست Output
+</h3>
+<p>
+گاهی اوقات شما می خواهید صحت اجرای یک روش، به عنوان مثال، یک خروجی مورد انتظار را بررسی کنید (به عنوان مثال از طریق echo یا print)
+</p>
+
+<p><br>
+<strong>
+مثال 12:تست خروجی یک تابع یا متد
+</strong></p>
+
+<pre><code class="language-php   line-numbers">&lt;?php
+namespace Test;
+
+use PHPUnit\Framework\TestCase;
+
+class Examples extends TestCase
+{
+    public function testExpectFooActualFoo()
+    {
+        $this-&gt;expectOutputString('foo');
+        print 'foo';
+    }
+
+    public function testExpectBarActualBaz()
+    {
+        $this-&gt;expectOutputString('bar');
+        print 'baz';
+    }
+}
+</code></pre>
+
+<p>
+نتیجه خروجی :
+</p>
+
+<pre><code class="language-bash">
+phpunit OutputTest
+PHPUnit 6.5.0 by Sebastian Bergmann and contributors.
+
+.F
+
+Time: 0 seconds, Memory: 5.75Mb
+
+There was 1 failure:
+
+1) OutputTest::testExpectBarActualBaz
+Failed asserting that two strings are equal.
+--- Expected
++++ Actual
+@@ @@
+-'bar'
++'baz'
+
+
+FAILURES!
+Tests: 2, Assertions: 2, Failures: 1.
+</code></pre>
+
+<p><br>
+<strong>
+جدول زیر لیست متدهای برای تست خروجی را نمایش می دهد:
+</strong></p>
+
+<table style="direction:ltr" summary="Methods for testing output" border="1">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th align="left">Method</th>
+<th align="left">Meaning</th>
+</tr></thead>
+<tbody>
+<tr>
+<td align="left"><code class="literal">void expectOutputRegex(string $regularExpression)</code></td>
+<td align="left">Set up the expectation that the output matches a <code class="literal">$regularExpression</code>.</td>
+</tr>
+<tr>
+<td align="left"><code class="literal">void expectOutputString(string $expectedString)</code></td>
+<td align="left">Set up the expectation that the output is equal to an <code class="literal">$expectedString</code>.</td>
+</tr>
+<tr>
+<td align="left"><code class="literal">bool setOutputCallback(callable $callback)</code></td>
+<td align="left">Sets up a callback that is used to, for instance, normalize the actual output.</td>
+</tr>
+<tr>
+<td align="left"><code class="literal">string getActualOutput()</code></td>
+<td align="left">Get the actual output.</td>
+</tr>
+</tbody>
+</table>
+
+        </section>
+        
+<hr>
+<p>
+</p>
+<div>منابع مورد مطالعه جهت جمع آوری این مطلب:</div>
+<div class="refrencehref">
+        https://phpunit.de/manual/current/en/writing-tests-for-phpunit.html#writing-tests-for-phpunit.exceptions
+</div>
+
+
+        <hr>
+        <style>
+    #commentsdiv{
+        background-color: #f5f5f5;
+        border: 1px solid #c5c5c5;
+        border-bottom: 0px !important;
+        padding: 12px;
+    }
+    #commentsborder{
+        background-color: #fff;
+        border: 1px solid #c5c5c5;
+        white-space: normal;
+        padding: 20px;
+    }
+</style>
+
+<div id="commentsdiv">نظرات</div>
+<div id="commentsborder">
+<div id="wpac-comment"></div>
+</div>
+<script type="text/javascript">
+wpac_init = window.wpac_init || [];
+wpac_init.push({widget: 'Comment', id: 7878});
+(function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = 'https://embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+})();
+</script>
+
+    </article>
+</div>
+<script src="/assets/js/anchor.min.js"></script>
+<script>
+    anchors.options = {
+        placement: 'left',
+        visible: 'always',
+//        icon: '#',
+    };
+    anchors.add('.anchored h2,.anchored h3,.anchored h4,.anchored h5,.anchored h6');
+
+    (function($){
+        if(window.location.hash) {
+            var hash = decodeURIComponent(window.location.hash);
+            gotohash($(hash).offset().top);
+        }
+        $('a.anchorjs-link').click(function(){
+			gotohash($(this).offset().top);
+        });
+        $('a.anchorjs').click(function(){
+			var id = '#' + $(this).attr('title');
+			gotohash($(id).offset().top);
+        });		
+        function gotohash(top){
+            var headerHeight = 70; // Get fixed header height
+            $('html,body').animate({
+                scrollTop: top - headerHeight
+            }, 20);
+        }
+    })(jQuery);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+   $(document).ready(function (){
+
+     var scrollPosition = getParameterByName('scroll');
+     if(scrollPosition)
+      $(".doc-menu").scrollTop(scrollPosition);
+
+     $('.doc-link').click(function(){
+        var scrollTop = $(".doc-menu").scrollTop();
+        if(scrollTop > 0)
+          $(this).attr("href",this.href + "?scroll=" + $(".doc-menu").scrollTop());
+     });
+
+     function getParameterByName(name, url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+   });
+</script>
+    <div id="back-to-top" role="button" aria-label="Back to top">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+    </div>
+</main>
+<!-- footer -->
+
+<footer class="footer" role="contentinfo" aria-label="Site footer">
+    <div class="navigation" role="navigation" aria-label="Footer links">
+        <a href="http://localhost:4000" class="avatar" role="link"></a>
+        <ul role="menubar" aria-label="Footer links menubar">
+            <li class="footer-products" role="menuitem" aria-label="Products">
+                تولیدات
+                <ul role="menu" aria-hidden="true" aria-label="Products link">
+                </ul>
+            </li>
+            <li class="footer-blog" role="menuitem" aria-label="Blog">
+                مقالات
+                <ul role="menu" aria-hidden="true" aria-label="Blog link">
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2020/07/03/marriage.html" role="link" aria-label="ازدواج">ازدواج</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2019/10/11/vuejs.html" role="link" aria-label="آموزش vuejs">آموزش vuejs</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/18/laravel.html" role="link" aria-label="آموزش Laravel">آموزش Laravel</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/articles/2017/12/13/laravelcollective.html" role="link" aria-label="معرفی Laravel Collective">معرفی Laravel Collective</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/06/design-patterns.html" role="link" aria-label="معرفی  Design Pattern">معرفی  Design Pattern</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/blog" role="link" aria-label="Read more">Read More</a></li>
+                </ul>
+            </li>
+
+            <li class="footer-connect" role="menuitem" aria-label="Connect">
+                تماس
+                <ul role="menu" aria-hidden="true" aria-label="Connect link">
+                    <li role="listitem" aria-label="Connect link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub">GitHub</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://www.linkedin.com/in/farhad-mirzapour/" target="_blank" role="link" aria-label="Linkedin">Linkedin</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter">Twitter</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="socials" role="navigation" aria-label="Social links">
+        <ul role="menu" aria-hidden="true" aria-label="Social link">
+            <li role="listitem" aria-label="Social link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://www.linkedin.com/in/farhad-mirzapour-0043b862/" target="_blank" role="link" aria-label="Linkedin"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="/feed.xml" role="link" aria-label="RSS"><i class="fa fa-rss-square" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+    <div class="copyright" role="contentinfo" aria-label="Copyright">
+        <p>© <script type="text/javascript">document.write(new Date().getFullYear());</script> Farhad Mirzapour</p>
+    </div>
+</footer>
+
+<!-- scripts -->
+<script src="/assets/js/hamburger-menu.js"></script>
+
+<script src="/assets/js/elevator.min.js"></script>
+<script src="/assets/js/back-to-top.js"></script>
+<script src="/assets/prisma/prism.js"></script>
+<!-- google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108878564-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-108878564-1');
+</script>
+
+</body>
+</html>

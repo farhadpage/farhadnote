@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="">
+<!-- head -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>کار با رویدادها(Event Handling) | مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="کار با رویدادها(Event Handling)" />
+<meta name="author" content="Farhad Mirzapour" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="گوش دادن به وقایع (Listening to Events) ما می توانیم از دستورالعمل v-on برای گوش دادن به رویدادهای DOM استفاده کنیم و برخی از کدهای جاوا اسکریپت را در هنگام بروز آنها اجرا کنیم. برای مثال: &amp;#x3C;div id=&amp;#x22;example-1&amp;#x22;&amp;#x3E; &amp;#x3C;button v-on:click=&amp;#x22;counter += 1&amp;#x22;&amp;#x3E;Add 1&amp;#x3C;/button&amp;#x3E; &amp;#x3C;p&amp;#x3E;The button above has been clicked &#123;&#123; counter &#125;&#125; times.&amp;#x3C;/p&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var example1 = new Vue({ el: &#39;#example-1&#39;, data: { counter: 0 } }) نتیجه: Add 1 The button above has been clicked &#123;&#123; counter &#125;&#125; times. متدهای کار با رویدادها (Method Event Handlers) منطق برای بسیاری از اداره کنندگان رویدادها پیچیده تر خواهد شد ، بنابراین نگه داشتن کد JavaScript در مقدار ویژگی v-on امکان پذیر نیست. به همین دلیل v-on می تواند نام متدی را که می خواهید آن را فراخوانی نیز بپذیرد. برای مثال: &amp;#x3C;div id=&amp;#x22;example-2&amp;#x22;&amp;#x3E; &amp;#x3C;!-- &amp;#x60;greet&amp;#x60; is the name of a method defined below --&amp;#x3E; &amp;#x3C;button v-on:click=&amp;#x22;greet&amp;#x22;&amp;#x3E;Greet&amp;#x3C;/button&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var example2 = new Vue({ el: &#39;#example-2&#39;, data: { name: &#39;Vue.js&#39; }, // define methods under the `methods` object methods: { greet: function (event) { // `this` inside methods points to the Vue instance alert(&#39;Hello &#39; + this.name + &#39;!&#39;) // `event` is the native DOM event if (event) { alert(event.target.tagName) } } } }) // you can invoke methods in JavaScript too example2.greet() // =&gt; &#39;Hello Vue.js!&#39; Greet کار با متدهای درون خطی (Methods in Inline Handlers) به جای اتصال مستقیم به نام متد ، می توانیم از متدهایی در یک عبارت JavaScript به صورت خطی (inline) نیز استفاده کنیم: &amp;#x3C;div id=&amp;#x22;example-3&amp;#x22;&amp;#x3E; &amp;#x3C;button v-on:click=&amp;#x22;say(&amp;#x27;hi&amp;#x27;)&amp;#x22;&amp;#x3E;Say hi&amp;#x3C;/button&amp;#x3E; &amp;#x3C;button v-on:click=&amp;#x22;say(&amp;#x27;what&amp;#x27;)&amp;#x22;&amp;#x3E;Say what&amp;#x3C;/button&amp;#x3E; &amp;#x3C;/div&amp;#x3E; new Vue({ el: &#39;#example-3&#39;, methods: { say: function (message) { alert(message) } } }) نتیجه: Say hi Say what بعضی اوقات ما نیاز داریم در یک کنترل کننده دستور داخلی (inline statement handler)به رویداد اصلی DOM نیز دسترسی پیدا کنیم. می توانید با استفاده از متغیر ویژه $event آن رویداد را به متد منتقل کنید: &amp;#x3C;button v-on:click=&amp;#x22;warn(&amp;#x27;Form cannot be submitted yet.&amp;#x27;, $event)&amp;#x22;&amp;#x3E; Submit &amp;#x3C;/button&amp;#x3E; // ... methods: { warn: function (message, event) { // now we have access to the native event if (event) event.preventDefault() alert(message) } } Submit اصلاح کننده رویداد (Event Modifiers) این یک نیاز بسیار متداول است که متدهای ()event.preventDefault یا ()event.stopPropagation را در مدیریت رویداد به کار بگیرید. اگرچه ما می توانیم این کار را به راحتی در داخل متدها انجام دهیم ، اما بهتر است که متدها صرفاً در مورد منطق داده ها باشند نه اینکه بخواهند با جزئیات رویداد DOM سروکار داشته باشند. برای رفع این مشکل ، Vue اصلاح کننده رویداد (event modifiers ) را برای v-on فراهم می کند. به یاد بیاورید که event modifiers پسوندهایی با عنوان هستند که توسط یک نقطه مشخص می شوند. .stop .prevent .capture .self .once .passive &amp;#x3C;!-- the click event&amp;#x27;s propagation will be stopped --&amp;#x3E; &amp;#x3C;a v-on:click.stop=&amp;#x22;doThis&amp;#x22;&amp;#x3E;&amp;#x3C;/a&amp;#x3E; &amp;#x3C;!-- the submit event will no longer reload the page --&amp;#x3E; &amp;#x3C;form v-on:submit.prevent=&amp;#x22;onSubmit&amp;#x22;&amp;#x3E;&amp;#x3C;/form&amp;#x3E; &amp;#x3C;!-- modifiers can be chained --&amp;#x3E; &amp;#x3C;a v-on:click.stop.prevent=&amp;#x22;doThat&amp;#x22;&amp;#x3E;&amp;#x3C;/a&amp;#x3E; &amp;#x3C;!-- just the modifier --&amp;#x3E; &amp;#x3C;form v-on:submit.prevent&amp;#x3E;&amp;#x3C;/form&amp;#x3E; &amp;#x3C;!-- use capture mode when adding the event listener --&amp;#x3E; &amp;#x3C;!-- i.e. an event targeting an inner element is handled here before being handled by that element --&amp;#x3E; &amp;#x3C;div v-on:click.capture=&amp;#x22;doThis&amp;#x22;&amp;#x3E;...&amp;#x3C;/div&amp;#x3E; &amp;#x3C;!-- only trigger handler if event.target is the element itself --&amp;#x3E; &amp;#x3C;!-- i.e. not from a child element --&amp;#x3E; &amp;#x3C;div v-on:click.self=&amp;#x22;doThat&amp;#x22;&amp;#x3E;...&amp;#x3C;/div&amp;#x3E; هنگام استفاده از modifiers ، موارد مهم را مرتب کنید زیرا کد مربوطه به همان ترتیب تولید می شود. بنابراین استفاده از v-on:click.prevent.self از کلیه کلیکها جلوگیری می کند در حالی که v-on:click.self.prevent فقط از کلیک روی خود عنصر جلوگیری می کند. در نسخه New in 2.1.4+ &amp;#x3C;!-- the click event will be triggered at most once --&amp;#x3E; &amp;#x3C;a v-on:click.once=&amp;#x22;doThis&amp;#x22;&amp;#x3E;&amp;#x3C;/a&amp;#x3E; بر خلاف اصلاح کننده های دیگر ، که منحصر به رویدادهای DOM بومی هستند ، از اصلاح کننده once. نیز می توانید در رویدادهای کامپوننت استفاده کنید. در نسخه New in 2.3.0+ &amp;#x3C;!-- the scroll event&amp;#x27;s default behavior (scrolling) will happen --&amp;#x3E; &amp;#x3C;!-- immediately, instead of waiting for &amp;#x60;onScroll&amp;#x60; to complete --&amp;#x3E; &amp;#x3C;!-- in case it contains &amp;#x60;event.preventDefault()&amp;#x60; --&amp;#x3E; &amp;#x3C;div v-on:scroll.passive=&amp;#x22;onScroll&amp;#x22;&amp;#x3E;...&amp;#x3C;/div&amp;#x3E; اصلاح کننده passive. مخصوصاً برای بهبود عملکرد در دستگاه های تلفن همراه مفید است. از passive. و .prevent با یکدیگر استفاده نکنید ، زیرا prevent. نادیده گرفته می شود و مرورگر شما احتمالاً هشداری را به شما نشان می دهد. به یاد داشته باشید ، passive. با مرورگر ارتباط برقرار می کند که نمی خواهید از عملکرد پیش فرض رویداد جلوگیری کند. کار با کیبورد (Key Modifiers) هنگام گوش دادن به رویدادهای صفحه کلید ، اغلب باید کلیدهای خاص را بررسی کنیم. Vue اجازه می دهد تا هنگام گوش دادن به رویدادهای کلیدی ، اصلاح کننده های کیبورد (key modifiers) را برای v-on اضافه کنید: &amp;#x3C;!-- only call &amp;#x60;vm.submit()&amp;#x60; when the &amp;#x60;key&amp;#x60; is &amp;#x60;Enter&amp;#x60; --&amp;#x3E; &amp;#x3C;input v-on:keyup.enter=&amp;#x22;submit&amp;#x22;&amp;#x3E; می توانید مستقیماً از نامهای کلید معتبری که از طریق KeyboardEvent.key در معرض مدیریت هستند با تغییر نام آنها بصورت kebab-case استفاده کنید. &amp;#x3C;input v-on:keyup.page-down=&amp;#x22;onPageDown&amp;#x22;&amp;#x3E; در مثال بالا، مدیریت کننده رویداد زمانی فراخوانی می شود که event.key$ برابر با &#39;PageDown&#39; باشد. استفاده از (Key Codes) استفاده از رویدادهای keyCode ممکن است در مرورگرهای جدید پشتیبانی نشود. استفاده از ویژگی های keyCode نیز مجاز است: &amp;#x3C;input v-on:keyup.13=&amp;#x22;submit&amp;#x22;&amp;#x3E; Vue در صورت لزوم برای پشتیبانی از مرورگرها ، نامهای متداول را برای متداول ترین کدهای کلیدی فراهم می کند: .enter .tab .delete (captures both “Delete” and “Backspace” keys) .esc .space .up .down .left .right چند کلید (esc. و تمام کلیدهای جهت دار) در IE9 دارای مقادیر کلیدی متناقض هستند ، بنابراین در صورت نیاز به پشتیبانی از IE9 ، این مستعارهای داخلی ترجیح داده می شوند. همچنین می توانید نام مستعار اصلاح کننده کلید سفارشی (define custom key modifier aliases) را از طریق شیء سراسری config.keyCodes تعریف کنید: // enable `v-on:keyup.f1` Vue.config.keyCodes.f1 = 112 System Modifier Keys در New in 2.1.0+ : شما می توانید از modifiers زیر جهت شنود رویدادهای موس یا کیبورد فقط زمانیکه کلید اصلاح کننده مربوطه فشرده شد استفاده نمایید: .ctrl .alt .shift .meta توجه: در کیبوردهایMacintosh ، دکمه meta کلید (⌘) است. در کیبوردهای ویندوز ، دکمه meta کلید (⊞) است. در کیبوردSun Microsystems ، متا به عنوان یک الماس جامد (◆) مشخص شده است. در کیبوردهای خاص ، به طور خاص صفحه کلیدها و جانشینان دستگاههای MIT و Lisp ، مانند کیبورد نایت ، کیبوردcadet فضایی ، متا با عنوان &quot;META&quot; شناخته می شوند. در کیبوردهایSymbolics ، متا با &quot;META&quot; یا &quot;متا&quot; شناخته می شوند. برای مثال: &amp;#x3C;!-- Alt + C --&amp;#x3E; &amp;#x3C;input @keyup.alt.67=&amp;#x22;clear&amp;#x22;&amp;#x3E; &amp;#x3C;!-- Ctrl + Click --&amp;#x3E; &amp;#x3C;div @click.ctrl=&amp;#x22;doSomething&amp;#x22;&amp;#x3E;Do something&amp;#x3C;/div&amp;#x3E; توجه داشته باشید که کلیدهای اصلاح کننده با کلیدهای معمولی متفاوت هستند و در هنگام استفاده از وقایع Keyup ، هنگام انتشار رویداد باید فشرده شوند. به عبارت دیگر ، keyup.ctrl تنها در صورت رها کردن کلید در حالی که ctrl را رها می کنید ، شروع می شود. اگر کلید ctrl را به تنهایی آزاد کنید ، رویدادی ایجاد نمی شود. اگر چنین رفتاری را می خواهید ، به جای آن از کلید keycode برای ctrl استفاده کنید: keyup.17. .exact Modifier در نسخه New in 2.5.0+ : اصلاح کننده exact. اجازه می دهد تا کنترل ترکیب دقیق اصلاح کننده های سیستم مورد نیاز برای ایجاد یک رویداد را کنترل کنید. &amp;#x3C;!-- this will fire even if Alt or Shift is also pressed --&amp;#x3E; &amp;#x3C;button @click.ctrl=&amp;#x22;onClick&amp;#x22;&amp;#x3E;A&amp;#x3C;/button&amp;#x3E; &amp;#x3C;!-- this will only fire when Ctrl and no other keys are pressed --&amp;#x3E; &amp;#x3C;button @click.ctrl.exact=&amp;#x22;onCtrlClick&amp;#x22;&amp;#x3E;A&amp;#x3C;/button&amp;#x3E; &amp;#x3C;!-- this will only fire when no system modifiers are pressed --&amp;#x3E; &amp;#x3C;button @click.exact=&amp;#x22;onClick&amp;#x22;&amp;#x3E;A&amp;#x3C;/button&amp;#x3E; Mouse Button Modifiers در نسخه New in 2.2.0+ : .left .right .middle این اصلاح کننده ها کنترل کننده ها را محدود به حوادثی می کنند که توسط یک دکمه ماوس خاص ایجاد می شوند. چرا از شنودندگان در HTML استفاده می کنیم؟ ممکن است شما نگران باشید که تمام این رویکرد گوش دادن به رویداد ، قوانین قدیمی خوب درباره &quot;جدایی نگرانی ها - separation of concerns &quot; را نقض می کند. مطمئن باشید - از آنجا که تمام عملکردها و اصطلاحات انتقال دهنده Vue کاملاً محدود به ViewModel هستند که نمای فعلی را کنترل می کند ، هیچ مشکلی برای نگهداری نخواهد داشت. در حقیقت ، استفاده از v-on فواید زیادی دارد: پیاده سازی تابع کنترل کننده بهمراه کد JS شما با استفاده از قالب html ساده تر است. از آنجا که لازم نیست شنوندگان رویداد را به صورت دستی در JS وصل کنید ، کد ViewModel شما می تواند منطقی ناب و عاری از DOM باشد. این باعث می شود آزمایش آسان تر شود. هنگامی که یک ViewModel از بین می رود ، تمام شنوندگان رویداد به طور خودکار حذف می شوند. نیازی به نگرانی در مورد پاک کردن توسط خودتان نیست." />
+<meta property="og:description" content="گوش دادن به وقایع (Listening to Events) ما می توانیم از دستورالعمل v-on برای گوش دادن به رویدادهای DOM استفاده کنیم و برخی از کدهای جاوا اسکریپت را در هنگام بروز آنها اجرا کنیم. برای مثال: &amp;#x3C;div id=&amp;#x22;example-1&amp;#x22;&amp;#x3E; &amp;#x3C;button v-on:click=&amp;#x22;counter += 1&amp;#x22;&amp;#x3E;Add 1&amp;#x3C;/button&amp;#x3E; &amp;#x3C;p&amp;#x3E;The button above has been clicked &#123;&#123; counter &#125;&#125; times.&amp;#x3C;/p&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var example1 = new Vue({ el: &#39;#example-1&#39;, data: { counter: 0 } }) نتیجه: Add 1 The button above has been clicked &#123;&#123; counter &#125;&#125; times. متدهای کار با رویدادها (Method Event Handlers) منطق برای بسیاری از اداره کنندگان رویدادها پیچیده تر خواهد شد ، بنابراین نگه داشتن کد JavaScript در مقدار ویژگی v-on امکان پذیر نیست. به همین دلیل v-on می تواند نام متدی را که می خواهید آن را فراخوانی نیز بپذیرد. برای مثال: &amp;#x3C;div id=&amp;#x22;example-2&amp;#x22;&amp;#x3E; &amp;#x3C;!-- &amp;#x60;greet&amp;#x60; is the name of a method defined below --&amp;#x3E; &amp;#x3C;button v-on:click=&amp;#x22;greet&amp;#x22;&amp;#x3E;Greet&amp;#x3C;/button&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var example2 = new Vue({ el: &#39;#example-2&#39;, data: { name: &#39;Vue.js&#39; }, // define methods under the `methods` object methods: { greet: function (event) { // `this` inside methods points to the Vue instance alert(&#39;Hello &#39; + this.name + &#39;!&#39;) // `event` is the native DOM event if (event) { alert(event.target.tagName) } } } }) // you can invoke methods in JavaScript too example2.greet() // =&gt; &#39;Hello Vue.js!&#39; Greet کار با متدهای درون خطی (Methods in Inline Handlers) به جای اتصال مستقیم به نام متد ، می توانیم از متدهایی در یک عبارت JavaScript به صورت خطی (inline) نیز استفاده کنیم: &amp;#x3C;div id=&amp;#x22;example-3&amp;#x22;&amp;#x3E; &amp;#x3C;button v-on:click=&amp;#x22;say(&amp;#x27;hi&amp;#x27;)&amp;#x22;&amp;#x3E;Say hi&amp;#x3C;/button&amp;#x3E; &amp;#x3C;button v-on:click=&amp;#x22;say(&amp;#x27;what&amp;#x27;)&amp;#x22;&amp;#x3E;Say what&amp;#x3C;/button&amp;#x3E; &amp;#x3C;/div&amp;#x3E; new Vue({ el: &#39;#example-3&#39;, methods: { say: function (message) { alert(message) } } }) نتیجه: Say hi Say what بعضی اوقات ما نیاز داریم در یک کنترل کننده دستور داخلی (inline statement handler)به رویداد اصلی DOM نیز دسترسی پیدا کنیم. می توانید با استفاده از متغیر ویژه $event آن رویداد را به متد منتقل کنید: &amp;#x3C;button v-on:click=&amp;#x22;warn(&amp;#x27;Form cannot be submitted yet.&amp;#x27;, $event)&amp;#x22;&amp;#x3E; Submit &amp;#x3C;/button&amp;#x3E; // ... methods: { warn: function (message, event) { // now we have access to the native event if (event) event.preventDefault() alert(message) } } Submit اصلاح کننده رویداد (Event Modifiers) این یک نیاز بسیار متداول است که متدهای ()event.preventDefault یا ()event.stopPropagation را در مدیریت رویداد به کار بگیرید. اگرچه ما می توانیم این کار را به راحتی در داخل متدها انجام دهیم ، اما بهتر است که متدها صرفاً در مورد منطق داده ها باشند نه اینکه بخواهند با جزئیات رویداد DOM سروکار داشته باشند. برای رفع این مشکل ، Vue اصلاح کننده رویداد (event modifiers ) را برای v-on فراهم می کند. به یاد بیاورید که event modifiers پسوندهایی با عنوان هستند که توسط یک نقطه مشخص می شوند. .stop .prevent .capture .self .once .passive &amp;#x3C;!-- the click event&amp;#x27;s propagation will be stopped --&amp;#x3E; &amp;#x3C;a v-on:click.stop=&amp;#x22;doThis&amp;#x22;&amp;#x3E;&amp;#x3C;/a&amp;#x3E; &amp;#x3C;!-- the submit event will no longer reload the page --&amp;#x3E; &amp;#x3C;form v-on:submit.prevent=&amp;#x22;onSubmit&amp;#x22;&amp;#x3E;&amp;#x3C;/form&amp;#x3E; &amp;#x3C;!-- modifiers can be chained --&amp;#x3E; &amp;#x3C;a v-on:click.stop.prevent=&amp;#x22;doThat&amp;#x22;&amp;#x3E;&amp;#x3C;/a&amp;#x3E; &amp;#x3C;!-- just the modifier --&amp;#x3E; &amp;#x3C;form v-on:submit.prevent&amp;#x3E;&amp;#x3C;/form&amp;#x3E; &amp;#x3C;!-- use capture mode when adding the event listener --&amp;#x3E; &amp;#x3C;!-- i.e. an event targeting an inner element is handled here before being handled by that element --&amp;#x3E; &amp;#x3C;div v-on:click.capture=&amp;#x22;doThis&amp;#x22;&amp;#x3E;...&amp;#x3C;/div&amp;#x3E; &amp;#x3C;!-- only trigger handler if event.target is the element itself --&amp;#x3E; &amp;#x3C;!-- i.e. not from a child element --&amp;#x3E; &amp;#x3C;div v-on:click.self=&amp;#x22;doThat&amp;#x22;&amp;#x3E;...&amp;#x3C;/div&amp;#x3E; هنگام استفاده از modifiers ، موارد مهم را مرتب کنید زیرا کد مربوطه به همان ترتیب تولید می شود. بنابراین استفاده از v-on:click.prevent.self از کلیه کلیکها جلوگیری می کند در حالی که v-on:click.self.prevent فقط از کلیک روی خود عنصر جلوگیری می کند. در نسخه New in 2.1.4+ &amp;#x3C;!-- the click event will be triggered at most once --&amp;#x3E; &amp;#x3C;a v-on:click.once=&amp;#x22;doThis&amp;#x22;&amp;#x3E;&amp;#x3C;/a&amp;#x3E; بر خلاف اصلاح کننده های دیگر ، که منحصر به رویدادهای DOM بومی هستند ، از اصلاح کننده once. نیز می توانید در رویدادهای کامپوننت استفاده کنید. در نسخه New in 2.3.0+ &amp;#x3C;!-- the scroll event&amp;#x27;s default behavior (scrolling) will happen --&amp;#x3E; &amp;#x3C;!-- immediately, instead of waiting for &amp;#x60;onScroll&amp;#x60; to complete --&amp;#x3E; &amp;#x3C;!-- in case it contains &amp;#x60;event.preventDefault()&amp;#x60; --&amp;#x3E; &amp;#x3C;div v-on:scroll.passive=&amp;#x22;onScroll&amp;#x22;&amp;#x3E;...&amp;#x3C;/div&amp;#x3E; اصلاح کننده passive. مخصوصاً برای بهبود عملکرد در دستگاه های تلفن همراه مفید است. از passive. و .prevent با یکدیگر استفاده نکنید ، زیرا prevent. نادیده گرفته می شود و مرورگر شما احتمالاً هشداری را به شما نشان می دهد. به یاد داشته باشید ، passive. با مرورگر ارتباط برقرار می کند که نمی خواهید از عملکرد پیش فرض رویداد جلوگیری کند. کار با کیبورد (Key Modifiers) هنگام گوش دادن به رویدادهای صفحه کلید ، اغلب باید کلیدهای خاص را بررسی کنیم. Vue اجازه می دهد تا هنگام گوش دادن به رویدادهای کلیدی ، اصلاح کننده های کیبورد (key modifiers) را برای v-on اضافه کنید: &amp;#x3C;!-- only call &amp;#x60;vm.submit()&amp;#x60; when the &amp;#x60;key&amp;#x60; is &amp;#x60;Enter&amp;#x60; --&amp;#x3E; &amp;#x3C;input v-on:keyup.enter=&amp;#x22;submit&amp;#x22;&amp;#x3E; می توانید مستقیماً از نامهای کلید معتبری که از طریق KeyboardEvent.key در معرض مدیریت هستند با تغییر نام آنها بصورت kebab-case استفاده کنید. &amp;#x3C;input v-on:keyup.page-down=&amp;#x22;onPageDown&amp;#x22;&amp;#x3E; در مثال بالا، مدیریت کننده رویداد زمانی فراخوانی می شود که event.key$ برابر با &#39;PageDown&#39; باشد. استفاده از (Key Codes) استفاده از رویدادهای keyCode ممکن است در مرورگرهای جدید پشتیبانی نشود. استفاده از ویژگی های keyCode نیز مجاز است: &amp;#x3C;input v-on:keyup.13=&amp;#x22;submit&amp;#x22;&amp;#x3E; Vue در صورت لزوم برای پشتیبانی از مرورگرها ، نامهای متداول را برای متداول ترین کدهای کلیدی فراهم می کند: .enter .tab .delete (captures both “Delete” and “Backspace” keys) .esc .space .up .down .left .right چند کلید (esc. و تمام کلیدهای جهت دار) در IE9 دارای مقادیر کلیدی متناقض هستند ، بنابراین در صورت نیاز به پشتیبانی از IE9 ، این مستعارهای داخلی ترجیح داده می شوند. همچنین می توانید نام مستعار اصلاح کننده کلید سفارشی (define custom key modifier aliases) را از طریق شیء سراسری config.keyCodes تعریف کنید: // enable `v-on:keyup.f1` Vue.config.keyCodes.f1 = 112 System Modifier Keys در New in 2.1.0+ : شما می توانید از modifiers زیر جهت شنود رویدادهای موس یا کیبورد فقط زمانیکه کلید اصلاح کننده مربوطه فشرده شد استفاده نمایید: .ctrl .alt .shift .meta توجه: در کیبوردهایMacintosh ، دکمه meta کلید (⌘) است. در کیبوردهای ویندوز ، دکمه meta کلید (⊞) است. در کیبوردSun Microsystems ، متا به عنوان یک الماس جامد (◆) مشخص شده است. در کیبوردهای خاص ، به طور خاص صفحه کلیدها و جانشینان دستگاههای MIT و Lisp ، مانند کیبورد نایت ، کیبوردcadet فضایی ، متا با عنوان &quot;META&quot; شناخته می شوند. در کیبوردهایSymbolics ، متا با &quot;META&quot; یا &quot;متا&quot; شناخته می شوند. برای مثال: &amp;#x3C;!-- Alt + C --&amp;#x3E; &amp;#x3C;input @keyup.alt.67=&amp;#x22;clear&amp;#x22;&amp;#x3E; &amp;#x3C;!-- Ctrl + Click --&amp;#x3E; &amp;#x3C;div @click.ctrl=&amp;#x22;doSomething&amp;#x22;&amp;#x3E;Do something&amp;#x3C;/div&amp;#x3E; توجه داشته باشید که کلیدهای اصلاح کننده با کلیدهای معمولی متفاوت هستند و در هنگام استفاده از وقایع Keyup ، هنگام انتشار رویداد باید فشرده شوند. به عبارت دیگر ، keyup.ctrl تنها در صورت رها کردن کلید در حالی که ctrl را رها می کنید ، شروع می شود. اگر کلید ctrl را به تنهایی آزاد کنید ، رویدادی ایجاد نمی شود. اگر چنین رفتاری را می خواهید ، به جای آن از کلید keycode برای ctrl استفاده کنید: keyup.17. .exact Modifier در نسخه New in 2.5.0+ : اصلاح کننده exact. اجازه می دهد تا کنترل ترکیب دقیق اصلاح کننده های سیستم مورد نیاز برای ایجاد یک رویداد را کنترل کنید. &amp;#x3C;!-- this will fire even if Alt or Shift is also pressed --&amp;#x3E; &amp;#x3C;button @click.ctrl=&amp;#x22;onClick&amp;#x22;&amp;#x3E;A&amp;#x3C;/button&amp;#x3E; &amp;#x3C;!-- this will only fire when Ctrl and no other keys are pressed --&amp;#x3E; &amp;#x3C;button @click.ctrl.exact=&amp;#x22;onCtrlClick&amp;#x22;&amp;#x3E;A&amp;#x3C;/button&amp;#x3E; &amp;#x3C;!-- this will only fire when no system modifiers are pressed --&amp;#x3E; &amp;#x3C;button @click.exact=&amp;#x22;onClick&amp;#x22;&amp;#x3E;A&amp;#x3C;/button&amp;#x3E; Mouse Button Modifiers در نسخه New in 2.2.0+ : .left .right .middle این اصلاح کننده ها کنترل کننده ها را محدود به حوادثی می کنند که توسط یک دکمه ماوس خاص ایجاد می شوند. چرا از شنودندگان در HTML استفاده می کنیم؟ ممکن است شما نگران باشید که تمام این رویکرد گوش دادن به رویداد ، قوانین قدیمی خوب درباره &quot;جدایی نگرانی ها - separation of concerns &quot; را نقض می کند. مطمئن باشید - از آنجا که تمام عملکردها و اصطلاحات انتقال دهنده Vue کاملاً محدود به ViewModel هستند که نمای فعلی را کنترل می کند ، هیچ مشکلی برای نگهداری نخواهد داشت. در حقیقت ، استفاده از v-on فواید زیادی دارد: پیاده سازی تابع کنترل کننده بهمراه کد JS شما با استفاده از قالب html ساده تر است. از آنجا که لازم نیست شنوندگان رویداد را به صورت دستی در JS وصل کنید ، کد ViewModel شما می تواند منطقی ناب و عاری از DOM باشد. این باعث می شود آزمایش آسان تر شود. هنگامی که یک ViewModel از بین می رود ، تمام شنوندگان رویداد به طور خودکار حذف می شوند. نیازی به نگرانی در مورد پاک کردن توسط خودتان نیست." />
+<link rel="canonical" href="http://localhost:4000/documentation/vuejs/Essentials/Event-Handling" />
+<meta property="og:url" content="http://localhost:4000/documentation/vuejs/Essentials/Event-Handling" />
+<meta property="og:site_name" content="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-10-11T09:21:42+03:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="کار با رویدادها(Event Handling)" />
+<meta name="twitter:site" content="@farhadmirzapour" />
+<meta name="twitter:creator" content="@Farhad Mirzapour" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"کار با رویدادها(Event Handling)","url":"http://localhost:4000/documentation/vuejs/Essentials/Event-Handling","datePublished":"2019-10-11T09:21:42+03:30","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"dateModified":"2019-10-11T09:21:42+03:30","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/documentation/vuejs/Essentials/Event-Handling"},"author":{"@type":"Person","name":"Farhad Mirzapour"},"description":"گوش دادن به وقایع (Listening to Events) ما می توانیم از دستورالعمل v-on برای گوش دادن به رویدادهای DOM استفاده کنیم و برخی از کدهای جاوا اسکریپت را در هنگام بروز آنها اجرا کنیم. برای مثال: &amp;#x3C;div id=&amp;#x22;example-1&amp;#x22;&amp;#x3E; &amp;#x3C;button v-on:click=&amp;#x22;counter += 1&amp;#x22;&amp;#x3E;Add 1&amp;#x3C;/button&amp;#x3E; &amp;#x3C;p&amp;#x3E;The button above has been clicked &#123;&#123; counter &#125;&#125; times.&amp;#x3C;/p&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var example1 = new Vue({ el: &#39;#example-1&#39;, data: { counter: 0 } }) نتیجه: Add 1 The button above has been clicked &#123;&#123; counter &#125;&#125; times. متدهای کار با رویدادها (Method Event Handlers) منطق برای بسیاری از اداره کنندگان رویدادها پیچیده تر خواهد شد ، بنابراین نگه داشتن کد JavaScript در مقدار ویژگی v-on امکان پذیر نیست. به همین دلیل v-on می تواند نام متدی را که می خواهید آن را فراخوانی نیز بپذیرد. برای مثال: &amp;#x3C;div id=&amp;#x22;example-2&amp;#x22;&amp;#x3E; &amp;#x3C;!-- &amp;#x60;greet&amp;#x60; is the name of a method defined below --&amp;#x3E; &amp;#x3C;button v-on:click=&amp;#x22;greet&amp;#x22;&amp;#x3E;Greet&amp;#x3C;/button&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var example2 = new Vue({ el: &#39;#example-2&#39;, data: { name: &#39;Vue.js&#39; }, // define methods under the `methods` object methods: { greet: function (event) { // `this` inside methods points to the Vue instance alert(&#39;Hello &#39; + this.name + &#39;!&#39;) // `event` is the native DOM event if (event) { alert(event.target.tagName) } } } }) // you can invoke methods in JavaScript too example2.greet() // =&gt; &#39;Hello Vue.js!&#39; Greet کار با متدهای درون خطی (Methods in Inline Handlers) به جای اتصال مستقیم به نام متد ، می توانیم از متدهایی در یک عبارت JavaScript به صورت خطی (inline) نیز استفاده کنیم: &amp;#x3C;div id=&amp;#x22;example-3&amp;#x22;&amp;#x3E; &amp;#x3C;button v-on:click=&amp;#x22;say(&amp;#x27;hi&amp;#x27;)&amp;#x22;&amp;#x3E;Say hi&amp;#x3C;/button&amp;#x3E; &amp;#x3C;button v-on:click=&amp;#x22;say(&amp;#x27;what&amp;#x27;)&amp;#x22;&amp;#x3E;Say what&amp;#x3C;/button&amp;#x3E; &amp;#x3C;/div&amp;#x3E; new Vue({ el: &#39;#example-3&#39;, methods: { say: function (message) { alert(message) } } }) نتیجه: Say hi Say what بعضی اوقات ما نیاز داریم در یک کنترل کننده دستور داخلی (inline statement handler)به رویداد اصلی DOM نیز دسترسی پیدا کنیم. می توانید با استفاده از متغیر ویژه $event آن رویداد را به متد منتقل کنید: &amp;#x3C;button v-on:click=&amp;#x22;warn(&amp;#x27;Form cannot be submitted yet.&amp;#x27;, $event)&amp;#x22;&amp;#x3E; Submit &amp;#x3C;/button&amp;#x3E; // ... methods: { warn: function (message, event) { // now we have access to the native event if (event) event.preventDefault() alert(message) } } Submit اصلاح کننده رویداد (Event Modifiers) این یک نیاز بسیار متداول است که متدهای ()event.preventDefault یا ()event.stopPropagation را در مدیریت رویداد به کار بگیرید. اگرچه ما می توانیم این کار را به راحتی در داخل متدها انجام دهیم ، اما بهتر است که متدها صرفاً در مورد منطق داده ها باشند نه اینکه بخواهند با جزئیات رویداد DOM سروکار داشته باشند. برای رفع این مشکل ، Vue اصلاح کننده رویداد (event modifiers ) را برای v-on فراهم می کند. به یاد بیاورید که event modifiers پسوندهایی با عنوان هستند که توسط یک نقطه مشخص می شوند. .stop .prevent .capture .self .once .passive &amp;#x3C;!-- the click event&amp;#x27;s propagation will be stopped --&amp;#x3E; &amp;#x3C;a v-on:click.stop=&amp;#x22;doThis&amp;#x22;&amp;#x3E;&amp;#x3C;/a&amp;#x3E; &amp;#x3C;!-- the submit event will no longer reload the page --&amp;#x3E; &amp;#x3C;form v-on:submit.prevent=&amp;#x22;onSubmit&amp;#x22;&amp;#x3E;&amp;#x3C;/form&amp;#x3E; &amp;#x3C;!-- modifiers can be chained --&amp;#x3E; &amp;#x3C;a v-on:click.stop.prevent=&amp;#x22;doThat&amp;#x22;&amp;#x3E;&amp;#x3C;/a&amp;#x3E; &amp;#x3C;!-- just the modifier --&amp;#x3E; &amp;#x3C;form v-on:submit.prevent&amp;#x3E;&amp;#x3C;/form&amp;#x3E; &amp;#x3C;!-- use capture mode when adding the event listener --&amp;#x3E; &amp;#x3C;!-- i.e. an event targeting an inner element is handled here before being handled by that element --&amp;#x3E; &amp;#x3C;div v-on:click.capture=&amp;#x22;doThis&amp;#x22;&amp;#x3E;...&amp;#x3C;/div&amp;#x3E; &amp;#x3C;!-- only trigger handler if event.target is the element itself --&amp;#x3E; &amp;#x3C;!-- i.e. not from a child element --&amp;#x3E; &amp;#x3C;div v-on:click.self=&amp;#x22;doThat&amp;#x22;&amp;#x3E;...&amp;#x3C;/div&amp;#x3E; هنگام استفاده از modifiers ، موارد مهم را مرتب کنید زیرا کد مربوطه به همان ترتیب تولید می شود. بنابراین استفاده از v-on:click.prevent.self از کلیه کلیکها جلوگیری می کند در حالی که v-on:click.self.prevent فقط از کلیک روی خود عنصر جلوگیری می کند. در نسخه New in 2.1.4+ &amp;#x3C;!-- the click event will be triggered at most once --&amp;#x3E; &amp;#x3C;a v-on:click.once=&amp;#x22;doThis&amp;#x22;&amp;#x3E;&amp;#x3C;/a&amp;#x3E; بر خلاف اصلاح کننده های دیگر ، که منحصر به رویدادهای DOM بومی هستند ، از اصلاح کننده once. نیز می توانید در رویدادهای کامپوننت استفاده کنید. در نسخه New in 2.3.0+ &amp;#x3C;!-- the scroll event&amp;#x27;s default behavior (scrolling) will happen --&amp;#x3E; &amp;#x3C;!-- immediately, instead of waiting for &amp;#x60;onScroll&amp;#x60; to complete --&amp;#x3E; &amp;#x3C;!-- in case it contains &amp;#x60;event.preventDefault()&amp;#x60; --&amp;#x3E; &amp;#x3C;div v-on:scroll.passive=&amp;#x22;onScroll&amp;#x22;&amp;#x3E;...&amp;#x3C;/div&amp;#x3E; اصلاح کننده passive. مخصوصاً برای بهبود عملکرد در دستگاه های تلفن همراه مفید است. از passive. و .prevent با یکدیگر استفاده نکنید ، زیرا prevent. نادیده گرفته می شود و مرورگر شما احتمالاً هشداری را به شما نشان می دهد. به یاد داشته باشید ، passive. با مرورگر ارتباط برقرار می کند که نمی خواهید از عملکرد پیش فرض رویداد جلوگیری کند. کار با کیبورد (Key Modifiers) هنگام گوش دادن به رویدادهای صفحه کلید ، اغلب باید کلیدهای خاص را بررسی کنیم. Vue اجازه می دهد تا هنگام گوش دادن به رویدادهای کلیدی ، اصلاح کننده های کیبورد (key modifiers) را برای v-on اضافه کنید: &amp;#x3C;!-- only call &amp;#x60;vm.submit()&amp;#x60; when the &amp;#x60;key&amp;#x60; is &amp;#x60;Enter&amp;#x60; --&amp;#x3E; &amp;#x3C;input v-on:keyup.enter=&amp;#x22;submit&amp;#x22;&amp;#x3E; می توانید مستقیماً از نامهای کلید معتبری که از طریق KeyboardEvent.key در معرض مدیریت هستند با تغییر نام آنها بصورت kebab-case استفاده کنید. &amp;#x3C;input v-on:keyup.page-down=&amp;#x22;onPageDown&amp;#x22;&amp;#x3E; در مثال بالا، مدیریت کننده رویداد زمانی فراخوانی می شود که event.key$ برابر با &#39;PageDown&#39; باشد. استفاده از (Key Codes) استفاده از رویدادهای keyCode ممکن است در مرورگرهای جدید پشتیبانی نشود. استفاده از ویژگی های keyCode نیز مجاز است: &amp;#x3C;input v-on:keyup.13=&amp;#x22;submit&amp;#x22;&amp;#x3E; Vue در صورت لزوم برای پشتیبانی از مرورگرها ، نامهای متداول را برای متداول ترین کدهای کلیدی فراهم می کند: .enter .tab .delete (captures both “Delete” and “Backspace” keys) .esc .space .up .down .left .right چند کلید (esc. و تمام کلیدهای جهت دار) در IE9 دارای مقادیر کلیدی متناقض هستند ، بنابراین در صورت نیاز به پشتیبانی از IE9 ، این مستعارهای داخلی ترجیح داده می شوند. همچنین می توانید نام مستعار اصلاح کننده کلید سفارشی (define custom key modifier aliases) را از طریق شیء سراسری config.keyCodes تعریف کنید: // enable `v-on:keyup.f1` Vue.config.keyCodes.f1 = 112 System Modifier Keys در New in 2.1.0+ : شما می توانید از modifiers زیر جهت شنود رویدادهای موس یا کیبورد فقط زمانیکه کلید اصلاح کننده مربوطه فشرده شد استفاده نمایید: .ctrl .alt .shift .meta توجه: در کیبوردهایMacintosh ، دکمه meta کلید (⌘) است. در کیبوردهای ویندوز ، دکمه meta کلید (⊞) است. در کیبوردSun Microsystems ، متا به عنوان یک الماس جامد (◆) مشخص شده است. در کیبوردهای خاص ، به طور خاص صفحه کلیدها و جانشینان دستگاههای MIT و Lisp ، مانند کیبورد نایت ، کیبوردcadet فضایی ، متا با عنوان &quot;META&quot; شناخته می شوند. در کیبوردهایSymbolics ، متا با &quot;META&quot; یا &quot;متا&quot; شناخته می شوند. برای مثال: &amp;#x3C;!-- Alt + C --&amp;#x3E; &amp;#x3C;input @keyup.alt.67=&amp;#x22;clear&amp;#x22;&amp;#x3E; &amp;#x3C;!-- Ctrl + Click --&amp;#x3E; &amp;#x3C;div @click.ctrl=&amp;#x22;doSomething&amp;#x22;&amp;#x3E;Do something&amp;#x3C;/div&amp;#x3E; توجه داشته باشید که کلیدهای اصلاح کننده با کلیدهای معمولی متفاوت هستند و در هنگام استفاده از وقایع Keyup ، هنگام انتشار رویداد باید فشرده شوند. به عبارت دیگر ، keyup.ctrl تنها در صورت رها کردن کلید در حالی که ctrl را رها می کنید ، شروع می شود. اگر کلید ctrl را به تنهایی آزاد کنید ، رویدادی ایجاد نمی شود. اگر چنین رفتاری را می خواهید ، به جای آن از کلید keycode برای ctrl استفاده کنید: keyup.17. .exact Modifier در نسخه New in 2.5.0+ : اصلاح کننده exact. اجازه می دهد تا کنترل ترکیب دقیق اصلاح کننده های سیستم مورد نیاز برای ایجاد یک رویداد را کنترل کنید. &amp;#x3C;!-- this will fire even if Alt or Shift is also pressed --&amp;#x3E; &amp;#x3C;button @click.ctrl=&amp;#x22;onClick&amp;#x22;&amp;#x3E;A&amp;#x3C;/button&amp;#x3E; &amp;#x3C;!-- this will only fire when Ctrl and no other keys are pressed --&amp;#x3E; &amp;#x3C;button @click.ctrl.exact=&amp;#x22;onCtrlClick&amp;#x22;&amp;#x3E;A&amp;#x3C;/button&amp;#x3E; &amp;#x3C;!-- this will only fire when no system modifiers are pressed --&amp;#x3E; &amp;#x3C;button @click.exact=&amp;#x22;onClick&amp;#x22;&amp;#x3E;A&amp;#x3C;/button&amp;#x3E; Mouse Button Modifiers در نسخه New in 2.2.0+ : .left .right .middle این اصلاح کننده ها کنترل کننده ها را محدود به حوادثی می کنند که توسط یک دکمه ماوس خاص ایجاد می شوند. چرا از شنودندگان در HTML استفاده می کنیم؟ ممکن است شما نگران باشید که تمام این رویکرد گوش دادن به رویداد ، قوانین قدیمی خوب درباره &quot;جدایی نگرانی ها - separation of concerns &quot; را نقض می کند. مطمئن باشید - از آنجا که تمام عملکردها و اصطلاحات انتقال دهنده Vue کاملاً محدود به ViewModel هستند که نمای فعلی را کنترل می کند ، هیچ مشکلی برای نگهداری نخواهد داشت. در حقیقت ، استفاده از v-on فواید زیادی دارد: پیاده سازی تابع کنترل کننده بهمراه کد JS شما با استفاده از قالب html ساده تر است. از آنجا که لازم نیست شنوندگان رویداد را به صورت دستی در JS وصل کنید ، کد ViewModel شما می تواند منطقی ناب و عاری از DOM باشد. این باعث می شود آزمایش آسان تر شود. هنگامی که یک ViewModel از بین می رود ، تمام شنوندگان رویداد به طور خودکار حذف می شوند. نیازی به نگرانی در مورد پاک کردن توسط خودتان نیست.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="stylesheet" href="/assets/prisma/prism.css">
+    <!-- favicons and rss -->
+    <link rel="alternate" type="application/rss+xml" title="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" href="/feed.xml">
+    <link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/assets/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/assets/img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- header -->
+<header class="header" role="banner" aria-label="Header">
+    <button class="hamburger-button" onclick="hamburgerMenu();" role="button" aria-label="Hamburger menu button">
+        <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    </button>
+    <a href="/" class="logo" role="link" aria-label="Home">
+        <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo"/>
+    </a>
+    <nav class="navigation" role="navigation" aria-label="Navigation">
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item">
+                <a href="/" class="logo" role="menuitem" aria-label="Home">
+                    <img alt="مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور" src="/assets/img/logo/farhadmirzapour-logo.png" role="img" aria-label="Logo"/>
+                </a>
+            </li>
+            
+            <li role="menuitem"><a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a></li>
+            
+            <li role="menuitem"><a href="/contactus" role="menuitem" aria-label="تماس">تماس</a></li>
+            
+        </ul>
+    </nav>
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox"/>
+        </form>
+    </div>
+</header>
+
+<nav id="hamburger-menu" role="navigation" aria-label="Hamburger menu">
+    <div class="searchbox" role="search" aria-label="Search">
+        <form action="/search" id="searchthis" method="get" role="form" aria-label="Search form">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <input type="search" id="search" name="query" placeholder="Search..." role="textbox" aria-label="Search textbox"/>
+        </form>
+    </div>
+    <div class="home-nav" role="navigation" aria-label="Site navigation">
+        <a href="/" role="menuitem" aria-label="Home">صفحه اصلی</a>
+        
+        <a href="/blog" role="menuitem" aria-label="مقالات">مقالات</a>
+        
+        <a href="/contactus" role="menuitem" aria-label="تماس">تماس</a>
+        
+    </div>
+
+    
+    <div class="doc-nav" role="navigation" aria-label="Documentation navigation">
+        <p role="presentation" aria-label="Category name">
+            اصول آموزش vuejs
+        </p>
+        <ul role="menu" aria-hidden="true" aria-label="Navigation menu">
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/2019/10/11/vuejs.html" class="doc-link" role="link" aria-label="کار با رویدادها(Event Handling)">مقدمه</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/The-Vue-Instance" class="doc-link" role="link" aria-label="ایجاد نمونه Vue">ایجاد نمونه Vue</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Template-Syntax" class="doc-link" role="link" aria-label="اصول قالب در Vue">اصول قالب در Vue</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Computed-Properties-and-Watchers" class="doc-link" role="link" aria-label="خاصیت Computed و Watchers">خاصیت Computed و Watchers</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Class-and-Style-Bindings" class="doc-link" role="link" aria-label="اتصال Class و Style">اتصال Class و Style</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Conditional-Rendering" class="doc-link" role="link" aria-label="رندرینگ شرطی  (Conditional Rendering)">رندرینگ شرطی  (Conditional Rendering)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/List-Rendering" class="doc-link" role="link" aria-label="رندر List (List Rendering)">رندر List (List Rendering)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Event-Handling" class="doc-link" role="link" aria-label="کار با رویدادها(Event Handling)">کار با رویدادها(Event Handling)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Form-Input-Bindings" class="doc-link" role="link" aria-label="اتصال داده به ورودی فرم (Form Input Bindings)">اتصال داده به ورودی فرم (Form Input Bindings)</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Essentials/Components-Basics" class="doc-link" role="link" aria-label="اصول پایه Component">اصول پایه Component</a></li>
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Components-In-Depth/Component-Registration" class="doc-link" role="link" aria-label="ثبت Component">ثبت Component</a></li>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <li role="menuitem" aria-label="Navigation menu item"><a href="/documentation/vuejs/Components-In-Depth/components-props" class="doc-link" role="link" aria-label="props">props</a></li>
+            
+            
+        </ul>
+    </div>
+    
+</nav>
+<!-- main content -->
+<main class="container" role="main">
+    <div class="rcdoccontainerimg">
+<div class="rc-DRTVBanner-new rc-DRTVBanner-bigsize">
+    <div style="background: url('/images/original/vuejs.jpg'); " class="blurred_img"></div>
+    <div class="mask"></div>
+    <div class="bot"></div>
+    <div class="over">
+        <div class="container-rc">
+            <img class="image" src="/images/original/vuejs.jpg" alt="کار با رویدادها(Event Handling)" height="190">
+            <div class="desktop-banner-container">
+                <h1 class="display-5-text headline">
+                    
+                    
+                    اصول آموزش vuejs
+                    </h1>
+                <!--<div class="tagslist"><ul class='lyda-tag-list'><li class='lyda-tag-list-title'>برچسب ها</li><li><a class="tags" href="/tag/لاراول">#لاراول</a></li><li><a class="tags" href="/tag/لاراول-5-5">#لاراول 5.5</a></li></ul></div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="bread-crumb">-->
+<!--<div class="container   ">-->
+<!--<div class="pull-right ">-->
+<!--<div class="bread-button text-custom b-left">-->
+<!--انتشار : 2 ماه پیش-->
+<!--</div>-->
+<!--<a href="/category/article/" class="bread-button back-to-all b-left hidden-xs">همه مقالات</a>-->
+<!--<div class="cat-lable">-->
+<!--<a href="/category/article/laravel/">-->
+<!--لاراول-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<script>
+    $(window).scroll(function(){
+        var sticky = $('.doc-menu'),
+            scroll = $(window).scrollTop();
+        if (scroll >= 101) {sticky.addClass('doc-header-scroll'); }
+        else {sticky.removeClass('doc-header-scroll'); };
+    });
+</script>
+</div>
+<div class="doc-container">
+
+    <div class="doc-menu">
+    
+    <ul>
+        <li>
+            <a  href="/2019/10/11/vuejs.html" class="active doc-link" role="link">
+                مقدمه
+            </a>
+        </li>
+        
+        <li>
+            <span class="caret">مفاهیم اساسی</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="ایجاد نمونه Vue" href="/documentation/vuejs/Essentials/The-Vue-Instance" class="active doc-link" role="link">
+                ایجاد نمونه Vue
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول قالب در Vue" href="/documentation/vuejs/Essentials/Template-Syntax" class="active doc-link" role="link">
+                اصول قالب در Vue
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="خاصیت Computed و Watchers" href="/documentation/vuejs/Essentials/Computed-Properties-and-Watchers" class="active doc-link" role="link">
+                خاصیت Computed و Watchers
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اتصال Class و Style" href="/documentation/vuejs/Essentials/Class-and-Style-Bindings" class="active doc-link" role="link">
+                اتصال Class و Style
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="رندرینگ شرطی  (Conditional Rendering)" href="/documentation/vuejs/Essentials/Conditional-Rendering" class="active doc-link" role="link">
+                رندرینگ شرطی  (Conditional Rendering)
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="رندر List (List Rendering)" href="/documentation/vuejs/Essentials/List-Rendering" class="active doc-link" role="link">
+                رندر List (List Rendering)
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="کار با رویدادها(Event Handling)" href="/documentation/vuejs/Essentials/Event-Handling" class="active doc-link" role="link">
+                کار با رویدادها(Event Handling)
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اتصال داده به ورودی فرم (Form Input Bindings)" href="/documentation/vuejs/Essentials/Form-Input-Bindings" class="active doc-link" role="link">
+                اتصال داده به ورودی فرم (Form Input Bindings)
+            </a>
+        </li>
+        
+        
+        
+        <li>
+            <a title="اصول پایه Component" href="/documentation/vuejs/Essentials/Components-Basics" class="active doc-link" role="link">
+                اصول پایه Component
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+            </ul>
+        </li>
+        
+        <li>
+            <span class="caret">کامپوننت ها</span>
+            <ul>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="ثبت Component" href="/documentation/vuejs/Components-In-Depth/Component-Registration" class="active doc-link" role="link">
+                ثبت Component
+            </a>
+        </li>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <li>
+            <a title="props" href="/documentation/vuejs/Components-In-Depth/components-props" class="active doc-link" role="link">
+                props
+            </a>
+        </li>
+        
+        
+            </ul>
+        </li>
+        
+    </ul>
+    
+</div>
+
+    <article class="documentation">
+        <header class="doc-header">
+            <div class="time">
+                    تاریخ :      جمعه 19 مهر 1398
+            </div>
+                
+        </header>
+        <section class="anchored">
+            <h3>گوش دادن به وقایع (Listening to Events)</h3>
+<p>
+ما می توانیم از دستورالعمل v-on برای گوش دادن به رویدادهای DOM استفاده کنیم و برخی از کدهای جاوا اسکریپت را در هنگام بروز آنها اجرا کنیم.
+</p>
+
+<p>
+برای مثال:
+</p>
+
+<pre><code class="language-html  line-numbers">&#x3C;div id=&#x22;example-1&#x22;&#x3E;
+  &#x3C;button v-on:click=&#x22;counter += 1&#x22;&#x3E;Add 1&#x3C;/button&#x3E;
+  &#x3C;p&#x3E;The button above has been clicked &#123;&#123; counter &#125;&#125; times.&#x3C;/p&#x3E;
+&#x3C;/div&#x3E;
+</code></pre>
+
+<pre><code class="language-javascript  line-numbers">var example1 = new Vue({
+  el: '#example-1',
+  data: {
+    counter: 0
+  }
+})
+</code></pre>
+
+<p>نتیجه:</p>
+<div id="app1" class="result-example">
+<button v-on:click="counter += 1">Add 1</button>
+  <p>The button above has been clicked &#123;&#123; counter &#125;&#125; times.</p>
+</div>
+
+<p><br /></p>
+
+<h3>متدهای کار با رویدادها (Method Event Handlers)</h3>
+<p>
+منطق برای بسیاری از اداره کنندگان رویدادها پیچیده تر خواهد شد ، بنابراین نگه داشتن کد JavaScript در مقدار  ویژگی v-on امکان پذیر نیست. به همین دلیل v-on می تواند نام متدی را که می خواهید  آن را فراخوانی نیز بپذیرد.
+</p>
+<p>
+برای مثال:
+</p>
+
+<pre><code class="language-html  line-numbers">&#x3C;div id=&#x22;example-2&#x22;&#x3E;
+  &#x3C;!-- &#x60;greet&#x60; is the name of a method defined below --&#x3E;
+  &#x3C;button v-on:click=&#x22;greet&#x22;&#x3E;Greet&#x3C;/button&#x3E;
+&#x3C;/div&#x3E;
+</code></pre>
+
+<pre><code class="language-javascript  line-numbers">var example2 = new Vue({
+  el: '#example-2',
+  data: {
+    name: 'Vue.js'
+  },
+  // define methods under the `methods` object
+  methods: {
+    greet: function (event) {
+      // `this` inside methods points to the Vue instance
+      alert('Hello ' + this.name + '!')
+      // `event` is the native DOM event
+      if (event) {
+        alert(event.target.tagName)
+      }
+    }
+  }
+})
+
+// you can invoke methods in JavaScript too
+example2.greet() // =&gt; 'Hello Vue.js!'
+</code></pre>
+<div id="app2" class="result-example">
+  <!-- `greet` is the name of a method defined below -->
+  <button v-on:click="greet">Greet</button>
+</div>
+<p><br /></p>
+
+<h3>کار با متدهای درون خطی (Methods in Inline Handlers)</h3>
+<p>
+به جای اتصال مستقیم به نام متد ، می توانیم از متدهایی در یک عبارت JavaScript به صورت خطی (inline)  نیز استفاده کنیم:
+</p>
+
+<pre><code class="language-html  line-numbers">&#x3C;div id=&#x22;example-3&#x22;&#x3E;
+  &#x3C;button v-on:click=&#x22;say(&#x27;hi&#x27;)&#x22;&#x3E;Say hi&#x3C;/button&#x3E;
+  &#x3C;button v-on:click=&#x22;say(&#x27;what&#x27;)&#x22;&#x3E;Say what&#x3C;/button&#x3E;
+&#x3C;/div&#x3E;
+</code></pre>
+
+<pre><code class="language-javascript  line-numbers">new Vue({
+  el: '#example-3',
+  methods: {
+    say: function (message) {
+      alert(message)
+    }
+  }
+})
+</code></pre>
+
+<p>
+نتیجه:
+</p>
+
+<div id="app3" class="result-example">
+  <button v-on:click="say('hi')">Say hi</button>
+  <button v-on:click="say('what')">Say what</button>
+</div>
+
+<p>
+بعضی اوقات ما نیاز داریم در یک کنترل کننده دستور داخلی  (inline statement handler)به رویداد اصلی DOM نیز دسترسی پیدا کنیم. می توانید با استفاده از متغیر ویژه $event آن رویداد را به متد منتقل کنید:
+</p>
+
+<pre><code class="language-html  line-numbers">&#x3C;button v-on:click=&#x22;warn(&#x27;Form cannot be submitted yet.&#x27;, $event)&#x22;&#x3E;
+  Submit
+&#x3C;/button&#x3E;
+</code></pre>
+
+<pre><code class="language-javascript  line-numbers">// ...
+methods: {
+  warn: function (message, event) {
+    // now we have access to the native event
+    if (event) event.preventDefault()
+    alert(message)
+  }
+}
+</code></pre>
+<div id="app4" class="result-example">
+<button v-on:click="warn('Form cannot be submitted yet.', $event)">
+  Submit
+</button>
+</div>
+<p><br /></p>
+
+<h3>اصلاح کننده رویداد (Event Modifiers)</h3>
+
+<p>
+این یک نیاز بسیار متداول است که متدهای ()event.preventDefault   یا ()event.stopPropagation   را در مدیریت رویداد به کار بگیرید. اگرچه ما می توانیم این کار را به راحتی در داخل متدها انجام دهیم ، اما بهتر  است که متدها صرفاً در مورد منطق داده ها باشند نه اینکه بخواهند با جزئیات رویداد DOM سروکار داشته باشند.
+</p>
+
+<p>
+برای رفع این مشکل ،  Vue اصلاح کننده رویداد  (event modifiers ) را برای v-on فراهم می کند. به یاد بیاورید که event modifiers پسوندهایی با عنوان هستند که توسط یک نقطه مشخص می شوند.
+</p>
+
+<p style="direction: ltr;text-align: left">
+<ul style="direction: ltr;text-align: left">
+<li><code>.stop</code></li>
+<li><code>.prevent</code></li>
+<li><code>.capture</code></li>
+<li><code>.self</code></li>
+<li><code>.once</code></li>
+<li><code>.passive</code></li>
+</ul>
+</p>
+
+<pre><code class="language-html  line-numbers">&#x3C;!-- the click event&#x27;s propagation will be stopped --&#x3E;
+&#x3C;a v-on:click.stop=&#x22;doThis&#x22;&#x3E;&#x3C;/a&#x3E;
+
+&#x3C;!-- the submit event will no longer reload the page --&#x3E;
+&#x3C;form v-on:submit.prevent=&#x22;onSubmit&#x22;&#x3E;&#x3C;/form&#x3E;
+
+&#x3C;!-- modifiers can be chained --&#x3E;
+&#x3C;a v-on:click.stop.prevent=&#x22;doThat&#x22;&#x3E;&#x3C;/a&#x3E;
+
+&#x3C;!-- just the modifier --&#x3E;
+&#x3C;form v-on:submit.prevent&#x3E;&#x3C;/form&#x3E;
+
+&#x3C;!-- use capture mode when adding the event listener --&#x3E;
+&#x3C;!-- i.e. an event targeting an inner element is handled here before being handled by that element --&#x3E;
+&#x3C;div v-on:click.capture=&#x22;doThis&#x22;&#x3E;...&#x3C;/div&#x3E;
+
+&#x3C;!-- only trigger handler if event.target is the element itself --&#x3E;
+&#x3C;!-- i.e. not from a child element --&#x3E;
+&#x3C;div v-on:click.self=&#x22;doThat&#x22;&#x3E;...&#x3C;/div&#x3E;
+</code></pre>
+
+<blockquote class="has-icon tip">
+هنگام استفاده از modifiers ، موارد مهم را مرتب کنید زیرا کد مربوطه به همان ترتیب تولید می شود. بنابراین استفاده از v-on:click.prevent.self  از کلیه کلیکها جلوگیری می کند در حالی که v-on:click.self.prevent   فقط از کلیک روی خود عنصر جلوگیری می کند.
+</blockquote>
+
+<p>
+در نسخه New in 2.1.4+
+</p>
+
+<pre><code class="language-html  line-numbers">&#x3C;!-- the click event will be triggered at most once --&#x3E;
+&#x3C;a v-on:click.once=&#x22;doThis&#x22;&#x3E;&#x3C;/a&#x3E;
+</code></pre>
+
+<p>
+بر خلاف اصلاح کننده های دیگر ، که منحصر به رویدادهای DOM بومی هستند ، از اصلاح کننده  once.  نیز می توانید در رویدادهای کامپوننت استفاده کنید.
+</p>
+
+<p>
+در نسخه New in 2.3.0+
+</p>
+
+<pre><code class="language-html  line-numbers">&#x3C;!-- the scroll event&#x27;s default behavior (scrolling) will happen --&#x3E;
+&#x3C;!-- immediately, instead of waiting for &#x60;onScroll&#x60; to complete  --&#x3E;
+&#x3C;!-- in case it contains &#x60;event.preventDefault()&#x60;                --&#x3E;
+&#x3C;div v-on:scroll.passive=&#x22;onScroll&#x22;&#x3E;...&#x3C;/div&#x3E;
+</code></pre>
+
+<p>
+اصلاح کننده passive.  مخصوصاً برای بهبود عملکرد در دستگاه های تلفن همراه مفید است.
+</p>
+
+<blockquote class="has-icon tip">
+از  passive.  و .prevent  با یکدیگر استفاده نکنید ، زیرا prevent.  نادیده گرفته می شود و مرورگر شما احتمالاً هشداری را به شما نشان می دهد. به یاد داشته باشید ، passive.  با مرورگر ارتباط برقرار می کند که نمی خواهید از عملکرد پیش فرض رویداد جلوگیری کند.
+</blockquote>
+
+<p><br /></p>
+
+<h3>کار با کیبورد  (Key Modifiers)</h3>
+
+<p>
+هنگام گوش دادن به رویدادهای صفحه کلید ، اغلب باید کلیدهای خاص را بررسی کنیم. Vue اجازه می دهد تا هنگام گوش دادن به رویدادهای کلیدی ، اصلاح کننده های کیبورد (key modifiers) را برای v-on اضافه کنید:
+</p>
+
+<pre><code class="language-html  line-numbers">&#x3C;!-- only call &#x60;vm.submit()&#x60; when the &#x60;key&#x60; is &#x60;Enter&#x60; --&#x3E;
+&#x3C;input v-on:keyup.enter=&#x22;submit&#x22;&#x3E;
+</code></pre>
+
+<p>
+می توانید مستقیماً از نامهای کلید معتبری که از طریق KeyboardEvent.key در معرض مدیریت هستند با تغییر نام آنها بصورت  kebab-case استفاده کنید.
+</p>
+
+<pre><code class="language-html  line-numbers">&#x3C;input v-on:keyup.page-down=&#x22;onPageDown&#x22;&#x3E;
+</code></pre>
+
+<p>
+در مثال بالا، مدیریت کننده رویداد زمانی فراخوانی می شود که event.key$  برابر با 'PageDown' باشد.
+</p>
+
+<p><br /></p>
+
+<h4>استفاده از   (Key Codes)</h4>
+
+<blockquote class="has-icon tip">
+استفاده از رویدادهای keyCode  ممکن است در مرورگرهای جدید پشتیبانی نشود.
+</blockquote>
+
+<p>
+استفاده از ویژگی های keyCode نیز مجاز است:
+</p>
+
+<pre><code class="language-html  line-numbers">&#x3C;input v-on:keyup.13=&#x22;submit&#x22;&#x3E;
+</code></pre>
+
+<p>
+Vue در صورت لزوم برای پشتیبانی از مرورگرها ، نامهای متداول را برای متداول ترین کدهای کلیدی فراهم می کند:
+</p>
+
+<p style="direction: ltr;text-align: left">
+<ul style="direction: ltr;text-align: left">
+<li><code>.enter</code></li>
+<li><code>.tab</code></li>
+<li><code>.delete</code> (captures both “Delete” and “Backspace” keys)</li>
+<li><code>.esc</code></li>
+<li><code>.space</code></li>
+<li><code>.up</code></li>
+<li><code>.down</code></li>
+<li><code>.left</code></li>
+<li><code>.right</code></li>
+</ul>
+</p>
+
+<p>
+چند کلید (esc. و تمام کلیدهای جهت دار) در IE9 دارای مقادیر کلیدی متناقض هستند ، بنابراین در صورت نیاز به پشتیبانی از IE9 ، این مستعارهای داخلی ترجیح داده می شوند.
+</p>
+
+<p>
+همچنین می توانید نام مستعار اصلاح کننده کلید سفارشی   (<a href="https://vuejs.org/v2/api/#keyCodes" target="_blank">define custom key modifier aliases</a>) را از طریق شیء سراسری config.keyCodes تعریف کنید:
+</p>
+
+<pre><code class="language-javascript  line-numbers">// enable `v-on:keyup.f1`
+Vue.config.keyCodes.f1 = 112
+</code></pre>
+
+<p><br /></p>
+
+<h3>System Modifier Keys</h3>
+
+<p>
+در New in 2.1.0+ :
+</p>
+
+<p>
+شما می توانید از modifiers زیر جهت شنود رویدادهای موس یا کیبورد فقط زمانیکه کلید اصلاح کننده مربوطه فشرده شد استفاده نمایید:
+</p>
+
+<p style="direction: ltr;text-align: left">
+<ul style="direction: ltr;text-align: left">
+<li><code>.ctrl</code></li>
+<li><code>.alt</code></li>
+<li><code>.shift</code></li>
+<li><code>.meta</code></li>
+</ul>
+</p>
+
+<blockquote class="has-icon tip">
+توجه: در کیبوردهایMacintosh ، دکمه meta کلید (⌘) است. در کیبوردهای ویندوز ، دکمه meta کلید (⊞) است. در کیبوردSun Microsystems ، متا به عنوان یک الماس جامد (◆) مشخص شده است. در کیبوردهای خاص ، به طور خاص صفحه کلیدها و جانشینان دستگاههای MIT و Lisp ، مانند کیبورد نایت ، کیبوردcadet فضایی ، متا با عنوان "META" شناخته می شوند. در کیبوردهایSymbolics ، متا با "META" یا "متا" شناخته می شوند.
+</blockquote>
+
+<p>
+برای مثال:
+</p>
+
+<pre><code class="language-html  line-numbers">&#x3C;!-- Alt + C --&#x3E;
+&#x3C;input @keyup.alt.67=&#x22;clear&#x22;&#x3E;
+
+&#x3C;!-- Ctrl + Click --&#x3E;
+&#x3C;div @click.ctrl=&#x22;doSomething&#x22;&#x3E;Do something&#x3C;/div&#x3E;
+</code></pre>
+
+<blockquote class="has-icon tip">
+توجه داشته باشید که کلیدهای اصلاح کننده با کلیدهای معمولی متفاوت هستند و در هنگام استفاده از وقایع Keyup ، هنگام انتشار رویداد باید فشرده شوند. به عبارت دیگر ، keyup.ctrl تنها در صورت رها کردن کلید در حالی که ctrl را رها می کنید ، شروع می شود. اگر کلید ctrl را به تنهایی آزاد کنید ، رویدادی ایجاد نمی شود. اگر چنین رفتاری را می خواهید ، به جای آن از کلید keycode برای ctrl استفاده کنید: keyup.17.
+</blockquote>
+
+<p><br /></p>
+
+<h3>.exact Modifier</h3>
+<p>
+در نسخه New in 2.5.0+ :
+</p>
+
+<p>
+اصلاح کننده exact.  اجازه می دهد تا کنترل ترکیب دقیق اصلاح کننده های سیستم مورد نیاز برای ایجاد یک رویداد را کنترل کنید.
+</p>
+
+<pre><code class="language-html  line-numbers">&#x3C;!-- this will fire even if Alt or Shift is also pressed --&#x3E;
+&#x3C;button @click.ctrl=&#x22;onClick&#x22;&#x3E;A&#x3C;/button&#x3E;
+
+&#x3C;!-- this will only fire when Ctrl and no other keys are pressed --&#x3E;
+&#x3C;button @click.ctrl.exact=&#x22;onCtrlClick&#x22;&#x3E;A&#x3C;/button&#x3E;
+
+&#x3C;!-- this will only fire when no system modifiers are pressed --&#x3E;
+&#x3C;button @click.exact=&#x22;onClick&#x22;&#x3E;A&#x3C;/button&#x3E;
+</code></pre>
+
+<p><br /></p>
+
+<h3>Mouse Button Modifiers</h3>
+<p>
+در نسخه New in 2.2.0+ :
+</p>
+
+<p style="direction: ltr;text-align: left">
+<ul style="direction: ltr;text-align: left">
+<li><code>.left</code></li>
+<li><code>.right</code></li>
+<li><code>.middle</code></li>
+</ul>
+</p>
+
+<p>
+این اصلاح کننده ها کنترل کننده ها را محدود به حوادثی می کنند که توسط یک دکمه ماوس خاص ایجاد می شوند.
+</p>
+
+<p><br /></p>
+
+<h3>چرا از شنودندگان در HTML استفاده می کنیم؟</h3>
+
+<p>
+ممکن است شما نگران باشید که تمام این رویکرد گوش دادن به رویداد ، قوانین قدیمی خوب درباره "جدایی نگرانی ها - separation of concerns " را نقض می کند. مطمئن باشید - از آنجا که تمام عملکردها و اصطلاحات انتقال دهنده Vue کاملاً محدود به ViewModel هستند که نمای فعلی را کنترل می کند ، هیچ مشکلی برای نگهداری نخواهد داشت. در حقیقت ، استفاده از v-on فواید زیادی دارد:
+</p>
+
+<p>
+<ul>
+<li>
+پیاده سازی تابع کنترل کننده بهمراه کد JS شما با استفاده از قالب html ساده تر است.
+</li>
+<li>
+از آنجا که لازم نیست شنوندگان رویداد را به صورت دستی در JS وصل کنید ، کد ViewModel شما می تواند منطقی ناب و عاری از DOM باشد. این باعث می شود آزمایش آسان تر شود.
+</li>
+<li>
+هنگامی که یک ViewModel از بین می رود ، تمام شنوندگان رویداد به طور خودکار حذف می شوند. نیازی به نگرانی در مورد پاک کردن توسط خودتان  نیست.
+</li>
+</ul>
+</p>
+
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+<script>
+var app1 = new Vue({
+  el: '#app1',
+  data: {
+    counter: 0
+  }
+})
+
+    var app2 = new Vue({
+        el: '#app2',
+        data: {
+            name: 'Vue.js'
+        },
+        // define methods under the `methods` object
+        methods: {
+            greet: function (event) {
+                // `this` inside methods points to the Vue instance
+                alert('Hello ' + this.name + '!')
+                // `event` is the native DOM event
+                if (event) {
+                    alert(event.target.tagName)
+                }
+            }
+        }
+    })
+
+    // you can invoke methods in JavaScript too
+    app2.greet() // => 'Hello Vue.js!'
+    var app3 = new Vue({
+        el: '#app3',
+        data: {
+            name: 'Vue.js'
+        },
+        // define methods under the `methods` object
+        methods: {
+                say: function (message) {
+                  alert(message)
+                }
+        }
+    })
+</script>
+
+
+        </section>
+        
+<hr>
+<p>
+<div>منابع مورد مطالعه جهت جمع آوری این مطلب:</div>
+<div  class="refrencehref">
+        https://vuejs.org/v2/guide/events.html
+</div>
+</p>
+
+        <hr>
+        <style>
+    #commentsdiv{
+        background-color: #f5f5f5;
+        border: 1px solid #c5c5c5;
+        border-bottom: 0px !important;
+        padding: 12px;
+    }
+    #commentsborder{
+        background-color: #fff;
+        border: 1px solid #c5c5c5;
+        white-space: normal;
+        padding: 20px;
+    }
+</style>
+
+<div id="commentsdiv">نظرات</div>
+<div id="commentsborder">
+<div id="wpac-comment"></div>
+</div>
+<script type="text/javascript">
+wpac_init = window.wpac_init || [];
+wpac_init.push({widget: 'Comment', id: 7878});
+(function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = 'https://embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+})();
+</script>
+
+    </article>
+</div>
+<script src="/assets/js/anchor.min.js"></script>
+<script>
+    anchors.options = {
+        placement: 'left',
+        visible: 'always',
+//        icon: '#',
+    };
+    anchors.add('.anchored h2,.anchored h3,.anchored h4,.anchored h5,.anchored h6');
+
+    (function($){
+        if(window.location.hash) {
+            var hash = decodeURIComponent(window.location.hash);
+            gotohash($(hash).offset().top);
+        }
+        $('a.anchorjs-link').click(function(){
+			gotohash($(this).offset().top);
+        });
+        $('a.anchorjs').click(function(){
+			var id = '#' + $(this).attr('title');
+			gotohash($(id).offset().top);
+        });		
+        function gotohash(top){
+            var headerHeight = 70; // Get fixed header height
+            $('html,body').animate({
+                scrollTop: top - headerHeight
+            }, 20);
+        }
+    })(jQuery);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+   $(document).ready(function (){
+
+     var scrollPosition = getParameterByName('scroll');
+     if(scrollPosition)
+      $(".doc-menu").scrollTop(scrollPosition);
+
+     $('.doc-link').click(function(){
+        var scrollTop = $(".doc-menu").scrollTop();
+        if(scrollTop > 0)
+          $(this).attr("href",this.href + "?scroll=" + $(".doc-menu").scrollTop());
+     });
+
+     function getParameterByName(name, url) {
+        if (!url) {
+          url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+   });
+</script>
+    <div id="back-to-top" role="button" aria-label="Back to top">
+        <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+    </div>
+</main>
+<!-- footer -->
+
+<footer class="footer" role="contentinfo" aria-label="Site footer">
+    <div class="navigation" role="navigation" aria-label="Footer links">
+        <a href="http://localhost:4000" class="avatar" role="link" ></a>
+        <ul role="menubar" aria-label="Footer links menubar">
+            <li class="footer-products" role="menuitem" aria-label="Products">
+                تولیدات
+                <ul role="menu" aria-hidden="true" aria-label="Products link">
+                </ul>
+            </li>
+            <li class="footer-blog" role="menuitem" aria-label="Blog">
+                مقالات
+                <ul role="menu" aria-hidden="true" aria-label="Blog link">
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2020/07/03/marriage.html" role="link" aria-label="ازدواج">ازدواج</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2019/10/11/vuejs.html" role="link" aria-label="آموزش vuejs">آموزش vuejs</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/18/laravel.html" role="link" aria-label="آموزش Laravel">آموزش Laravel</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/articles/2017/12/13/laravelcollective.html" role="link" aria-label="معرفی Laravel Collective">معرفی Laravel Collective</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/2017/12/06/design-patterns.html" role="link" aria-label="معرفی  Design Pattern">معرفی  Design Pattern</a></li>
+                    
+                    <li role="listitem" aria-label="Blog link item"><a href="/blog" role="link" aria-label="Read more">Read More</a></li>
+                </ul>
+            </li>
+
+            <li class="footer-connect" role="menuitem" aria-label="Connect">
+                تماس
+                <ul role="menu" aria-hidden="true" aria-label="Connect link">
+                    <li role="listitem" aria-label="Connect link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub">GitHub</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://www.linkedin.com/in/farhad-mirzapour/" target="_blank" role="link" aria-label="Linkedin">Linkedin</a></li>
+                    <li role="listitem" aria-label="Connect link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter">Twitter</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="socials"  role="navigation" aria-label="Social links">
+        <ul role="menu" aria-hidden="true" aria-label="Social link">
+            <li role="listitem" aria-label="Social link item"><a href="https://github.com/farhadmirzapour" target="_blank" role="link" aria-label="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://twitter.com/farhadmirzapour" target="_blank" role="link" aria-label="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="https://www.linkedin.com/in/farhad-mirzapour-0043b862/" target="_blank" role="link" aria-label="Linkedin"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="/feed.xml" role="link" aria-label="RSS"><i class="fa fa-rss-square" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+    <div class="copyright" role="contentinfo" aria-label="Copyright">
+        <p>&copy; <script type="text/javascript">document.write(new Date().getFullYear());</script> Farhad Mirzapour</p>
+    </div>
+</footer>
+
+<!-- scripts -->
+<script src="/assets/js/hamburger-menu.js"></script>
+
+<script src="/assets/js/elevator.min.js"></script>
+<script src="/assets/js/back-to-top.js"></script>
+<script src="/assets/prisma/prism.js"></script>
+<!-- google analytics -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108878564-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-108878564-1');
+</script>
+
+</body>
+</html>

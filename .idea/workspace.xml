@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="86190f2d-df56-403d-ae77-aef069298cad" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/_documentation/vuejs/Components-In-Depth/components-props.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemfile" beforeDir="false" afterPath="$PROJECT_DIR$/Gemfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gemfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Gemfile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/_config.yml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1QkWld9nHzUAKAsudDWybDa4LcX" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/_documentation/vuejs/Components-In-Depth" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\farha\OneDrive\projects\jekyll\farhadnote\_documentation\vuejs\Components-In-Depth" />
+      <recent name="C:\Users\farha\OneDrive\projects\jekyll\farhadnote\_site\documentation\vuejs\Components-In-Depth" />
+      <recent name="C:\Users\farha\OneDrive\projects\jekyll\farhadnote\_documentation\marriage" />
+      <recent name="C:\Users\farha\OneDrive\projects\jekyll\farhadnote\_documentation" />
+      <recent name="C:\Users\farha\OneDrive\projects\jekyll\farhadnote\_posts" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\farha\OneDrive\projects\jekyll\farhadnote\_documentation\laravel" />
+      <recent name="C:\Users\farha\OneDrive\projects\jekyll\farhadnote\_documentation\Database" />
+      <recent name="C:\Users\farha\OneDrive\projects\jekyll\farhadnote\_documentation\laravel\Digging-Deeper" />
+      <recent name="C:\Users\farha\OneDrive\projects\jekyll\farhadnote\_includes" />
+    </key>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration>C:\Users\farha\AppData\Roaming\Subversion</configuration>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="86190f2d-df56-403d-ae77-aef069298cad" name="Default Changelist" comment="" />
+      <created>1568315227034</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1568315227034</updated>
+      <workItem from="1568315231177" duration="903000" />
+      <workItem from="1568908295798" duration="4248000" />
+      <workItem from="1568988615403" duration="158000" />
+      <workItem from="1569435895657" duration="3871000" />
+      <workItem from="1569506476807" duration="16358000" />
+      <workItem from="1569558678811" duration="30489000" />
+      <workItem from="1569692647234" duration="527000" />
+      <workItem from="1569777929477" duration="2688000" />
+      <workItem from="1569944494925" duration="8606000" />
+      <workItem from="1570118509599" duration="7557000" />
+      <workItem from="1570173048872" duration="11501000" />
+      <workItem from="1570202615421" duration="6201000" />
+      <workItem from="1570296594225" duration="599000" />
+      <workItem from="1570298923601" duration="429000" />
+      <workItem from="1570299372972" duration="1898000" />
+      <workItem from="1570380841486" duration="276000" />
+      <workItem from="1570547395428" duration="8173000" />
+      <workItem from="1570638319269" duration="3775000" />
+      <workItem from="1570706402982" duration="599000" />
+      <workItem from="1570713997882" duration="11386000" />
+      <workItem from="1570772926713" duration="5547000" />
+      <workItem from="1570786177336" duration="14364000" />
+      <workItem from="1570810204303" duration="4052000" />
+      <workItem from="1570972191693" duration="10917000" />
+      <workItem from="1570988501957" duration="3895000" />
+      <workItem from="1571070031929" duration="4613000" />
+      <workItem from="1571157182134" duration="4174000" />
+      <workItem from="1571247416883" duration="3703000" />
+      <workItem from="1571381089869" duration="13008000" />
+      <workItem from="1571465480587" duration="3414000" />
+      <workItem from="1571986594470" duration="599000" />
+      <workItem from="1572595678301" duration="5532000" />
+      <workItem from="1573801011378" duration="5764000" />
+      <workItem from="1573823432638" duration="8355000" />
+      <workItem from="1576824674872" duration="11350000" />
+      <workItem from="1580283137135" duration="458000" />
+      <workItem from="1580286519825" duration="2892000" />
+      <workItem from="1580396298503" duration="991000" />
+      <workItem from="1580453971491" duration="6084000" />
+      <workItem from="1582298555263" duration="621000" />
+      <workItem from="1583498644115" duration="38000" />
+      <workItem from="1583498725920" duration="19000" />
+      <workItem from="1583498762653" duration="24000" />
+      <workItem from="1583498901753" duration="132000" />
+      <workItem from="1586962960611" duration="8829000" />
+      <workItem from="1587103192758" duration="3104000" />
+      <workItem from="1587208985218" duration="4098000" />
+      <workItem from="1593794024395" duration="15190000" />
+      <workItem from="1598289216101" duration="72000" />
+      <workItem from="1598289308729" duration="720000" />
+      <workItem from="1620983127409" duration="1399000" />
+      <workItem from="1620997017424" duration="5412000" />
+      <workItem from="1621576690106" duration="2277000" />
+      <workItem from="1621580677215" duration="8326000" />
+      <workItem from="1621706347362" duration="3618000" />
+      <workItem from="1625582870597" duration="41000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="463" y="119" key="FileChooserDialogImpl" timestamp="1625582895591">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1625582895591" />
+  </component>
+</project>
