@@ -127,9 +127,6 @@ GEM
     jekyll-mentions (1.6.0)
       html-pipeline (~> 2.3)
       jekyll (>= 3.7, < 5.0)
-    jekyll-minimagick (0.0.4)
-      jekyll (>= 0.10.0)
-      mini_magick (>= 3.3)
     jekyll-optional-front-matter (0.3.2)
       jekyll (>= 3.0, < 5.0)
     jekyll-paginate (1.1.0)
@@ -199,7 +196,6 @@ GEM
       gemoji (~> 3.0)
       html-pipeline (~> 2.2)
       jekyll (>= 3.0, < 5.0)
-    json (2.6.3)
     kramdown (2.3.2)
       rexml
     kramdown-parser-gfm (1.1.0)
@@ -209,7 +205,6 @@ GEM
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     mercenary (0.3.6)
-    mini_magick (4.12.0)
     minima (2.5.1)
       jekyll (>= 3.5, < 5.0)
       jekyll-feed (~> 0.9)
@@ -259,21 +254,7 @@ PLATFORMS
 
 DEPENDENCIES
   github-pages
-  jekyll-avatar
   jekyll-include-cache
-  jekyll-mentions
-  jekyll-minimagick
-  jekyll-paginate
-  jekyll-redirect-from
-  jekyll-relative-links
-  jekyll-seo-tag
-  jekyll-sitemap
-  jekyll-titles-from-headings
-  jemoji
-  json (>= 2.0.0)
-  kramdown-parser-gfm (~> 1.1)
-  mini_magick
-  minima (~> 2.0)
   tzinfo-data
   webrick (~> 1.8)
 
