@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-05-22T23:41:59+04:30</updated><id>http://localhost:4000/feed.xml</id><title type="html">مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title><subtitle>مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</subtitle><author><name>Farhad Mirzapour</name></author><entry><title type="html">ازدواج</title><link href="http://localhost:4000/2020/07/03/marriage.html" rel="alternate" type="text/html" title="ازدواج" /><published>2020-07-03T23:00:00+04:30</published><updated>2020-07-03T23:00:00+04:30</updated><id>http://localhost:4000/2020/07/03/marriage</id><content type="html" xml:base="http://localhost:4000/2020/07/03/marriage.html">&lt;h3&gt;ازدواج &lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-07-18T15:52:56+03:30</updated><id>http://localhost:4000/feed.xml</id><title type="html">مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title><subtitle>مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</subtitle><author><name>Farhad Mirzapour</name></author><entry><title type="html">ازدواج</title><link href="http://localhost:4000/2020/07/03/marriage.html" rel="alternate" type="text/html" title="ازدواج" /><published>2020-07-03T23:00:00+04:30</published><updated>2020-07-03T23:00:00+04:30</updated><id>http://localhost:4000/2020/07/03/marriage</id><content type="html" xml:base="http://localhost:4000/2020/07/03/marriage.html">&lt;h3&gt;ازدواج &lt;/h3&gt;
 &lt;p&gt;
 ازدواج یکی ار مراحل مهم زندگی انسان ها محسوب می شود که بر خلاف سایر اتفاقات زندگی همچون مرگ و تولد که احساس می کنیم نقشی در آن نداریم ، در این بخش از زندگی ،نقش ما پررنگ تر دیده می شود
 &lt;/p&gt;
@@ -49,9 +49,9 @@ Vue (تلفظ / vjuː / ، مانند view) یک فریمورک پیشرفته �
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;pre&gt;&lt;code class=&quot;language-javascript  line-numbers&quot;&gt;var app = new Vue({
-  el: '#app',
+  el: &apos;#app&apos;,
   data: {
-    message: 'Hello Vue!'
+    message: &apos;Hello Vue!&apos;
   }
 })
 &lt;/code&gt;&lt;/pre&gt;
@@ -77,9 +77,9 @@ Vue (تلفظ / vjuː / ، مانند view) یک فریمورک پیشرفته �
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;pre&gt;&lt;code class=&quot;language-javascript  line-numbers&quot;&gt;var app2 = new Vue({
-  el: '#app-2',
+  el: &apos;#app-2&apos;,
   data: {
-    message: 'You loaded this page on ' + new Date().toLocaleString()
+    message: &apos;You loaded this page on &apos; + new Date().toLocaleString()
   }
 })
 &lt;/code&gt;&lt;/pre&gt;
@@ -96,7 +96,7 @@ Vue (تلفظ / vjuː / ، مانند view) یک فریمورک پیشرفته �
 &lt;/p&gt;
 
 &lt;p&gt;
-اگر کنسول جاوا اسکریپت خود را دوباره باز کنید و app2.message = 'some new message'  را وارد کنید ، یک بار دیگر خواهید دید که در HTML محدود - در این مورد ویژگی title  - به روز شده است.
+اگر کنسول جاوا اسکریپت خود را دوباره باز کنید و app2.message = &apos;some new message&apos;  را وارد کنید ، یک بار دیگر خواهید دید که در HTML محدود - در این مورد ویژگی title  - به روز شده است.
 &lt;/p&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
@@ -110,7 +110,7 @@ Vue (تلفظ / vjuː / ، مانند view) یک فریمورک پیشرفته �
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;pre&gt;&lt;code class=&quot;language-javascript  line-numbers&quot;&gt;var app3 = new Vue({
-  el: '#app-3',
+  el: &apos;#app-3&apos;,
   data: {
     seen: true
   }
@@ -144,12 +144,12 @@ Vue (تلفظ / vjuː / ، مانند view) یک فریمورک پیشرفته �
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;pre&gt;&lt;code class=&quot;language-javascript  line-numbers&quot;&gt;var app4 = new Vue({
-  el: '#app-4',
+  el: &apos;#app-4&apos;,
   data: {
     todos: [
-      { text: 'Learn JavaScript' },
-      { text: 'Learn Vue' },
-      { text: 'Build something awesome' }
+      { text: &apos;Learn JavaScript&apos; },
+      { text: &apos;Learn Vue&apos; },
+      { text: &apos;Build something awesome&apos; }
     ]
   }
 })
@@ -164,7 +164,7 @@ Vue (تلفظ / vjuː / ، مانند view) یک فریمورک پیشرفته �
 &lt;/div&gt;
 
 &lt;p&gt;
-در کنسول ، app4.todos.push({ text: 'New item' }) را وارد کنید.  شما باید مورد جدید اضافه شده ای را در لیست ببینید.
+در کنسول ، app4.todos.push({ text: &apos;New item&apos; }) را وارد کنید.  شما باید مورد جدید اضافه شده ای را در لیست ببینید.
 &lt;/p&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
@@ -183,13 +183,13 @@ Vue (تلفظ / vjuː / ، مانند view) یک فریمورک پیشرفته �
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;pre&gt;&lt;code class=&quot;language-javascript  line-numbers&quot;&gt;var app5 = new Vue({
-  el: '#app-5',
+  el: &apos;#app-5&apos;,
   data: {
-    message: 'Hello Vue.js!'
+    message: &apos;Hello Vue.js!&apos;
   },
   methods: {
     reverseMessage: function () {
-      this.message = this.message.split('').reverse().join('')
+      this.message = this.message.split(&apos;&apos;).reverse().join(&apos;&apos;)
     }
   }
 })
@@ -215,9 +215,9 @@ Vue همچنین دایرکتیو v-model را ارائه می دهد که با�
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;pre&gt;&lt;code class=&quot;language-javascript  line-numbers&quot;&gt;var app6 = new Vue({
-  el: '#app-6',
+  el: &apos;#app-6&apos;,
   data: {
-    message: 'Hello Vue!'
+    message: &apos;Hello Vue!&apos;
   }
 })
 &lt;/code&gt;&lt;/pre&gt;
@@ -242,8 +242,8 @@ Vue همچنین دایرکتیو v-model را ارائه می دهد که با�
 &lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&quot;language-javascript  line-numbers&quot;&gt;// Define a new component called todo-item
-Vue.component('todo-item', {
-  template: '&amp;#x3C;li&amp;#x3E;This is a todo&amp;#x3C;/li&amp;#x3E;'
+Vue.component(&apos;todo-item&apos;, {
+  template: &apos;&amp;#x3C;li&amp;#x3E;This is a todo&amp;#x3C;/li&amp;#x3E;&apos;
 })
 
 var app = new Vue(...)
@@ -263,12 +263,12 @@ var app = new Vue(...)
 اما این متن مشابه را برای هر یک از todo ارائه می دهد ، که اصلا جالب نیست. ما باید بتوانیم داده ها را از دامنه والدین به اجزای کودک منتقل کنیم. بیایید کامپوننت را با  prop تغییر دهیم:
 &lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-javascript  line-numbers&quot;&gt;Vue.component('todo-item', {
+&lt;pre&gt;&lt;code class=&quot;language-javascript  line-numbers&quot;&gt;Vue.component(&apos;todo-item&apos;, {
   // The todo-item component now accepts a
   // &quot;prop&quot;, which is like a custom attribute.
   // This prop is called todo.
-  props: ['todo'],
-  template: '&lt;li&gt;&amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125;&lt;/li&gt;'
+  props: [&apos;todo&apos;],
+  template: &apos;&lt;li&gt;&amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125;&lt;/li&gt;&apos;
 })
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -293,18 +293,18 @@ var app = new Vue(...)
 &amp;#x3C;/div&amp;#x3E;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-javascript  line-numbers&quot;&gt;Vue.component('todo-item', {
-  props: ['todo'],
-  template: '&lt;li&gt;&amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125;&lt;/li&gt;'
+&lt;pre&gt;&lt;code class=&quot;language-javascript  line-numbers&quot;&gt;Vue.component(&apos;todo-item&apos;, {
+  props: [&apos;todo&apos;],
+  template: &apos;&lt;li&gt;&amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125;&lt;/li&gt;&apos;
 })
 
 var app7 = new Vue({
-  el: '#app-7',
+  el: &apos;#app-7&apos;,
   data: {
     groceryList: [
-      { id: 0, text: 'Vegetables' },
-      { id: 1, text: 'Cheese' },
-      { id: 2, text: 'Whatever else humans are supposed to eat' }
+      { id: 0, text: &apos;Vegetables&apos; },
+      { id: 1, text: &apos;Cheese&apos; },
+      { id: 2, text: &apos;Whatever else humans are supposed to eat&apos; }
     ]
   }
 })
@@ -314,7 +314,7 @@ var app7 = new Vue({
     &lt;ol&gt;
         &lt;!--
           Now we provide each todo-item with the todo object
-          it's representing, so that its content can be dynamic.
+          it&apos;s representing, so that its content can be dynamic.
           We also need to provide each component with a &quot;key&quot;,
           which will be explained later.
         --&gt;
@@ -344,66 +344,66 @@ var app7 = new Vue({
 
 &lt;script&gt;
     var app = new Vue({
-        el: '#app',
+        el: &apos;#app&apos;,
         data: {
-            message: 'Hello Vue!'
+            message: &apos;Hello Vue!&apos;
         }
     })
     var app2 = new Vue({
-        el: '#app-2',
+        el: &apos;#app-2&apos;,
         data: {
-            message: 'You loaded this page on ' + new Date().toLocaleString()
+            message: &apos;You loaded this page on &apos; + new Date().toLocaleString()
         }
     })
     var app3 = new Vue({
-        el: '#app-3',
+        el: &apos;#app-3&apos;,
         data: {
             seen: true
         }
     })
     var app4 = new Vue({
-        el: '#app-4',
+        el: &apos;#app-4&apos;,
         data: {
             todos: [
-                { text: 'Learn JavaScript' },
-                { text: 'Learn Vue' },
-                { text: 'Build something awesome' }
+                { text: &apos;Learn JavaScript&apos; },
+                { text: &apos;Learn Vue&apos; },
+                { text: &apos;Build something awesome&apos; }
             ]
         }
     })
     var app5 = new Vue({
-        el: '#app-5',
+        el: &apos;#app-5&apos;,
         data: {
-            message: 'Hello Vue.js!'
+            message: &apos;Hello Vue.js!&apos;
         },
         methods: {
             reverseMessage: function () {
-                this.message = this.message.split('').reverse().join('')
+                this.message = this.message.split(&apos;&apos;).reverse().join(&apos;&apos;)
             }
         }
     })
     var app6 = new Vue({
-        el: '#app-6',
+        el: &apos;#app-6&apos;,
         data: {
-            message: 'Hello Vue!'
+            message: &apos;Hello Vue!&apos;
         }
     })
-    Vue.component('todo-item', {
-        props: ['todo'],
-        template: '&lt;li&gt;&amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125;&lt;/li&gt;'
+    Vue.component(&apos;todo-item&apos;, {
+        props: [&apos;todo&apos;],
+        template: &apos;&lt;li&gt;&amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125;&lt;/li&gt;&apos;
     })
 
     var app7 = new Vue({
-        el: '#app-7',
+        el: &apos;#app-7&apos;,
         data: {
             groceryList: [
-                { id: 0, text: 'Vegetables' },
-                { id: 1, text: 'Cheese' },
-                { id: 2, text: 'Whatever else humans are supposed to eat' }
+                { id: 0, text: &apos;Vegetables&apos; },
+                { id: 1, text: &apos;Cheese&apos; },
+                { id: 2, text: &apos;Whatever else humans are supposed to eat&apos; }
             ]
         }
     })
-&lt;/script&gt;</content><author><name>Farhad Mirzapour</name></author><summary type="html">چرا Vue.js؟ Vue (تلفظ / vjuː / ، مانند view) یک فریمورک پیشرفته برای ساخت رابط های کاربر است. برخلاف سایر فریمورک های یکپارچه ، Vue از پایه طراحی شده تا از نظر تدریجی قابل قبول باشد. کتابخانه اصلی فقط بر روی لایه view متمرکز شده است ، و انتخاب و ادغام آن با کتابخانه های دیگر یا پروژه های موجود آسان است. از طرف دیگر ، Vue همچنین قادر است در هنگام استفاده از کتابخانه های نوین و پشتیبانی از کتابخانه ها ، از برنامه های تک صفحه ای پیشرفته استفاده کند. شروع ساده ترین راه برای امتحان کردن Vue.js استفاده از مثال سلام جهانی JSFiddle است. می توانید یک فایل index.html ایجاد کنید و Vue را با آن شامل کنید: &amp;#x3C;!-- development version, includes helpful console warnings --&amp;#x3E; &amp;#x3C;script src=&amp;#x22;https://cdn.jsdelivr.net/npm/vue/dist/vue.js&amp;#x22;&amp;#x3E;&amp;#x3C;/script&amp;#x3E; یا : &amp;#x3C;!-- production version, optimized for size and speed --&amp;#x3E; &amp;#x3C;script src=&amp;#x22;https://cdn.jsdelivr.net/npm/vue&amp;#x22;&amp;#x3E;&amp;#x3C;/script&amp;#x3E; صفحه Installation گزینه های بیشتری را برای نصب Vue ارائه می دهد. توجه: ما توصیه نمی کنیم که مبتدیان از vue-cli شروع کنند ، به خصوص اگر هنوز با ابزارهای ساخت مبتنی بر Node.js آشنا نیستید. اعلان رندرینگ (Declarative Rendering) در هسته Vue.js سیستمی است که به ما امکان می دهد تا با استفاده از نحو الگوی ساده ، داده ها را به DOM ارائه دهیم: &amp;#x3C;div id=&amp;#x22;app&amp;#x22;&amp;#x3E; &amp;#123;&amp;#123; message &amp;#125;&amp;#125; &amp;#x3C;/div&amp;#x3E; var app = new Vue({ el: '#app', data: { message: 'Hello Vue!' } }) &amp;#123;&amp;#123; message &amp;#125;&amp;#125; ما اولین برنامه Vue را ایجاد کرده ایم! به نظر می رسد بسیار شبیه به رندر الگوی رشته ای است ، اما Vue کارهای زیادی را در در پس زمینه انجام داده است. داده ها و DOM اکنون مرتبط شده اند ، و اکنون همه چیز واکنشی است. چگونه می دانیم؟ کنسول جاوا اسکریپت مرورگر خود را باز کنید (همین حالا) و app.message را به مقدار دیگری تنظیم کنید. بر این اساس باید مثال ارائه شده در بالا را به روز کنید. علاوه بر جاگذاری متن ، ما همچنین می توانیم ویژگی های عناصر مانند زیر را به هم پیوند دهیم: &amp;#x3C;div id=&amp;#x22;app-2&amp;#x22;&amp;#x3E; &amp;#x3C;span v-bind:title=&amp;#x22;message&amp;#x22;&amp;#x3E; Hover your mouse over me for a few seconds to see my dynamically bound title! &amp;#x3C;/span&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var app2 = new Vue({ el: '#app-2', data: { message: 'You loaded this page on ' + new Date().toLocaleString() } }) Hover your mouse over me for a few seconds to see my dynamically bound title! در اینجا با چیز جدیدی روبرو می شویم. ویژگی v-bind که می بینید دایرکتیو (directive) خوانده می شود. دایرکتیو ها با v- پیشوند شده اند تا نشان دهند که اینها ویژگی های خاصی هستند که توسط Vue ارائه شده است ، و همانطور که احتمالاً حدس زده اید ، آنها رفتار واکنشی ویژه ای را برای DOM ارائه شده اعمال می کنند. در اینجا ، اساساً گفته می شود &quot;ویژگی عنوان این عنصر را با ویژگی پیام در نمونه Vue به روز نگه دارید.&quot; اگر کنسول جاوا اسکریپت خود را دوباره باز کنید و app2.message = 'some new message' را وارد کنید ، یک بار دیگر خواهید دید که در HTML محدود - در این مورد ویژگی title - به روز شده است. شرط ها و حلقه ها (Conditionals and Loops) &amp;#x3C;div id=&amp;#x22;app-3&amp;#x22;&amp;#x3E; &amp;#x3C;span v-if=&amp;#x22;seen&amp;#x22;&amp;#x3E;Now you see me&amp;#x3C;/span&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var app3 = new Vue({ el: '#app-3', data: { seen: true } }) Now you see me در کنسول app3.seen = false را وارد کنید. می بینید که پیام از بین می رود. این مثال نشان می دهد که ما می توانیم داده ها را نه تنها به متن و ویژگی ها ، بلکه به ساختار DOM متصل کنیم. علاوه بر این ، Vue همچنین یک سیستم اثر گذار قدرتمند را فراهم می کند که می تواند هنگام inserted/updated/removed عناصر توسط Vue ، اثرات انتقال را بطور خودکار اعمال کند. چند دستورالعمل دیگر نیز وجود دارد که هر کدام عملکرد ویژه خود را دارند. به عنوان مثال ، دایرکتیو v-for می تواند برای نمایش لیستی از موارد با استفاده از داده های یک Array استفاده شود: &amp;#x3C;div id=&amp;#x22;app-4&amp;#x22;&amp;#x3E; &amp;#x3C;ol&amp;#x3E; &amp;#x3C;li v-for=&amp;#x22;todo in todos&amp;#x22;&amp;#x3E; &amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125; &amp;#x3C;/li&amp;#x3E; &amp;#x3C;/ol&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var app4 = new Vue({ el: '#app-4', data: { todos: [ { text: 'Learn JavaScript' }, { text: 'Learn Vue' }, { text: 'Build something awesome' } ] } }) &amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125; در کنسول ، app4.todos.push({ text: 'New item' }) را وارد کنید. شما باید مورد جدید اضافه شده ای را در لیست ببینید. کار با ورودی کاربران (Handling User Input) برای اینکه کاربران بتوانند با برنامه شما ارتباط برقرار کنند ، می توانیم از دایرکتیو v-on برای پیوستن به شنوندگان رویداد که در نمونه های Vue از متدها استفاده می کنند استفاده کنیم: &amp;#x3C;div id=&amp;#x22;app-5&amp;#x22;&amp;#x3E; &amp;#x3C;p&amp;#x3E;&amp;#123;&amp;#123; message &amp;#125;&amp;#125;&amp;#x3C;/p&amp;#x3E; &amp;#x3C;button v-on:click=&amp;#x22;reverseMessage&amp;#x22;&amp;#x3E;Reverse Message&amp;#x3C;/button&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var app5 = new Vue({ el: '#app-5', data: { message: 'Hello Vue.js!' }, methods: { reverseMessage: function () { this.message = this.message.split('').reverse().join('') } } }) &amp;#123;&amp;#123; message &amp;#125;&amp;#125; Reverse Message توجه داشته باشید که در این روش وضعیت برنامه خود را بدون دست زدن به DOM به روز می کنیم - کلیه دستکاری های DOM توسط Vue انجام می شود و کدی که می نویسید بر روی منطق اساسی متمرکز است. Vue همچنین دایرکتیو v-model را ارائه می دهد که باعث می شود اتصال دو طرفه بین ورودی فرم و حالت برنامه برقرار شود: &amp;#x3C;div id=&amp;#x22;app-6&amp;#x22;&amp;#x3E; &amp;#x3C;p&amp;#x3E;&amp;#123;&amp;#123; message &amp;#125;&amp;#125;&amp;#x3C;/p&amp;#x3E; &amp;#x3C;input v-model=&amp;#x22;message&amp;#x22;&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var app6 = new Vue({ el: '#app-6', data: { message: 'Hello Vue!' } }) &amp;#123;&amp;#123; message &amp;#125;&amp;#125; ترکیب با کامپوننت ها (Composing with Components) سیستم کامپوننت مفهوم مهم دیگری در Vue است ، زیرا انتزاعی است که به ما امکان می دهد برنامه های بزرگی ایجاد کنیم که از اجزای کوچک ، خودمحور و اغلب قابل استفاده مجدد ساخته شده است.: در Vue ، یک کامپوننت در اصل یک نمونه Vue با گزینه های از پیش تعریف شده است. ثبت کامپوننت در Vue ساده است: // Define a new component called todo-item Vue.component('todo-item', { template: '&amp;#x3C;li&amp;#x3E;This is a todo&amp;#x3C;/li&amp;#x3E;' }) var app = new Vue(...) اکنون می توانید آن را در الگوی کامپوننت دیگر تنظیم کنید: &amp;#x3C;ol&amp;#x3E; &amp;#x3C;!-- Create an instance of the todo-item component --&amp;#x3E; &amp;#x3C;todo-item&amp;#x3E;&amp;#x3C;/todo-item&amp;#x3E; &amp;#x3C;/ol&amp;#x3E; اما این متن مشابه را برای هر یک از todo ارائه می دهد ، که اصلا جالب نیست. ما باید بتوانیم داده ها را از دامنه والدین به اجزای کودک منتقل کنیم. بیایید کامپوننت را با prop تغییر دهیم: Vue.component('todo-item', { // The todo-item component now accepts a // &quot;prop&quot;, which is like a custom attribute. // This prop is called todo. props: ['todo'], template: '&amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125;' }) اکنون می توانیم todo را به هر کامپوننت تکراری دیگر با استفاده از v-bind منتقل نماییم: &amp;#x3C;div id=&amp;#x22;app-7&amp;#x22;&amp;#x3E; &amp;#x3C;ol&amp;#x3E; &amp;#x3C;!-- Now we provide each todo-item with the todo object it&amp;#x27;s representing, so that its content can be dynamic. We also need to provide each component with a &amp;#x22;key&amp;#x22;, which will be explained later. --&amp;#x3E; &amp;#x3C;todo-item v-for=&amp;#x22;item in groceryList&amp;#x22; v-bind:todo=&amp;#x22;item&amp;#x22; v-bind:key=&amp;#x22;item.id&amp;#x22; &amp;#x3E;&amp;#x3C;/todo-item&amp;#x3E; &amp;#x3C;/ol&amp;#x3E; &amp;#x3C;/div&amp;#x3E; Vue.component('todo-item', { props: ['todo'], template: '&amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125;' }) var app7 = new Vue({ el: '#app-7', data: { groceryList: [ { id: 0, text: 'Vegetables' }, { id: 1, text: 'Cheese' }, { id: 2, text: 'Whatever else humans are supposed to eat' } ] } }) این یک مثال معقول است ، ما موفق شده ایم که برنامه خود را به دو واحد کوچکتر جدا کنیم و کودک به طور منطقی از والدین با استفاده از props جدا شده است. اکنون می توانیم مؤلفه &amp;#x3C;todo-item&amp;#x3E; خود را با الگوی و منطق پیچیده تری بهبود بخشیم بدون اینکه روی برنامه والدین تأثیر بگذارد. در یک برنامه بزرگ ، لازم است کل برنامه را به اجزای کوچکتر تقسیم کنید تا توسعه برنامه قابل مدیریت باشد. ما بعداً در راهنمای بیشتر در مورد مؤلفه ها صحبت خواهیم کرد ، اما یک مثال (تخیلی) که قالب یک برنامه ممکن است با اجزای کامپوننت چگونه باشد: &amp;#x3C;div id=&amp;#x22;app&amp;#x22;&amp;#x3E; &amp;#x3C;app-nav&amp;#x3E;&amp;#x3C;/app-nav&amp;#x3E; &amp;#x3C;app-view&amp;#x3E; &amp;#x3C;app-sidebar&amp;#x3E;&amp;#x3C;/app-sidebar&amp;#x3E; &amp;#x3C;app-content&amp;#x3E;&amp;#x3C;/app-content&amp;#x3E; &amp;#x3C;/app-view&amp;#x3E; &amp;#x3C;/div&amp;#x3E;</summary></entry><entry><title type="html">آموزش Laravel</title><link href="http://localhost:4000/2017/12/18/laravel.html" rel="alternate" type="text/html" title="آموزش Laravel" /><published>2017-12-18T11:18:42+03:30</published><updated>2017-12-18T11:18:42+03:30</updated><id>http://localhost:4000/2017/12/18/laravel</id><content type="html" xml:base="http://localhost:4000/2017/12/18/laravel.html">&lt;p&gt;
+&lt;/script&gt;</content><author><name>Farhad Mirzapour</name></author><summary type="html">چرا Vue.js؟ Vue (تلفظ / vjuː / ، مانند view) یک فریمورک پیشرفته برای ساخت رابط های کاربر است. برخلاف سایر فریمورک های یکپارچه ، Vue از پایه طراحی شده تا از نظر تدریجی قابل قبول باشد. کتابخانه اصلی فقط بر روی لایه view متمرکز شده است ، و انتخاب و ادغام آن با کتابخانه های دیگر یا پروژه های موجود آسان است. از طرف دیگر ، Vue همچنین قادر است در هنگام استفاده از کتابخانه های نوین و پشتیبانی از کتابخانه ها ، از برنامه های تک صفحه ای پیشرفته استفاده کند. شروع ساده ترین راه برای امتحان کردن Vue.js استفاده از مثال سلام جهانی JSFiddle است. می توانید یک فایل index.html ایجاد کنید و Vue را با آن شامل کنید: &amp;#x3C;!-- development version, includes helpful console warnings --&amp;#x3E; &amp;#x3C;script src=&amp;#x22;https://cdn.jsdelivr.net/npm/vue/dist/vue.js&amp;#x22;&amp;#x3E;&amp;#x3C;/script&amp;#x3E; یا : &amp;#x3C;!-- production version, optimized for size and speed --&amp;#x3E; &amp;#x3C;script src=&amp;#x22;https://cdn.jsdelivr.net/npm/vue&amp;#x22;&amp;#x3E;&amp;#x3C;/script&amp;#x3E; صفحه Installation گزینه های بیشتری را برای نصب Vue ارائه می دهد. توجه: ما توصیه نمی کنیم که مبتدیان از vue-cli شروع کنند ، به خصوص اگر هنوز با ابزارهای ساخت مبتنی بر Node.js آشنا نیستید. اعلان رندرینگ (Declarative Rendering) در هسته Vue.js سیستمی است که به ما امکان می دهد تا با استفاده از نحو الگوی ساده ، داده ها را به DOM ارائه دهیم: &amp;#x3C;div id=&amp;#x22;app&amp;#x22;&amp;#x3E; &amp;#123;&amp;#123; message &amp;#125;&amp;#125; &amp;#x3C;/div&amp;#x3E; var app = new Vue({ el: &apos;#app&apos;, data: { message: &apos;Hello Vue!&apos; } }) &amp;#123;&amp;#123; message &amp;#125;&amp;#125; ما اولین برنامه Vue را ایجاد کرده ایم! به نظر می رسد بسیار شبیه به رندر الگوی رشته ای است ، اما Vue کارهای زیادی را در در پس زمینه انجام داده است. داده ها و DOM اکنون مرتبط شده اند ، و اکنون همه چیز واکنشی است. چگونه می دانیم؟ کنسول جاوا اسکریپت مرورگر خود را باز کنید (همین حالا) و app.message را به مقدار دیگری تنظیم کنید. بر این اساس باید مثال ارائه شده در بالا را به روز کنید. علاوه بر جاگذاری متن ، ما همچنین می توانیم ویژگی های عناصر مانند زیر را به هم پیوند دهیم: &amp;#x3C;div id=&amp;#x22;app-2&amp;#x22;&amp;#x3E; &amp;#x3C;span v-bind:title=&amp;#x22;message&amp;#x22;&amp;#x3E; Hover your mouse over me for a few seconds to see my dynamically bound title! &amp;#x3C;/span&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var app2 = new Vue({ el: &apos;#app-2&apos;, data: { message: &apos;You loaded this page on &apos; + new Date().toLocaleString() } }) Hover your mouse over me for a few seconds to see my dynamically bound title! در اینجا با چیز جدیدی روبرو می شویم. ویژگی v-bind که می بینید دایرکتیو (directive) خوانده می شود. دایرکتیو ها با v- پیشوند شده اند تا نشان دهند که اینها ویژگی های خاصی هستند که توسط Vue ارائه شده است ، و همانطور که احتمالاً حدس زده اید ، آنها رفتار واکنشی ویژه ای را برای DOM ارائه شده اعمال می کنند. در اینجا ، اساساً گفته می شود &quot;ویژگی عنوان این عنصر را با ویژگی پیام در نمونه Vue به روز نگه دارید.&quot; اگر کنسول جاوا اسکریپت خود را دوباره باز کنید و app2.message = &apos;some new message&apos; را وارد کنید ، یک بار دیگر خواهید دید که در HTML محدود - در این مورد ویژگی title - به روز شده است. شرط ها و حلقه ها (Conditionals and Loops) &amp;#x3C;div id=&amp;#x22;app-3&amp;#x22;&amp;#x3E; &amp;#x3C;span v-if=&amp;#x22;seen&amp;#x22;&amp;#x3E;Now you see me&amp;#x3C;/span&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var app3 = new Vue({ el: &apos;#app-3&apos;, data: { seen: true } }) Now you see me در کنسول app3.seen = false را وارد کنید. می بینید که پیام از بین می رود. این مثال نشان می دهد که ما می توانیم داده ها را نه تنها به متن و ویژگی ها ، بلکه به ساختار DOM متصل کنیم. علاوه بر این ، Vue همچنین یک سیستم اثر گذار قدرتمند را فراهم می کند که می تواند هنگام inserted/updated/removed عناصر توسط Vue ، اثرات انتقال را بطور خودکار اعمال کند. چند دستورالعمل دیگر نیز وجود دارد که هر کدام عملکرد ویژه خود را دارند. به عنوان مثال ، دایرکتیو v-for می تواند برای نمایش لیستی از موارد با استفاده از داده های یک Array استفاده شود: &amp;#x3C;div id=&amp;#x22;app-4&amp;#x22;&amp;#x3E; &amp;#x3C;ol&amp;#x3E; &amp;#x3C;li v-for=&amp;#x22;todo in todos&amp;#x22;&amp;#x3E; &amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125; &amp;#x3C;/li&amp;#x3E; &amp;#x3C;/ol&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var app4 = new Vue({ el: &apos;#app-4&apos;, data: { todos: [ { text: &apos;Learn JavaScript&apos; }, { text: &apos;Learn Vue&apos; }, { text: &apos;Build something awesome&apos; } ] } }) &amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125; در کنسول ، app4.todos.push({ text: &apos;New item&apos; }) را وارد کنید. شما باید مورد جدید اضافه شده ای را در لیست ببینید. کار با ورودی کاربران (Handling User Input) برای اینکه کاربران بتوانند با برنامه شما ارتباط برقرار کنند ، می توانیم از دایرکتیو v-on برای پیوستن به شنوندگان رویداد که در نمونه های Vue از متدها استفاده می کنند استفاده کنیم: &amp;#x3C;div id=&amp;#x22;app-5&amp;#x22;&amp;#x3E; &amp;#x3C;p&amp;#x3E;&amp;#123;&amp;#123; message &amp;#125;&amp;#125;&amp;#x3C;/p&amp;#x3E; &amp;#x3C;button v-on:click=&amp;#x22;reverseMessage&amp;#x22;&amp;#x3E;Reverse Message&amp;#x3C;/button&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var app5 = new Vue({ el: &apos;#app-5&apos;, data: { message: &apos;Hello Vue.js!&apos; }, methods: { reverseMessage: function () { this.message = this.message.split(&apos;&apos;).reverse().join(&apos;&apos;) } } }) &amp;#123;&amp;#123; message &amp;#125;&amp;#125; Reverse Message توجه داشته باشید که در این روش وضعیت برنامه خود را بدون دست زدن به DOM به روز می کنیم - کلیه دستکاری های DOM توسط Vue انجام می شود و کدی که می نویسید بر روی منطق اساسی متمرکز است. Vue همچنین دایرکتیو v-model را ارائه می دهد که باعث می شود اتصال دو طرفه بین ورودی فرم و حالت برنامه برقرار شود: &amp;#x3C;div id=&amp;#x22;app-6&amp;#x22;&amp;#x3E; &amp;#x3C;p&amp;#x3E;&amp;#123;&amp;#123; message &amp;#125;&amp;#125;&amp;#x3C;/p&amp;#x3E; &amp;#x3C;input v-model=&amp;#x22;message&amp;#x22;&amp;#x3E; &amp;#x3C;/div&amp;#x3E; var app6 = new Vue({ el: &apos;#app-6&apos;, data: { message: &apos;Hello Vue!&apos; } }) &amp;#123;&amp;#123; message &amp;#125;&amp;#125; ترکیب با کامپوننت ها (Composing with Components) سیستم کامپوننت مفهوم مهم دیگری در Vue است ، زیرا انتزاعی است که به ما امکان می دهد برنامه های بزرگی ایجاد کنیم که از اجزای کوچک ، خودمحور و اغلب قابل استفاده مجدد ساخته شده است.: در Vue ، یک کامپوننت در اصل یک نمونه Vue با گزینه های از پیش تعریف شده است. ثبت کامپوننت در Vue ساده است: // Define a new component called todo-item Vue.component(&apos;todo-item&apos;, { template: &apos;&amp;#x3C;li&amp;#x3E;This is a todo&amp;#x3C;/li&amp;#x3E;&apos; }) var app = new Vue(...) اکنون می توانید آن را در الگوی کامپوننت دیگر تنظیم کنید: &amp;#x3C;ol&amp;#x3E; &amp;#x3C;!-- Create an instance of the todo-item component --&amp;#x3E; &amp;#x3C;todo-item&amp;#x3E;&amp;#x3C;/todo-item&amp;#x3E; &amp;#x3C;/ol&amp;#x3E; اما این متن مشابه را برای هر یک از todo ارائه می دهد ، که اصلا جالب نیست. ما باید بتوانیم داده ها را از دامنه والدین به اجزای کودک منتقل کنیم. بیایید کامپوننت را با prop تغییر دهیم: Vue.component(&apos;todo-item&apos;, { // The todo-item component now accepts a // &quot;prop&quot;, which is like a custom attribute. // This prop is called todo. props: [&apos;todo&apos;], template: &apos;&amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125;&apos; }) اکنون می توانیم todo را به هر کامپوننت تکراری دیگر با استفاده از v-bind منتقل نماییم: &amp;#x3C;div id=&amp;#x22;app-7&amp;#x22;&amp;#x3E; &amp;#x3C;ol&amp;#x3E; &amp;#x3C;!-- Now we provide each todo-item with the todo object it&amp;#x27;s representing, so that its content can be dynamic. We also need to provide each component with a &amp;#x22;key&amp;#x22;, which will be explained later. --&amp;#x3E; &amp;#x3C;todo-item v-for=&amp;#x22;item in groceryList&amp;#x22; v-bind:todo=&amp;#x22;item&amp;#x22; v-bind:key=&amp;#x22;item.id&amp;#x22; &amp;#x3E;&amp;#x3C;/todo-item&amp;#x3E; &amp;#x3C;/ol&amp;#x3E; &amp;#x3C;/div&amp;#x3E; Vue.component(&apos;todo-item&apos;, { props: [&apos;todo&apos;], template: &apos;&amp;#123;&amp;#123; todo.text &amp;#125;&amp;#125;&apos; }) var app7 = new Vue({ el: &apos;#app-7&apos;, data: { groceryList: [ { id: 0, text: &apos;Vegetables&apos; }, { id: 1, text: &apos;Cheese&apos; }, { id: 2, text: &apos;Whatever else humans are supposed to eat&apos; } ] } }) این یک مثال معقول است ، ما موفق شده ایم که برنامه خود را به دو واحد کوچکتر جدا کنیم و کودک به طور منطقی از والدین با استفاده از props جدا شده است. اکنون می توانیم مؤلفه &amp;#x3C;todo-item&amp;#x3E; خود را با الگوی و منطق پیچیده تری بهبود بخشیم بدون اینکه روی برنامه والدین تأثیر بگذارد. در یک برنامه بزرگ ، لازم است کل برنامه را به اجزای کوچکتر تقسیم کنید تا توسعه برنامه قابل مدیریت باشد. ما بعداً در راهنمای بیشتر در مورد مؤلفه ها صحبت خواهیم کرد ، اما یک مثال (تخیلی) که قالب یک برنامه ممکن است با اجزای کامپوننت چگونه باشد: &amp;#x3C;div id=&amp;#x22;app&amp;#x22;&amp;#x3E; &amp;#x3C;app-nav&amp;#x3E;&amp;#x3C;/app-nav&amp;#x3E; &amp;#x3C;app-view&amp;#x3E; &amp;#x3C;app-sidebar&amp;#x3E;&amp;#x3C;/app-sidebar&amp;#x3E; &amp;#x3C;app-content&amp;#x3E;&amp;#x3C;/app-content&amp;#x3E; &amp;#x3C;/app-view&amp;#x3E; &amp;#x3C;/div&amp;#x3E;</summary></entry><entry><title type="html">آموزش Laravel</title><link href="http://localhost:4000/2017/12/18/laravel.html" rel="alternate" type="text/html" title="آموزش Laravel" /><published>2017-12-18T11:18:42+03:30</published><updated>2017-12-18T11:18:42+03:30</updated><id>http://localhost:4000/2017/12/18/laravel</id><content type="html" xml:base="http://localhost:4000/2017/12/18/laravel.html">&lt;p&gt;
 لاراول (به انگلیسی Laravel) یک چارچوب متن باز پی اچ پی (PHP) است که توسط تیلور اوتول، برای توسعه نرم‌افزارهای وب بر پایه معماری MVC طراحی شده‌است. بعضی از ویژگی‌های لاراول به صورت ماژولار و بسته‌بندی شده ارائه شده‌است. در مارس ۲۰۱۵، لاراول به عنوان معروف‌ترین فریم ورک php شناخته شد، سایر فریم ورک‌های محبوب از قبیل symfony2,Nette,CodeIgniter,Yii2 و سایر فریم ورک‌ها بودند. کدهای باز لاراول برروی github میزبانی می‌شود؛ و تحت لیسانس MIT License ارائه شده‌است.
 &lt;/p&gt;
 
@@ -476,7 +476,7 @@ Laravel Collective جهت ایجاد فرم های ایمن و سریع در ف�
 سپس، provider جدید خود را به آرایه providers واقع در config / app.php اضافه کنید:
 &lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;'providers' =&amp;gt; [
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;&apos;providers&apos; =&amp;gt; [
     // ...
     Collective\Html\HtmlServiceProvider::class,
     // ...
@@ -487,10 +487,10 @@ Laravel Collective جهت ایجاد فرم های ایمن و سریع در ف�
 نهایتا دو نام مستعار کلاس  را به آرایه aliases واقع در config / app.php اضافه نمایید :
 &lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;  'aliases' =&amp;gt; [
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;  &apos;aliases&apos; =&amp;gt; [
     // ...
-      'Form' =&amp;gt; Collective\Html\FormFacade::class,
-      'Html' =&amp;gt; Collective\Html\HtmlFacade::class,
+      &apos;Form&apos; =&amp;gt; Collective\Html\FormFacade::class,
+      &apos;Html&apos; =&amp;gt; Collective\Html\HtmlFacade::class,
     // ...
   ],
 
@@ -499,7 +499,7 @@ Laravel Collective جهت ایجاد فرم های ایمن و سریع در ف�
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h3&gt;ایجاد Form&lt;/h3&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;{{ Form::open(['url' =&amp;gt; 'foo/bar']) }}
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;{{ Form::open([&apos;url&apos; =&amp;gt; &apos;foo/bar&apos;]) }}
     //
 {{ Form::close() }}
 &lt;/code&gt;&lt;/pre&gt;
@@ -508,7 +508,7 @@ Laravel Collective جهت ایجاد فرم های ایمن و سریع در ف�
 به طور پیش فرض، از روش POST جهت ارسال اطلاعات در فرم استفاده می شود، با این حال، شما می توانید روش دیگری را مشخص کنید:
 &lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::open(['url' =&amp;gt; 'foo/bar', 'method' =&amp;gt; 'put'])
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::open([&apos;url&apos; =&amp;gt; &apos;foo/bar&apos;, &apos;method&apos; =&amp;gt; &apos;put&apos;])
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;blockquote&gt;
@@ -517,22 +517,22 @@ Laravel Collective جهت ایجاد فرم های ایمن و سریع در ف�
 
 &lt;p&gt;جهت ارسال اطلاعات فرم به route و یا action  کنترلر همانند زیر عمل می کنیم :&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::open(['route' =&amp;gt; 'route.name'])
-echo Form::open(['action' =&amp;gt; 'Controller@method'])
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::open([&apos;route&apos; =&amp;gt; &apos;route.name&apos;])
+echo Form::open([&apos;action&apos; =&amp;gt; &apos;Controller@method&apos;])
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;همچنین جهت ارسال پارامتر به route و یا action کنترلر  همانند زیر عمل می کنیم:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::open(['route' =&amp;gt; ['route.name', $user-&amp;gt;id]])
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::open([&apos;route&apos; =&amp;gt; [&apos;route.name&apos;, $user-&amp;gt;id]])
 
-echo Form::open(['action' =&amp;gt; ['Controller@method', $user-&amp;gt;id]])
+echo Form::open([&apos;action&apos; =&amp;gt; [&apos;Controller@method&apos;, $user-&amp;gt;id]])
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;
 همچنین جهت آپلود و ارسال فایل مانند زیر عمل کنید :
 &lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::open(['url' =&amp;gt; 'foo/bar', 'files' =&amp;gt; true])
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::open([&apos;url&apos; =&amp;gt; &apos;foo/bar&apos;, &apos;files&apos; =&amp;gt; true])
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
@@ -547,9 +547,9 @@ Laravel  روش آسانی برای حفاظت از اپلیکیشن شما در
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;افزودن CSRF به Route :&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;Route::post('profile',
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;Route::post(&apos;profile&apos;,
     [
-        'before' =&amp;gt; 'csrf',
+        &apos;before&apos; =&amp;gt; &apos;csrf&apos;,
         function()
         {
             //
@@ -564,7 +564,7 @@ Laravel  روش آسانی برای حفاظت از اپلیکیشن شما در
 ممکن است بخواهید فرم را بر اساس محتویات یک model پر کنید. برای انجام این کار، از روش Form::model استفاده کنید:
 &lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::model($user, ['route' =&amp;gt; ['user.update', $user-&amp;gt;id]])
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::model($user, [&apos;route&apos; =&amp;gt; [&apos;user.update&apos;, $user-&amp;gt;id]])
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;
@@ -614,25 +614,25 @@ class User extends Model
     use FormAccessible;     
 
     /**
-     * Get the user's first name.
+     * Get the user&apos;s first name.
      *
      * @param  string  $value
      * @return string
      */
     public function getDateOfBirthAttribute($value)
     {
-        return Carbon::parse($value)-&amp;gt;format('m/d/Y');
+        return Carbon::parse($value)-&amp;gt;format(&apos;m/d/Y&apos;);
     }
 
     /**
-     * Get the user's first name for forms.
+     * Get the user&apos;s first name for forms.
      *
      * @param  string  $value
      * @return string
      */
     public function formDateOfBirthAttribute($value)
     {
-        return Carbon::parse($value)-&amp;gt;format('Y-m-d');
+        return Carbon::parse($value)-&amp;gt;format(&apos;Y-m-d&apos;);
     }
 }
 &lt;/code&gt;&lt;/pre&gt;
@@ -640,14 +640,14 @@ class User extends Model
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h3&gt;ایجاد Label در فرم&lt;/h3&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::label('email', 'E-Mail Address');
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::label(&apos;email&apos;, &apos;E-Mail Address&apos;);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;
 تعیین ویژگی های HTML  در Label :
 &lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::label('email', 'E-Mail Address', ['class' =&amp;gt; 'awesome']);
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::label(&apos;email&apos;, &apos;E-Mail Address&apos;, [&apos;class&apos; =&amp;gt; &apos;awesome&apos;]);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;blockquote&gt;
@@ -656,62 +656,62 @@ class User extends Model
 
 &lt;h3&gt;ایجاد Text Input&lt;/h3&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::text('username');
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::text(&apos;username&apos;);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;
 تعیین  یک مقدار پیش فرض در Text Input :
 &lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::text('email', 'example@gmail.com');
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::text(&apos;email&apos;, &apos;example@gmail.com&apos;);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h3&gt;ایجاد Password Input&lt;/h3&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::password('password', ['class' =&amp;gt; 'awesome']);
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::password(&apos;password&apos;, [&apos;class&apos; =&amp;gt; &apos;awesome&apos;]);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h3&gt;ایجاد Input  های Email  و File&lt;/h3&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::email('name', $value = null, $attributes = []);
-echo Form::file('name', $attributes = []);
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::email(&apos;name&apos;, $value = null, $attributes = []);
+echo Form::file(&apos;name&apos;, $attributes = []);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h3&gt;ایجاد Checkbox و Radio Input&lt;/h3&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::checkbox('name', 'value');
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::checkbox(&apos;name&apos;, &apos;value&apos;);
 
-echo Form::radio('name', 'value');
+echo Form::radio(&apos;name&apos;, &apos;value&apos;);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;
 Checkbox Or Radio Input که ویژگی تیک خورده اند :
 &lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::checkbox('name', 'value', true);
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::checkbox(&apos;name&apos;, &apos;value&apos;, true);
 
-echo Form::radio('name', 'value', true);
+echo Form::radio(&apos;name&apos;, &apos;value&apos;, true);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h3&gt;ایجاد Number Input&lt;/h3&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::number('name', 'value');
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::number(&apos;name&apos;, &apos;value&apos;);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h3&gt;ایجاد Date Input&lt;/h3&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::date('name', \Carbon\Carbon::now());
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::date(&apos;name&apos;, \Carbon\Carbon::now());
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h3&gt;ایجاد File Input&lt;/h3&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::file('image');
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::file(&apos;image&apos;);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;blockquote&gt;
@@ -721,41 +721,41 @@ echo Form::radio('name', 'value', true);
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h3&gt;ایجاد Drop-Down List&lt;/h3&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::select('size', ['L' =&amp;gt; 'Large', 'S' =&amp;gt; 'Small']);
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::select(&apos;size&apos;, [&apos;L&apos; =&amp;gt; &apos;Large&apos;, &apos;S&apos; =&amp;gt; &apos;Small&apos;]);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;ایجاد Drop-Down List با گزینه انتخاب شده پیش فرض :&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::select('size', ['L' =&amp;gt; 'Large', 'S' =&amp;gt; 'Small'], 'S');
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::select(&apos;size&apos;, [&apos;L&apos; =&amp;gt; &apos;Large&apos;, &apos;S&apos; =&amp;gt; &apos;Small&apos;], &apos;S&apos;);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;ایجاد Drop-Down List همراه با placeholder : &lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::select('size', ['L' =&amp;gt; 'Large', 'S' =&amp;gt; 'Small'], null, ['placeholder' =&amp;gt; 'Pick a size...']);
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::select(&apos;size&apos;, [&apos;L&apos; =&amp;gt; &apos;Large&apos;, &apos;S&apos; =&amp;gt; &apos;Small&apos;], null, [&apos;placeholder&apos; =&amp;gt; &apos;Pick a size...&apos;]);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;در زیر نحوه ایجاد Grouped List را مشاهده می کنید :&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::select('animal',[
-    'Cats' =&amp;gt; ['leopard' =&amp;gt; 'Leopard'],
-    'Dogs' =&amp;gt; ['spaniel' =&amp;gt; 'Spaniel'],
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::select(&apos;animal&apos;,[
+    &apos;Cats&apos; =&amp;gt; [&apos;leopard&apos; =&amp;gt; &apos;Leopard&apos;],
+    &apos;Dogs&apos; =&amp;gt; [&apos;spaniel&apos; =&amp;gt; &apos;Spaniel&apos;],
 ]);&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;ایجاد Grouped List با یک رنج عددی :&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::selectRange('number', 10, 20);
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::selectRange(&apos;number&apos;, 10, 20);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h3&gt;ایجاد List  با یک Month Names :&lt;/h3&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::selectMonth('month');
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::selectMonth(&apos;month&apos;);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h3&gt;ایجاد Submit Button&lt;/h3&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::submit('Click Me!');
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo Form::submit(&apos;Click Me!&apos;);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
@@ -765,9 +765,9 @@ echo Form::radio('name', 'value', true);
 &lt;/p&gt;
 &lt;p&gt;جهت ایجاد Macro  همانند زیر عمل می کنیم :&lt;/p&gt;
 
-&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Form::macro('myField', function()
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Form::macro(&apos;myField&apos;, function()
 {
-    return '&lt;span class=&quot;nt&quot;&gt;&amp;lt;input&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;awesome&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;';
+    return &apos;&lt;span class=&quot;nt&quot;&gt;&amp;lt;input&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;awesome&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;&apos;;
 });
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
@@ -785,7 +785,7 @@ component  شبیه macro  های سفارشی می باشند با این تف�
 &lt;p&gt;
 جهت ثبت یک کامپوننت از روش زیر استفاده می کنیم
 &lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;Form::component('bsText', 'components.form.text', ['name', 'value', 'attributes']);
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;Form::component(&apos;bsText&apos;, &apos;components.form.text&apos;, [&apos;name&apos;, &apos;value&apos;, &apos;attributes&apos;]);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;
@@ -794,21 +794,21 @@ component  شبیه macro  های سفارشی می باشند با این تف�
 
 &lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// resources/views/components/form/text.blade.php
 &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;form-group&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-    {{ Form::label($name, null, ['class' =&amp;gt; 'control-label']) }}
-    {{ Form::text($name, $value, array_merge(['class' =&amp;gt; 'form-control'], $attributes)) }}
+    {{ Form::label($name, null, [&apos;class&apos; =&amp;gt; &apos;control-label&apos;]) }}
+    {{ Form::text($name, $value, array_merge([&apos;class&apos; =&amp;gt; &apos;form-control&apos;], $attributes)) }}
 &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;آنگاه جهت ثبت آن بصورت component  خواهیم داشت :&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;Form::component('bsText', 'components.form.text', ['name', 'value' =&amp;gt; null, 'attributes' =&amp;gt; []]);
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;Form::component(&apos;bsText&apos;, &apos;components.form.text&apos;, [&apos;name&apos;, &apos;value&apos; =&amp;gt; null, &apos;attributes&apos; =&amp;gt; []]);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;
 و برای فراخوانی components  ثبت شده :
 &lt;/p&gt;
 
-&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;{{ Form::bsText('first_name') }}
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;{{ Form::bsText(&apos;first_name&apos;) }}
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;که خروجی آن HTML  موجود در view  مشخص شده می باشد :&lt;/p&gt;
@@ -823,23 +823,23 @@ component  شبیه macro  های سفارشی می باشند با این تف�
 &lt;h3&gt;ایجاد URLs&lt;/h3&gt;
 &lt;p&gt;ایجاد یک لینک به یک آدرس URL  مشخص :&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo link_to('foo/bar', $title = null, $attributes = [], $secure = null);
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo link_to(&apos;foo/bar&apos;, $title = null, $attributes = [], $secure = null);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;ایجاد یک لینک برای اتصل به یک asset :&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo link_to_asset('foo/bar.zip', $title = null, $attributes = [], $secure = null);
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo link_to_asset(&apos;foo/bar.zip&apos;, $title = null, $attributes = [], $secure = null);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;ایجاد لینک به یک route :&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo link_to_route('route.name', $title = null, $parameters = [], $attributes = []);
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo link_to_route(&apos;route.name&apos;, $title = null, $parameters = [], $attributes = []);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;ایجاد لینک به یک controller action :&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo link_to_action('HomeController@getIndex', $title = null, $parameters = [], $attributes = []);
-&lt;/code&gt;&lt;/pre&gt;</content><author><name>Farhad Mirzapour</name></author><category term="articles" /><summary type="html">Laravel Collective جهت ایجاد فرم های ایمن و سریع در فریم ورک laravel کاربرد دارد به عبارتی پس از آنکه ما این امکان جانبی را نصب نمودیم دیگر نیاز به کدنویسی های پیچیده html برای فرم های خود نداریم و به سادگی می توانیم از طریق داکیومنتی که خود لاراول کالکتیو در اختیار ما قرار می دهد هر عملیاتی را انجام دهیم. نصب جهت نصب این پکیج با استفاده از composer ، فایل composer.json پروژه خود را همانند زیر ویرایش نمائید : composer require &quot;laravelcollective/html&quot;:&quot;^5.4.0&quot; سپس، provider جدید خود را به آرایه providers واقع در config / app.php اضافه کنید: 'providers' =&amp;gt; [ // ... Collective\Html\HtmlServiceProvider::class, // ... ], نهایتا دو نام مستعار کلاس را به آرایه aliases واقع در config / app.php اضافه نمایید : 'aliases' =&amp;gt; [ // ... 'Form' =&amp;gt; Collective\Html\FormFacade::class, 'Html' =&amp;gt; Collective\Html\HtmlFacade::class, // ... ], ایجاد Form {{ Form::open(['url' =&amp;gt; 'foo/bar']) }} // {{ Form::close() }} به طور پیش فرض، از روش POST جهت ارسال اطلاعات در فرم استفاده می شود، با این حال، شما می توانید روش دیگری را مشخص کنید: echo Form::open(['url' =&amp;gt; 'foo/bar', 'method' =&amp;gt; 'put']) توجه داشته باشید: از آنجا که فرمهای HTML فقط از POST و GET پشتیبانی می کنند، جهت استفاده از روشهای PUT و DELETE ، بطور اتوماتیک یک فیلد پنهان method_ به فرم شما اضافه می گردد. جهت ارسال اطلاعات فرم به route و یا action کنترلر همانند زیر عمل می کنیم : echo Form::open(['route' =&amp;gt; 'route.name']) echo Form::open(['action' =&amp;gt; 'Controller@method']) همچنین جهت ارسال پارامتر به route و یا action کنترلر همانند زیر عمل می کنیم: echo Form::open(['route' =&amp;gt; ['route.name', $user-&amp;gt;id]]) echo Form::open(['action' =&amp;gt; ['Controller@method', $user-&amp;gt;id]]) همچنین جهت آپلود و ارسال فایل مانند زیر عمل کنید : echo Form::open(['url' =&amp;gt; 'foo/bar', 'files' =&amp;gt; true]) استفاده از توکن CSRF در فرم Laravel روش آسانی برای حفاظت از اپلیکیشن شما در برابر حملات cross-site request forgeries فراهم کرده است. اگر شما از روش Form::open با استفاده از POST، PUT یا DELETE استفاده کنید، نشانه CSRF به صورت خودکار به عنوان فیلد پنهان به فرم شما اضافه می شود. همچنین، اگر شما مایل به ایجاد HTML برای فیلد پنهان CSRF هستید، می توانید از روش token استفاده کنید: echo Form::token(); افزودن CSRF به Route : Route::post('profile', [ 'before' =&amp;gt; 'csrf', function() { // } ] ); ایجاد فرم با استفاده از Model ممکن است بخواهید فرم را بر اساس محتویات یک model پر کنید. برای انجام این کار، از روش Form::model استفاده کنید: echo Form::model($user, ['route' =&amp;gt; ['user.update', $user-&amp;gt;id]]) زمانیکه که شما یک عنصر در فرم همانند یک text input را تولید می کنید، ، مقدار این text input به صورت خودکار برابر با مقدار نام آیتم موجود در Model تنظیم می گردد. با این حال موارد دیگری نیز وجود دارد. اگر یک آیتم در Session flash data مطابق با نام ورودی وجود داشته باشد، بر روی مقدار مدل اولویت خواهد داشت. بنابراین ترتیب اولویت ها بدین صورت است : Session Flash Data (Old Input) Explicitly Passed Value Model Attribute Data این امر به شما اجازه می دهد تا سریعا فرم هایی را ایجاد کنید که نه تنها به مقادیر model پیوند دارند، بلکه اگر خطای اعتبارسنجی روی سرور وجود داشته باشد، به راحتی مقادیر فرم دوباره پر شود! توجه: هنگام استفاده از Form :: model، باید فرم خود را با Form::close ببندید! بررسی Form Model Accessors Eloquent Accessor در Laravel اجازه می دهد ویژگی model را تا قبل از بازگشت دستکاری کنید. برای مثال، برای تعیین فرمت های تاریخ جهانی، این می تواند بسیار مفید باشد. با این حال، فرمت تاریخ مورد استفاده برای نمایش ممکن است با قالب تاریخی مورد استفاده برای عناصر فرم سازگار نباشد. شما می توانید این را با ایجاد دو دسترسی جداگانه حل کنید: یک دسترسی استاندارد و یا یک فرم دسترسی. برای تعریف دسترسی به فرم، یک متد formFooAttribute را در model خود ایجاد کنید که در آن Foo نام ستونی است که میخواهید به آن دسترسی پیدا کنید. در این مثال، یک accessor برای ویژگی date_of_birth تعریف می کنیم. زمانیکه ()Form::model جهت پر کردن فرم استفاده شود، Accessor به صورت خودکار توسط ایجاد کننده فرم فراخوانی می گردد. شما باید با استفاده از روش trait کلاس FormAccessible را به model خود include نمایید. &amp;lt;?php namespace App; use Carbon\Carbon; use Illuminate\Database\Eloquent\Model; use Collective\Html\Eloquent\FormAccessible; class User extends Model { use FormAccessible; /** * Get the user's first name. * * @param string $value * @return string */ public function getDateOfBirthAttribute($value) { return Carbon::parse($value)-&amp;gt;format('m/d/Y'); } /** * Get the user's first name for forms. * * @param string $value * @return string */ public function formDateOfBirthAttribute($value) { return Carbon::parse($value)-&amp;gt;format('Y-m-d'); } } ایجاد Label در فرم echo Form::label('email', 'E-Mail Address'); تعیین ویژگی های HTML در Label : echo Form::label('email', 'E-Mail Address', ['class' =&amp;gt; 'awesome']); نکته: پس از ایجاد یک Label، هر عنصر فرم که با نامی مطابق با نام Label ایجاد می کند، به طور خودکار یک شناسه مطابق با نام Label نیز دریافت می کند. ایجاد Text Input echo Form::text('username'); تعیین یک مقدار پیش فرض در Text Input : echo Form::text('email', 'example@gmail.com'); ایجاد Password Input echo Form::password('password', ['class' =&amp;gt; 'awesome']); ایجاد Input های Email و File echo Form::email('name', $value = null, $attributes = []); echo Form::file('name', $attributes = []); ایجاد Checkbox و Radio Input echo Form::checkbox('name', 'value'); echo Form::radio('name', 'value'); Checkbox Or Radio Input که ویژگی تیک خورده اند : echo Form::checkbox('name', 'value', true); echo Form::radio('name', 'value', true); ایجاد Number Input echo Form::number('name', 'value'); ایجاد Date Input echo Form::date('name', \Carbon\Carbon::now()); ایجاد File Input echo Form::file('image'); نکته: خاصیت files باید در هنگام ایجاد فرم برابر true باشد ایجاد Drop-Down List echo Form::select('size', ['L' =&amp;gt; 'Large', 'S' =&amp;gt; 'Small']); ایجاد Drop-Down List با گزینه انتخاب شده پیش فرض : echo Form::select('size', ['L' =&amp;gt; 'Large', 'S' =&amp;gt; 'Small'], 'S'); ایجاد Drop-Down List همراه با placeholder : echo Form::select('size', ['L' =&amp;gt; 'Large', 'S' =&amp;gt; 'Small'], null, ['placeholder' =&amp;gt; 'Pick a size...']); در زیر نحوه ایجاد Grouped List را مشاهده می کنید : echo Form::select('animal',[ 'Cats' =&amp;gt; ['leopard' =&amp;gt; 'Leopard'], 'Dogs' =&amp;gt; ['spaniel' =&amp;gt; 'Spaniel'], ]); ایجاد Grouped List با یک رنج عددی : echo Form::selectRange('number', 10, 20); ایجاد List با یک Month Names : echo Form::selectMonth('month'); ایجاد Submit Button echo Form::submit('Click Me!'); ایجاد Form Macro به Form class helpers شخصی، اصطلاحا macro گفته می شود. جهت ایجاد Macro همانند زیر عمل می کنیم : Form::macro('myField', function() { return '&amp;lt;input type=&quot;awesome&quot;&amp;gt;'; }); هم اکنون با استفاده از نام Macro می توانیم آنرا فراخوانی کنیم : echo Form::myField(); ایجاد Custom Component component شبیه macro های سفارشی می باشند با این تفاوت که در ماکروها خروجی مستقیما تگ های HTML است ولی در کامپوننت محتوای موجود در قالب Laravel Blade Templates می باشد جهت ثبت یک کامپوننت از روش زیر استفاده می کنیم Form::component('bsText', 'components.form.text', ['name', 'value', 'attributes']); برای مثال فرض کنید یک view مانند زیر داشته باشیم : // resources/views/components/form/text.blade.php &amp;lt;div class=&quot;form-group&quot;&amp;gt; {{ Form::label($name, null, ['class' =&amp;gt; 'control-label']) }} {{ Form::text($name, $value, array_merge(['class' =&amp;gt; 'form-control'], $attributes)) }} &amp;lt;/div&amp;gt; آنگاه جهت ثبت آن بصورت component خواهیم داشت : Form::component('bsText', 'components.form.text', ['name', 'value' =&amp;gt; null, 'attributes' =&amp;gt; []]); و برای فراخوانی components ثبت شده : {{ Form::bsText('first_name') }} که خروجی آن HTML موجود در view مشخص شده می باشد : &amp;lt;div class=&quot;form-group&quot;&amp;gt; &amp;lt;label for=&quot;first_name&quot;&amp;gt;First Name&amp;lt;/label&amp;gt; &amp;lt;input type=&quot;text&quot; name=&quot;first_name&quot; value=&quot;&quot; class=&quot;form-control&quot;&amp;gt; &amp;lt;/div&amp;gt; ایجاد URLs ایجاد یک لینک به یک آدرس URL مشخص : echo link_to('foo/bar', $title = null, $attributes = [], $secure = null); ایجاد یک لینک برای اتصل به یک asset : echo link_to_asset('foo/bar.zip', $title = null, $attributes = [], $secure = null); ایجاد لینک به یک route : echo link_to_route('route.name', $title = null, $parameters = [], $attributes = []); ایجاد لینک به یک controller action : echo link_to_action('HomeController@getIndex', $title = null, $parameters = [], $attributes = []);</summary></entry><entry><title type="html">معرفی Design Pattern</title><link href="http://localhost:4000/2017/12/06/design-patterns.html" rel="alternate" type="text/html" title="معرفی Design Pattern" /><published>2017-12-06T19:03:42+03:30</published><updated>2017-12-06T19:03:42+03:30</updated><id>http://localhost:4000/2017/12/06/design-patterns</id><content type="html" xml:base="http://localhost:4000/2017/12/06/design-patterns.html">&lt;p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;echo link_to_action(&apos;HomeController@getIndex&apos;, $title = null, $parameters = [], $attributes = []);
+&lt;/code&gt;&lt;/pre&gt;</content><author><name>Farhad Mirzapour</name></author><category term="articles" /><summary type="html">Laravel Collective جهت ایجاد فرم های ایمن و سریع در فریم ورک laravel کاربرد دارد به عبارتی پس از آنکه ما این امکان جانبی را نصب نمودیم دیگر نیاز به کدنویسی های پیچیده html برای فرم های خود نداریم و به سادگی می توانیم از طریق داکیومنتی که خود لاراول کالکتیو در اختیار ما قرار می دهد هر عملیاتی را انجام دهیم. نصب جهت نصب این پکیج با استفاده از composer ، فایل composer.json پروژه خود را همانند زیر ویرایش نمائید : composer require &quot;laravelcollective/html&quot;:&quot;^5.4.0&quot; سپس، provider جدید خود را به آرایه providers واقع در config / app.php اضافه کنید: &apos;providers&apos; =&amp;gt; [ // ... Collective\Html\HtmlServiceProvider::class, // ... ], نهایتا دو نام مستعار کلاس را به آرایه aliases واقع در config / app.php اضافه نمایید : &apos;aliases&apos; =&amp;gt; [ // ... &apos;Form&apos; =&amp;gt; Collective\Html\FormFacade::class, &apos;Html&apos; =&amp;gt; Collective\Html\HtmlFacade::class, // ... ], ایجاد Form {{ Form::open([&apos;url&apos; =&amp;gt; &apos;foo/bar&apos;]) }} // {{ Form::close() }} به طور پیش فرض، از روش POST جهت ارسال اطلاعات در فرم استفاده می شود، با این حال، شما می توانید روش دیگری را مشخص کنید: echo Form::open([&apos;url&apos; =&amp;gt; &apos;foo/bar&apos;, &apos;method&apos; =&amp;gt; &apos;put&apos;]) توجه داشته باشید: از آنجا که فرمهای HTML فقط از POST و GET پشتیبانی می کنند، جهت استفاده از روشهای PUT و DELETE ، بطور اتوماتیک یک فیلد پنهان method_ به فرم شما اضافه می گردد. جهت ارسال اطلاعات فرم به route و یا action کنترلر همانند زیر عمل می کنیم : echo Form::open([&apos;route&apos; =&amp;gt; &apos;route.name&apos;]) echo Form::open([&apos;action&apos; =&amp;gt; &apos;Controller@method&apos;]) همچنین جهت ارسال پارامتر به route و یا action کنترلر همانند زیر عمل می کنیم: echo Form::open([&apos;route&apos; =&amp;gt; [&apos;route.name&apos;, $user-&amp;gt;id]]) echo Form::open([&apos;action&apos; =&amp;gt; [&apos;Controller@method&apos;, $user-&amp;gt;id]]) همچنین جهت آپلود و ارسال فایل مانند زیر عمل کنید : echo Form::open([&apos;url&apos; =&amp;gt; &apos;foo/bar&apos;, &apos;files&apos; =&amp;gt; true]) استفاده از توکن CSRF در فرم Laravel روش آسانی برای حفاظت از اپلیکیشن شما در برابر حملات cross-site request forgeries فراهم کرده است. اگر شما از روش Form::open با استفاده از POST، PUT یا DELETE استفاده کنید، نشانه CSRF به صورت خودکار به عنوان فیلد پنهان به فرم شما اضافه می شود. همچنین، اگر شما مایل به ایجاد HTML برای فیلد پنهان CSRF هستید، می توانید از روش token استفاده کنید: echo Form::token(); افزودن CSRF به Route : Route::post(&apos;profile&apos;, [ &apos;before&apos; =&amp;gt; &apos;csrf&apos;, function() { // } ] ); ایجاد فرم با استفاده از Model ممکن است بخواهید فرم را بر اساس محتویات یک model پر کنید. برای انجام این کار، از روش Form::model استفاده کنید: echo Form::model($user, [&apos;route&apos; =&amp;gt; [&apos;user.update&apos;, $user-&amp;gt;id]]) زمانیکه که شما یک عنصر در فرم همانند یک text input را تولید می کنید، ، مقدار این text input به صورت خودکار برابر با مقدار نام آیتم موجود در Model تنظیم می گردد. با این حال موارد دیگری نیز وجود دارد. اگر یک آیتم در Session flash data مطابق با نام ورودی وجود داشته باشد، بر روی مقدار مدل اولویت خواهد داشت. بنابراین ترتیب اولویت ها بدین صورت است : Session Flash Data (Old Input) Explicitly Passed Value Model Attribute Data این امر به شما اجازه می دهد تا سریعا فرم هایی را ایجاد کنید که نه تنها به مقادیر model پیوند دارند، بلکه اگر خطای اعتبارسنجی روی سرور وجود داشته باشد، به راحتی مقادیر فرم دوباره پر شود! توجه: هنگام استفاده از Form :: model، باید فرم خود را با Form::close ببندید! بررسی Form Model Accessors Eloquent Accessor در Laravel اجازه می دهد ویژگی model را تا قبل از بازگشت دستکاری کنید. برای مثال، برای تعیین فرمت های تاریخ جهانی، این می تواند بسیار مفید باشد. با این حال، فرمت تاریخ مورد استفاده برای نمایش ممکن است با قالب تاریخی مورد استفاده برای عناصر فرم سازگار نباشد. شما می توانید این را با ایجاد دو دسترسی جداگانه حل کنید: یک دسترسی استاندارد و یا یک فرم دسترسی. برای تعریف دسترسی به فرم، یک متد formFooAttribute را در model خود ایجاد کنید که در آن Foo نام ستونی است که میخواهید به آن دسترسی پیدا کنید. در این مثال، یک accessor برای ویژگی date_of_birth تعریف می کنیم. زمانیکه ()Form::model جهت پر کردن فرم استفاده شود، Accessor به صورت خودکار توسط ایجاد کننده فرم فراخوانی می گردد. شما باید با استفاده از روش trait کلاس FormAccessible را به model خود include نمایید. &amp;lt;?php namespace App; use Carbon\Carbon; use Illuminate\Database\Eloquent\Model; use Collective\Html\Eloquent\FormAccessible; class User extends Model { use FormAccessible; /** * Get the user&apos;s first name. * * @param string $value * @return string */ public function getDateOfBirthAttribute($value) { return Carbon::parse($value)-&amp;gt;format(&apos;m/d/Y&apos;); } /** * Get the user&apos;s first name for forms. * * @param string $value * @return string */ public function formDateOfBirthAttribute($value) { return Carbon::parse($value)-&amp;gt;format(&apos;Y-m-d&apos;); } } ایجاد Label در فرم echo Form::label(&apos;email&apos;, &apos;E-Mail Address&apos;); تعیین ویژگی های HTML در Label : echo Form::label(&apos;email&apos;, &apos;E-Mail Address&apos;, [&apos;class&apos; =&amp;gt; &apos;awesome&apos;]); نکته: پس از ایجاد یک Label، هر عنصر فرم که با نامی مطابق با نام Label ایجاد می کند، به طور خودکار یک شناسه مطابق با نام Label نیز دریافت می کند. ایجاد Text Input echo Form::text(&apos;username&apos;); تعیین یک مقدار پیش فرض در Text Input : echo Form::text(&apos;email&apos;, &apos;example@gmail.com&apos;); ایجاد Password Input echo Form::password(&apos;password&apos;, [&apos;class&apos; =&amp;gt; &apos;awesome&apos;]); ایجاد Input های Email و File echo Form::email(&apos;name&apos;, $value = null, $attributes = []); echo Form::file(&apos;name&apos;, $attributes = []); ایجاد Checkbox و Radio Input echo Form::checkbox(&apos;name&apos;, &apos;value&apos;); echo Form::radio(&apos;name&apos;, &apos;value&apos;); Checkbox Or Radio Input که ویژگی تیک خورده اند : echo Form::checkbox(&apos;name&apos;, &apos;value&apos;, true); echo Form::radio(&apos;name&apos;, &apos;value&apos;, true); ایجاد Number Input echo Form::number(&apos;name&apos;, &apos;value&apos;); ایجاد Date Input echo Form::date(&apos;name&apos;, \Carbon\Carbon::now()); ایجاد File Input echo Form::file(&apos;image&apos;); نکته: خاصیت files باید در هنگام ایجاد فرم برابر true باشد ایجاد Drop-Down List echo Form::select(&apos;size&apos;, [&apos;L&apos; =&amp;gt; &apos;Large&apos;, &apos;S&apos; =&amp;gt; &apos;Small&apos;]); ایجاد Drop-Down List با گزینه انتخاب شده پیش فرض : echo Form::select(&apos;size&apos;, [&apos;L&apos; =&amp;gt; &apos;Large&apos;, &apos;S&apos; =&amp;gt; &apos;Small&apos;], &apos;S&apos;); ایجاد Drop-Down List همراه با placeholder : echo Form::select(&apos;size&apos;, [&apos;L&apos; =&amp;gt; &apos;Large&apos;, &apos;S&apos; =&amp;gt; &apos;Small&apos;], null, [&apos;placeholder&apos; =&amp;gt; &apos;Pick a size...&apos;]); در زیر نحوه ایجاد Grouped List را مشاهده می کنید : echo Form::select(&apos;animal&apos;,[ &apos;Cats&apos; =&amp;gt; [&apos;leopard&apos; =&amp;gt; &apos;Leopard&apos;], &apos;Dogs&apos; =&amp;gt; [&apos;spaniel&apos; =&amp;gt; &apos;Spaniel&apos;], ]); ایجاد Grouped List با یک رنج عددی : echo Form::selectRange(&apos;number&apos;, 10, 20); ایجاد List با یک Month Names : echo Form::selectMonth(&apos;month&apos;); ایجاد Submit Button echo Form::submit(&apos;Click Me!&apos;); ایجاد Form Macro به Form class helpers شخصی، اصطلاحا macro گفته می شود. جهت ایجاد Macro همانند زیر عمل می کنیم : Form::macro(&apos;myField&apos;, function() { return &apos;&amp;lt;input type=&quot;awesome&quot;&amp;gt;&apos;; }); هم اکنون با استفاده از نام Macro می توانیم آنرا فراخوانی کنیم : echo Form::myField(); ایجاد Custom Component component شبیه macro های سفارشی می باشند با این تفاوت که در ماکروها خروجی مستقیما تگ های HTML است ولی در کامپوننت محتوای موجود در قالب Laravel Blade Templates می باشد جهت ثبت یک کامپوننت از روش زیر استفاده می کنیم Form::component(&apos;bsText&apos;, &apos;components.form.text&apos;, [&apos;name&apos;, &apos;value&apos;, &apos;attributes&apos;]); برای مثال فرض کنید یک view مانند زیر داشته باشیم : // resources/views/components/form/text.blade.php &amp;lt;div class=&quot;form-group&quot;&amp;gt; {{ Form::label($name, null, [&apos;class&apos; =&amp;gt; &apos;control-label&apos;]) }} {{ Form::text($name, $value, array_merge([&apos;class&apos; =&amp;gt; &apos;form-control&apos;], $attributes)) }} &amp;lt;/div&amp;gt; آنگاه جهت ثبت آن بصورت component خواهیم داشت : Form::component(&apos;bsText&apos;, &apos;components.form.text&apos;, [&apos;name&apos;, &apos;value&apos; =&amp;gt; null, &apos;attributes&apos; =&amp;gt; []]); و برای فراخوانی components ثبت شده : {{ Form::bsText(&apos;first_name&apos;) }} که خروجی آن HTML موجود در view مشخص شده می باشد : &amp;lt;div class=&quot;form-group&quot;&amp;gt; &amp;lt;label for=&quot;first_name&quot;&amp;gt;First Name&amp;lt;/label&amp;gt; &amp;lt;input type=&quot;text&quot; name=&quot;first_name&quot; value=&quot;&quot; class=&quot;form-control&quot;&amp;gt; &amp;lt;/div&amp;gt; ایجاد URLs ایجاد یک لینک به یک آدرس URL مشخص : echo link_to(&apos;foo/bar&apos;, $title = null, $attributes = [], $secure = null); ایجاد یک لینک برای اتصل به یک asset : echo link_to_asset(&apos;foo/bar.zip&apos;, $title = null, $attributes = [], $secure = null); ایجاد لینک به یک route : echo link_to_route(&apos;route.name&apos;, $title = null, $parameters = [], $attributes = []); ایجاد لینک به یک controller action : echo link_to_action(&apos;HomeController@getIndex&apos;, $title = null, $parameters = [], $attributes = []);</summary></entry><entry><title type="html">معرفی Design Pattern</title><link href="http://localhost:4000/2017/12/06/design-patterns.html" rel="alternate" type="text/html" title="معرفی Design Pattern" /><published>2017-12-06T19:03:42+03:30</published><updated>2017-12-06T19:03:42+03:30</updated><id>http://localhost:4000/2017/12/06/design-patterns</id><content type="html" xml:base="http://localhost:4000/2017/12/06/design-patterns.html">&lt;p&gt;
 Design Patternها یکسری جواب های ثابت شده به مشکلات رایج در طراحی هستند. به وسیله آنها می توان یکسری راهکار برای حل مسائل بازگشتی در طراحی برنامه تعریف کرد.
 &lt;/p&gt;
 
@@ -1351,7 +1351,7 @@ class IoC {
             return $name();
         }
 
-        throw new Exception('Nothing registered with that name, fool.');
+        throw new Exception(&apos;Nothing registered with that name, fool.&apos;);
     }
 
     /**
@@ -1375,17 +1375,17 @@ class IoC {
 &lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&quot;language-php  line-numbers&quot;&gt;// Add `photo` to the registry array, along with a resolver
-IoC::register('photo', function() {
+IoC::register(&apos;photo&apos;, function() {
     $photo = new Photo;
-    $photo-&amp;gt;setDB('...');
-    $photo-&amp;gt;setConfig('...');
+    $photo-&amp;gt;setDB(&apos;...&apos;);
+    $photo-&amp;gt;setConfig(&apos;...&apos;);
 
     return $photo;
 });
 
 // Fetch new photo instance with dependencies set
-$photo = IoC::resolve('photo');
-&lt;/code&gt;&lt;/pre&gt;</content><author><name>Farhad Mirzapour</name></author><category term="articles" /><summary type="html">تزریق وابستگی یا Dependency Injection یک پترن و الگوی طراحی است که هدف اصلی آن حذف وابستگی‌ های موجود بین دو کلاس با استفاده از یک رابط (Interface) است. در تزریق وابستگی ها دو اصطلاح داریم: loosely coupled: بدین معنی‌ست که کمترین وابستگی بین دو کلاس وجود دارد. tight coupled: بدین معنی‌ست که بیشترین وابستگی بین دو کلاس وجود دارد. بنابراین باید برنامه و نرم‌افزار خود را طوری طراحی کنیم که تا حد ممکن استحکام ضعیف (loosely coupled) باشد. هنگامیکه دو کلاس tight coupled هستند (یعنی به همدیگر وابستگی بسیار دارند یا به اصطلاح دیگری در هم چفت شده‌اند) با استفاده از یک رابطه‌ی باینری به یکدیگر متصل هستند و این امر انعطاف‌پذیری نرم‌افزار را به شدت پایین می‌آورد. چرا بایستی کد وابستگی پایینی داشته باشد؟ Extensibility (توسعه پذیری) : با افزودن یک کلاس به برنامه نیازمند تغییرات در بخش های دیگر نباشیم Testability (قابلیت تست پذیری) : فرآیند تست واحد به سهولت و بدون نیاز به در نظرگرفتن بخش های دیگر در آزمون انجام گیرد Late Binding (انقیاد پویا) : بتوان در زمان اجرا و کامپایل خدمات مورداستفاده برنامه را تغییر داد Parallel Development (توسعه موازی) : توسعه یک بخش از برنامه منوط به توسعه بخش خاص دیگری نباشد Maintainability (قابلیت نگه داری) : افزودن بخش های جدید به برنامه و تغییرات پرهزینه نشوند. استفاده از DI یک آینده نگری است. همه ما میدانیم که احتمال تغییرات در سورس همیشه وجود دارد. پس نحوه کد نویسی در بهترین حالت خود, با کمترین تغییرات در آینده بیشترین کارایی را فراهم می نماید. در حالت های کد نویسی آشفته و بی برنامه ممکن است کوچکترین تغییری نیازمند بررسی و تغییر چندین کلاس و چندین فایل و چندین ماژول باشد. اما با برنامه ریزی این تغییرات به حداقل خود خواهد رسید علاوه بر آن مدیریت تغییرات را برای شما آسوده تر خواهد کرد. جهت مفهوم این مطلب به مثال زیر توجه کنید : &amp;lt;?php class Photo { /** * @var PDO The connection to the database */ protected $db; /** * Construct. */ public function __construct() { $this-&amp;gt;db = DB::getInstance(); } } در نگاه اول، این کد ممکن است به نظر بی عیب و بی نقص باشد. اما باید درنظر گرفت کلاس Photo وابستگی زیادی به اتصال پایگاه داده دارد(ممکن است در آینده بخواهیم از انواع مختلف پایگاه داده ها همانند sqlserver,mysql,oracle ... استفاده نماییم که مجبور به تغییرات زیاد در این بخش شده و حتی منجر به ایجاد باگ های زیاد در صورت فراموشی تغییرات مربوطه می گردد). آیا به این فکر می کنید چرا باید کلاس Photo با منابع خارجی ارتباط برقرار کند؟ ایده اصلی این است که هر کلاس مسئول یک وظیفه باشد و با توجه به این نکته مسئولیت اتصال به پایگاه داده طبیعی نیست. (اصل Single Responsibility Principle) بیایید نگاه دوباره ای به کلاس Photo بیاندازیم و اتصال پایگاه داده را به خارج از این کلاس انتقال دهیم. دو راه برای انجام این کار وجود دارد: Constructor Injection (تزریق با استفاده از سازنده کلاس) Setter Injection (تزریق با استفاده از متدهای setter کلاس) تزریق با استفاده از سازنده کلاس (Constructor Injection) در این روش، زمانی که متد سازنده کلاس اجرا می شود، همه وابستگی های مورد نیاز را تزریق می کنیم. همانند کد زیر : &amp;lt;?php class Photo { /** * @var PDO The connection to the database */ protected $db; /** * Construct. * @param PDO $db_conn The database connection */ public function __construct($dbConn) { $this-&amp;gt;db = $dbConn; } } $photo = new Photo($dbConn); تزریق با استفاده از متدهای setter کلاس (Setter Injection) در این روش می توان با استفاده از متدهایی که درون کلاس تعریف می کنیم اشیا کلاس های دیگر را به درون کلاس تزریق نماییم. همانند کد زیر : &amp;lt;?php class Photo { /** * @var PDO The connection to the database */ protected $db; public function __construct() {} /** * Sets the database connection * @param PDO $dbConn The connection to the database. */ public function setDB($dbConn) { $this-&amp;gt;db = $dbConn; } } $photo = new Photo; $photo-&amp;gt;setDB($dbConn); با این تغییر ساده، کلاس دیگر وابسته به هیچ ارتباط خاص نیست. سیستم بیرونی کنترل کامل را حفظ می کند. این تکنیک باعث می شود که کلاس به راحتی تست شود، زیرا ما می توانیم در هنگام عملیات mock کردن دیتابیس در فرآیند تست واحد،از متد setDB استفاده نمائیم. مشکل اساسی جهت استفاده از تزریق کننده ها این است که کاربر باید از وابستگی های کلاس کاملا آگاه باشد و باید آن را به نحوی تنظیم کند. همانند زیر : $photo = new Photo; $photo-&amp;gt;setDB($dbConn); $photo-&amp;gt;setConfig($config); $photo-&amp;gt;setResponse($response); قبل از این کاربر به سادگی می توانست نمونه جدیدی از کلاس Photo را ایجاد کند، اما اکنون باید تمام این وابستگی ها را به یاد داشته باشد که با همچنین در سردرگمی و پیچیدگی مواجه شدیم!!! راه حل این مشکل استفاده از مفهوم Inversion of Control) IoC) می باشد. مفهوم Inversion of Control) IoC) مفهوم Inversion of Control) IoC) بدین صورت بیان می گردد: در این فریم ورک امکان تنظیم اولیه وابستگی‌های سیستم وجود دارد. برای مثال زمانیکه برنامه از یک IoC Container، نوع اینترفیس خاصی را درخواست می‌کند، این فریم ورک با توجه به تنظیمات اولیه‌اش، کلاسی مشخص را بازگشت خواهد داد. به کلاس IoC کد زیر دقت نمایید : // Also frequently called &quot;Container&quot; class IoC { /** * @var PDO The connection to the database */ protected $db; /** * Create a new instance of Photo and set dependencies. */ public static newPhoto() { $photo = new Photo; $photo-&amp;gt;setDB(static::$db); // $photo-&amp;gt;setConfig(); // $photo-&amp;gt;setResponse(); return $photo; } } همانطور که در کد بالا مشاهده می کنید ایجاد یک نمونه از کلاس و نیز فراخوانی وابستگی های مرتبط با آن درون متد newPhoto که بصورت static تعریف شده انجام می گردد. بنابراین هر زمان که به کلاس Photo نیاز داشتیم نیازی به خاطر سپردن وابستگی های مرتبط با آن نیست و تنها کافی است بصورت زیر عمل می کنیم : $photo = IoC::newPhoto(); بسیار خب فرض کنید علاوه بر کلاس Photo کلاس های دیگری نیز داشته باشیم، به جای ایجاد یک متد جدید در IoC به ازای هر کلاس می توانیم از روش عمومی تر همانند زیر استفاده نمائیم : // Also frequently called &quot;Container&quot; class IoC { /** * @var PDO The connection to the database */ protected static $registry = array(); /** * Add a new resolver to the registry array. * @param string $name The id * @param object $resolve Closure that creates instance * @return void */ public static function register($name, Closure $resolve) { static::$registry[$name] = $resolve; } /** * Create the instance * @param string $name The id * @return mixed */ public static function resolve($name) { if ( static::registered($name) ) { $name = static::$registry[$name]; return $name(); } throw new Exception('Nothing registered with that name, fool.'); } /** * Determine whether the id is registered * @param string $name The id * @return bool Whether to id exists or not */ public static function registered($name) { return array_key_exists($name, static::$registry); } } در کد بالا یک آرایه به نام registry$ ایجاد کرده ایم که با استفاده از متد register مقادیر کلید (نام کلاس) و دیتای متناظر با آن که یک تابع از نوع Closure می باشد مقدار دهی می شود. همچنین از تابع resolve و registered برای بررسی اینکه آیا نام کلاس در آرایه قبلا ثبت شده است و یا خیر استفاده می شود. بنابراین تنها کافی است برای ثبت یک کلاس و وابستگی های مرتبط با آن و سپس فراخوانی کلاس مربوط به آن بدین صورت عمل کنیم : // Add `photo` to the registry array, along with a resolver IoC::register('photo', function() { $photo = new Photo; $photo-&amp;gt;setDB('...'); $photo-&amp;gt;setConfig('...'); return $photo; }); // Fetch new photo instance with dependencies set $photo = IoC::resolve('photo');</summary></entry><entry><title type="html">اصول S.O.L.I.D در طراحی شی گرا (OOD)</title><link href="http://localhost:4000/2017/11/10/solid-object-oriented-design.html" rel="alternate" type="text/html" title="اصول S.O.L.I.D در طراحی شی گرا (OOD)" /><published>2017-11-10T10:00:42+03:30</published><updated>2017-11-10T10:00:42+03:30</updated><id>http://localhost:4000/2017/11/10/solid-object-oriented-design</id><content type="html" xml:base="http://localhost:4000/2017/11/10/solid-object-oriented-design.html">&lt;p&gt;
+$photo = IoC::resolve(&apos;photo&apos;);
+&lt;/code&gt;&lt;/pre&gt;</content><author><name>Farhad Mirzapour</name></author><category term="articles" /><summary type="html">تزریق وابستگی یا Dependency Injection یک پترن و الگوی طراحی است که هدف اصلی آن حذف وابستگی‌ های موجود بین دو کلاس با استفاده از یک رابط (Interface) است. در تزریق وابستگی ها دو اصطلاح داریم: loosely coupled: بدین معنی‌ست که کمترین وابستگی بین دو کلاس وجود دارد. tight coupled: بدین معنی‌ست که بیشترین وابستگی بین دو کلاس وجود دارد. بنابراین باید برنامه و نرم‌افزار خود را طوری طراحی کنیم که تا حد ممکن استحکام ضعیف (loosely coupled) باشد. هنگامیکه دو کلاس tight coupled هستند (یعنی به همدیگر وابستگی بسیار دارند یا به اصطلاح دیگری در هم چفت شده‌اند) با استفاده از یک رابطه‌ی باینری به یکدیگر متصل هستند و این امر انعطاف‌پذیری نرم‌افزار را به شدت پایین می‌آورد. چرا بایستی کد وابستگی پایینی داشته باشد؟ Extensibility (توسعه پذیری) : با افزودن یک کلاس به برنامه نیازمند تغییرات در بخش های دیگر نباشیم Testability (قابلیت تست پذیری) : فرآیند تست واحد به سهولت و بدون نیاز به در نظرگرفتن بخش های دیگر در آزمون انجام گیرد Late Binding (انقیاد پویا) : بتوان در زمان اجرا و کامپایل خدمات مورداستفاده برنامه را تغییر داد Parallel Development (توسعه موازی) : توسعه یک بخش از برنامه منوط به توسعه بخش خاص دیگری نباشد Maintainability (قابلیت نگه داری) : افزودن بخش های جدید به برنامه و تغییرات پرهزینه نشوند. استفاده از DI یک آینده نگری است. همه ما میدانیم که احتمال تغییرات در سورس همیشه وجود دارد. پس نحوه کد نویسی در بهترین حالت خود, با کمترین تغییرات در آینده بیشترین کارایی را فراهم می نماید. در حالت های کد نویسی آشفته و بی برنامه ممکن است کوچکترین تغییری نیازمند بررسی و تغییر چندین کلاس و چندین فایل و چندین ماژول باشد. اما با برنامه ریزی این تغییرات به حداقل خود خواهد رسید علاوه بر آن مدیریت تغییرات را برای شما آسوده تر خواهد کرد. جهت مفهوم این مطلب به مثال زیر توجه کنید : &amp;lt;?php class Photo { /** * @var PDO The connection to the database */ protected $db; /** * Construct. */ public function __construct() { $this-&amp;gt;db = DB::getInstance(); } } در نگاه اول، این کد ممکن است به نظر بی عیب و بی نقص باشد. اما باید درنظر گرفت کلاس Photo وابستگی زیادی به اتصال پایگاه داده دارد(ممکن است در آینده بخواهیم از انواع مختلف پایگاه داده ها همانند sqlserver,mysql,oracle ... استفاده نماییم که مجبور به تغییرات زیاد در این بخش شده و حتی منجر به ایجاد باگ های زیاد در صورت فراموشی تغییرات مربوطه می گردد). آیا به این فکر می کنید چرا باید کلاس Photo با منابع خارجی ارتباط برقرار کند؟ ایده اصلی این است که هر کلاس مسئول یک وظیفه باشد و با توجه به این نکته مسئولیت اتصال به پایگاه داده طبیعی نیست. (اصل Single Responsibility Principle) بیایید نگاه دوباره ای به کلاس Photo بیاندازیم و اتصال پایگاه داده را به خارج از این کلاس انتقال دهیم. دو راه برای انجام این کار وجود دارد: Constructor Injection (تزریق با استفاده از سازنده کلاس) Setter Injection (تزریق با استفاده از متدهای setter کلاس) تزریق با استفاده از سازنده کلاس (Constructor Injection) در این روش، زمانی که متد سازنده کلاس اجرا می شود، همه وابستگی های مورد نیاز را تزریق می کنیم. همانند کد زیر : &amp;lt;?php class Photo { /** * @var PDO The connection to the database */ protected $db; /** * Construct. * @param PDO $db_conn The database connection */ public function __construct($dbConn) { $this-&amp;gt;db = $dbConn; } } $photo = new Photo($dbConn); تزریق با استفاده از متدهای setter کلاس (Setter Injection) در این روش می توان با استفاده از متدهایی که درون کلاس تعریف می کنیم اشیا کلاس های دیگر را به درون کلاس تزریق نماییم. همانند کد زیر : &amp;lt;?php class Photo { /** * @var PDO The connection to the database */ protected $db; public function __construct() {} /** * Sets the database connection * @param PDO $dbConn The connection to the database. */ public function setDB($dbConn) { $this-&amp;gt;db = $dbConn; } } $photo = new Photo; $photo-&amp;gt;setDB($dbConn); با این تغییر ساده، کلاس دیگر وابسته به هیچ ارتباط خاص نیست. سیستم بیرونی کنترل کامل را حفظ می کند. این تکنیک باعث می شود که کلاس به راحتی تست شود، زیرا ما می توانیم در هنگام عملیات mock کردن دیتابیس در فرآیند تست واحد،از متد setDB استفاده نمائیم. مشکل اساسی جهت استفاده از تزریق کننده ها این است که کاربر باید از وابستگی های کلاس کاملا آگاه باشد و باید آن را به نحوی تنظیم کند. همانند زیر : $photo = new Photo; $photo-&amp;gt;setDB($dbConn); $photo-&amp;gt;setConfig($config); $photo-&amp;gt;setResponse($response); قبل از این کاربر به سادگی می توانست نمونه جدیدی از کلاس Photo را ایجاد کند، اما اکنون باید تمام این وابستگی ها را به یاد داشته باشد که با همچنین در سردرگمی و پیچیدگی مواجه شدیم!!! راه حل این مشکل استفاده از مفهوم Inversion of Control) IoC) می باشد. مفهوم Inversion of Control) IoC) مفهوم Inversion of Control) IoC) بدین صورت بیان می گردد: در این فریم ورک امکان تنظیم اولیه وابستگی‌های سیستم وجود دارد. برای مثال زمانیکه برنامه از یک IoC Container، نوع اینترفیس خاصی را درخواست می‌کند، این فریم ورک با توجه به تنظیمات اولیه‌اش، کلاسی مشخص را بازگشت خواهد داد. به کلاس IoC کد زیر دقت نمایید : // Also frequently called &quot;Container&quot; class IoC { /** * @var PDO The connection to the database */ protected $db; /** * Create a new instance of Photo and set dependencies. */ public static newPhoto() { $photo = new Photo; $photo-&amp;gt;setDB(static::$db); // $photo-&amp;gt;setConfig(); // $photo-&amp;gt;setResponse(); return $photo; } } همانطور که در کد بالا مشاهده می کنید ایجاد یک نمونه از کلاس و نیز فراخوانی وابستگی های مرتبط با آن درون متد newPhoto که بصورت static تعریف شده انجام می گردد. بنابراین هر زمان که به کلاس Photo نیاز داشتیم نیازی به خاطر سپردن وابستگی های مرتبط با آن نیست و تنها کافی است بصورت زیر عمل می کنیم : $photo = IoC::newPhoto(); بسیار خب فرض کنید علاوه بر کلاس Photo کلاس های دیگری نیز داشته باشیم، به جای ایجاد یک متد جدید در IoC به ازای هر کلاس می توانیم از روش عمومی تر همانند زیر استفاده نمائیم : // Also frequently called &quot;Container&quot; class IoC { /** * @var PDO The connection to the database */ protected static $registry = array(); /** * Add a new resolver to the registry array. * @param string $name The id * @param object $resolve Closure that creates instance * @return void */ public static function register($name, Closure $resolve) { static::$registry[$name] = $resolve; } /** * Create the instance * @param string $name The id * @return mixed */ public static function resolve($name) { if ( static::registered($name) ) { $name = static::$registry[$name]; return $name(); } throw new Exception(&apos;Nothing registered with that name, fool.&apos;); } /** * Determine whether the id is registered * @param string $name The id * @return bool Whether to id exists or not */ public static function registered($name) { return array_key_exists($name, static::$registry); } } در کد بالا یک آرایه به نام registry$ ایجاد کرده ایم که با استفاده از متد register مقادیر کلید (نام کلاس) و دیتای متناظر با آن که یک تابع از نوع Closure می باشد مقدار دهی می شود. همچنین از تابع resolve و registered برای بررسی اینکه آیا نام کلاس در آرایه قبلا ثبت شده است و یا خیر استفاده می شود. بنابراین تنها کافی است برای ثبت یک کلاس و وابستگی های مرتبط با آن و سپس فراخوانی کلاس مربوط به آن بدین صورت عمل کنیم : // Add `photo` to the registry array, along with a resolver IoC::register(&apos;photo&apos;, function() { $photo = new Photo; $photo-&amp;gt;setDB(&apos;...&apos;); $photo-&amp;gt;setConfig(&apos;...&apos;); return $photo; }); // Fetch new photo instance with dependencies set $photo = IoC::resolve(&apos;photo&apos;);</summary></entry><entry><title type="html">اصول S.O.L.I.D در طراحی شی گرا (OOD)</title><link href="http://localhost:4000/2017/11/10/solid-object-oriented-design.html" rel="alternate" type="text/html" title="اصول S.O.L.I.D در طراحی شی گرا (OOD)" /><published>2017-11-10T10:00:42+03:30</published><updated>2017-11-10T10:00:42+03:30</updated><id>http://localhost:4000/2017/11/10/solid-object-oriented-design</id><content type="html" xml:base="http://localhost:4000/2017/11/10/solid-object-oriented-design.html">&lt;p&gt;
 SOLID مخفف پنج اصل زیر بنایی طراحی شی گرا (Object-Oriented Design) است که اوایل سال ۲۰۰۰ میلادی توسط Robert C. Martin یا همان Uncle Bob معرفی شد.
 &lt;/p&gt;
 
@@ -1488,7 +1488,7 @@ SOLID مخفف پنج اصل زیر بنایی طراحی شی گرا (Object-Or
 &lt;pre&gt;&lt;code class=&quot;language-php line-numbers&quot;&gt;&amp;lt;?php
 
 function lego () {
-    return 'You are now a master builder.';
+    return &apos;You are now a master builder.&apos;;
 }
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/li&gt;
@@ -1519,7 +1519,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    '239a881d87672da709af2b939c130dab' =&amp;gt; $baseDir . '/mylibrary/functions.php',
+    &apos;239a881d87672da709af2b939c130dab&apos; =&amp;gt; $baseDir . &apos;/mylibrary/functions.php&apos;,
 );
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -1531,7 +1531,7 @@ return array(
 &lt;/li&gt;
 &lt;li&gt;اگر تمام مراحل بالا به درستی انجام شده باشد, فرایند ساخت autoload به وسیله composer و از روش files به موفقیت به اتمام رسیده است . حالا برای استفاده از فایل function.php کافی است در فولدر aldemo فایلی به نام index.php ایجاد کنید و کدهای زیر را قرار دهید :
 &lt;pre&gt;&lt;code class=&quot;language-php line-numbers&quot;&gt;&amp;lt;?php
-require 'vendor/autoload.php';
+require &apos;vendor/autoload.php&apos;;
 echo lego();
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/li&gt;
@@ -1556,7 +1556,7 @@ echo lego();
 Class Cmautoload {
  
 	  public function classmap () {
-		  return 'that knows how to autoload with a classmap! ';
+		  return &apos;that knows how to autoload with a classmap! &apos;;
 	  }
 }
 &lt;/code&gt;&lt;/pre&gt;
@@ -1568,7 +1568,7 @@ Class Cmautoload {
 
 &lt;pre&gt;&lt;code class=&quot;language-php line-numbers&quot;&gt;&amp;lt;?php
  
-require 'vendor/autoload.php';
+require &apos;vendor/autoload.php&apos;;
  
 echo lego();
  
@@ -1611,7 +1611,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Cmautoload' =&amp;gt; $baseDir . '/classes/myclass.php',
+    &apos;Cmautoload&apos; =&amp;gt; $baseDir . &apos;/classes/myclass.php&apos;,
 );
 
 &lt;/code&gt;&lt;/pre&gt;
@@ -1659,7 +1659,7 @@ Class Greeting
 
 &lt;pre&gt;&lt;code class=&quot;language-php line-numbers&quot;&gt;&amp;lt;?php
  
-require 'vendor/autoload.php';
+require &apos;vendor/autoload.php&apos;;
  
 echo lego();
  
@@ -1709,7 +1709,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'VegibitLibrary\\' =&amp;gt; array($baseDir . '/src/vegibit/library'),
+    &apos;VegibitLibrary\\&apos; =&amp;gt; array($baseDir . &apos;/src/vegibit/library&apos;),
 );
 
 
@@ -1726,4 +1726,4 @@ return array(
 &lt;/p&gt;
 &lt;p align=&quot;left&quot;&gt;
 &lt;a href=&quot;/files/aldemo.zip&quot;&gt;aldemo.zip&lt;/a&gt;
-&lt;/p&gt;</content><author><name>Farhad Mirzapour</name></author><category term="articles" /><summary type="html">همانطور که می دانیم در php برای استفاده از هر کلاسی باید اون کلاس رو در صفحه ای که لازم داریم include یا require کنیم تا php آن کلاس را بشناسد و بتوان از آن استفاده کرد . خب مشکل اینجاست که اگر تعداد کلاس های مورد استفاده زیاد شود این include کردن هر کلاس واقعا مشکل ساز میشه و تمرکز مارو کم می کنه و بیشتر وقتمون میره سمت اینکه کلاس ها در داخل کدام دایرکتوری هستند و تک تک آن ها را به صفحه ی خودمون include کنیم . خوشبختانه composer این مشکل را برای ما حل کرده و خودش این موضوع را به عهده می گیرد و ما فقط کافی است بسته به نیازمون یکی از 3 روش زیر را که در فایل composer.json می باشد استفاده نماییم . داخل فایل composer آبجکتی به نام&amp;nbsp;autoload وجود دارد که داخل آن تعریف می کنیم که چه فایل هایی را و از چه طریق برای ما autoload بسازد. 3روش autoloading در composer عبارتند از : File Based Autoloading Classmap Based Autoloading PSR-4 Autoloading سایت اصلی composer روش&amp;nbsp;PSR-4 Autoloading را پیشنهاد می کند اما ما در این مقاله &amp;nbsp;هر 4 روش را بررسی می نماییم . روش File Based Autoloading در روت (root) پروژه خودتون یک فولدر به نامaldemo ایجاد کنید . سپس داخل فولدرaldemo یک فولدر دیگر به نام&amp;nbsp;mylibrary ایجاد می کنیم تا فایل های خودمون را داخل اش قرار بدهیم . داخل فولدر&amp;nbsp;mylibrary یک فایل به نام&amp;nbsp;functions.php ایجاد و کدهای زیر را قرار دهید : &amp;lt;?php function lego () { return 'You are now a master builder.'; } حالا داخل فولدر(aldemo) پروژه امون فایل composer.json را ایجاد و کدهای زیر را قرار می دهیم : { &quot;autoload&quot;: { &quot;files&quot;: [&quot;mylibrary/functions.php&quot;] } } همانطور که در بالا مشاهده می کنید یک آبجکت به نام autoload داریم و داخل آن &amp;nbsp;مشخص کردیم که به چه روشی&amp;nbsp;autoload برای ما ساخته شود . ما روش files را تعیین کردیم و جلوی آن فایل هایی که قرار است به صورت&amp;nbsp;autoload درآیند را بصورت عناصر آرایه مشخص می کنیم . حالا برای ایجاد autoload باید ترمینال را باز کرده و به روت پروژه بروید و یکی از دستورات زیر را اجرا کنید : composer dump یا composer dumpautoload بعد از اجرای فرمان بالا و زدن دکمه اینتر مشاهده می کنید که در روت پروژه , فولدری به نام vendor ساخته می شود .جهت مشاهده تغییرات وارد پوشه vendor سپس پوشه composer شده و فایل autoload_files.php را باز نمائید. &amp;lt;?php // autoload_files.php @generated by Composer $vendorDir = dirname(dirname(__FILE__)); $baseDir = dirname($vendorDir); return array( '239a881d87672da709af2b939c130dab' =&amp;gt; $baseDir . '/mylibrary/functions.php', ); در خط 8 مشاهده می کنید مسیر فایل function.php به این فایل افزوده شده است. اگر تمام مراحل بالا به درستی انجام شده باشد, فرایند ساخت autoload به وسیله composer و از روش files به موفقیت به اتمام رسیده است . حالا برای استفاده از فایل function.php کافی است در فولدر aldemo فایلی به نام index.php ایجاد کنید و کدهای زیر را قرار دهید : &amp;lt;?php require 'vendor/autoload.php'; echo lego(); در کدهای بالا در خط اول لازم بود که autoload.php را به فایل index امان require کنید . و در خط بعدی از فانکشن lego که در فایل function.php موجود هست استفاده کردیم . روش Classmap Based Autoloading این روش از روش File Based Autoloading بهتر است به این خاطر که شما لازم نیست مسیر واقعی فایل خود را مشخص کنید و تنها دایرکتوری که فایل در آن قرار دارد را مشخص می کنیم. نکته : در این روش فقط می توان از کلاس ها استفاده نمود . فولدری به نام classes در شاخه aldemo ایجاد نمائید.سپس فایل myclass.php را در آن ایجاد و کدهای زیر را در آن قرار دهید : &amp;lt;?php Class Cmautoload { public function classmap () { return 'that knows how to autoload with a classmap! '; } } فایل index.php را مطابق زیر تغییر دهید : &amp;lt;?php require 'vendor/autoload.php'; echo lego(); $cm = new Cmautoload; echo $cm-&amp;gt;classmap(); فایل composer.json را مطابق زیر تغییر دهید : { &quot;autoload&quot;: { &quot;files&quot;: [ &quot;mylibrary/functions.php&quot; ], &quot;classmap&quot;: [ &quot;classes&quot; ] } } حالا برای ایجاد autoload باید ترمینال را باز کرده و به روت پروژه بروید و یکی از دستورات زیر را اجرا کنید : composer dump یا composer dumpautoload جهت مشاهده تغییرات وارد پوشه vendor سپس پوشه composer شده و فایل autoload_classmap.php را باز نمائید. &amp;lt;?php // autoload_classmap.php @generated by Composer $vendorDir = dirname(dirname(__FILE__)); $baseDir = dirname($vendorDir); return array( 'Cmautoload' =&amp;gt; $baseDir . '/classes/myclass.php', ); در خط شماره 9 مشاهده می کنید مسیر کلیه کلاس های موجود در پوشه classes افزوده شده است. روش PSR-4 Based Autoloading استاندارد psr-4 بر خلاف دو روش قبلی یعنی File Based Autoloading , Classmap Based Autoloading با namespace ها در کلاس ها سرو کار دارد . مسیر زیر را در پروژه خود ایجاد نمائید: src/vegibit/library فایل greeting.php را در مسیر بالا ایجاد و کدهای زیر را در آن قرار دهید: &amp;lt;?php namespace VegibitLibrary; Class Greeting { public function hi() { return &quot;We got you covered&quot;; } } فایل index.php را مطابق زیر تغییر دهید : &amp;lt;?php require 'vendor/autoload.php'; echo lego(); $cm = new Cmautoload; echo $cm-&amp;gt;classmap(); $obj = new VegibitLibrary\Greeting(); echo $obj-&amp;gt;hi(); فایل composer.json را مطابق زیر تغییر دهید: { &quot;autoload&quot;: { &quot;files&quot;: [ &quot;mylibrary/functions.php&quot; ], &quot;classmap&quot;: [ &quot;classes&quot; ], &quot;psr-4&quot;: { &quot;VegibitLibrary\\&quot; : &quot;src/vegibit/library/&quot; } } } حالا برای ایجاد autoload باید ترمینال را باز کرده و به روت پروژه بروید و یکی از دستورات زیر را اجرا کنید : composer dump یا composer dumpautoload جهت مشاهده تغییرات وارد پوشه vendor سپس پوشه composer شده و فایل autoload_psr4.php را باز نمائید. &amp;lt;?php // autoload_psr4.php @generated by Composer $vendorDir = dirname(dirname(__FILE__)); $baseDir = dirname($vendorDir); return array( 'VegibitLibrary\\' =&amp;gt; array($baseDir . '/src/vegibit/library'), ); در خط شماره 9 مشاهده می کنید آدرس فضای نام VegibitLibrary بصورت عنصر آرایه افزوده شده است. کلیه فایل های بالا را می توانید از لینک زیر دانلود نمایید: aldemo.zip</summary></entry></feed>
+&lt;/p&gt;</content><author><name>Farhad Mirzapour</name></author><category term="articles" /><summary type="html">همانطور که می دانیم در php برای استفاده از هر کلاسی باید اون کلاس رو در صفحه ای که لازم داریم include یا require کنیم تا php آن کلاس را بشناسد و بتوان از آن استفاده کرد . خب مشکل اینجاست که اگر تعداد کلاس های مورد استفاده زیاد شود این include کردن هر کلاس واقعا مشکل ساز میشه و تمرکز مارو کم می کنه و بیشتر وقتمون میره سمت اینکه کلاس ها در داخل کدام دایرکتوری هستند و تک تک آن ها را به صفحه ی خودمون include کنیم . خوشبختانه composer این مشکل را برای ما حل کرده و خودش این موضوع را به عهده می گیرد و ما فقط کافی است بسته به نیازمون یکی از 3 روش زیر را که در فایل composer.json می باشد استفاده نماییم . داخل فایل composer آبجکتی به نام&amp;nbsp;autoload وجود دارد که داخل آن تعریف می کنیم که چه فایل هایی را و از چه طریق برای ما autoload بسازد. 3روش autoloading در composer عبارتند از : File Based Autoloading Classmap Based Autoloading PSR-4 Autoloading سایت اصلی composer روش&amp;nbsp;PSR-4 Autoloading را پیشنهاد می کند اما ما در این مقاله &amp;nbsp;هر 4 روش را بررسی می نماییم . روش File Based Autoloading در روت (root) پروژه خودتون یک فولدر به نامaldemo ایجاد کنید . سپس داخل فولدرaldemo یک فولدر دیگر به نام&amp;nbsp;mylibrary ایجاد می کنیم تا فایل های خودمون را داخل اش قرار بدهیم . داخل فولدر&amp;nbsp;mylibrary یک فایل به نام&amp;nbsp;functions.php ایجاد و کدهای زیر را قرار دهید : &amp;lt;?php function lego () { return &apos;You are now a master builder.&apos;; } حالا داخل فولدر(aldemo) پروژه امون فایل composer.json را ایجاد و کدهای زیر را قرار می دهیم : { &quot;autoload&quot;: { &quot;files&quot;: [&quot;mylibrary/functions.php&quot;] } } همانطور که در بالا مشاهده می کنید یک آبجکت به نام autoload داریم و داخل آن &amp;nbsp;مشخص کردیم که به چه روشی&amp;nbsp;autoload برای ما ساخته شود . ما روش files را تعیین کردیم و جلوی آن فایل هایی که قرار است به صورت&amp;nbsp;autoload درآیند را بصورت عناصر آرایه مشخص می کنیم . حالا برای ایجاد autoload باید ترمینال را باز کرده و به روت پروژه بروید و یکی از دستورات زیر را اجرا کنید : composer dump یا composer dumpautoload بعد از اجرای فرمان بالا و زدن دکمه اینتر مشاهده می کنید که در روت پروژه , فولدری به نام vendor ساخته می شود .جهت مشاهده تغییرات وارد پوشه vendor سپس پوشه composer شده و فایل autoload_files.php را باز نمائید. &amp;lt;?php // autoload_files.php @generated by Composer $vendorDir = dirname(dirname(__FILE__)); $baseDir = dirname($vendorDir); return array( &apos;239a881d87672da709af2b939c130dab&apos; =&amp;gt; $baseDir . &apos;/mylibrary/functions.php&apos;, ); در خط 8 مشاهده می کنید مسیر فایل function.php به این فایل افزوده شده است. اگر تمام مراحل بالا به درستی انجام شده باشد, فرایند ساخت autoload به وسیله composer و از روش files به موفقیت به اتمام رسیده است . حالا برای استفاده از فایل function.php کافی است در فولدر aldemo فایلی به نام index.php ایجاد کنید و کدهای زیر را قرار دهید : &amp;lt;?php require &apos;vendor/autoload.php&apos;; echo lego(); در کدهای بالا در خط اول لازم بود که autoload.php را به فایل index امان require کنید . و در خط بعدی از فانکشن lego که در فایل function.php موجود هست استفاده کردیم . روش Classmap Based Autoloading این روش از روش File Based Autoloading بهتر است به این خاطر که شما لازم نیست مسیر واقعی فایل خود را مشخص کنید و تنها دایرکتوری که فایل در آن قرار دارد را مشخص می کنیم. نکته : در این روش فقط می توان از کلاس ها استفاده نمود . فولدری به نام classes در شاخه aldemo ایجاد نمائید.سپس فایل myclass.php را در آن ایجاد و کدهای زیر را در آن قرار دهید : &amp;lt;?php Class Cmautoload { public function classmap () { return &apos;that knows how to autoload with a classmap! &apos;; } } فایل index.php را مطابق زیر تغییر دهید : &amp;lt;?php require &apos;vendor/autoload.php&apos;; echo lego(); $cm = new Cmautoload; echo $cm-&amp;gt;classmap(); فایل composer.json را مطابق زیر تغییر دهید : { &quot;autoload&quot;: { &quot;files&quot;: [ &quot;mylibrary/functions.php&quot; ], &quot;classmap&quot;: [ &quot;classes&quot; ] } } حالا برای ایجاد autoload باید ترمینال را باز کرده و به روت پروژه بروید و یکی از دستورات زیر را اجرا کنید : composer dump یا composer dumpautoload جهت مشاهده تغییرات وارد پوشه vendor سپس پوشه composer شده و فایل autoload_classmap.php را باز نمائید. &amp;lt;?php // autoload_classmap.php @generated by Composer $vendorDir = dirname(dirname(__FILE__)); $baseDir = dirname($vendorDir); return array( &apos;Cmautoload&apos; =&amp;gt; $baseDir . &apos;/classes/myclass.php&apos;, ); در خط شماره 9 مشاهده می کنید مسیر کلیه کلاس های موجود در پوشه classes افزوده شده است. روش PSR-4 Based Autoloading استاندارد psr-4 بر خلاف دو روش قبلی یعنی File Based Autoloading , Classmap Based Autoloading با namespace ها در کلاس ها سرو کار دارد . مسیر زیر را در پروژه خود ایجاد نمائید: src/vegibit/library فایل greeting.php را در مسیر بالا ایجاد و کدهای زیر را در آن قرار دهید: &amp;lt;?php namespace VegibitLibrary; Class Greeting { public function hi() { return &quot;We got you covered&quot;; } } فایل index.php را مطابق زیر تغییر دهید : &amp;lt;?php require &apos;vendor/autoload.php&apos;; echo lego(); $cm = new Cmautoload; echo $cm-&amp;gt;classmap(); $obj = new VegibitLibrary\Greeting(); echo $obj-&amp;gt;hi(); فایل composer.json را مطابق زیر تغییر دهید: { &quot;autoload&quot;: { &quot;files&quot;: [ &quot;mylibrary/functions.php&quot; ], &quot;classmap&quot;: [ &quot;classes&quot; ], &quot;psr-4&quot;: { &quot;VegibitLibrary\\&quot; : &quot;src/vegibit/library/&quot; } } } حالا برای ایجاد autoload باید ترمینال را باز کرده و به روت پروژه بروید و یکی از دستورات زیر را اجرا کنید : composer dump یا composer dumpautoload جهت مشاهده تغییرات وارد پوشه vendor سپس پوشه composer شده و فایل autoload_psr4.php را باز نمائید. &amp;lt;?php // autoload_psr4.php @generated by Composer $vendorDir = dirname(dirname(__FILE__)); $baseDir = dirname($vendorDir); return array( &apos;VegibitLibrary\\&apos; =&amp;gt; array($baseDir . &apos;/src/vegibit/library&apos;), ); در خط شماره 9 مشاهده می کنید آدرس فضای نام VegibitLibrary بصورت عنصر آرایه افزوده شده است. کلیه فایل های بالا را می توانید از لینک زیر دانلود نمایید: aldemo.zip</summary></entry></feed>

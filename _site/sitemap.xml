@@ -339,6 +339,9 @@
 <loc>http://localhost:4000/search.html</loc>
 </url>
 <url>
+<loc>http://localhost:4000/node_modules/elevator.js/</loc>
+</url>
+<url>
 <loc>http://localhost:4000/blog/page2/</loc>
 </url>
 <url>
