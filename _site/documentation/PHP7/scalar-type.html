@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <!-- Begin Jekyll SEO tag v2.8.0 -->
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Scalar type های جدید در php7 | مجموعه مقالات و مطالب آموزشی وب - گرداوری توسط فرهاد میرزاپور</title>
-<meta name="generator" content="Jekyll v3.9.3" />
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="Scalar type های جدید در php7" />
 <meta name="author" content="Farhad Mirzapour" />
 <meta property="og:locale" content="en_US" />
@@ -23,7 +23,7 @@
 <meta name="twitter:site" content="@farhadmirzapour" />
 <meta name="twitter:creator" content="@Farhad Mirzapour" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Farhad Mirzapour"},"dateModified":"2017-11-03T19:37:42+03:30","datePublished":"2017-11-03T19:37:42+03:30","description":"Scalar type های جدید در php7 در نسخه 7 (php) ، یک قابلیت جدید به نام اعلان های نوع عددی (Scalar Type Declarations) ، معرفی شده است . اعلان های نوع عددی دو گزینه دارند : اجباری – حالت پیش فرض است و نیازی به مشخص کردن نیست سخت گیرانه – باید با صراحت تمام اشاره شود انواع داده شده برای پارامتر های عملکرد می تواند با حالت های بالا ، اجرا شود . int float bool string interfaces array callable مثال برای حالت اجباری : // Coercive mode function sum(int ...$ints) { return array_sum($ints); } print(sum(2, &#39;3&#39;, 4.1)); خروجی : 9 مثال برای حالت سخت گیرانه : // Strict mode declare(strict_types=1); function sum(int ...$ints) { return array_sum($ints); } print(sum(2, &#39;3&#39;, 4.1)); خروجی : Fatal error: Uncaught TypeError: Return value of returnIntValue() must be of the type integer, float returned...","headline":"Scalar type های جدید در php7","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/documentation/PHP7/scalar-type"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"url":"http://localhost:4000/documentation/PHP7/scalar-type"}</script>
+{"headline":"Scalar type های جدید در php7","dateModified":"2017-11-03T19:37:42+03:30","datePublished":"2017-11-03T19:37:42+03:30","author":{"@type":"Person","name":"Farhad Mirzapour"},"url":"http://localhost:4000/documentation/PHP7/scalar-type","@type":"BlogPosting","description":"Scalar type های جدید در php7 در نسخه 7 (php) ، یک قابلیت جدید به نام اعلان های نوع عددی (Scalar Type Declarations) ، معرفی شده است . اعلان های نوع عددی دو گزینه دارند : اجباری – حالت پیش فرض است و نیازی به مشخص کردن نیست سخت گیرانه – باید با صراحت تمام اشاره شود انواع داده شده برای پارامتر های عملکرد می تواند با حالت های بالا ، اجرا شود . int float bool string interfaces array callable مثال برای حالت اجباری : // Coercive mode function sum(int ...$ints) { return array_sum($ints); } print(sum(2, &#39;3&#39;, 4.1)); خروجی : 9 مثال برای حالت سخت گیرانه : // Strict mode declare(strict_types=1); function sum(int ...$ints) { return array_sum($ints); } print(sum(2, &#39;3&#39;, 4.1)); خروجی : Fatal error: Uncaught TypeError: Return value of returnIntValue() must be of the type integer, float returned...","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/logo/blankspace-avatar.png"},"name":"Farhad Mirzapour"},"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/documentation/PHP7/scalar-type"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
     <!-- stylesheets -->
